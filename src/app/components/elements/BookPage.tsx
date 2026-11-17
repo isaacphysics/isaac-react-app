@@ -56,8 +56,8 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
             {hasQuestions && <MetadataContainerLink id="questions" title={t("common:title.questions")} />}
             {hasResources && <MetadataContainerLink id="resources" title={t("common:title.resources")} />}
             {hasRelevantTests && <MetadataContainerLink id="tests" title={t("sci:title.practiceTests")} />}
-            {hasExtension && <MetadataContainerLink id="extension" title={t("common:books.page.extensionTitle")} />}
-            {!hasQuestions && !hasResources && !hasRelevantTests && !hasExtension && <span className="ms-2">{t("common:books.page.emptyState")}</span>}
+            {hasExtension && <MetadataContainerLink id="extension" title={t("pages:books.page.extensionTitle")} />}
+            {!hasQuestions && !hasResources && !hasRelevantTests && !hasExtension && <span className="ms-2">{t("pages:books.page.emptyState")}</span>}
         </MetadataContainer>
 
         {hasQuestions && <>
@@ -100,8 +100,8 @@ export const BookPage = ({ page }: { page: IsaacBookDetailPageDTO }) => {
         </>}
 
         {hasExtension && <>
-            <h3 className="mt-4 mb-3 h4" id="extension">{t("common:books.page.extensionTitle")}</h3>
-            <span>{t("common:books.page.extensionIntroText")}</span>
+            <h3 className="mt-4 mb-3 h4" id="extension">{t("pages:books.page.extensionTitle")}</h3>
+            <span>{t("pages:books.page.extensionIntroText")}</span>
             <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView
                     type="gameboard"

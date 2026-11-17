@@ -49,7 +49,7 @@ export const AssignmentSummaryCard = ({studentsAttempted, studentsCompleted, tot
         <CardBody className="d-flex flex-column flex-lg-row assignment-progress-group-overview row-gap-2">
             <div className="d-flex align-items-center flex-grow-1 fw-bold">
                 <i className={classNames("icon me-2", dueDate && dueDate < new Date() ? "icon-event-complete" : "icon-event-upcoming", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
-                {t("common:assignments.progress.dueDate", { dueDate: formatDate(dueDate) })}
+                {t("teaching:assignments.progress.dueDate", { dueDate: formatDate(dueDate) })}
             </div>
             <div className="d-flex align-items-center flex-grow-1 fw-bold">
                 <i className={classNames("icon icon-group me-2", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
@@ -57,7 +57,7 @@ export const AssignmentSummaryCard = ({studentsAttempted, studentsCompleted, tot
             </div>
             <div className="d-flex align-items-center flex-grow-1 fw-bold">
                 <i className={classNames("icon icon-task-complete me-2", siteSpecific("icon-md", "icon-sm"))} color="secondary"/>
-                {t("common:assignments.progress.fullMarks", { completedCount: studentsCompleted, totalCount: totalStudents })}
+                {t("teaching:assignments.progress.fullMarks", { completedCount: studentsCompleted, totalCount: totalStudents })}
             </div>
         </CardBody>
     </Card>;
@@ -161,7 +161,7 @@ export const AssignmentProgressIndividual = ({user, group}: {user: RegisteredUse
     >
         <ShowLoadingQuery
             query={combineQueries(assignmentQuery, assignmentProgressQuery, augmentAssignmentWithProgress)}
-            defaultErrorTitle={t("common:assignments.progress.errorFetching")}
+            defaultErrorTitle={t("teaching:assignments.progress.errorFetching")}
             thenRender={(assignmentWithProgress) =>
                 <div className="assignment-progress-container mb-7">
                     <AssignmentProgressPageSettingsContext.Provider value={pageSettings}>

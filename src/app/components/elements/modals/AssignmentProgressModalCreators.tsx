@@ -10,7 +10,7 @@ import i18next from "i18next";
 export const downloadLinkModal = (link: string): ActiveModalProps => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal());},
-        title: i18next.t("common:assignments.downloadPrivacyTitle"),
+        title: i18next.t("teaching:assignments.downloadPrivacyTitle"),
         body: <PageFragment fragmentId="csv_download_notice" />,
         buttons: [
             <Button key={0} block color="solid" tag="a"  href={link} target="_blank" onClick={() => {store.dispatch(closeActiveModal());}}>

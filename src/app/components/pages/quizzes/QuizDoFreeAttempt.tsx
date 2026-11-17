@@ -68,11 +68,11 @@ export const QuizDoFreeAttempt = ({user}: {user: RegisteredUserDTO}) => {
             {error && <>
                 <TitleAndBreadcrumb currentPageTitle={t("common:title.test")} intermediateCrumbs={myQuizzesCrumbs} icon={{type: "icon", icon: "icon-error"}} />
                 <Alert color={assignedQuizError ? "warning" : "danger"} className="mt-4">
-                    <h2 className="alert-heading h4">{assignedQuizError ? t("common:tests.attempt.assignedErrorTitle") : t("common:tests.attempt.loadErrorTitle")}</h2>
+                    <h2 className="alert-heading h4">{assignedQuizError ? t("teaching:tests.attempt.assignedErrorTitle") : t("teaching:tests.attempt.loadErrorTitle")}</h2>
                     {!assignedQuizError && <p data-testid="error-message">{error}</p>}
                     {assignedQuizError && <>
                         <p><Trans
-                            i18nKey="common:tests.attempt.assignedErrorBody"
+                            i18nKey="teaching:tests.attempt.assignedErrorBody"
                             components={{
                                 br: <br />,
                                 assignedTestsLink: <TransAnchor href={"/tests"} target="_self" rel="noopener noreferrer" />,

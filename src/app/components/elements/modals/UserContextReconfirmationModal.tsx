@@ -154,7 +154,7 @@ const UserContextReconfirmationModalBody = () => {
         {submissionAttempted && !allFieldsAreValid &&
             <ExigentAlert color="warning">
                 <p className="alert-heading fw-bold">{t("common:error.updateAccount")}</p>
-                <p>{t("common:account.update.fillAllFields")}</p>
+                <p>{t("account:account.update.fillAllFields")}</p>
             </ExigentAlert>
         }
         {updateCurrentUserError &&
@@ -211,12 +211,12 @@ const UserContextReconfirmationModalBody = () => {
         <div className="text-muted small pb-2">{modalText.privacyPolicy}</div>
 
         {submissionAttempted && !allFieldsAreValid && <div role="alert" className="text-danger text-center mb-4 h4">
-            {t("common:account.update.incompleteFields")}
+            {t("account:account.update.incompleteFields")}
         </div>}
 
         <div className="text-center pb-3 pt-1">
             <Button type="submit" color="secondary" className="my-1 w-lg-50 w-100">
-                {t("common:account.update.submitButton")}
+                {t("account:account.update.submitButton")}
             </Button>
         </div>
     </Form>;

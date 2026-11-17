@@ -49,7 +49,7 @@ export const SetPasswordInput = ({
     return <div className={className}>
         <FormGroup className="form-group">
             <Label htmlFor={`${idPrefix}-password-set`} className={"fw-bold form-required"}>{label ?? t("common:label.password")}</Label>
-            <p className="d-block input-description">{t("common:auth.password.minLengthHint", { minLength: MINIMUM_PASSWORD_LENGTH })}</p>
+            <p className="d-block input-description">{t("account:auth.password.minLengthHint", { minLength: MINIMUM_PASSWORD_LENGTH })}</p>
             <TogglablePasswordInput
                 id={`${idPrefix}-password-set`} name="password" type="password"
                 data-testid={`${idPrefix}-password-set`}

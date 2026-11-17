@@ -139,7 +139,7 @@ const ReorderButtons = ({index, items, setItems, isParsons, currentIndent, inAva
     const canReorderDown = index !== items.length - 1 && !inAvailableItems;
     return <div className="reorder-buttons">
         <button type="button" className={classNames("btn btn-blank py-1 px-0 m-0 border-0", {"disabled": !canReorderUp})}
-            disabled={!canReorderUp} title={t("common:questions.parsons.moveUp", { itemName: getAccessibleItemName(items[index]) })} onClick={() => {
+            disabled={!canReorderUp} title={t("questions:questions.parsons.moveUp", { itemName: getAccessibleItemName(items[index]) })} onClick={() => {
                 const newItems = [...items];
                 moveParsonsItem(newItems, index, newItems, index-1, isParsons ? currentIndent || 0 : undefined);
                 setItems(newItems);
@@ -148,7 +148,7 @@ const ReorderButtons = ({index, items, setItems, isParsons, currentIndent, inAva
             <i className={classNames("icon icon-chevron-up", canReorderUp ? "icon-color-muted-hoverable icon-color-theme-on-hover" : "icon-color-disabled")} />
         </button>
         <button type="button" className={classNames("btn btn-blank py-1 px-0 m-0 border-0", {"disabled": !canReorderDown})}
-            disabled={!canReorderDown} title={t("common:questions.parsons.moveDown", { itemName: getAccessibleItemName(items[index]) })} onClick={() => {
+            disabled={!canReorderDown} title={t("questions:questions.parsons.moveDown", { itemName: getAccessibleItemName(items[index]) })} onClick={() => {
                 const newItems = [...items];
                 moveParsonsItem(newItems, index, newItems, index+1, isParsons ? currentIndent || 0 : undefined);
                 setItems(newItems);
@@ -290,8 +290,8 @@ export const ParsonsDraggableItem = ({currentItem, index, items, setItems, swapI
                     type="button" className="swap-button btn btn-blank py-1 px-0 m-0 me-2 border-0" 
                     title={
                         inAvailableItems
-                            ? t("common:questions.parsons.moveToAnswer", { itemName: getAccessibleItemName(currentItem) })
-                            : t("common:questions.parsons.moveBackToItems", { itemName: getAccessibleItemName(currentItem) })
+                            ? t("questions:questions.parsons.moveToAnswer", { itemName: getAccessibleItemName(currentItem) })
+                            : t("questions:questions.parsons.moveBackToItems", { itemName: getAccessibleItemName(currentItem) })
                     }
                     onClick={swapItemList}
                 >

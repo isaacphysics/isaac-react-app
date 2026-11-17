@@ -31,7 +31,7 @@ export const RegistrationAgeCheckSSOOnly = () => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={t("common:auth.register.pageTitle", { siteName: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
+            <TitleAndBreadcrumb currentPageTitle={t("account:auth.register.pageTitle", { siteName: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
         }
         sidebar={siteSpecific(
             <SignupSidebar activeTab={1}/>,
@@ -40,15 +40,15 @@ export const RegistrationAgeCheckSSOOnly = () => {
     >
         <Card className="my-7">
             <CardBody>
-                <h3>{t("common:auth.registration.ageCheck.heading")}</h3>
+                <h3>{t("account:auth.registration.ageCheck.heading")}</h3>
                 <p><Trans
-                    i18nKey="common:auth.registration.ageCheck.message"
+                    i18nKey="account:auth.registration.ageCheck.message"
                     components={{
                         strong: <strong />,
                     }}
                     values={{ minAge: SITE_LOWER_AGE_LIMIT, maxAge: SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT - 1 }}
                 /></p>
-                <p>{t("common:auth.registration.ageCheck.tryOtherProvider", { authProviders: authProviderListString })}</p>
+                <p>{t("account:auth.registration.ageCheck.tryOtherProvider", { authProviders: authProviderListString })}</p>
                 {isAda && <hr/>}
                 <div className="d-flex flex-column gap-2">
                     {isAda && <RaspberryPiSignInButton knownRole="STUDENT" />}

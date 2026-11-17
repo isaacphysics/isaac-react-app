@@ -16,7 +16,7 @@ export const emailApi = isaacApi.injectEndpoints({
             onQueryStarted: onQueryLifecycleEvents({
                 onQuerySuccess: (args, _, {dispatch}) => {
                     dispatch(requestCurrentUser());
-                    dispatch(showSuccessToast(i18next.t("common:auth.emailVerification.successTitle"), i18next.t("common:auth.emailVerification.successMessage")));
+                    dispatch(showSuccessToast(i18next.t("account:auth.emailVerification.successTitle"), i18next.t("account:auth.emailVerification.successMessage")));
                 }
             })
         }),
@@ -29,8 +29,8 @@ export const emailApi = isaacApi.injectEndpoints({
             }),
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: () => i18next.t("common:error.emailRequestFailed"),
-                successTitle: () => i18next.t("common:auth.emailVerification.requestSuccessTitle"),
-                successMessage: () => i18next.t("common:auth.emailVerification.requestSuccessMessage"),
+                successTitle: () => i18next.t("account:auth.emailVerification.requestSuccessTitle"),
+                successMessage: () => i18next.t("account:auth.emailVerification.requestSuccessMessage"),
             }),
         }),
 
@@ -41,9 +41,9 @@ export const emailApi = isaacApi.injectEndpoints({
                 body: roles,
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:admin.email.sendErrorTitle"),
-                successTitle: () => i18next.t("common:admin.email.sendSuccessTitle"),
-                successMessage: () => i18next.t("common:admin.email.sendSuccessMessage"),
+                errorTitle: () => i18next.t("admin:admin.email.sendErrorTitle"),
+                successTitle: () => i18next.t("admin:admin.email.sendSuccessTitle"),
+                successMessage: () => i18next.t("admin:admin.email.sendSuccessMessage"),
             })
         }),
 
@@ -54,9 +54,9 @@ export const emailApi = isaacApi.injectEndpoints({
                 body: ids,
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:admin.email.sendWithIdsErrorTitle"),
-                successTitle: () => i18next.t("common:admin.email.sendSuccessTitle"),
-                successMessage: () => i18next.t("common:admin.email.sendSuccessMessage"),
+                errorTitle: () => i18next.t("admin:admin.email.sendWithIdsErrorTitle"),
+                successTitle: () => i18next.t("admin:admin.email.sendSuccessTitle"),
+                successMessage: () => i18next.t("admin:admin.email.sendSuccessMessage"),
             })
         }),
 
@@ -67,16 +67,16 @@ export const emailApi = isaacApi.injectEndpoints({
                 body: {userIds: ids, emailTemplate},
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:admin.email.sendWithIdsErrorTitle"),
-                successTitle: () => i18next.t("common:admin.email.sendSuccessTitle"),
-                successMessage: () => i18next.t("common:admin.email.sendSuccessMessage"),
+                errorTitle: () => i18next.t("admin:admin.email.sendWithIdsErrorTitle"),
+                successTitle: () => i18next.t("admin:admin.email.sendSuccessTitle"),
+                successMessage: () => i18next.t("admin:admin.email.sendSuccessMessage"),
             })
         }),
 
         getTemplateEmail: build.query<TemplateEmail, string>({
             query: (contentId) => `/email/viewinbrowser/${encodeURIComponent(contentId)}`,
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:admin.email.templateErrorTitle"),
+                errorTitle: () => i18next.t("admin:admin.email.templateErrorTitle"),
             })
         }),
     })

@@ -29,10 +29,10 @@ const GroupJoinPanel = () => {
 
     return <div className='w-100 dashboard-panel'>
         <h2 className="panel-title">{t("common:button.joinGroup")}</h2>
-        {t("common:connections.connect.codeInstruction")}
+        {t("account:connections.connect.codeInstruction")}
         <InputGroup className="my-4 separate-input-group">
             <Input
-                type="text" placeholder={t("common:dashboard.groupJoin.placeholder")}
+                type="text" placeholder={t("pages:dashboard.groupJoin.placeholder")}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAuthenticationToken(e.target.value)}
                 onKeyDown={(e) => {if (e.key === 'Enter') {
                     e.preventDefault();
@@ -44,7 +44,7 @@ const GroupJoinPanel = () => {
         </InputGroup>
         <Spacer/>
         <Link to="/account#teacherconnections" className="panel-link">
-            {t("common:dashboard.groupJoin.existingGroupsLink")}
+            {t("pages:dashboard.groupJoin.existingGroupsLink")}
         </Link>
     </div>;
 };
@@ -58,7 +58,7 @@ const DashboardStreakPanel = ({ streakRecord }: DashboardStreakPanelProps) => {
 
     const streaksTooltip = useRef(null);
     const tooltip = <UncontrolledTooltip placement="bottom" autohide={false} target={streaksTooltip}>
-        <Trans i18nKey="common:dashboard.streak.tooltip" components={{ br1: <br />, br2: <br /> }} />
+        <Trans i18nKey="pages:dashboard.streak.tooltip" components={{ br1: <br />, br2: <br /> }} />
     </UncontrolledTooltip>;
 
     const remainingToAnswer = 10 - (streakRecord?.weeklyStreakRecord?.currentActivity || 0);
@@ -66,22 +66,22 @@ const DashboardStreakPanel = ({ streakRecord }: DashboardStreakPanelProps) => {
     const inStreakFreezeRange = new Date(1766361600000) <= new Date() && new Date() <= new Date(1767571200000);
 
     return <div className='w-100 dashboard-panel'>
-        <h2 className="panel-title">{t("common:dashboard.streak.title")}</h2>
+        <h2 className="panel-title">{t("pages:dashboard.streak.title")}</h2>
         <div className={"streak-panel-gauge align-self-center text-center mb-3"}>
             <DashboardStreakGauge streakRecord={streakRecord}/>
         </div>
         <div className="streak-text mb-2">
             {streakLength >= 1 && inStreakFreezeRange
-                ? t("common:dashboard.streak.festiveFreeze")
+                ? t("pages:dashboard.streak.festiveFreeze")
                 : remainingToAnswer <= 0
-                    ? t("common:dashboard.streak.maintained")
-                    : t("common:dashboard.streak.remaining", { remainingParts: remainingToAnswer })
+                    ? t("pages:dashboard.streak.maintained")
+                    : t("pages:dashboard.streak.remaining", { remainingParts: remainingToAnswer })
 
             }
         </div>
         <Spacer/>
         <Button className="d-flex align-items-center p-0 gap-2 panel-link mt-2" color="link" size="sm" innerRef={streaksTooltip}>
-            <i className="icon icon-info icon-color-grey"/> {t("common:dashboard.streak.infoLink")}
+            <i className="icon icon-info icon-color-grey"/> {t("pages:dashboard.streak.infoLink")}
         </Button>
         {tooltip}
     </div>;
@@ -140,7 +140,7 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
             </div>
             <Spacer/>
             <div className="d-flex text-nowrap">
-                {dueDate && (isOverdue(assignment) ? <span className="overdue me-3">{t("common:status.overdue")}</span> : <span className="me-3">{t("common:dashboard.currentWork.dueDate", { dueLabel: getFriendlyDaysUntil(dueDate) })}</span>)}
+                {dueDate && (isOverdue(assignment) ? <span className="overdue me-3">{t("common:status.overdue")}</span> : <span className="me-3">{t("pages:dashboard.currentWork.dueDate", { dueLabel: getFriendlyDaysUntil(dueDate) })}</span>)}
                 <span className="group-name">{groupName}</span>
             </div>
         </Card>
@@ -162,16 +162,16 @@ const CurrentWorkPanel = ({assignments, quizAssignments, groups}: CurrentWorkPan
     const {all: toDo} = getAllSortedWorkToDo(assignments, quizAssignments, 2);
 
     return <div className='w-100 dashboard-panel'>
-        <h2 className="panel-title">{t("common:dashboard.currentWork.title")}</h2>
+        <h2 className="panel-title">{t("pages:dashboard.currentWork.title")}</h2>
         {toDo.length === 0 
             ? <div className="mt-3 mt-lg-0 mt-xl-3 text-center">
-                <span className="mb-2 row d-flex justify-content-center">{t("common:dashboard.currentWork.emptyState")}</span>
+                <span className="mb-2 row d-flex justify-content-center">{t("pages:dashboard.currentWork.emptyState")}</span>
                 <Link to="/assignments" className="d-inline panel-link">
-                    {t("common:dashboard.currentWork.viewOlderLink")}
+                    {t("pages:dashboard.currentWork.viewOlderLink")}
                 </Link>
             </div> 
             : <>
-                <span className="mb-2">{t("common:dashboard.currentWork.activeIntro")}</span>
+                <span className="mb-2">{t("pages:dashboard.currentWork.activeIntro")}</span>
                 <div className="row overflow-y-auto pt-1 mt-n1">
                     {toDo.map((assignment: IAssignmentLike) => <div key={assignment.id} className="d-flex col-12 col-lg-6 col-xl-12 mb-3">
                         <AssignmentCard assignment={assignment} groups={groups}/>
@@ -180,10 +180,10 @@ const CurrentWorkPanel = ({assignments, quizAssignments, groups}: CurrentWorkPan
                 <Spacer/>
                 <div className="d-flex align-items-center">
                     <Link to="/assignments" className="d-inline panel-link">
-                        {t("common:dashboard.currentWork.allAssignmentsLink")}
+                        {t("pages:dashboard.currentWork.allAssignmentsLink")}
                     </Link>
                     <Link to="/tests" className="d-inline panel-link ms-auto ms-lg-7 ms-xl-auto">
-                        {t("common:dashboard.currentWork.allTestsLink")}
+                        {t("pages:dashboard.currentWork.allTestsLink")}
                     </Link>
                 </div>
             </>}
@@ -198,7 +198,7 @@ interface MyIsaacPanelProps {
 const MyIsaacPanel = ({assignmentsCount, quizzesCount}: MyIsaacPanelProps) => {
     const { t } = useTranslation();
     return <div className='w-100 dashboard-panel'>
-        <h2 className="panel-title">{t("common:dashboard.myIsaac.title")}</h2>
+        <h2 className="panel-title">{t("pages:dashboard.myIsaac.title")}</h2>
         <div className="d-flex flex-column">
             <Link to={PATHS.MY_GAMEBOARDS} className="panel-my-isaac-link">
                 {t("sci:title.mySavedDecks")}
@@ -238,7 +238,7 @@ export const StudentDashboard = ({assignments, quizAssignments, streakRecord, gr
     const {all: _, assignmentsCount, quizzesCount} = getAllSortedWorkToDo(assignments, quizAssignments);
 
     return <div className={classNames("dashboard w-100", {"dashboard-outer": !isTutorOrAbove(user)})}>
-        {nameToDisplay && <h1 className="text-wrap h3">{t("common:dashboard.greeting", { studentName: nameToDisplay })}</h1>}
+        {nameToDisplay && <h1 className="text-wrap h3">{t("pages:dashboard.greeting", { studentName: nameToDisplay })}</h1>}
         {deviceSize === "lg"
             ? <>
                 <Row>

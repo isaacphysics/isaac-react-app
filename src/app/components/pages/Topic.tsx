@@ -57,8 +57,8 @@ export const Topic = () => {
                 <Col className={"py-0 mw-760"}>
                     <Card className="board-card card-neat">
                         <CardBody className="pb-4 pt-4">
-                            <CardTitle>{t("common:topics.gameboards.title")}</CardTitle>
-                            <p>{t("common:topics.gameboards.description")}</p>
+                            <CardTitle>{t("pages:topics.gameboards.title")}</CardTitle>
+                            <p>{t("pages:topics.gameboards.description")}</p>
                             <ul>{linkedRelevantGameboards.map((gameboard, i) => <div key={gameboard.id || i}>
                                 {user?.loggedIn && user?.role !== "STUDENT" &&
                                     <li>
@@ -79,7 +79,7 @@ export const Topic = () => {
                     <Row>
                         <Col size={6} className="text-center">
                             <Button tag={Link} to="/topics" color="keyline" size="lg" block>
-                                <Trans i18nKey="common:topics.page.backButton" components={{ responsivePrefix: <span className="d-none d-md-inline" /> }} />
+                                <Trans i18nKey="pages:topics.page.backButton" components={{ responsivePrefix: <span className="d-none d-md-inline" /> }} />
                             </Button>
                         </Col>
                     </Row>

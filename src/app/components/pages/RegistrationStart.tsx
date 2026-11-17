@@ -29,7 +29,7 @@ export const RegistrationStart = () => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={t("common:auth.registration.pageTitle", { siteTitle: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
+            <TitleAndBreadcrumb currentPageTitle={t("account:auth.registration.pageTitle", { siteTitle: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
         }
         sidebar={siteSpecific(
             <SignupSidebar activeTab={0}/>,
@@ -53,7 +53,7 @@ export const RegistrationStart = () => {
                             )}
                         </div>
                         <div className="my-7">
-                            <h3 className={classNames({"h4 mb-3": isPhy})}>{t("common:auth.registration.socialSignIn.title")}</h3>
+                            <h3 className={classNames({"h4 mb-3": isPhy})}>{t("account:auth.registration.socialSignIn.title")}</h3>
                             <div className="d-flex flex-column gap-2 mb-2">
                                 {isAda && <RaspberryPiSignInButton />}
                                 <GoogleSignInButton />
@@ -62,12 +62,12 @@ export const RegistrationStart = () => {
                             {isPhy && <SsoHelpLink />}                            
                         </div>
                         <div className="my-5">
-                            <h3 className={classNames({"h4 mb-3": isPhy})}>{t("common:auth.registration.emailSection.title")}</h3>
-                            <Button block onClick={emailSignUp}>{t("common:auth.registration.emailSection.button")}</Button>
+                            <h3 className={classNames({"h4 mb-3": isPhy})}>{t("account:auth.registration.emailSection.title")}</h3>
+                            <Button block onClick={emailSignUp}>{t("account:auth.registration.emailSection.button")}</Button>
                         </div>
                         {siteSpecific(<div className="section-divider"/>, <hr/>)}
                         <div className="my-5">
-                            <h3 className={classNames({"h4 mb-3": isPhy})}>{t("common:auth.register.existingAccount")}</h3>
+                            <h3 className={classNames({"h4 mb-3": isPhy})}>{t("account:auth.register.existingAccount")}</h3>
                             <Button color={siteSpecific("solid", "keyline")} block onClick={login}>{t("common:button.logIn")}</Button>
                         </div>
                     </Col>

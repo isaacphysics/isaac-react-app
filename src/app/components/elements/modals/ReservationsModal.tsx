@@ -218,7 +218,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
 
     return <>
         <div id="reservation-modal">
-            {!event.allowGroupReservations && <p>{t("common:events.reservations.noGroupReservations")}</p>}
+            {!event.allowGroupReservations && <p>{t("events:events.reservations.noGroupReservations")}</p>}
             {event.allowGroupReservations && <Col>
                 <Row className="mb-7">
                     <Col md={3}>
@@ -226,7 +226,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                             <React.Fragment>
                                 {sortedActiveGroups && sortedActiveGroups.length > 0 && <UncontrolledButtonDropdown>
                                     <DropdownToggle caret color="primary mb-4">
-                                        {selectedGroup ? selectedGroup?.groupName : t("common:events.reservations.selectGroup")}
+                                        {selectedGroup ? selectedGroup?.groupName : t("events:events.reservations.selectGroup")}
                                     </DropdownToggle>
                                     <DropdownMenu>
                                         {sortedActiveGroups.map(group =>
@@ -243,14 +243,14 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                         </ShowLoading>
                     </Col>
                     {sortedActiveGroups && sortedActiveGroups.length === 0 && <p>
-                        <Trans i18nKey="common:events.reservations.createGroupsPrompt" components={{ groupsPageLink: <Link to="/groups" onClick={() => dispatch(closeActiveModal())} /> }} />
+                        <Trans i18nKey="events:events.reservations.createGroupsPrompt" components={{ groupsPageLink: <Link to="/groups" onClick={() => dispatch(closeActiveModal())} /> }} />
                     </p>}
                     <Col cols={12} lg={{size: 8, offset: 1}} xl={{size: 9, offset: 0}}>
                         {fetchingGroupMembers
-                            ? <div className={"w-100 text-center"}>{t("common:events.reservations.loadingMembers")} <IsaacSpinner size={"sm"} inline/></div>
+                            ? <div className={"w-100 text-center"}>{t("events:events.reservations.loadingMembers")} <IsaacSpinner size={"sm"} inline/></div>
                             : <>
-                                {!groupMembers && <p>{t("common:events.reservations.selectGroupHint")}</p>}
-                                {groupMembers && groupMembers.length === 0 && <p>{t("common:events.reservations.noMembers")}</p>}
+                                {!groupMembers && <p>{t("events:events.reservations.selectGroupHint")}</p>}
+                                {groupMembers && groupMembers.length === 0 && <p>{t("events:events.reservations.noMembers")}</p>}
                             </>
                         }
                         <>
@@ -258,7 +258,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                 <Table bordered className="bg-white reserved mb-0">
                                     <thead>
                                         <tr>
-                                            <th colSpan={4}>{t("common:events.reservations.currentReservations")}</th>
+                                            <th colSpan={4}>{t("events:events.reservations.currentReservations")}</th>
                                         </tr>
                                         <tr>
                                             <th className="align-middle checkbox">
@@ -277,7 +277,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                                 {t("common:table.bookingStatus")}
                                             </th>
                                             <th className="align-middle reserved-by">
-                                                {t("common:events.reservations.reservedBy")}
+                                                {t("events:events.reservations.reservedBy")}
                                             </th>
                                         </tr>
                                     </thead>
@@ -298,20 +298,20 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                                 </td>
                                                 <td className="align-middle">
                                                     {booking.userBooked.givenName + " " + booking.userBooked.familyName}
-                                                    {booking.userBooked.emailVerificationStatus !== 'VERIFIED' && <div className="text-danger">{t("common:events.reservations.emailNotVerified")}</div>}
+                                                    {booking.userBooked.emailVerificationStatus !== 'VERIFIED' && <div className="text-danger">{t("events:events.reservations.emailNotVerified")}</div>}
                                                 </td>
                                                 <td className="align-middle">{booking.bookingStatus && bookingStatusMap[booking.bookingStatus]}</td>
-                                                <td className="align-middle">{!booking.reservedById ? '' : (booking.reservedById === user?.id ? t("common:events.reservations.reservedByYou") : t("common:label.someoneElse"))}</td>
+                                                <td className="align-middle">{!booking.reservedById ? '' : (booking.reservedById === user?.id ? t("events:events.reservations.reservedByYou") : t("common:label.someoneElse"))}</td>
                                             </tr>);
                                         })}
-                                        {eventBookingsForGroup && eventBookingsForGroup.length === 0 && <tr><td colSpan={4}>{t("common:events.reservations.noBookings")}</td></tr>}
+                                        {eventBookingsForGroup && eventBookingsForGroup.length === 0 && <tr><td colSpan={4}>{t("events:events.reservations.noBookings")}</td></tr>}
                                     </tbody>
                                 </Table>
                             </HorizontalScroller>
 
                             <div className="text-center mb-3">
                                 <Button color="keyline" disabled={!Object.values(cancelReservationCheckboxes).some(v => v)} onClick={cancelReservations}>
-                                    {t("common:events.reservations.cancelButton")}
+                                    {t("events:events.reservations.cancelButton")}
                                 </Button>
                             </div>
                         </>
@@ -319,7 +319,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                             <Table bordered className="mt-3 bg-white unreserved">
                                 <thead>
                                     <tr>
-                                        <th colSpan={2}>{t("common:events.reservations.otherStudents")}</th>
+                                        <th colSpan={2}>{t("events:events.reservations.otherStudents")}</th>
                                     </tr>
                                     <tr>
                                         <th className="w-auto text-nowrap align-middle">
@@ -353,7 +353,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                             </td>
                                             <td className="w-100 align-middle">
                                                 {user.givenName + " " + user.familyName}
-                                                {user.emailVerificationStatus !== 'VERIFIED' && <div className="text-danger">{t("common:events.reservations.emailNotVerified")}</div>}
+                                                {user.emailVerificationStatus !== 'VERIFIED' && <div className="text-danger">{t("events:events.reservations.emailNotVerified")}</div>}
                                             </td>
                                         </tr>);
                                     })}
@@ -362,8 +362,8 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
 
                             {/* Contact details for main supervisor */}
                             <div className="mt-2 mb-3">
-                                <h2 className="h4">{t("common:events.reservations.supervisorContactTitle")}</h2>
-                                <p>{t("common:events.reservations.supervisorContactDescription")}</p>
+                                <h2 className="h4">{t("events:events.reservations.supervisorContactTitle")}</h2>
+                                <p>{t("events:events.reservations.supervisorContactDescription")}</p>
                                 <Row>
                                     <Col md={6}>
                                         <Label htmlFor="contact-name" className="form-required">
@@ -377,7 +377,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                     </Col>
                                     <Col md={6}>
                                         <Label htmlFor="contact-email" className="form-required">
-                                            {t("common:events.reservations.contactEmail")}
+                                            {t("events:events.reservations.contactEmail")}
                                         </Label>
                                         <Input
                                             id="contact-email" name="contact-email" type="text" value={groupSupervisorContactEmail}
@@ -390,9 +390,9 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
 
                             {/* Additional booking information for teachers */}
                             <div className="mt-2 mb-3">
-                                <h2 className="h4">{t("common:events.reservations.additionalInfoTitle")}</h2>
+                                <h2 className="h4">{t("events:events.reservations.additionalInfoTitle")}</h2>
                                 <p>
-                                    {t("common:events.reservations.additionalInfoDescription")}
+                                    {t("events:events.reservations.additionalInfoDescription")}
                                 </p>
                                 <Input type={"textarea"} value={additionalBookingNotes} onChange={e => setAdditionalBookingNotes(e.target.value)} />
                             </div>
@@ -400,11 +400,11 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                             <Row className="toolbar">
                                 <Col>
                                     {isReservationLimitReached() && <p className="text-danger">
-                                        {t("common:events.reservations.limitWarning", { maxReservations: event.groupReservationLimit })}
+                                        {t("events:events.reservations.limitWarning", { maxReservations: event.groupReservationLimit })}
                                     </p>}
                                     <div className="text-center">
                                         <Button color="solid" disabled={!allowedToReserve} onClick={requestReservations}>
-                                            {t("common:events.reservations.reserveButton")}
+                                            {t("events:events.reservations.reserveButton")}
                                         </Button>
                                     </div>
                                 </Col>
@@ -421,7 +421,7 @@ export const reservationsModal = ({event}: {event: AugmentedEvent}): ActiveModal
     return {
         closeAction: () => {store.dispatch(closeActiveModal());},
         size: 'xl',
-        title: i18next.t("common:events.reservations.title"),
+        title: i18next.t("events:events.reservations.title"),
         body: <ReservationsModal event={event} />,
         bodyContainerClassName: "overflow-visible",
     };

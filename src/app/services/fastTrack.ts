@@ -52,7 +52,7 @@ function backToBoard(board: string) {
 function showRelatedConceptPage(conceptPage: ApiTypes.ContentSummaryDTO) {
     return {
         type: "button",
-        title: i18next.t("common:questions.fastTrack.relatedConceptTitle"),
+        title: i18next.t("questions:questions.fastTrack.relatedConceptTitle"),
         value: "Read related concept page",
         onClick: function() {
             goToUrl(`/concepts/${conceptPage.id}`);

@@ -18,7 +18,7 @@ export const DesmosEmbedding = ({doc}: DesmosEmbeddingProps) => {
         <DesmosCookieHandler afterAcceptedElement={
             <figure>
                 <iframe
-                    title={altText || t("common:desmos.embedTitle")}
+                    title={altText || t("questions:desmos.embedTitle")}
                     src={baseURL}
                     width="100%"
                     height="500px"

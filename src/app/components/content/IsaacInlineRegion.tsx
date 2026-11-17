@@ -32,9 +32,9 @@ export const useInlineRegionPart = (pageQuestions: AppQuestionDTO[] | undefined)
     const defaultFeedback = (correctness: QuestionCorrectness) : ContentDTO => {
         const feedbackMap : {[key in QuestionCorrectness]: string} = {
             "CORRECT" : "Correct!",
-            "INCORRECT" : t("common:questions.inlineRegion.feedback.incorrect"),
-            "NOT_ANSWERED" : t("common:questions.inlineRegion.feedback.notAnswered"),
-            "NOT_SUBMITTED" : t("common:questions.inlineRegion.feedback.missingUnit"), // this is a special case for numeric questions, may need to be updated if we add more inline q types
+            "INCORRECT" : t("questions:questions.inlineRegion.feedback.incorrect"),
+            "NOT_ANSWERED" : t("questions:questions.inlineRegion.feedback.notAnswered"),
+            "NOT_SUBMITTED" : t("questions:questions.inlineRegion.feedback.missingUnit"), // this is a special case for numeric questions, may need to be updated if we add more inline q types
         };
 
         return {

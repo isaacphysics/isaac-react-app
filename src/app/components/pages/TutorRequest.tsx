@@ -79,7 +79,7 @@ export const TutorRequest = () => {
     }, [user]);
 
     return <Container id="contact-page" className="pb-7">
-        <TitleAndBreadcrumb currentPageTitle={t("common:account.tutorRequest.title")} icon={{type: "icon", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb currentPageTitle={t("account:account.tutorRequest.title")} icon={{type: "icon", icon: "icon-account"}}/>
         <div className="pt-4">
             <Row>
                 <Col size={9}>
@@ -91,7 +91,7 @@ export const TutorRequest = () => {
                             <Row>
                                 <Col className="text-center pt-3">
                                     <span className="h3 mb-3 d-inline-block">
-                                        {t("common:account.tutorRequest.alreadyTutor")}
+                                        {t("account:account.tutorRequest.alreadyTutor")}
                                     </span>
                                     {isPhy && <p className="mb-2">
                                         <Trans i18nKey="sci:account.tutorRequest.tutorFeaturesLink" components={{ tutorFeaturesLink: <Link to="/tutor_features" /> }} />
@@ -103,7 +103,7 @@ export const TutorRequest = () => {
                             <Row>
                                 <Col className="text-center">
                                     <p className="mt-3">
-                                        {t("common:account.tutorRequest.submittedThanks")}
+                                        {t("account:account.tutorRequest.submittedThanks")}
                                     </p>
                                     <p>
                                         {t("common:label.accountVerificationNote")}
@@ -118,7 +118,7 @@ export const TutorRequest = () => {
                             }}>
                                 <CardBody>
                                     <p>
-                                        <Trans i18nKey="common:account.tutorRequest.formIntro" components={{ accountLink: <Link to="/account" /> }} values={{ siteTitle: t("common:account.tutorRequest.formInstruction", { siteTitle: SITE_TITLE }) }} />
+                                        <Trans i18nKey="account:account.tutorRequest.formIntro" components={{ accountLink: <Link to="/account" /> }} values={{ siteTitle: t("account:account.tutorRequest.formInstruction", { siteTitle: SITE_TITLE }) }} />
                                     </p>
                                     <Row>
                                         <Col size={12} md={6}>
@@ -167,7 +167,7 @@ export const TutorRequest = () => {
                                         <Col size={12}>
                                             <FormGroup className="form-group">
                                                 <Label htmlFor="other-info-input" className="form-required">
-                                                    {t("common:account.tutorRequest.reasonLabel")}
+                                                    {t("account:account.tutorRequest.reasonLabel")}
                                                 </Label>
                                                 <Input id="other-info-input" type="textarea" name="other-info" required
                                                     onChange={e => setReason(e.target.value)}/>
@@ -189,7 +189,7 @@ export const TutorRequest = () => {
                                 <CardFooter>
                                     <div>
                                         <Alert color="danger" isOpen={!!errorMessage}><><Trans
-                                            i18nKey="common:account.tutorRequest.errorContact"
+                                            i18nKey="account:account.tutorRequest.errorContact"
                                             components={{
                                                 emailLink: <TransAnchor href={`mailto:${WEBMASTER_EMAIL}`} />,
                                             }}

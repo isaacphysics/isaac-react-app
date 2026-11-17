@@ -46,14 +46,14 @@ export const AddUsersToBooking = ({event, eventBookingUserIds}: AddUsersToBookin
         }));
     }, [setQueryParams]);
 
-    return <Accordion id="add-users-to-booking" trustedTitle={t("common:events.addUsers.title")} disabled={event?.isCancelled && t("common:events.addUsers.disabledMessage")}>
+    return <Accordion id="add-users-to-booking" trustedTitle={t("events:events.addUsers.title")} disabled={event?.isCancelled && t("events:events.addUsers.disabledMessage")}>
         <Form onSubmit={userSearch}>
             <Row>
                 <Col md={6}>
                     <div className="mb-3">
                         <Label htmlFor="user-search-familyName">{t("common:label.findUserByFamilyName")}</Label>
                         <Input
-                            id="user-search-familyName" type="text" placeholder={t("common:events.addUsers.searchFamilyNamePlaceholder")} value={queryParams.familyName || ""}
+                            id="user-search-familyName" type="text" placeholder={t("events:events.addUsers.searchFamilyNamePlaceholder")} value={queryParams.familyName || ""}
                             onChange={e => setParamIfNotDefault("familyName", e.target.value, "")}
                         />
                     </div>
@@ -62,7 +62,7 @@ export const AddUsersToBooking = ({event, eventBookingUserIds}: AddUsersToBookin
                     <div className="mb-3">
                         <Label htmlFor="user-search-email">{t("common:label.findUserByEmail")}</Label>
                         <Input
-                            id="user-search-email" type="text" placeholder={t("common:events.addUsers.searchEmailPlaceholder")} value={queryParams.email || ""}
+                            id="user-search-email" type="text" placeholder={t("events:events.addUsers.searchEmailPlaceholder")} value={queryParams.email || ""}
                             onChange={e => setParamIfNotDefault("email", e.target.value, "")}
                         />
                     </div>
@@ -74,7 +74,7 @@ export const AddUsersToBooking = ({event, eventBookingUserIds}: AddUsersToBookin
                             type="select" id="user-search-role" value={queryParams.role || "NO_ROLE"}
                             onChange={e => setParamIfNotDefault("role", e.target.value, "NO_ROLE")}
                         >
-                            <option value="NO_ROLE">{t("common:events.addUsers.roleAny")}</option>
+                            <option value="NO_ROLE">{t("events:events.addUsers.roleAny")}</option>
                             <option value="TUTOR">{t("common:role.tutor")}</option>
                             <option value="TEACHER">{t("common:role.teacher")}</option>
                             <option value="CONTENT_EDITOR">{t("common:role.contentEditor")}</option>
@@ -85,7 +85,7 @@ export const AddUsersToBooking = ({event, eventBookingUserIds}: AddUsersToBookin
             </Row>
             <Row>
                 <Col>
-                    <Button type="submit" color="secondary" className="w-100 my-2">{t("common:events.addUsers.searchButton")}</Button>
+                    <Button type="submit" color="secondary" className="w-100 my-2">{t("events:events.addUsers.searchButton")}</Button>
                 </Col>
             </Row>
         </Form>
@@ -100,7 +100,7 @@ export const AddUsersToBooking = ({event, eventBookingUserIds}: AddUsersToBookin
                         <th className="align-middle">{t("common:table.name")}</th>
                         <th className="align-middle">{t("common:table.email")}</th>
                         <th className="align-middle">{t("common:table.role")}</th>
-                        <th className="align-middle">{t("common:events.addUsers.tableHeaderSchoolSet")}</th>
+                        <th className="align-middle">{t("events:events.addUsers.tableHeaderSchoolSet")}</th>
                         <th className="align-middle">{t("common:table.memberSince")}</th>
                         <th className="align-middle">{t("common:table.lastSeen")}</th>
                     </tr>
@@ -113,12 +113,12 @@ export const AddUsersToBooking = ({event, eventBookingUserIds}: AddUsersToBookin
                                 {formatManageBookingActionButtonMessage(event)}
                             </Button>
                             }
-                            {eventBookingUserIds.includes(result.id as number) && <div className="text-center">{t("common:events.addUsers.bookingExists")}</div>}
+                            {eventBookingUserIds.includes(result.id as number) && <div className="text-center">{t("events:events.addUsers.bookingExists")}</div>}
                         </td>
                         <td className="align-middle">{result.familyName}, {result.givenName}</td>
                         <td className="align-middle">{result.email}</td>
                         <td className="align-middle">{result.role}</td>
-                        <td className="align-middle">{result.schoolId != null ? t("common:status.yes") : result.schoolOther != null ? t("common:events.addUsers.schoolSetOther") : t("common:events.addUsers.schoolSetNone")}</td>
+                        <td className="align-middle">{result.schoolId != null ? t("common:status.yes") : result.schoolOther != null ? t("events:events.addUsers.schoolSetOther") : t("events:events.addUsers.schoolSetNone")}</td>
                         <td className="align-middle"><DateString>{result.registrationDate}</DateString></td>
                         <td className="align-middle"><DateString>{result.lastSeen}</DateString></td>
                     </tr>)}
@@ -127,7 +127,7 @@ export const AddUsersToBooking = ({event, eventBookingUserIds}: AddUsersToBookin
         </div>}
 
         {searchRequested && userSearchResults && zeroOrLess(userSearchResults.length) && <div className="text-center">
-            <strong>{t("common:events.addUsers.noResults")}</strong>
+            <strong>{t("events:events.addUsers.noResults")}</strong>
         </div>}
     </Accordion>;
 };

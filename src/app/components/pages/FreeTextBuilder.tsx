@@ -146,7 +146,7 @@ export const FreeTextBuilder = () => {
     const atLeastOneQuestionChoiceAndTestCase = atLeastOne(cleanQuestionChoices.length) && atLeastOne(cleanTestCases.length);
 
     return <Container>
-        <TitleAndBreadcrumb className="mb-4" currentPageTitle={t("common:freeTextBuilder.title")} icon={{type: "icon", icon: "icon-concept"}} />
+        <TitleAndBreadcrumb className="mb-4" currentPageTitle={t("questions:freeTextBuilder.title")} icon={{type: "icon", icon: "icon-concept"}} />
         <Form onSubmit={(event: React.FormEvent) => {
             if (event) {event.preventDefault();}
             if (atLeastOneQuestionChoiceAndTestCase) {
@@ -156,11 +156,11 @@ export const FreeTextBuilder = () => {
         }}>
             <Card className="mb-4">
                 <CardBody>
-                    <h2 className="h3">{t("common:freeTextBuilder.matchingRules.title")}</h2>
+                    <h2 className="h3">{t("questions:freeTextBuilder.matchingRules.title")}</h2>
                     <Tabs className="d-flex flex-column-reverse" tabTitleClass="px-3">
                         {{
                             'GUI': <Table className="mb-3">
-                                <thead><tr><th>{t("common:freeTextBuilder.matchingRules.table.ruleColumn")}</th><th colSpan={3}>{t("common:freeTextBuilder.matchingRules.table.responseColumn")}</th></tr></thead>
+                                <thead><tr><th>{t("questions:freeTextBuilder.matchingRules.table.ruleColumn")}</th><th colSpan={3}>{t("questions:freeTextBuilder.matchingRules.table.responseColumn")}</th></tr></thead>
                                 <tbody>
                                     {questionChoices.map(choice => <tr key={choice.choiceNumber}>
                                         <td>
@@ -178,19 +178,19 @@ export const FreeTextBuilder = () => {
                                                 <div className="text-start">
                                                     <Table>
                                                         <thead>
-                                                            <tr><th className="text-light" colSpan={2}>{t("common:freeTextBuilder.matchingRules.tooltip.wildcardsTitle")}</th></tr>
+                                                            <tr><th className="text-light" colSpan={2}>{t("questions:freeTextBuilder.matchingRules.tooltip.wildcardsTitle")}</th></tr>
                                                         </thead>
                                                         <tr>
                                                             <td><strong><code className="text-dark">|</code></strong></td>
-                                                            <td className="text-light">{t("common:freeTextBuilder.matchingRules.tooltip.orList")}</td>
+                                                            <td className="text-light">{t("questions:freeTextBuilder.matchingRules.tooltip.orList")}</td>
                                                         </tr>
                                                         <tr>
                                                             <td><strong><code className="text-dark">.</code></strong></td>
-                                                            <td className="text-light">{t("common:freeTextBuilder.matchingRules.tooltip.singleChar")}</td>
+                                                            <td className="text-light">{t("questions:freeTextBuilder.matchingRules.tooltip.singleChar")}</td>
                                                         </tr>
                                                         <tr>
                                                             <td><strong><code className="text-dark">*</code></strong></td>
-                                                            <td className="text-light">{t("common:freeTextBuilder.matchingRules.tooltip.multiChar")}</td>
+                                                            <td className="text-light">{t("questions:freeTextBuilder.matchingRules.tooltip.multiChar")}</td>
                                                         </tr>
                                                     </Table>
                                                 </div>
@@ -198,22 +198,22 @@ export const FreeTextBuilder = () => {
                                             <Row>
                                                 <Col xs={3} className="text-center">
                                                     <Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, caseInsensitive: !c.caseInsensitive} : c))}>
-                                                        <Label>{t("common:freeTextBuilder.matchingRules.table.ignoreCase", { checkmark: checkMark(choice.caseInsensitive) })}</Label>
+                                                        <Label>{t("questions:freeTextBuilder.matchingRules.table.ignoreCase", { checkmark: checkMark(choice.caseInsensitive) })}</Label>
                                                     </Button>
                                                 </Col>
                                                 <Col xs={3} className="text-center">
                                                     <Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, allowsAnyOrder: !c.allowsAnyOrder} : c))}>
-                                                        <Label>{t("common:freeTextBuilder.matchingRules.table.anyOrder", { checkmark: checkMark(choice.allowsAnyOrder) })}</Label>
+                                                        <Label>{t("questions:freeTextBuilder.matchingRules.table.anyOrder", { checkmark: checkMark(choice.allowsAnyOrder) })}</Label>
                                                     </Button>
                                                 </Col>
                                                 <Col xs={3} className="text-center">
                                                     <Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, allowsExtraWords: !c.allowsExtraWords} : c))}>
-                                                        <Label>{t("common:freeTextBuilder.matchingRules.table.extraWords", { checkmark: checkMark(choice.allowsExtraWords) })}</Label>
+                                                        <Label>{t("questions:freeTextBuilder.matchingRules.table.extraWords", { checkmark: checkMark(choice.allowsExtraWords) })}</Label>
                                                     </Button>
                                                 </Col>
                                                 <Col xs={3} className="text-center">
                                                     <Button color="link" onClick={() => setQuestionChoices(questionChoices.map(c => choice == c ? {...c, allowsMisspelling: !c.allowsMisspelling} : c))}>
-                                                        <Label>{t("common:freeTextBuilder.matchingRules.table.misspelling", { checkmark: checkMark(choice.allowsMisspelling) })}</Label>
+                                                        <Label>{t("questions:freeTextBuilder.matchingRules.table.misspelling", { checkmark: checkMark(choice.allowsMisspelling) })}</Label>
                                                     </Button>
                                                 </Col>
                                             </Row>
@@ -225,7 +225,7 @@ export const FreeTextBuilder = () => {
                                         </td>
                                         <td>
                                             <Label>
-                                                {t("common:freeTextBuilder.matchingRules.table.feedbackLabel")}
+                                                {t("questions:freeTextBuilder.matchingRules.table.feedbackLabel")}
                                                 {isEditableExplanation(choice.explanation) ?
                                                     <Input
                                                         type="textarea" value={(choice.explanation as any).children[0].value}
@@ -259,7 +259,7 @@ export const FreeTextBuilder = () => {
                                 </tfoot>
                             </Table>,
                             "JSON": <div className="mb-3">
-                                <p><Trans i18nKey="common:freeTextBuilder.matchingRules.json.description" components={{ strong: <strong /> }} /></p>
+                                <p><Trans i18nKey="questions:freeTextBuilder.matchingRules.json.description" components={{ strong: <strong /> }} /></p>
                                 <Input
                                     type="textarea" rows={25} className={jsonParseError ? "alert-danger" : ""}
                                     value={questionChoicesJson}
@@ -289,17 +289,17 @@ export const FreeTextBuilder = () => {
 
             <Card className="mb-4">
                 <CardBody>
-                    <h2 className="h3">{t("common:freeTextBuilder.testCases.title", { matchCount: numberOfResponseMatches, totalCount: testCases.length })}</h2>
+                    <h2 className="h3">{t("questions:freeTextBuilder.testCases.title", { matchCount: numberOfResponseMatches, totalCount: testCases.length })}</h2>
                     <Tabs className="d-flex flex-column-reverse" tabTitleClass="px-3">
                         {{
                             'GUI': <Table className="mb-2">
                                 <thead>
                                     <tr>
-                                        <th className="w-10 text-center">{t("common:freeTextBuilder.testCases.table.expectedColumn")}</th>
+                                        <th className="w-10 text-center">{t("questions:freeTextBuilder.testCases.table.expectedColumn")}</th>
                                         <th>{t("common:label.value")}</th>
-                                        <th className="bg-light w-10 text-center">{t("common:freeTextBuilder.testCases.table.actualColumn")}</th>
-                                        <th className="bg-light w-20">{t("common:freeTextBuilder.testCases.table.feedbackColumn")}</th>
-                                        <th className="bg-light w-10 text-center">{t("common:freeTextBuilder.testCases.table.matchColumn")}</th>
+                                        <th className="bg-light w-10 text-center">{t("questions:freeTextBuilder.testCases.table.actualColumn")}</th>
+                                        <th className="bg-light w-20">{t("questions:freeTextBuilder.testCases.table.feedbackColumn")}</th>
+                                        <th className="bg-light w-10 text-center">{t("questions:freeTextBuilder.testCases.table.matchColumn")}</th>
                                         <th className="bg-light"/>
                                     </tr>
                                 </thead>
@@ -353,7 +353,7 @@ export const FreeTextBuilder = () => {
                                 </tfoot>
                             </Table>,
                             'CSV': <div className="mb-3">
-                                <p>{t("common:freeTextBuilder.testCases.csv.description")}</p>
+                                <p>{t("questions:freeTextBuilder.testCases.csv.description")}</p>
                                 <Input type="textarea" rows={10} value={testCasesCsv} onChange={event => {
                                     setCsvParseError(false);
                                     setTestCasesCsv(event.target.value);
@@ -379,7 +379,7 @@ export const FreeTextBuilder = () => {
             </Card>
 
             <div className="mb-7 text-center">
-                <Button type="submit" color="secondary" className={siteSpecific("btn-xl", "form-control border-0")}>{t("common:freeTextBuilder.submitButton")}</Button>
+                <Button type="submit" color="secondary" className={siteSpecific("btn-xl", "form-control border-0")}>{t("questions:freeTextBuilder.submitButton")}</Button>
             </div>
         </Form>
     </Container>;

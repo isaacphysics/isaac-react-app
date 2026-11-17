@@ -11,13 +11,13 @@ export const RaspberryPiSignInButton = ({isSignup, knownRole, concise}: {isSignu
     const logInWithRaspberryPi = () => dispatch(handleProviderLoginRedirect("RASPBERRYPI", isSignup, knownRole));
 
     return <button className="d-flex w-100 align-items-center linked-account-button-outer bg-white mb-1 p-3" onClick={logInWithRaspberryPi}>
-        <img className="authenticator-logo" src={"/assets/common/logos/raspberry-pi.png"} alt={t("common:auth.raspberryPi.logoAlt")}/>
+        <img className="authenticator-logo" src={"/assets/common/logos/raspberry-pi.png"} alt={t("account:auth.raspberryPi.logoAlt")}/>
         {
             concise ?
                 <div className={"d-inline"}>{t("common:label.raspberryPi")}</div> :
                 <div className={"d-inline"}>
                     <div className={"d-inline d-md-none"}>{t("common:label.raspberryPi")}</div>
-                    <div className={"d-none d-md-inline"}>{t("common:auth.raspberryPi.fullLabelDesktop")}</div>
+                    <div className={"d-none d-md-inline"}>{t("account:auth.raspberryPi.fullLabelDesktop")}</div>
                 </div>
         }
         <Spacer />

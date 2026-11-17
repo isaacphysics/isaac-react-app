@@ -18,7 +18,7 @@ export const RegistrationAgeCheckFailed = () => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={t("common:auth.registration.pageTitle", { siteTitle: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
+            <TitleAndBreadcrumb currentPageTitle={t("account:auth.registration.pageTitle", { siteTitle: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
         }
         sidebar={siteSpecific(
             <SignupSidebar activeTab={1}/>,
@@ -27,8 +27,8 @@ export const RegistrationAgeCheckFailed = () => {
     >
         <Card className="my-7">
             <CardBody>
-                <h2 className="h3">{t("common:auth.ageCheckFailed.heading")}</h2>
-                <p>{t("common:auth.ageCheckFailed.restrictionMessage", { minAge: SITE_LOWER_AGE_LIMIT })}</p>
+                <h2 className="h3">{t("account:auth.ageCheckFailed.heading")}</h2>
+                <p>{t("account:auth.ageCheckFailed.restrictionMessage", { minAge: SITE_LOWER_AGE_LIMIT })}</p>
                 <p>{siteSpecific(
                     <><Trans i18nKey="sci:auth.ageCheckFailed.freeAccessNote" components={{ b: <b /> }} /></>,
                     <><Trans i18nKey="ada:auth.ageCheckFailed.freeAccessNote" components={{ b: <b /> }} /></>

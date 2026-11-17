@@ -14,7 +14,7 @@ export const ConfirmAccountDeletionRequestModal = (confirmAccountDeletionRequest
                 {i18next.t("common:button.cancel")}
             </Button>,
             <Button key={0} block color="solid" onClick={() => {confirmAccountDeletionRequest();}}>
-                {i18next.t("common:account.deletion.confirmButton")}
+                {i18next.t("account:account.deletion.confirmButton")}
             </Button>,
         ]
     };

@@ -26,7 +26,7 @@ function DefaultOptions({isVisible, toggle, doc}: OptionsProps) {
     return <Row>
         <Col sm={12} md={siteSpecific({size: 10, offset: 1}, {size: 12})}>
             <Button color="secondary" block className={classNames({"active": isVisible})} onClick={toggle} id={`toggle-${elemID(doc)}`}>
-                {isVisible ? t("common:questions.quickQuestion.hideAnswerButton") : t("common:questions.quickQuestion.showAnswerButton")}
+                {isVisible ? t("questions:questions.quickQuestion.hideAnswerButton") : t("questions:questions.quickQuestion.showAnswerButton")}
             </Button>
         </Col>
     </Row>;
@@ -44,7 +44,7 @@ function FastTrackOptions({isVisible, toggle, doc, fastTrackInfo}: OptionsProps)
         </div>}
         <div className={"m-auto pt-3 pb-1 w-100 w-sm-50 w-md-100 w-lg-50 ps-sm-2 ps-md-0 ps-lg-3"}>
             <Button color="solid" block className={classNames({"active": isVisible})} onClick={toggle} id={`toggle-${elemID(doc)}`}>
-                {isVisible ? t("common:questions.quickQuestion.hideAnswerButton") : t("common:questions.quickQuestion.showAnswerButton")}
+                {isVisible ? t("questions:questions.quickQuestion.hideAnswerButton") : t("questions:questions.quickQuestion.showAnswerButton")}
             </Button>
         </div>
     </div>;
@@ -73,7 +73,7 @@ function ConfidenceOptions({isVisible, setVisible, doc, fastTrackInfo}: OptionsP
         {isVisible && <Row className="mt-3 no-print">
             <Col sm={12} md={!fastTrackInfo.isFastTrackPage ? siteSpecific({size: 10, offset: 1}, {size: 12}) : {}}>
                 <Button color="secondary" type={"button"} block className={classNames("active", {"hide-answer": isAda})} onClick={hideAnswer} id={`toggle-${elemID(doc)}`}>
-                    {t("common:questions.quickQuestion.hideAnswerButton")}
+                    {t("questions:questions.quickQuestion.hideAnswerButton")}
                 </Button>
             </Col>
         </Row>}

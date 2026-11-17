@@ -13,9 +13,9 @@ export const SelectedEventDetails = ({event}: SelectedEventDetailsProps) => {
     const { t } = useTranslation();
     return <Card>
         <CardBody>
-            <div className="h-subtitle mb-1 h3">{t("common:events.selectedDetails.title")}</div>
+            <div className="h-subtitle mb-1 h3">{t("events:events.selectedDetails.title")}</div>
             <p className="m-0">
-                <strong>{t("common:events.selectedDetails.eventLabel")} </strong>
+                <strong>{t("events:events.selectedDetails.eventLabel")} </strong>
                 <Link to={`/events/${event.id}`} target="_blank">
                     {event.title} {event.subtitle}
                 </Link>
@@ -31,11 +31,11 @@ export const SelectedEventDetails = ({event}: SelectedEventDetailsProps) => {
                     </>
                 }
 
-                <strong>{t("common:events.selectedDetails.statusLabel")} </strong>
+                <strong>{t("events:events.selectedDetails.statusLabel")} </strong>
                 <span className={event.isCancelled ? "text-danger fw-bold" : ""}>{event.eventStatus}</span>
                 <br />
 
-                <strong>{t("common:events.selectedDetails.startDateLabel")} </strong>
+                <strong>{t("events:events.selectedDetails.startDateLabel")} </strong>
                 <DateString>{event.date}</DateString> - <DateString>{event.endDate}</DateString>
                 <br />
 
@@ -43,7 +43,7 @@ export const SelectedEventDetails = ({event}: SelectedEventDetailsProps) => {
                 <DateString>{event.bookingDeadline}</DateString>
                 <br />
 
-                <strong>{t("common:events.selectedDetails.prepWorkDeadlineLabel")} </strong>
+                <strong>{t("events:events.selectedDetails.prepWorkDeadlineLabel")} </strong>
                 <DateString>{event.prepWorkDeadline}</DateString>
                 <br />
 
@@ -53,7 +53,7 @@ export const SelectedEventDetails = ({event}: SelectedEventDetailsProps) => {
                 {/*<br />*/}
 
                 <span className={zeroOrLess(event.placesAvailable) ? "text-danger" : ""}>
-                    <strong>{t("common:events.selectedDetails.placesAvailableLabel")} </strong>
+                    <strong>{t("events:events.selectedDetails.placesAvailableLabel")} </strong>
                     {event.placesAvailable} / {event.numberOfPlaces}
                 </span>
             </p>

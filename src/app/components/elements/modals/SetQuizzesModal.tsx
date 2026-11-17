@@ -141,7 +141,7 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
                             .sort((a, b) => a.label.localeCompare(b.label));
 
                         return <div className={classNames({"is-invalid": validationAttempted && groupInvalid})}>
-                            <StyledSelect isMulti placeholder={t("common:tests.setQuiz.groupPlaceholder")}
+                            <StyledSelect isMulti placeholder={t("teaching:tests.setQuiz.groupPlaceholder")}
                                 value={selectedGroups}
                                 closeMenuOnSelect={false}
                                 onChange={selectOnChange(setSelectedGroups, false)}
@@ -164,7 +164,7 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
 
         <FormGroup>
             <Label className="w-100">
-                <span className="form-required">{t("common:tests.setQuiz.feedbackLabel")}</span>
+                <span className="form-required">{t("teaching:tests.setQuiz.feedbackLabel")}</span>
                 <div className={classNames({"is-invalid": validationAttempted && feedbackModeInvalid})}>
                     <StyledSelect
                         value={feedbackMode && feedbackOptionsMap[feedbackMode]}
@@ -177,7 +177,7 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
                         options={feedbackOptionsList}
                     />
                 </div>
-                <FormFeedback>{t("common:tests.setQuiz.feedbackRequired")}</FormFeedback>
+                <FormFeedback>{t("teaching:tests.setQuiz.feedbackRequired")}</FormFeedback>
             </Label>
         </FormGroup>
 
@@ -194,9 +194,9 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
                     onChange={setScheduledStartDateAtSevenAM}
                 />
                 <UncontrolledTooltip placement="top" autohide={false} target={scheduledQuizHelpTooltipId}>
-                    <Trans i18nKey="common:tests.setQuiz.startDateHelp" components={{ br: <br /> }} />
+                    <Trans i18nKey="teaching:tests.setQuiz.startDateHelp" components={{ br: <br /> }} />
                 </UncontrolledTooltip>
-                <FormFeedback>{t("common:tests.setQuiz.startDateError")}</FormFeedback>
+                <FormFeedback>{t("teaching:tests.setQuiz.startDateError")}</FormFeedback>
             </Label>
         </FormGroup>
 
@@ -211,10 +211,10 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
                 />
                 <FormFeedback>
                     {!isDefined(dueDate) 
-                        ? t("common:tests.setQuiz.dueDateSelect")
+                        ? t("teaching:tests.setQuiz.dueDateSelect")
                         : dueDate.valueOf() > TODAY().valueOf() 
-                            ? t("common:tests.setQuiz.dueDateAfterStart") 
-                            : t("common:tests.setQuiz.dueDateAfterToday")}
+                            ? t("teaching:tests.setQuiz.dueDateAfterStart") 
+                            : t("teaching:tests.setQuiz.dueDateAfterToday")}
                 </FormFeedback>
             </Label>
         </FormGroup>
@@ -223,7 +223,7 @@ function SetQuizzesModalContent({quiz, dueDate: initialDueDate, scheduledStartDa
                 id="completion-notifications-check"
                 checked={completionNotifications}
                 onChange={e => setCompletionNotifications(e.target.checked)}
-                label={<span>{t("common:tests.setQuiz.completionEmail")}</span>}
+                label={<span>{t("teaching:tests.setQuiz.completionEmail")}</span>}
             />
         </FormGroup>}
 
@@ -251,7 +251,7 @@ export const SetQuizzesModal = (props: SetQuizzesModalProps): ActiveModalProps =
     const {quiz} = props;
 
     return {
-        title: i18next.t("common:tests.setQuiz.title", { testTitle: quiz.title ?? quiz.id }),
+        title: i18next.t("teaching:tests.setQuiz.title", { testTitle: quiz.title ?? quiz.id }),
         body: <SetQuizzesModalContent {...props}/>
     };
 };

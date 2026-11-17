@@ -76,7 +76,7 @@ const GeogebraPlainElement = (props: GeogebraPlainElementProps) => {
     return <>
         {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */ /* the button maintains accessibility */}
         {isInert && <div className="geogebra-embedding-wrapper" onClick={() => setIsInert(false)}>
-            <Button color="primary" onClick={() => setIsInert(false)}>{t("common:geogebra.openContent")}</Button>
+            <Button color="primary" onClick={() => setIsInert(false)}>{t("questions:geogebra.openContent")}</Button>
         </div>}
         <div id={"ggb-element-" + uuid} {...{ inert: isInert ? '' : undefined }} />
     </>;

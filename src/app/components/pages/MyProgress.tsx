@@ -106,7 +106,7 @@ const MyProgress = ({user}: MyProgressProps) => {
     const progress = (!viewingOwnData && isTeacherOrAbove(user)) ? userProgress : myProgress;
 
     const userName = `${progress?.userDetails?.givenName || ""}${progress?.userDetails?.givenName ? " " : ""}${progress?.userDetails?.familyName || ""}`;
-    const pageTitle = viewingOwnData ? t("site:progress.pageTitle") : t("common:progress.otherUserTitle", { userName: userName || "user" });
+    const pageTitle = viewingOwnData ? t("site:progress.pageTitle") : t("teaching:progress.otherUserTitle", { userName: userName || "user" });
 
     return <PageContainer id="my-progress"
         pageTitle={
@@ -147,7 +147,7 @@ const MyProgress = ({user}: MyProgressProps) => {
                     </Card>
 
                     <div className="mt-4">
-                        <h2 className="h4">{t("common:progress.questionPartsTitle")}</h2>
+                        <h2 className="h4">{t("teaching:progress.questionPartsTitle")}</h2>
                         <Row className="d-flex justify-content-center">
                             {siteSpecificStats.questionTypeStatsList.map((qType: string) => {
                                 const groupedTypes = PROGRESS_QUESTION_TYPE_MAP[qType] || [qType];
@@ -156,11 +156,11 @@ const MyProgress = ({user}: MyProgressProps) => {
                                 const percentage = safePercentage(correct, attempts);
                                 return <Col key={qType} lg={4} className="mt-2 type-progress-bar">
                                     <div className={"p-2"}>
-                                        {t("common:progress.questionTypeLabel", { questionType: HUMAN_QUESTION_TYPES[qType] })}
+                                        {t("teaching:progress.questionTypeLabel", { questionType: HUMAN_QUESTION_TYPES[qType] })}
                                     </div>
                                     <div className={"px-2"}>
                                         <ProgressBar percentage={percentage || 0}>
-                                            {percentage == null ? t("common:progress.noneAttempted") : t("common:progress.correctOfAttempts", { correct, attempts })}
+                                            {percentage == null ? t("teaching:progress.noneAttempted") : t("teaching:progress.correctOfAttempts", { correct, attempts })}
                                         </ProgressBar>
                                     </div>
                                 </Col>;
@@ -207,7 +207,7 @@ const MyProgress = ({user}: MyProgressProps) => {
 
                     <Row id="progress-questions">
                         {progress?.mostRecentQuestions && progress?.mostRecentQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
-                            <h2 className="h4">{t("common:progress.mostRecentTitle")}</h2>
+                            <h2 className="h4">{t("teaching:progress.mostRecentTitle")}</h2>
                             <ListView 
                                 type="item" 
                                 items={progress.mostRecentQuestions} 
@@ -216,7 +216,7 @@ const MyProgress = ({user}: MyProgressProps) => {
                             />
                         </Col>}
                         {progress?.oldestIncompleteQuestions && progress?.oldestIncompleteQuestions.length > 0 && <Col md={12} lg={6} className="mt-4">
-                            <h2 className="h4">{t("common:progress.oldestUnsolvedTitle")}</h2>
+                            <h2 className="h4">{t("teaching:progress.oldestUnsolvedTitle")}</h2>
                             <ListView 
                                 type="item" 
                                 items={progress.oldestIncompleteQuestions}
@@ -235,7 +235,7 @@ const QuestionAndSkillsAttemptsOverTime = ({viewingOwnData, user, userIdOfIntere
     const { t } = useTranslation();
     return <Card className="mt-4 attempts-min-height">
         <CardBody className='h-100 d-flex flex-column'>
-            <h2 className="h4">{t("common:progress.attemptsOverTime")}</h2>
+            <h2 className="h4">{t("teaching:progress.attemptsOverTime")}</h2>
             <div className='flex-grow-1 d-flex flex-column'>
                 <Tabs style="tabs" tabContentClass='mt-4' renderHiddenTabs={false}>
                     {{
@@ -263,7 +263,7 @@ const SkillsAttemptsOverTime = ({ viewingOwnData, user, userIdOfInterest }: User
         <Col md={9} className="d-flex align-items-center order-1 order-md-0 graph-min-height">
             <ShowLoadingQuery 
                 query={query}
-                defaultErrorTitle={t("common:progress.skillsAttemptsError")}
+                defaultErrorTitle={t("teaching:progress.skillsAttemptsError")}
                 thenRender={(data) => {
                     return <ActivityGraph
                         id="skills-attempts"
@@ -272,7 +272,7 @@ const SkillsAttemptsOverTime = ({ viewingOwnData, user, userIdOfInterest }: User
                         emptyText={<span>
                             <br/>
                             <Trans
-                                i18nKey="common:progress.mentalMathsEmptyState"
+                                i18nKey="teaching:progress.mentalMathsEmptyState"
                                 components={{
                                     mentalMathsLink: <TransAnchor href='/pages/app_page_mental_maths_overall' target='blank' />,
                                 }}

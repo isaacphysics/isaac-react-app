@@ -21,7 +21,7 @@ export function showEmailChangeModal(dispatch: AppDispatch): Promise<boolean> {
         };
 
         dispatch(openActiveModal({
-            title: i18next.t("common:account.emailChange.title"),
+            title: i18next.t("account:account.emailChange.title"),
             body: <EmailChangeModal proceed={proceed} cancel={cancel} />
         }));
     });
@@ -33,9 +33,9 @@ export const EmailChangeModal = (props: EmailChangeModalProps) => {
 
     return <div>
         <p>
-            {t("common:account.emailChange.explanation")}
+            {t("account:account.emailChange.explanation")}
         </p>
-        <p> {t("common:account.emailChange.confirmQuestion")} </p>
+        <p> {t("account:account.emailChange.confirmQuestion")} </p>
         <div className="w-100">
             <Button
                 className={"float-start mb-4"}

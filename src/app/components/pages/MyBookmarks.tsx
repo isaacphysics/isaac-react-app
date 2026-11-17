@@ -40,10 +40,10 @@ export const MyBookmarks = () => {
 
         <ShowLoadingQuery
             query={bookmarksQuery} 
-            defaultErrorTitle={t("common:bookmarks.loadError.message")}
+            defaultErrorTitle={t("questions:bookmarks.loadError.message")}
             thenRender={(bookmarks) => {
                 if (bookmarks.length === 0) {
-                    return <span>{t("common:bookmarks.emptyState.message")}</span>;
+                    return <span>{t("questions:bookmarks.emptyState.message")}</span>;
                 }
 
                 const filteredBookmarks = bookmarks.filter(bookmark => {

@@ -14,9 +14,9 @@ import { TransAnchor } from "../TransAnchor";
 export const tokenVerificationModal = (userId: number, authToken: string, usersToGrantAccess: UserSummaryWithEmailAddressDTO[]) => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal());},
-        title: i18next.t("common:account.sharingData.title"),
+        title: i18next.t("account:account.sharingData.title"),
         body: <React.Fragment>
-            <p>{i18next.t("common:account.sharingData.confirmBody", { siteName: SITE_TITLE_SHORT })}</p>
+            <p>{i18next.t("account:account.sharingData.confirmBody", { siteName: SITE_TITLE_SHORT })}</p>
             <Table bordered>
                 <tbody>
                     {usersToGrantAccess.map((member) => (<tr key={member.id}>
@@ -39,12 +39,12 @@ export const tokenVerificationModal = (userId: number, authToken: string, usersT
 
             <p>
                 <small>
-                    <Trans i18nKey="common:account.sharingData.rememberNote" components={{ strong: <strong /> }} />
+                    <Trans i18nKey="account:account.sharingData.rememberNote" components={{ strong: <strong /> }} />
                 </small>
                 <br />
                 <small>
                     <Trans
-                        i18nKey="common:account.sharingData.privacyNote"
+                        i18nKey="account:account.sharingData.privacyNote"
                         components={{
                             privacyPolicyLink: <TransAnchor href="/privacy" target="_blank" />,
                         }}
@@ -69,10 +69,10 @@ export const tokenVerificationModal = (userId: number, authToken: string, usersT
 export const revocationConfirmationModal = (userId: number, userToRevoke: UserSummaryWithEmailAddressDTO) => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal());},
-        title: i18next.t("common:account.revokeAccess.title"),
+        title: i18next.t("account:account.revokeAccess.title"),
         body: <React.Fragment>
             <p>
-                <Trans i18nKey="common:account.revokeAccess.confirmBody" components={{ strong: <strong />, br: <br /> }} values={{ teacherName: extractTeacherName(userToRevoke) }} />
+                <Trans i18nKey="account:account.revokeAccess.confirmBody" components={{ strong: <strong />, br: <br /> }} values={{ teacherName: extractTeacherName(userToRevoke) }} />
             </p>
         </React.Fragment>,
         buttons: [
@@ -92,10 +92,10 @@ export const revocationConfirmationModal = (userId: number, userToRevoke: UserSu
 export const releaseConfirmationModal = (userId: number, otherUser: UserSummaryDTO) => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal());},
-        title: i18next.t("common:account.releaseAccess.title"),
+        title: i18next.t("account:account.releaseAccess.title"),
         body: <React.Fragment>
             <p>
-                <Trans i18nKey="common:account.releaseAccess.confirmBody" components={{ strong: <strong />, br: <br /> }} values={{ firstName: otherUser.givenName, lastName: otherUser.familyName }} />
+                <Trans i18nKey="account:account.releaseAccess.confirmBody" components={{ strong: <strong />, br: <br /> }} values={{ firstName: otherUser.givenName, lastName: otherUser.familyName }} />
             </p>
         </React.Fragment>,
         buttons: [
@@ -115,10 +115,10 @@ export const releaseConfirmationModal = (userId: number, otherUser: UserSummaryD
 export const releaseAllConfirmationModal = () => {
     return {
         closeAction: () => {store.dispatch(closeActiveModal());},
-        title: i18next.t("common:account.releaseAll.title"),
+        title: i18next.t("account:account.releaseAll.title"),
         body: <React.Fragment>
             <p>
-                <Trans i18nKey="common:account.releaseAll.confirmBody" components={{ br: <br /> }} />
+                <Trans i18nKey="account:account.releaseAll.confirmBody" components={{ br: <br /> }} />
             </p>
         </React.Fragment>,
         buttons: [

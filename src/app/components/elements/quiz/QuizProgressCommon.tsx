@@ -181,8 +181,8 @@ export function ResultsTable<Q extends QuestionType>({
         };
         dispatch(openActiveModal({
             closeAction: () => dispatch(closeActiveModal()),
-            title: t("common:progress.returnAttempt.title"),
-            body: t("common:progress.returnAttempt.body"),
+            title: t("teaching:progress.returnAttempt.title"),
+            body: t("teaching:progress.returnAttempt.body"),
             buttons: [
                 <Button key={1} color="keyline" target="_blank" onClick={() => dispatch(closeActiveModal())}>
                     {t("common:button.cancel")}
@@ -270,7 +270,7 @@ export function ResultsTable<Q extends QuestionType>({
                 reverseOrder={"totalQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                 onClick={() => setSelectedQuestionIndex(undefined)}
-                label={t("common:progress.table.totalCorrectQuestionsLabel")}
+                label={t("teaching:progress.table.totalCorrectQuestionsLabel")}
             >
                 {siteSpecific(
                     <div className="d-flex flex-column ps-3">
@@ -286,7 +286,7 @@ export function ResultsTable<Q extends QuestionType>({
                 reverseOrder={"totalAttemptedQuestionPercentage"}
                 currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                 onClick={() => setSelectedQuestionIndex(undefined)}
-                label={t("common:progress.table.totalAttemptedQuestionsLabel")}
+                label={t("teaching:progress.table.totalAttemptedQuestionsLabel")}
             >
                 {siteSpecific(
                     <div className="d-flex flex-column ps-3">
@@ -305,7 +305,7 @@ export function ResultsTable<Q extends QuestionType>({
                     reverseOrder={"totalPartPercentage"}
                     currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                     onClick={() => setSelectedQuestionIndex(undefined)}
-                    label={t("common:progress.table.totalCorrectPartsLabel")}
+                    label={t("teaching:progress.table.totalCorrectPartsLabel")}
                 >
                     {siteSpecific(
                         <div className="d-flex flex-column ps-3">
@@ -321,7 +321,7 @@ export function ResultsTable<Q extends QuestionType>({
                     reverseOrder={"totalAttemptedPartPercentage"}
                     currentOrder={sortOrder} setOrder={toggleSort} reversed={reverseOrder}
                     onClick={() => setSelectedQuestionIndex(undefined)}
-                    label={t("common:progress.table.totalAttemptedPartsLabel")}
+                    label={t("teaching:progress.table.totalAttemptedPartsLabel")}
                 >
                     {siteSpecific(
                         <div className="d-flex flex-column ps-3">
@@ -431,10 +431,10 @@ export function ResultsTable<Q extends QuestionType>({
                                                         {(!duedate || duedate.valueOf() > TODAY().valueOf()) &&
                                                         studentProgress.completed &&
                                                         <div className="py-2 px-3">
-                                                            <Button size="sm" onClick={() => returnToStudent(studentProgress.user?.id)}>{t("common:progress.returnAttempt.action")}</Button>
+                                                            <Button size="sm" onClick={() => returnToStudent(studentProgress.user?.id)}>{t("teaching:progress.returnAttempt.action")}</Button>
                                                         </div>}
                                                         <div className="py-2 px-3">
-                                                            <Button size="sm" tag={Link} to={`/test/attempt/feedback/${assignmentId}/${studentProgress.user?.id}`}>{t("common:progress.table.viewAnswers")}</Button>
+                                                            <Button size="sm" tag={Link} to={`/test/attempt/feedback/${assignmentId}/${studentProgress.user?.id}`}>{t("teaching:progress.table.viewAnswers")}</Button>
                                                         </div>
                                                     </>}
                                                 </>
@@ -443,7 +443,7 @@ export function ResultsTable<Q extends QuestionType>({
                                     }
                                 </th>
                                 {/* total questions */}
-                                <th title={fullAccess ? undefined : t("common:progress.table.notSharing")} className={classNames({"sticky-ca-col": isPhy})}>
+                                <th title={fullAccess ? undefined : t("teaching:progress.table.notSharing")} className={classNames({"sticky-ca-col": isPhy})}>
                                     {fullAccess
                                         ? formatMark(
                                             isAssignment
@@ -460,7 +460,7 @@ export function ResultsTable<Q extends QuestionType>({
                                     }
                                 </th>
                                 {/* total parts */}
-                                {isPhy && isAssignment && <th title={fullAccess ? undefined : t("common:progress.table.notSharing")} className={classNames({"sticky-ca-col": isPhy})}>
+                                {isPhy && isAssignment && <th title={fullAccess ? undefined : t("teaching:progress.table.notSharing")} className={classNames({"sticky-ca-col": isPhy})}>
                                     {fullAccess
                                         ? formatMark(
                                             pageSettings?.attemptedOrCorrect === "CORRECT"
@@ -517,7 +517,7 @@ export function ResultsTable<Q extends QuestionType>({
                 </table>
             </div>
         </> : <div className="w-100 text-center p-3">
-            <Trans i18nKey="common:progress.table.emptyState" components={{ manageGroupsLink: <Link to="/groups" /> }} />
+            <Trans i18nKey="teaching:progress.table.emptyState" components={{ manageGroupsLink: <Link to="/groups" /> }} />
         </div>}
     </div>;
 }
@@ -638,7 +638,7 @@ export function ResultsTablePartBreakdown({
                                 reversed={reverseOrder}
                                 key={i}
                             >
-                                {t("common:progress.partBreakdown.partColumn", { partNumber: i + 1 })}
+                                {t("teaching:progress.partBreakdown.partColumn", { partNumber: i + 1 })}
                             </SortItemHeader>
                             // </th>
                         )}
@@ -701,6 +701,6 @@ export function ResultsTablePartBreakdown({
             </table>
         </div>
         : <div className="w-100 text-center p-3">
-            <Trans i18nKey="common:progress.table.emptyState" components={{ manageGroupsLink: <Link to="/groups" /> }} />
+            <Trans i18nKey="teaching:progress.table.emptyState" components={{ manageGroupsLink: <Link to="/groups" /> }} />
         </div>;
 }

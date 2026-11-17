@@ -35,8 +35,8 @@ export const UserContent = (props: UserContentProps) => {
 
     return <MyAccountTab
         leftColumn={<>
-            <h2 className="h3">{t("common:account.customise.title")}</h2>
-            <p>{t("common:account.customise.description")}</p>
+            <h2 className="h3">{t("account:account.customise.title")}</h2>
+            <p>{t("account:account.customise.description")}</p>
         </>}
         rightColumn={<>
             <UserContextAccountInput

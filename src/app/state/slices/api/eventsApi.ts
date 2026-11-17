@@ -107,7 +107,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             },
             providesTags: ["EventsList"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:events.fetch.errorTitle"),
+                errorTitle: () => i18next.t("events:events.fetch.errorTitle"),
             })
         }),
 
@@ -133,7 +133,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             },
             providesTags: ["AdminEventsList"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:events.adminOverviews.errorTitle"),
+                errorTitle: () => i18next.t("events:events.adminOverviews.errorTitle"),
             })
         }),
 
@@ -148,8 +148,8 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             invalidatesTags: (_, __, {eventId}) => [{type: "Event", id: eventId}],
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: () => i18next.t("common:error.eventBookingFailed"),
-                successTitle: () => i18next.t("common:events.selfBooking.book.successTitle"),
-                successMessage: () => i18next.t("common:events.selfBooking.book.successMessage"),
+                successTitle: () => i18next.t("events:events.selfBooking.book.successTitle"),
+                successMessage: () => i18next.t("events:events.selfBooking.book.successMessage"),
             })
         }),
 
@@ -166,11 +166,11 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: () => i18next.t("common:error.eventBookingFailed"),
                 successTitle: ({waitingListOnly}) => waitingListOnly
-                    ? i18next.t("common:events.selfBooking.waitingList.requestReceivedTitle")
-                    : i18next.t("common:events.selfBooking.waitingList.confirmedTitle"),
+                    ? i18next.t("events:events.selfBooking.waitingList.requestReceivedTitle")
+                    : i18next.t("events:events.selfBooking.waitingList.confirmedTitle"),
                 successMessage: ({waitingListOnly}) => waitingListOnly
                     ? i18next.t("common:status.requestedPlace")
-                    : i18next.t("common:events.selfBooking.waitingList.confirmedMessage"),
+                    : i18next.t("events:events.selfBooking.waitingList.confirmedMessage"),
             })
         }),
 
@@ -181,9 +181,9 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: (_, __, eventId) => [{type: "Event", id: eventId}],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:events.selfBooking.cancel.errorTitle"),
-                successTitle: () => i18next.t("common:events.selfBooking.cancel.successTitle"),
-                successMessage: () => i18next.t("common:events.selfBooking.cancel.successMessage"),
+                errorTitle: () => i18next.t("events:events.selfBooking.cancel.errorTitle"),
+                successTitle: () => i18next.t("events:events.selfBooking.cancel.successTitle"),
+                successMessage: () => i18next.t("events:events.selfBooking.cancel.successMessage"),
             })
         }),
 
@@ -193,7 +193,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             query: (eventId) => `/events/${encodeURIComponent(eventId)}/bookings`,
             providesTags: ["EventBookings"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:events.bookings.fetch.errorTitle"),
+                errorTitle: () => i18next.t("events:events.bookings.fetch.errorTitle"),
             })
         }),
 
@@ -201,7 +201,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             query: ({eventId, groupId}) => `/events/${encodeURIComponent(eventId)}/bookings/for_group/${groupId}`,
             providesTags: (eventBookings, _, {eventId, groupId}) => isDefined(eventBookings) ? [{type: "EventGroupBookings", id: `${eventId}|${groupId}`}] : [],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:events.bookings.fetch.errorTitle"),
+                errorTitle: () => i18next.t("events:events.bookings.fetch.errorTitle"),
             })
         }),
 
@@ -209,7 +209,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             query: (eventId) => `/events/${encodeURIComponent(eventId)}/groups_bookings`,
             providesTags: (eventBookings, _, eventId) => isDefined(eventBookings) ? [{type: "AllEventGroupBookings", id: eventId}] : [],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:events.bookings.fetch.errorTitle"),
+                errorTitle: () => i18next.t("events:events.bookings.fetch.errorTitle"),
             })
         }),
 
@@ -221,9 +221,9 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: (_, error, {eventId, groupId}) => !error ? [{type: "Event", id: eventId}, {type: "AllEventGroupBookings" as const, id: eventId}, ...(groupId ? [{type: "EventGroupBookings" as const, id: `${eventId}|${groupId}`}] : [])] : [],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:events.adminBooking.cancelReservations.errorTitle"),
-                successTitle: () => i18next.t("common:events.adminBooking.cancelReservations.successTitle"),
-                successMessage: () => i18next.t("common:events.adminBooking.cancelReservations.successMessage")
+                errorTitle: () => i18next.t("events:events.adminBooking.cancelReservations.errorTitle"),
+                successTitle: () => i18next.t("events:events.adminBooking.cancelReservations.successTitle"),
+                successMessage: () => i18next.t("events:events.adminBooking.cancelReservations.successMessage")
             })
         }),
 
@@ -235,9 +235,9 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: ["EventBookings"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:events.adminBooking.bookUser.errorTitle"),
-                successTitle: () => i18next.t("common:events.adminBooking.bookUser.successTitle"),
-                successMessage: () => i18next.t("common:events.adminBooking.bookUser.successMessage")
+                errorTitle: () => i18next.t("events:events.adminBooking.bookUser.errorTitle"),
+                successTitle: () => i18next.t("events:events.adminBooking.bookUser.successTitle"),
+                successMessage: () => i18next.t("events:events.adminBooking.bookUser.successMessage")
             })
         }),
 
@@ -249,9 +249,9 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: (_, __, {eventId}) => ["EventGroupBookings", {type: "Event", id: eventId}],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:events.adminBooking.reserveUsers.errorTitle"),
-                successTitle: () => i18next.t("common:events.adminBooking.reserveUsers.successTitle"),
-                successMessage: () => i18next.t("common:events.adminBooking.reserveUsers.successMessage")
+                errorTitle: () => i18next.t("events:events.adminBooking.reserveUsers.errorTitle"),
+                successTitle: () => i18next.t("events:events.adminBooking.reserveUsers.successTitle"),
+                successMessage: () => i18next.t("events:events.adminBooking.reserveUsers.successMessage")
             })
         }),
 
@@ -265,7 +265,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: ["EventBookings"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:events.adminBooking.promote.errorTitle")
+                errorTitle: () => i18next.t("events:events.adminBooking.promote.errorTitle")
             })
         }),
 
@@ -275,9 +275,9 @@ export const eventsApi = isaacApi.enhanceEndpoints({
                 method: "POST"
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:events.adminBooking.resendEmail.errorTitle"),
-                successTitle: () => i18next.t("common:events.adminBooking.resendEmail.successTitle"),
-                successMessage: ({userId}) => i18next.t("common:events.adminBooking.resendEmail.successMessage", { userId })
+                errorTitle: () => i18next.t("events:events.adminBooking.resendEmail.errorTitle"),
+                successTitle: () => i18next.t("events:events.adminBooking.resendEmail.successTitle"),
+                successMessage: ({userId}) => i18next.t("events:events.adminBooking.resendEmail.successMessage", { userId })
             })
         }),
 
@@ -288,7 +288,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: ["EventBookings"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:events.adminBooking.cancel.errorTitle"),
+                errorTitle: () => i18next.t("events:events.adminBooking.cancel.errorTitle"),
             })
         }),
 
@@ -299,7 +299,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: ["EventBookings"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:events.adminBooking.delete.errorTitle")
+                errorTitle: () => i18next.t("events:events.adminBooking.delete.errorTitle")
             })
         }),
 
@@ -310,7 +310,7 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: ["EventBookings"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:events.adminBooking.recordAttendance.errorTitle")
+                errorTitle: () => i18next.t("events:events.adminBooking.recordAttendance.errorTitle")
             })
         }),
     })

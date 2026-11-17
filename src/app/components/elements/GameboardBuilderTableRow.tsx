@@ -47,8 +47,8 @@ const GameboardBuilderTableRow = (
                         ? <IconButton icon="icon-bin action-button-small" color="keyline" className="action-button" aria-label={t("ada:button.deleteQuiz")} title={t("ada:button.deleteQuiz")} onClick={() => handleBuilderRowChange({ isDnd, question, currentQuestions, undoStack, redoStack, creationContext })}/>
                         : <StyledCheckbox
                             id={`${isDnd ? "gameboard-builder" : "question-search-modal"}-include-${question.id}`}
-                            aria-label={!isSelected ? t("common:gameboard.builder.select") : t("common:gameboard.builder.deselect")}
-                            title={!isSelected ? t("common:gameboard.builder.select") : t("common:gameboard.builder.deselect")}
+                            aria-label={!isSelected ? t("teaching:gameboard.builder.select") : t("teaching:gameboard.builder.deselect")}
+                            title={!isSelected ? t("teaching:gameboard.builder.select") : t("teaching:gameboard.builder.deselect")}
                             color="primary"
                             checked={isSelected}
                             onChange={() => handleBuilderRowChange({ isDnd, question, currentQuestions, undoStack, redoStack, creationContext })}
@@ -60,7 +60,7 @@ const GameboardBuilderTableRow = (
                     {isDnd && <i aria-label={t("common:label.dragToReorder")} className="ms-n1 me-1 grab-cursor icon icon-md icon-drag-indicator icon-color-black align-self-center" />}
                     <div>
                         <div className="d-flex">
-                            <a className="text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title={t("common:gameboard.builder.previewTooltip", { questionId: question.id })}>
+                            <a className="text-wrap" href={`/questions/${question.id}`} target="_blank" rel="noopener noreferrer" title={t("teaching:gameboard.builder.previewTooltip", { questionId: question.id })}>
                                 <Markup encoding="latex">{question.title ?? ""}</Markup>
                             </a>
                             <PreviewQuestionButton id={question.id} className="ms-2" />

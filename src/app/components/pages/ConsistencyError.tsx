@@ -12,11 +12,11 @@ export const ConsistencyError = () => {
     const [target, clearRenewPath] = useSessionExpired();
 
     return <Container>
-        <TitleAndBreadcrumb breadcrumbTitleOverride={t("common:auth.sessionError.breadcrumbTitle")} currentPageTitle={t("common:auth.sessionError.title", { siteTitle: SITE_TITLE })} icon={{type: "icon", icon: "icon-error"}} className="mb-4" />
-        <p className="pb-2">{t("common:auth.sessionError.message")}</p>
+        <TitleAndBreadcrumb breadcrumbTitleOverride={t("account:auth.sessionError.breadcrumbTitle")} currentPageTitle={t("account:auth.sessionError.title", { siteTitle: SITE_TITLE })} icon={{type: "icon", icon: "icon-error"}} className="mb-4" />
+        <p className="pb-2">{t("account:auth.sessionError.message")}</p>
         <p>
             <Trans
-                i18nKey="common:auth.sessionError.tip"
+                i18nKey="account:auth.sessionError.tip"
                 components={{
                     strong: <b />,
                     privacyLink: <TransAnchor href="https://en.wikipedia.org/wiki/Privacy_mode" target="_blank" rel="noopener noreferrer" />,

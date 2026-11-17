@@ -23,7 +23,7 @@ export const AnonymisationCheckboxes = ({className}: AnonymisationCheckboxesProp
                 }}
                 className={siteSpecific("mb-1", "mt-1")}
             />
-            <Label for="anonymise-users-checkbox" className="ms-2 mb-0">{t("common:admin.anonymisation.usersOnlyLabel")}</Label>
+            <Label for="anonymise-users-checkbox" className="ms-2 mb-0">{t("admin:admin.anonymisation.usersOnlyLabel")}</Label>
         </div>
         <div>
             <Input
@@ -38,7 +38,7 @@ export const AnonymisationCheckboxes = ({className}: AnonymisationCheckboxesProp
                 }}
                 className={siteSpecific("", "mt-1")}
             />
-            <Label for="anonymise-groups-checkbox" className="ms-2 mb-0">{t("common:admin.anonymisation.groupsLabel")}</Label>
+            <Label for="anonymise-groups-checkbox" className="ms-2 mb-0">{t("admin:admin.anonymisation.groupsLabel")}</Label>
         </div>
     </div>;
 };

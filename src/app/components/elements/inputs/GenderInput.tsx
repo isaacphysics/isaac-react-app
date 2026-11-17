@@ -41,10 +41,10 @@ export const GenderInput = ({className, userToUpdate, setUserToUpdate, submissio
             }
         >
             <option value="UNKNOWN" disabled className="d-none"></option>
-            <option value="FEMALE">{t("common:account.gender.options.female")}</option>
-            <option value="MALE">{t("common:account.gender.options.male")}</option>
-            <option value="OTHER">{t("common:account.gender.options.other")}</option>
-            <option value="PREFER_NOT_TO_SAY">{t("common:account.gender.options.preferNotToSay")}</option>
+            <option value="FEMALE">{t("account:account.gender.options.female")}</option>
+            <option value="MALE">{t("account:account.gender.options.male")}</option>
+            <option value="OTHER">{t("account:account.gender.options.other")}</option>
+            <option value="PREFER_NOT_TO_SAY">{t("account:account.gender.options.preferNotToSay")}</option>
         </StyledDropdown>
     </FormGroup>;
 };

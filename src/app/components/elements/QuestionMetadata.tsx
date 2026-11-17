@@ -35,7 +35,7 @@ export const QuestionMetaData = (props: QuestionMetaDataProps) => {
     return <>
         <MetadataContainer className="d-flex flex-wrap row no-print question-metadata">
             <Col className="d-flex flex-column mw-max-content" id="metadata-subject-topics">
-                <span>{t("common:questionMetadata.subjectTopicsTitle")}</span>
+                <span>{t("questions:questionMetadata.subjectTopicsTitle")}</span>
                 <div className="d-flex align-items-center">
                     <i className="icon icon-hexagon-bullet me-2"/>
                     {getTags(doc.tags).map((tag, index, arr) => <React.Fragment key={tag.title}>
@@ -59,11 +59,11 @@ export const QuestionMetaData = (props: QuestionMetaDataProps) => {
                 }
             </Col>
             <Col className="d-flex flex-column mw-max-content" id="metadata-stage-difficulty">
-                <span>{t("common:questionMetadata.stageDifficultyTitle")}</span>
+                <span>{t("questions:questionMetadata.stageDifficultyTitle")}</span>
                 <StageAndDifficultySummaryIcons audienceViews={audienceViews} iconClassName="ps-2" stack/>
             </Col>
             {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && accessibilityTags.length > 0 && <Col className="d-flex flex-column mw-max-content" id="metadata-accessibility">
-                <span>{t("common:questionMetadata.accessibilityWarningsTitle")}</span>
+                <span>{t("questions:questionMetadata.accessibilityWarningsTitle")}</span>
                 <div className="d-flex flex-column">
                     {accessibilityTags.map(tag => <div key={tag} className="d-flex align-items-center mb-1">
                         <i className={`icon ${ACCESSIBILITY_WARNINGS[tag].icon} me-2`}/>
@@ -76,14 +76,14 @@ export const QuestionMetaData = (props: QuestionMetaDataProps) => {
         {/* One-line version of the question metadata, only used for printing */}
         <div className="only-print">
             <div className="d-flex my-2">
-                <span className="me-2 fw-bold">{t("common:questionMetadata.printSubjectTopicsLabel")}</span>
+                <span className="me-2 fw-bold">{t("questions:questionMetadata.printSubjectTopicsLabel")}</span>
                 <div>
                     {getTags(doc.tags).map((tag, index, arr) => <React.Fragment key={tag.title}>
                         <span key={tag.title}> {tag.title} </span>
                         {index !== arr.length - 1 && <span className="mx-1">|</span>}
                     </React.Fragment>)}
                 </div>
-                <span className="ms-5 me-2 fw-bold">{t("common:questionMetadata.printStageDifficultyLabel")}</span>
+                <span className="ms-5 me-2 fw-bold">{t("questions:questionMetadata.printStageDifficultyLabel")}</span>
                 <div>
                     {audienceViews.map(((view, i, arr) => 
                         view.stage && view.difficulty && <span key={`${view.stage} ${view.difficulty}`}>

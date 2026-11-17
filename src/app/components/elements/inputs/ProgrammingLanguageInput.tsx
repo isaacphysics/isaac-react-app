@@ -22,7 +22,7 @@ export const ProgrammingLanguageInput = ({programmingLanguage, setProgrammingLan
 
     return <FormGroup className="form-group me-lg-7">
         <Label className={classNames("fw-bold", (isRequired ? "form-required" : "form-optional"))} htmlFor="programming-language-select">
-            {t("common:account.preferences.preferredLanguageLabel")}
+            {t("account:account.preferences.preferredLanguageLabel")}
         </Label>
         <StyledDropdown
             id="programming-language-select"

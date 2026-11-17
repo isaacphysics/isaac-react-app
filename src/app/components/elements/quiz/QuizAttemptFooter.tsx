@@ -30,7 +30,7 @@ export function QuizAttemptFooter(props: QuizProps & FullQuizInfo & {feedbackLin
         void markQuizAttemptAsComplete(attempt.id as number)
             .then((result) => {
                 if (mutationSucceeded(result)) {
-                    dispatch(showSuccessToast(t("common:status.testSubmitted"), t("common:tests.attempt.submitToastBody")));
+                    dispatch(showSuccessToast(t("common:status.testSubmitted"), t("teaching:tests.attempt.submitToastBody")));
                     void navigate(props.feedbackLink);
                 }
             });
@@ -56,13 +56,13 @@ export function QuizAttemptFooter(props: QuizProps & FullQuizInfo & {feedbackLin
         const totalCompleted = Object.values(completedSections).reduce((sum, complete) => sum + (complete ? 1 : 0), 0);
         const firstIncomplete = Object.values(completedSections).indexOf(false);
         const allCompleted = totalCompleted === sectionCount;
-        const submitButton = submitting ? <IsaacSpinner /> : allCompleted ? "Submit" : t("common:tests.attempt.submitAnyway");
+        const submitButton = submitting ? <IsaacSpinner /> : allCompleted ? "Submit" : t("teaching:tests.attempt.submitAnyway");
 
         if (allCompleted) {
             controls = <>
-                <Button color="keyline" tag={Link} to={pageLink(1)}>{t("common:tests.attempt.reviewAnswers")}</Button>
+                <Button color="keyline" tag={Link} to={pageLink(1)}>{t("teaching:tests.attempt.reviewAnswers")}</Button>
                 <Spacer/>
-                {t("common:tests.attempt.allComplete")}
+                {t("teaching:tests.attempt.allComplete")}
                 <Spacer/>
                 <Button color={siteSpecific("keyline", "solid")} onClick={submitQuiz}>{submitButton}</Button>
             </>;
@@ -70,10 +70,10 @@ export function QuizAttemptFooter(props: QuizProps & FullQuizInfo & {feedbackLin
             if (anyAnswered) {
                 controls = <>
                     <div className="text-center">
-                        <Button onClick={() => confirmThen(t("common:tests.attempt.submitConfirmIncomplete"), submitQuiz)}>{submitButton}</Button>
+                        <Button onClick={() => confirmThen(t("teaching:tests.attempt.submitConfirmIncomplete"), submitQuiz)}>{submitButton}</Button>
                     </div>
                     <Spacer/>
-                    {t("common:tests.attempt.sectionsComplete", { completedCount: totalCompleted, totalCount: sectionCount })}<br/>
+                    {t("teaching:tests.attempt.sectionsComplete", { completedCount: totalCompleted, totalCount: sectionCount })}<br/>
                     <Spacer/>
                     <Button color={siteSpecific("keyline", "solid")} tag={Link} to={pageLink(firstIncomplete + 1)}>{t("common:button.continue")}</Button>
                 </>;
@@ -85,7 +85,7 @@ export function QuizAttemptFooter(props: QuizProps & FullQuizInfo & {feedbackLin
             }
         }
     } else {
-        controls = <QuizPagination {...props} page={page} finalLabel={t("common:tests.attempt.finish")}/>;
+        controls = <QuizPagination {...props} page={page} finalLabel={t("teaching:tests.attempt.finish")}/>;
     }
 
     return <div className="d-flex w-100 align-items-center mt-2 gap-2 mt-4 pt-2 border-top">

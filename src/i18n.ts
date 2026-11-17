@@ -1,18 +1,19 @@
 /// <reference types="vite/client" />
 // Translation setup.
 //
-// * English (the source language) is bundled: `common` plus this site's file. `@i18n/en-site` is a Vite
-//   alias to en/ada.json or en/sci.json depending on the build, so neither site ships the other's text.
+// * English (the source language) is bundled: the shared files plus this site's file. `@i18n/en-site` is a
+//   Vite alias to en/ada.json or en/sci.json depending on the build, so neither site ships the other's text.
 // * Other languages are separate files, fetched only when that language is active.
-// * Namespaces: `common`, and `site` = this build's own file (so `t("site:…")` gives Ada wording on Ada
-//   and Isaac wording on Isaac). `ada:` / `sci:` also work, for text inside a one-site branch.
+// * Namespaces: the shared ones (`common`, `account`, `teaching`, … listed in app/locales/index.ts), and
+//   `site` = this build's own file (so `t("site:…")` gives Ada wording on Ada and Isaac wording on Isaac).
+//   `ada:` / `sci:` also work, for text inside a one-site branch.
 // * Language: ?lng=cy (remembered in localStorage) or the remembered choice; English otherwise. Changing
 //   language means reloading the page, so text translated at module level never goes stale. That relies on
 //   initI18n() finishing before the app's modules are imported: see src/index-*.tsx.
 
 import i18next, { type BackendModule, type ResourceKey } from "i18next";
 import { initReactI18next } from "react-i18next";
-import enCommon from "./app/locales/en/common.json";
+import { SHARED_NAMESPACES, sharedEnglish } from "./app/locales";
 import enSite from "@i18n/en-site";
 import { KEY, persistence } from "./app/services/localStorage";
 
@@ -52,9 +53,9 @@ export async function initI18n(): Promise<typeof i18next> {
             lng: detectLanguage(),
             fallbackLng: "en",
             supportedLngs: ["en", "cy"],
-            ns: ["common", "site", SITE_NS],
+            ns: [...SHARED_NAMESPACES, "site", SITE_NS],
             defaultNS: "common",
-            resources: { en: { common: enCommon, site: enSite, [SITE_NS]: enSite } },
+            resources: { en: { ...sharedEnglish, site: enSite, [SITE_NS]: enSite } },
             partialBundledLanguages: true, // English is bundled; other languages come from the backend
             returnEmptyString: false,      // an empty translation falls back to English
             interpolation: { escapeValue: false }, // React escapes already; otherwise O'Brien shows as O&#39;Brien

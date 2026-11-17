@@ -30,10 +30,10 @@ const GroupsPanel = ({ groups }: GroupsPanelProps) => {
                     {sortedGroups.map(group => <Link key={group.id} to={`/assignment_progress/group/${group.id}`} className="d-block panel-my-isaac-link">{group.groupName}</Link>)}
                 </div>
                 <Spacer/>
-                <Link to="/assignment_progress" className="d-inline panel-link mt-3">{t("common:dashboard.groups.viewAllLink")}</Link>
+                <Link to="/assignment_progress" className="d-inline panel-link mt-3">{t("pages:dashboard.groups.viewAllLink")}</Link>
             </> :
             <>
-                <div className="text-center mt-lg-3">{t("common:dashboard.groups.emptyState")}</div>
+                <div className="text-center mt-lg-3">{t("pages:dashboard.groups.emptyState")}</div>
                 <div className="text-center"><Button tag={Link} to="/groups" size="sm" className="mt-3">{t("common:button.createNewGroup")}</Button></div>
             </>}
     </div>;
@@ -60,7 +60,7 @@ const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProp
     const soonestDeadlines = sortUpcomingAssignments([...soonestAssignments, ...soonestQuizzes]).slice(0, 3);
 
     return <div className="dashboard-panel">
-        <h2 className="panel-title">{t("common:dashboard.assignments.title")}</h2>
+        <h2 className="panel-title">{t("pages:dashboard.assignments.title")}</h2>
         <ShowLoading
             until={assignments && quizzes}
             thenRender={() => {
@@ -71,13 +71,13 @@ const AssignmentsPanel = ({ assignments, quizzes, groups }: AssignmentsPanelProp
                                 <AssignmentCard assignment={assignment} isTeacherDashboard groups={groups} />
                             </div>)}
                     </div>
-                    : <div className="text-center mt-lg-3">{t("common:dashboard.assignments.emptyState")}</div>;
+                    : <div className="text-center mt-lg-3">{t("pages:dashboard.assignments.emptyState")}</div>;
             }}
         />
         <Spacer/>
         <div className="d-flex align-items-center mt-3">
             <Link to="/assigned" className="d-inline text-center panel-link me-3">
-                {t("common:dashboard.assignments.viewAllLink")}
+                {t("pages:dashboard.assignments.viewAllLink")}
             </Link>
         </div>
     </div>;
@@ -87,7 +87,7 @@ const MyIsaacPanel = () => {
     const { t } = useTranslation();
     const user = useAppSelector(selectors.user.orNull);
     return <div className='dashboard-panel'>
-        <h2 className="panel-title">{t("common:dashboard.myIsaac.title")}</h2>
+        <h2 className="panel-title">{t("pages:dashboard.myIsaac.title")}</h2>
         <div className="d-flex flex-column">
             <div className="col">
                 {isTutor(user) 
@@ -136,7 +136,7 @@ const BooksPanel = () => {
 
     return <div className="w-100 dashboard-panel book-panel">
         <div className="d-flex align-items-center">
-            <h2 className="panel-title">{t("common:dashboard.books.title")}</h2>
+            <h2 className="panel-title">{t("pages:dashboard.books.title")}</h2>
             <Spacer/>
             <select className="books-select ms-2 mb-3" value={subject}
                 onChange={(e: ChangeEvent<HTMLSelectElement>) => setSubject(e.target.value as Subject)}>
@@ -157,7 +157,7 @@ const BooksPanel = () => {
                     </Col>)}
         </div>
         <Spacer/>
-        <Link to="/books" className="d-inline panel-link mt-2">{t("common:dashboard.books.viewAllLink")}</Link>
+        <Link to="/books" className="d-inline panel-link mt-2">{t("pages:dashboard.books.viewAllLink")}</Link>
     </div>;
 };
 
@@ -180,9 +180,9 @@ export const TeacherDashboard = ({ assignmentsSetByMe, quizzesSetByMe, myAssignm
              
     return <div className="dashboard dashboard-outer w-100">
         <div className="d-flex flex-wrap">
-            {nameToDisplay && <h1 className="text-wrap h3">{t("common:dashboard.welcomeHeader", { teacherName: nameToDisplay })}</h1>}
+            {nameToDisplay && <h1 className="text-wrap h3">{t("pages:dashboard.welcomeHeader", { teacherName: nameToDisplay })}</h1>}
             <span className="ms-auto">
-                <div className="text-center">{t("common:dashboard.viewToggleLabel")}</div>
+                <div className="text-center">{t("pages:dashboard.viewToggleLabel")}</div>
                 <StyledToggle
                     checked={dashboardView === "student"}
                     falseLabel={isTutor(user) ? t("common:role.tutor") : t("common:role.teacher")}

@@ -94,7 +94,7 @@ const CSTable = (props: GameboardsTableProps) => {
                 <th>
                     {selectedBoards.length
                         ? <Button size={"sm"} color={"link"} onClick={confirmDeleteMultipleBoards}>
-                            {t("common:gameboard.table.unsaveCountButton", { selectedCount: selectedBoards.length })}
+                            {t("teaching:gameboard.table.unsaveCountButton", { selectedCount: selectedBoards.length })}
                         </Button>
                         : "Unsave"
                     }
@@ -162,7 +162,7 @@ const Cards = (props: GameboardsCardsProps) => {
         <div className="text-center mt-3 mb-7" style={{clear: "both"}}>
             {boards.boards.length === filteredBoards.length
                 ? <p><Trans
-                    i18nKey="common:gameboard.cards.showingAll"
+                    i18nKey="teaching:gameboard.cards.showingAll"
                     components={{
                         loadedCountEmphasis: <strong />,
                         totalCountEmphasis: <strong />,
@@ -170,7 +170,7 @@ const Cards = (props: GameboardsCardsProps) => {
                     values={{ loadedCount: boards.boards.length, totalCount: boards.totalResults }}
                 /></p>
                 : <p><Trans
-                    i18nKey="common:gameboard.cards.showingFiltered"
+                    i18nKey="teaching:gameboard.cards.showingFiltered"
                     components={{
                         matchedCountEmphasis: <strong />,
                         loadedCountEmphasis: <strong />,

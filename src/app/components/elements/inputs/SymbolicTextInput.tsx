@@ -94,12 +94,12 @@ export const symbolicTextInputValidator = (input: string, editorMode: EditorMode
         const parsedExpression = modeConstants[editorMode].parseExpressionFunc(input);
 
         if (isError(parsedExpression) && parsedExpression.error) {
-            errors.push(i18next.t("common:inequality.validation.syntaxError", { tokenValue: parsedExpression.error.token.value || '' }));
+            errors.push(i18next.t("questions:inequality.validation.syntaxError", { tokenValue: parsedExpression.error.token.value || '' }));
         }
     }
 
     if (["maths", "logic"].includes(editorMode) && /\\[a-zA-Z()]|[{}]/.test(input)) {
-        errors.push(i18next.t("common:inequality.validation.latexNotSupported"));
+        errors.push(i18next.t("questions:inequality.validation.latexNotSupported"));
     }
 
     const badCharacters = modeConstants[editorMode].badInputCharacters;
@@ -128,7 +128,7 @@ export const symbolicTextInputValidator = (input: string, editorMode: EditorMode
         || openCurlyBracketsCount !== closeCurlyBracketsCount) {
         if (["nuclear", "chemistry"].includes(editorMode)) {
             // Rather than a long message about which brackets need closing
-            errors.push(i18next.t("common:inequality.validation.missingBrackets"));
+            errors.push(i18next.t("questions:inequality.validation.missingBrackets"));
         } else {
             errors.push('You are missing some ' + (closeRoundBracketsCount > openRoundBracketsCount ? 'opening' : 'closing') + ' brackets.');
         }
@@ -136,28 +136,28 @@ export const symbolicTextInputValidator = (input: string, editorMode: EditorMode
 
     const decimalsOutsideCompound = input.match(/(?:[^A-Za-z]|^)\d+\.\d+\s*([A-Z]|$)|[A-Za-z]\d+\.\d+\s*$/);
     if ((["nuclear", "maths"].includes(editorMode) && /\.[0-9]/.test(input)) || (editorMode === "chemistry" && decimalsOutsideCompound)) {
-        errors.push(i18next.t("common:inequality.validation.decimalsToFractions"));
+        errors.push(i18next.t("questions:inequality.validation.decimalsToFractions"));
     }
     if (editorMode === "chemistry" && /\(s\)|\(aq\)|\(l\)|\(g\)/.test(input) && !mayRequireStateSymbols) {
-        errors.push(i18next.t("common:inequality.validation.stateSymbolsNotRequired"));
+        errors.push(i18next.t("questions:inequality.validation.stateSymbolsNotRequired"));
     }
     if (editorMode === "maths") {
         if (/[<>=].+[<>=]/.test(input)) {
-            errors.push(i18next.t("common:inequality.validation.doubleInequality"));
+            errors.push(i18next.t("questions:inequality.validation.doubleInequality"));
         }
         const invTrig = input.match(/(((sin|cos|tan|sec|cosec|cot)(h?))(\^|\*\*)[({]?-1[)}]?)/);
         if (invTrig != null) {
             const trigFunction = invTrig[2];
             if (invTrig[4] === 'h') {
-                errors.push(i18next.t("common:inequality.validation.inverseTrigHyperbolic", { trigFunction, functionName: trigFunction }));
+                errors.push(i18next.t("questions:inequality.validation.inverseTrigHyperbolic", { trigFunction, functionName: trigFunction }));
             }
             else {
-                errors.push(i18next.t("common:inequality.validation.inverseTrig", { trigFunction, functionName: trigFunction }));
+                errors.push(i18next.t("questions:inequality.validation.inverseTrig", { trigFunction, functionName: trigFunction }));
             }
         }
         if (/[A-Zbd-z](sin|cos|tan|log|ln|sqrt)\(/.test(input)) {
             // A warning about a common mistake naive users may make (no warning for asin or arcsin though):
-            return [i18next.t("common:inequality.validation.functionSpacing")];
+            return [i18next.t("questions:inequality.validation.functionSpacing")];
         }
     }
     return errors;
@@ -170,7 +170,7 @@ const SymbolicHelpTooltip = ({editorMode, helpTooltipId}: {editorMode: EditorMod
             <i id={helpTooltipId} className="icon icon-info icon-sm h-100 ms-3 align-self-center" />
         )}
         <UncontrolledTooltip target={helpTooltipId} placement="top" autohide={false} className="symbolic-help-tooltip">
-            <Trans i18nKey="common:inequality.helpTooltip.examples" components={{ br1: <br />, br2: <br />, br3: <br /> }} values={{ example: modeConstants[editorMode].tooltipExample }} />
+            <Trans i18nKey="questions:inequality.helpTooltip.examples" components={{ br1: <br />, br2: <br />, br3: <br /> }} values={{ example: modeConstants[editorMode].tooltipExample }} />
         </UncontrolledTooltip>
     </>;
 };
@@ -260,8 +260,8 @@ export const SymbolicTextInput = ({hiddenEditorRef, textInput, setTextInput, set
         <InputGroup className="my-2 separate-input-group">
             <div className="d-flex flex-nowrap w-100">
                 <div className="position-relative flex-grow-1">      
-                    <Input type="text" onChange={(e) => updateEquation(e.target.value)} value={textInput} placeholder={(editorMode === "logic" && !demoPage) ? t("common:inequality.input.placeholderOrType") : t("common:inequality.input.placeholder")} className={classNames({"h-100": isPhy}, {"text-body-tertiary": !demoPage && emptySubmission && textInput === typedProps.initialSeedText})}/>
-                    {!demoPage && typedProps.initialSeedText && <button type="button" className="eqn-editor-reset-text-input d-print-none" aria-label={t("common:inequality.input.resetButton")} onClick={() => {
+                    <Input type="text" onChange={(e) => updateEquation(e.target.value)} value={textInput} placeholder={(editorMode === "logic" && !demoPage) ? t("questions:inequality.input.placeholderOrType") : t("questions:inequality.input.placeholder")} className={classNames({"h-100": isPhy}, {"text-body-tertiary": !demoPage && emptySubmission && textInput === typedProps.initialSeedText})}/>
+                    {!demoPage && typedProps.initialSeedText && <button type="button" className="eqn-editor-reset-text-input d-print-none" aria-label={t("questions:inequality.input.resetButton")} onClick={() => {
                         updateEquation('');
                         if (sketchRef.current) sketchRef.current.loadTestCase(typedProps.editorSeed ?? []);
                         setHasStartedEditing(false);
@@ -277,7 +277,7 @@ export const SymbolicTextInput = ({hiddenEditorRef, textInput, setTextInput, set
             <QuestionInputValidation userInput={textInput} validator={(input) => symbolicTextInputValidator(input, editorMode, mayRequireStateSymbols, demoPage)}/>
         </InputGroup>
         {!demoPage && typedProps.symbolList && <div className="eqn-editor-symbols">
-            {t("common:inequality.input.symbolsHeading")} <pre>{typedProps.symbolList}</pre>
+            {t("questions:inequality.input.symbolsHeading")} <pre>{typedProps.symbolList}</pre>
         </div>}
     </div>;
 };

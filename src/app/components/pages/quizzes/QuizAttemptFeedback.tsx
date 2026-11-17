@@ -27,7 +27,7 @@ function QuizAttemptFeedbackFooter(props: QuizProps & FullQuizInfo) {
             <Button tag={Link} to={pageLink(1)}>{t("common:button.next")}</Button>
         </>;
     } else {
-        controls = <QuizPagination {...props} page={page} finalLabel={t("common:tests.feedback.footer.finalLabel")} />;
+        controls = <QuizPagination {...props} page={page} finalLabel={t("teaching:tests.feedback.footer.finalLabel")} />;
     }
 
     return <>
@@ -83,9 +83,9 @@ export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
                 {attempt.feedbackMode === 'DETAILED_FEEDBACK' && <QuizAttemptFeedbackFooter {...subProps} />}
             </QuizContentsComponent>}
             {isDefined(error) && <>
-                <TitleAndBreadcrumb currentPageTitle={t("common:tests.feedback.title")} intermediateCrumbs={myQuizzesCrumbs} icon={{type: "icon", icon: "icon-error"}} />
+                <TitleAndBreadcrumb currentPageTitle={t("teaching:tests.feedback.title")} intermediateCrumbs={myQuizzesCrumbs} icon={{type: "icon", icon: "icon-error"}} />
                 <Alert color="danger">
-                    <div className="alert-heading h4">{t("common:tests.feedback.error.heading")}</div>
+                    <div className="alert-heading h4">{t("teaching:tests.feedback.error.heading")}</div>
                     <p>{error}</p>
                 </Alert>
             </>}

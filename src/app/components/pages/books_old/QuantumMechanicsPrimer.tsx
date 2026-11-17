@@ -10,7 +10,7 @@ export const QuantumMechanicsPrimer = () => {
     return <Container className="physics">
         <Col>
             <div className="book-intro">
-                <TitleAndBreadcrumb className="mb-7" currentPageTitle={t("common:quantumMechanicsPrimer.title")} />
+                <TitleAndBreadcrumb className="mb-7" currentPageTitle={t("pages:quantumMechanicsPrimer.title")} />
                 <PageFragment fragmentId="quantum_mechanics_primer_intro"/>
             </div>
         </Col>

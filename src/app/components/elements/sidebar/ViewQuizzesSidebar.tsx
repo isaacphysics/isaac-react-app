@@ -47,10 +47,10 @@ export const ViewQuizzesSidebar = (props: ViewQuizzesSidebarProps) => {
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
         <search>
-            <h3 className="h5">{t("common:tests.view.searchTitle")}</h3>
+            <h3 className="h5">{t("teaching:tests.view.searchTitle")}</h3>
             <SearchInputWithIcon
                 outerClassName="my-3"
-                type="search" placeholder={t("common:tests.view.searchPlaceholder")} 
+                type="search" placeholder={t("teaching:tests.view.searchPlaceholder")} 
                 value={filterText} 
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setFilterText(e.target.value)}
             />

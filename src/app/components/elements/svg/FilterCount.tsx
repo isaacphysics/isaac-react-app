@@ -17,7 +17,7 @@ export const FilterCount = (props: FilterCountProps) => {
         width={`${filterIconWidth}px`}
         height={`${filterIconWidth}px`}
     >
-        <title>{t("common:svgFilter.count", { count })}</title>
+        <title>{t("questions:svgFilter.count", { count })}</title>
         <g>
             <Circle radius={filterIconWidth / 2} className={"circle filter-count"} />
             <foreignObject width={filterIconWidth} height={filterIconWidth}>

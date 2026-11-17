@@ -236,7 +236,7 @@ export function katexify(
         if (ref) {
             const number = figureNumbers[ref];
             if (number) {
-                const figure = i18next.t("common:latex.figureReference", { number });
+                const figure = i18next.t("questions:latex.figureReference", { number });
                 return format ? `<strong class="text-theme figure-reference">${figure}</strong>` : figure;
             }
         }
@@ -275,7 +275,7 @@ export function katexify(
                 const katexOptions = {...customKatexOptions, displayMode: search.mode == "display", macros: macrosToUse, output: "html"} as KatexOptions;
                 let katexRenderResult = katex.renderToString(latexMunged, katexOptions);
                 katexRenderResult = katexRenderResult.replace(REF_REGEXP, (_, match) => {
-                    return createReference(match, i18next.t("common:latex.unknownReference", { refKey: match }));
+                    return createReference(match, i18next.t("questions:latex.unknownReference", { refKey: match }));
                 });
 
                 let screenReaderText;
@@ -283,7 +283,7 @@ export function katexify(
                     const pauseChars = katexOptions.displayMode ? ". &nbsp;" : ",";  // trailing comma/full-stop for pause in speaking
                     screenReaderText = `${renderA11yString(latexMunged, katexOptions)}${pauseChars}`;
                     screenReaderText = screenReaderText.replace(SR_REF_REGEXP, (_, match) => {
-                        return createReference(match, i18next.t("common:latex.unknownReference", { refKey: match }), false);
+                        return createReference(match, i18next.t("questions:latex.unknownReference", { refKey: match }), false);
                     });
                 } catch {
                     screenReaderText = undefined;
@@ -301,8 +301,8 @@ export function katexify(
                     const katexMathML = katex.renderToString(
                         latexMunged
                             // a function, so a "$" in a translation isn't read as a replacement pattern
-                            .replace(dropZoneRegex, () => i18next.t("common:latex.dropZone"))
-                            .replace(dndDropZoneRegex, () => i18next.t("common:latex.dropZone")), 
+                            .replace(dropZoneRegex, () => i18next.t("questions:latex.dropZone"))
+                            .replace(dndDropZoneRegex, () => i18next.t("questions:latex.dropZone")), 
                         {...katexOptions, output: "mathml"}
                     ).replace(`class="katex"`, `class="katex-mathml"`);
                     
@@ -334,7 +334,7 @@ export function katexify(
         } else {
             // It's a ref
             const ref = match[0].match(/ref\{([^}]*)\}/);
-            const result = createReference(ref && ref[1], i18next.t("common:latex.unknownReference", { refKey: match[0] }));
+            const result = createReference(ref && ref[1], i18next.t("questions:latex.unknownReference", { refKey: match[0] }));
 
             output += result;
             index = match.index + match[0].length;

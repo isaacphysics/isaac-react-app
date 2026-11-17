@@ -25,12 +25,12 @@ export const KeyItem = (props: React.HTMLAttributes<HTMLSpanElement> & {icon: st
 export const CompletionKey = () => {
     const { t } = useTranslation();
     return <div className="d-flex flex-column sidebar-key">
-        {t("common:sidebar.completionKey.title")}
+        {t("questions:sidebar.completionKey.title")}
         <ul>
             <KeyItem icon="not-started" text={t("common:status.notStarted")}/>
             <KeyItem icon="in-progress" text={t("common:status.inProgress")}/>
             <KeyItem icon="attempted" text={t("common:status.allAttemptedWithErrors")}/>
-            <KeyItem icon="correct" text={t("common:sidebar.completionKey.allCorrect")}/>
+            <KeyItem icon="correct" text={t("questions:sidebar.completionKey.allCorrect")}/>
         </ul>
     </div>;
 };
@@ -184,7 +184,7 @@ export const BackToBookButton = (props: BackToBookButtonProps) => {
             type: "icon",
             affixClassName: "icon-inline me-2"
         }}>
-        {t("common:sidebar.backToBook.button")}
+        {t("questions:sidebar.backToBook.button")}
         <Spacer />
     </AffixButton>;
 };

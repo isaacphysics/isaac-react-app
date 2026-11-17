@@ -80,7 +80,7 @@ export const HierarchyFilterTreeContents = ({tier, index, choices, selections, q
                             {tier < 2 && choices[tier+1] && choice.value in choices[tier+1] && 
                                 <HierarchyFilterTreeList {...{tier: tier+1, index: choice.value, choices, selections, questionFinderFilter, setSelections}}/>
                             }
-                            {isComingSoon && <Badge className="ms-2 h-min-content align-self-center" color="theme">{t("common:svgFilter.comingSoon")}</Badge>}
+                            {isComingSoon && <Badge className="ms-2 h-min-content align-self-center" color="theme">{t("questions:svgFilter.comingSoon")}</Badge>}
                         </CheckboxWrapper>
                     </li>
                 </React.Fragment>;

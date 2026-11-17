@@ -21,7 +21,7 @@ const QuizFooter = ({quizId}: {quizId: string}) => {
     const { t } = useTranslation();
     return <div className="d-flex w-100 align-items-center mt-2 gap-2 mt-4 pt-2 border-top">
         <Spacer />
-        <Button tag={Link} to={`/test/attempt/${quizId}`}>{t("common:tests.view.takeTest")}</Button>
+        <Button tag={Link} to={`/test/attempt/${quizId}`}>{t("teaching:tests.view.takeTest")}</Button>
     </div>;
 };
 

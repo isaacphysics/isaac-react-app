@@ -12,7 +12,7 @@ type State = { errorMessage?: string, provider?: string, providerErrors: ReturnT
 export const AuthError = () => {
     const { t } = useTranslation();
     const location = useLocation();
-    return <Container role="region" aria-label={t("common:auth.page.ariaLabel")}>
+    return <Container role="region" aria-label={t("account:auth.page.ariaLabel")}>
         <TitleAndBreadcrumb currentPageTitle={t("common:title.authenticationError")} breadcrumbTitleOverride={t("common:title.authenticationError")} icon={{type: "icon", icon: "icon-error"}}/>
         <Row className="pt-4">
             <Col>
@@ -50,17 +50,17 @@ const AccountNotLinked  = ({ state }: { state?: State }) => {
     const provider = state?.provider === 'google' ? "Google" : "Microsoft";
 
     return <>
-        <h2 className="h3">{t("common:auth.notLinked.title", { provider })}</h2>
+        <h2 className="h3">{t("account:auth.notLinked.title", { provider })}</h2>
         <p>
-            {t("common:auth.notLinked.explanation", { siteName: SITE_TITLE_SHORT, provider, siteAccountName: SITE_TITLE_SHORT, providerAccount: provider, signInProvider: provider, siteAccount: SITE_TITLE_SHORT, alternateProvider: provider })}
+            {t("account:auth.notLinked.explanation", { siteName: SITE_TITLE_SHORT, provider, siteAccountName: SITE_TITLE_SHORT, providerAccount: provider, signInProvider: provider, siteAccount: SITE_TITLE_SHORT, alternateProvider: provider })}
         </p>
         <ul>
             <li>
-                <Trans i18nKey="site:auth.notLinked.enableSignIn" components={{ accountLink: <Link to="/account#security" aria-label={t("common:auth.accountLink.ariaLabel")} /> }} values={{ provider, providerSetting: provider }} />
-                <SSOLink> {t("common:auth.notLinked.readMore", { provider })}</SSOLink>
+                <Trans i18nKey="site:auth.notLinked.enableSignIn" components={{ accountLink: <Link to="/account#security" aria-label={t("account:auth.accountLink.ariaLabel")} /> }} values={{ provider, providerSetting: provider }} />
+                <SSOLink> {t("account:auth.notLinked.readMore", { provider })}</SSOLink>
             </li>
             <li>
-                <Trans i18nKey="common:auth.notLinked.switchAccount" components={{ accountLink: <Link to="/account#security" aria-label={t("common:auth.accountLink.ariaLabel")} /> }} values={{ provider, linkedProvider: provider }} />
+                <Trans i18nKey="account:auth.notLinked.switchAccount" components={{ accountLink: <Link to="/account#security" aria-label={t("account:auth.accountLink.ariaLabel")} /> }} values={{ provider, linkedProvider: provider }} />
             </li>
         </ul>
         <p>If you need more help signing in, <ContactUs/>.</p>
@@ -68,12 +68,12 @@ const AccountNotLinked  = ({ state }: { state?: State }) => {
 };
 
 const ConsentMissingMicrosoft = () => <>
-    <h2 className="h3">{i18next.t("common:auth.consent.title")}</h2>
+    <h2 className="h3">{i18next.t("account:auth.consent.title")}</h2>
     <p>
-        {i18next.t("common:auth.consent.explanation", { siteTitle: SITE_TITLE_SHORT })}
+        {i18next.t("account:auth.consent.explanation", { siteTitle: SITE_TITLE_SHORT })}
     </p>
     <p>
-        {i18next.t("common:auth.consent.schoolNote", { siteName: SITE_TITLE_SHORT, approvedSiteName: SITE_TITLE_SHORT })} <SSOLink>{i18next.t("common:auth.consent.readMore")}</SSOLink>
+        {i18next.t("account:auth.consent.schoolNote", { siteName: SITE_TITLE_SHORT, approvedSiteName: SITE_TITLE_SHORT })} <SSOLink>{i18next.t("account:auth.consent.readMore")}</SSOLink>
     </p>
     <p>If you need more help signing in, <ContactUs />.</p>
 </>;
@@ -81,4 +81,4 @@ const ConsentMissingMicrosoft = () => <>
 const SSOLink = ({ children }: { children: ReactNode}) => isPhy && 
     <Link to="/pages/single_sign_on" aria-label={i18next.t("sci:auth.sso.ariaLabel")}>{children}</Link>;
 
-const ContactUs = () => <Link to="/contact" aria-label={i18next.t("common:auth.contact.ariaLabel")}>{i18next.t("common:auth.contact.link")}</Link>;
+const ContactUs = () => <Link to="/contact" aria-label={i18next.t("account:auth.contact.ariaLabel")}>{i18next.t("account:auth.contact.link")}</Link>;

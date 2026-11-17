@@ -40,119 +40,119 @@ export const AdminStats = () => {
 
     return <Container id="admin-stats-page">
         <TitleAndBreadcrumb
-            currentPageTitle={t("common:admin.stats.title", { siteTitle: SITE_TITLE_SHORT })}
-            breadcrumbTitleOverride={t("common:admin.stats.breadcrumb")}
+            currentPageTitle={t("admin:admin.stats.title", { siteTitle: SITE_TITLE_SHORT })}
+            breadcrumbTitleOverride={t("admin:admin.stats.breadcrumb")}
             icon={{type: "icon", icon: "icon-progress"}}
         />
         <ShowLoading
             until={maybeAdminStatsWithTotals}
             thenRender={adminStatsWithTotals => {
                 return <>
-                    <div className="py-3">{t("common:admin.stats.overview")}</div>
+                    <div className="py-3">{t("admin:admin.stats.overview")}</div>
                     <Card className="mb-7 px-3 pt-1">
                         <CardBody>
                             <Row>
                                 <Col>
-                                    <strong>{t("common:admin.stats.users.heading")}</strong>
+                                    <strong>{t("admin:admin.stats.users.heading")}</strong>
                                     <ul className="list-unstyled mb-7">
-                                        <li><Trans i18nKey="common:admin.stats.users.sixMonths" components={{ strong: <strong /> }} values={{ activeUsersSixMonths: (adminStatsWithTotals.activeUsersOverPrevious.sixMonths.TOTAL || 0).toLocaleString() }} />
+                                        <li><Trans i18nKey="admin:admin.stats.users.sixMonths" components={{ strong: <strong /> }} values={{ activeUsersSixMonths: (adminStatsWithTotals.activeUsersOverPrevious.sixMonths.TOTAL || 0).toLocaleString() }} />
                                         </li>
-                                        <li><Trans i18nKey="common:admin.stats.users.twoYears" components={{ strong: <strong /> }} values={{ activeUsersTwoYears: (adminStatsWithTotals.activeUsersOverPrevious.twoYears.TOTAL || 0).toLocaleString() }} />
+                                        <li><Trans i18nKey="admin:admin.stats.users.twoYears" components={{ strong: <strong /> }} values={{ activeUsersTwoYears: (adminStatsWithTotals.activeUsersOverPrevious.twoYears.TOTAL || 0).toLocaleString() }} />
                                         </li>
-                                        <li><Trans i18nKey="common:admin.stats.users.total" components={{ strong: <strong /> }} values={{ totalUsers: (adminStatsWithTotals.userGenders.TOTAL || 0).toLocaleString() }} /></li>
+                                        <li><Trans i18nKey="admin:admin.stats.users.total" components={{ strong: <strong /> }} values={{ totalUsers: (adminStatsWithTotals.userGenders.TOTAL || 0).toLocaleString() }} /></li>
                                         <li className="mt-3">
                                             <strong>{t("common:label.gender")}</strong>
                                             <ul className="list-unstyled">
-                                                <li>{t("common:admin.stats.users.gender.male", { count: (adminStatsWithTotals.userGenders.MALE || 0).toLocaleString(), percentage: asPercentage(adminStatsWithTotals.userGenders.MALE, adminStatsWithTotals.userGenders.TOTAL) })}
+                                                <li>{t("admin:admin.stats.users.gender.male", { count: (adminStatsWithTotals.userGenders.MALE || 0).toLocaleString(), percentage: asPercentage(adminStatsWithTotals.userGenders.MALE, adminStatsWithTotals.userGenders.TOTAL) })}
                                                 </li>
-                                                <li>{t("common:admin.stats.users.gender.female", { count: (adminStatsWithTotals.userGenders.FEMALE || 0).toLocaleString(), percentage: asPercentage(adminStatsWithTotals.userGenders.FEMALE, adminStatsWithTotals.userGenders.TOTAL) })}
+                                                <li>{t("admin:admin.stats.users.gender.female", { count: (adminStatsWithTotals.userGenders.FEMALE || 0).toLocaleString(), percentage: asPercentage(adminStatsWithTotals.userGenders.FEMALE, adminStatsWithTotals.userGenders.TOTAL) })}
                                                 </li>
-                                                <li>{t("common:admin.stats.users.gender.other", { count: (adminStatsWithTotals.userGenders.OTHER || 0).toLocaleString(), percentage: asPercentage(adminStatsWithTotals.userGenders.OTHER, adminStatsWithTotals.userGenders.TOTAL) })}
+                                                <li>{t("admin:admin.stats.users.gender.other", { count: (adminStatsWithTotals.userGenders.OTHER || 0).toLocaleString(), percentage: asPercentage(adminStatsWithTotals.userGenders.OTHER, adminStatsWithTotals.userGenders.TOTAL) })}
                                                 </li>
-                                                <li>{t("common:admin.stats.users.gender.preferNotToSay", { count: (adminStatsWithTotals.userGenders.PREFER_NOT_TO_SAY || 0).toLocaleString(), percentage: asPercentage(adminStatsWithTotals.userGenders.PREFER_NOT_TO_SAY, adminStatsWithTotals.userGenders.TOTAL) })}
+                                                <li>{t("admin:admin.stats.users.gender.preferNotToSay", { count: (adminStatsWithTotals.userGenders.PREFER_NOT_TO_SAY || 0).toLocaleString(), percentage: asPercentage(adminStatsWithTotals.userGenders.PREFER_NOT_TO_SAY, adminStatsWithTotals.userGenders.TOTAL) })}
                                                 </li>
-                                                <li>{t("common:admin.stats.users.gender.missing", { count: (adminStatsWithTotals.userGenders.UNKNOWN || 0).toLocaleString(), percentage: asPercentage(adminStatsWithTotals.userGenders.UNKNOWN, adminStatsWithTotals.userGenders.TOTAL) })}
+                                                <li>{t("admin:admin.stats.users.gender.missing", { count: (adminStatsWithTotals.userGenders.UNKNOWN || 0).toLocaleString(), percentage: asPercentage(adminStatsWithTotals.userGenders.UNKNOWN, adminStatsWithTotals.userGenders.TOTAL) })}
                                                 </li>
                                             </ul>
                                         </li>
                                         <li className="mt-3">
                                             <strong>{t("common:label.role")}</strong>
                                             <ul className="list-unstyled">
-                                                <li>{t("common:admin.stats.users.role.student", { count: (adminStatsWithTotals.userRoles.STUDENT || 0).toLocaleString() })}</li>
-                                                <li>{t("common:admin.stats.users.role.tutor", { count: (adminStatsWithTotals.userRoles.TUTOR || 0).toLocaleString() })}</li>
-                                                <li>{t("common:admin.stats.users.role.teacher", { count: (adminStatsWithTotals.userRoles.TEACHER || 0).toLocaleString() })}</li>
-                                                <li>{t("common:admin.stats.users.role.eventLeader", { count: (adminStatsWithTotals.userRoles.EVENT_LEADER || 0).toLocaleString() })}</li>
-                                                <li>{t("common:admin.stats.users.role.contentEditor", { count: (adminStatsWithTotals.userRoles.CONTENT_EDITOR || 0).toLocaleString() })}</li>
-                                                <li>{t("common:admin.stats.users.role.eventManager", { count: (adminStatsWithTotals.userRoles.EVENT_MANAGER || 0).toLocaleString() })}</li>
-                                                <li>{t("common:admin.stats.users.role.admin", { count: (adminStatsWithTotals.userRoles.ADMIN || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.users.role.student", { count: (adminStatsWithTotals.userRoles.STUDENT || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.users.role.tutor", { count: (adminStatsWithTotals.userRoles.TUTOR || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.users.role.teacher", { count: (adminStatsWithTotals.userRoles.TEACHER || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.users.role.eventLeader", { count: (adminStatsWithTotals.userRoles.EVENT_LEADER || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.users.role.contentEditor", { count: (adminStatsWithTotals.userRoles.CONTENT_EDITOR || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.users.role.eventManager", { count: (adminStatsWithTotals.userRoles.EVENT_MANAGER || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.users.role.admin", { count: (adminStatsWithTotals.userRoles.ADMIN || 0).toLocaleString() })}</li>
                                             </ul>
                                         </li>
                                         <li className="mt-3">
-                                            <strong>{t("common:admin.stats.users.profileCompletionTitle")}</strong>
+                                            <strong>{t("admin:admin.stats.users.profileCompletionTitle")}</strong>
                                             <ul className="list-unstyled">
-                                                <li>{t("common:admin.stats.users.profileCompletion.ukIeSchool", { count: ((adminStatsWithTotals.userSchoolInfo.PROVIDED || 0) + (adminStatsWithTotals.userSchoolInfo.BOTH_PROVIDED || 0)).toLocaleString() })}
+                                                <li>{t("admin:admin.stats.users.profileCompletion.ukIeSchool", { count: ((adminStatsWithTotals.userSchoolInfo.PROVIDED || 0) + (adminStatsWithTotals.userSchoolInfo.BOTH_PROVIDED || 0)).toLocaleString() })}
                                                 </li>
-                                                <li>{t("common:admin.stats.users.profileCompletion.otherSchool", { count: (adminStatsWithTotals.userSchoolInfo.OTHER_PROVIDED || 0).toLocaleString() })}</li>
-                                                <li>{t("common:admin.stats.users.profileCompletion.noSchool", { count: (adminStatsWithTotals.userSchoolInfo.NOT_PROVIDED || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.users.profileCompletion.otherSchool", { count: (adminStatsWithTotals.userSchoolInfo.OTHER_PROVIDED || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.users.profileCompletion.noSchool", { count: (adminStatsWithTotals.userSchoolInfo.NOT_PROVIDED || 0).toLocaleString() })}</li>
                                             </ul>
                                         </li>
                                     </ul>
 
-                                    <strong>{t("common:admin.stats.content.heading")}</strong>
+                                    <strong>{t("admin:admin.stats.content.heading")}</strong>
                                     <ul className="list-unstyled">
-                                        <li>{t("common:admin.stats.content.questionPageViews", { count: (adminStatsWithTotals.viewQuestionEvents || 0).toLocaleString() })}</li>
-                                        <li>{t("common:admin.stats.content.questionAttempts", { count: (adminStatsWithTotals.answeredQuestionEvents || 0).toLocaleString() })}</li>
-                                        <li>{t("common:admin.stats.content.conceptPageViews", { count: (adminStatsWithTotals.viewConceptEvents || 0).toLocaleString() })}</li>
+                                        <li>{t("admin:admin.stats.content.questionPageViews", { count: (adminStatsWithTotals.viewQuestionEvents || 0).toLocaleString() })}</li>
+                                        <li>{t("admin:admin.stats.content.questionAttempts", { count: (adminStatsWithTotals.answeredQuestionEvents || 0).toLocaleString() })}</li>
+                                        <li>{t("admin:admin.stats.content.conceptPageViews", { count: (adminStatsWithTotals.viewConceptEvents || 0).toLocaleString() })}</li>
                                     </ul>
 
                                 </Col>
                                 <Col>
-                                    <strong>{t("common:admin.stats.lastSeen.heading")}</strong>
+                                    <strong>{t("admin:admin.stats.lastSeen.heading")}</strong>
                                     <ul className="list-unstyled">
-                                        <li>{t("common:admin.stats.period.sevenDays")}
+                                        <li>{t("admin:admin.stats.period.sevenDays")}
                                             <ul>
-                                                <li>{t("common:admin.stats.counts.all", { count: (adminStatsWithTotals.activeUsersOverPrevious.sevenDays.TOTAL || 0).toLocaleString() })}</li>
-                                                <li>{t("common:admin.stats.counts.teachers", { count: (adminStatsWithTotals.activeUsersOverPrevious.sevenDays.TEACHER || 0).toLocaleString() })}</li>
-                                                <li>{t("common:admin.stats.counts.students", { count: (adminStatsWithTotals.activeUsersOverPrevious.sevenDays.STUDENT || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.counts.all", { count: (adminStatsWithTotals.activeUsersOverPrevious.sevenDays.TOTAL || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.counts.teachers", { count: (adminStatsWithTotals.activeUsersOverPrevious.sevenDays.TEACHER || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.counts.students", { count: (adminStatsWithTotals.activeUsersOverPrevious.sevenDays.STUDENT || 0).toLocaleString() })}</li>
                                             </ul>
                                         </li>
-                                        <li>{t("common:admin.stats.period.thirtyDays")}
+                                        <li>{t("admin:admin.stats.period.thirtyDays")}
                                             <ul>
-                                                <li>{t("common:admin.stats.counts.all", { count: (adminStatsWithTotals.activeUsersOverPrevious.thirtyDays.TOTAL || 0).toLocaleString() })}</li>
-                                                <li>{t("common:admin.stats.counts.teachers", { count: (adminStatsWithTotals.activeUsersOverPrevious.thirtyDays.TEACHER || 0).toLocaleString() })}</li>
-                                                <li>{t("common:admin.stats.counts.students", { count: (adminStatsWithTotals.activeUsersOverPrevious.thirtyDays.STUDENT || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.counts.all", { count: (adminStatsWithTotals.activeUsersOverPrevious.thirtyDays.TOTAL || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.counts.teachers", { count: (adminStatsWithTotals.activeUsersOverPrevious.thirtyDays.TEACHER || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.counts.students", { count: (adminStatsWithTotals.activeUsersOverPrevious.thirtyDays.STUDENT || 0).toLocaleString() })}</li>
                                             </ul>
                                         </li>
-                                        <li>{t("common:admin.stats.period.ninetyDays")}
+                                        <li>{t("admin:admin.stats.period.ninetyDays")}
                                             <ul>
-                                                <li>{t("common:admin.stats.counts.all", { count: (adminStatsWithTotals.activeUsersOverPrevious.ninetyDays.TOTAL || 0).toLocaleString() })}</li>
-                                                <li>{t("common:admin.stats.counts.teachers", { count: (adminStatsWithTotals.activeUsersOverPrevious.ninetyDays.TEACHER || 0).toLocaleString() })}</li>
-                                                <li>{t("common:admin.stats.counts.students", { count: (adminStatsWithTotals.activeUsersOverPrevious.ninetyDays.STUDENT || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.counts.all", { count: (adminStatsWithTotals.activeUsersOverPrevious.ninetyDays.TOTAL || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.counts.teachers", { count: (adminStatsWithTotals.activeUsersOverPrevious.ninetyDays.TEACHER || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.counts.students", { count: (adminStatsWithTotals.activeUsersOverPrevious.ninetyDays.STUDENT || 0).toLocaleString() })}</li>
                                             </ul>
                                         </li>
                                     </ul>
 
-                                    <strong>{t("common:admin.stats.answering.heading")}</strong>
+                                    <strong>{t("admin:admin.stats.answering.heading")}</strong>
                                     <ul className="list-unstyled">
-                                        <li>{t("common:admin.stats.period.sevenDays")}
+                                        <li>{t("admin:admin.stats.period.sevenDays")}
                                             <ul>
-                                                <li>{t("common:admin.stats.counts.all", { count: (adminStatsWithTotals.answeringUsersOverPrevious.sevenDays.TOTAL || 0).toLocaleString() })}</li>
-                                                <li>{t("common:admin.stats.counts.teachers", { count: (adminStatsWithTotals.answeringUsersOverPrevious.sevenDays.TEACHER || 0).toLocaleString() })}</li>
-                                                <li>{t("common:admin.stats.counts.students", { count: (adminStatsWithTotals.answeringUsersOverPrevious.sevenDays.STUDENT || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.counts.all", { count: (adminStatsWithTotals.answeringUsersOverPrevious.sevenDays.TOTAL || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.counts.teachers", { count: (adminStatsWithTotals.answeringUsersOverPrevious.sevenDays.TEACHER || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.counts.students", { count: (adminStatsWithTotals.answeringUsersOverPrevious.sevenDays.STUDENT || 0).toLocaleString() })}</li>
                                             </ul>
                                         </li>
-                                        <li>{t("common:admin.stats.period.thirtyDays")}
+                                        <li>{t("admin:admin.stats.period.thirtyDays")}
                                             <ul>
-                                                <li>{t("common:admin.stats.counts.all", { count: (adminStatsWithTotals.answeringUsersOverPrevious.thirtyDays.TOTAL || 0).toLocaleString() })}</li>
-                                                <li>{t("common:admin.stats.counts.teachers", { count: (adminStatsWithTotals.answeringUsersOverPrevious.thirtyDays.TEACHER || 0).toLocaleString() })}</li>
-                                                <li>{t("common:admin.stats.counts.students", { count: (adminStatsWithTotals.answeringUsersOverPrevious.thirtyDays.STUDENT || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.counts.all", { count: (adminStatsWithTotals.answeringUsersOverPrevious.thirtyDays.TOTAL || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.counts.teachers", { count: (adminStatsWithTotals.answeringUsersOverPrevious.thirtyDays.TEACHER || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.counts.students", { count: (adminStatsWithTotals.answeringUsersOverPrevious.thirtyDays.STUDENT || 0).toLocaleString() })}</li>
                                             </ul>
                                         </li>
-                                        <li>{t("common:admin.stats.period.ninetyDays")}
+                                        <li>{t("admin:admin.stats.period.ninetyDays")}
                                             <ul>
-                                                <li>{t("common:admin.stats.counts.all", { count: (adminStatsWithTotals.answeringUsersOverPrevious.ninetyDays.TOTAL || 0).toLocaleString() })}</li>
-                                                <li>{t("common:admin.stats.counts.teachers", { count: (adminStatsWithTotals.answeringUsersOverPrevious.ninetyDays.TEACHER || 0).toLocaleString() })}</li>
-                                                <li>{t("common:admin.stats.counts.students", { count: (adminStatsWithTotals.answeringUsersOverPrevious.ninetyDays.STUDENT || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.counts.all", { count: (adminStatsWithTotals.answeringUsersOverPrevious.ninetyDays.TOTAL || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.counts.teachers", { count: (adminStatsWithTotals.answeringUsersOverPrevious.ninetyDays.TEACHER || 0).toLocaleString() })}</li>
+                                                <li>{t("admin:admin.stats.counts.students", { count: (adminStatsWithTotals.answeringUsersOverPrevious.ninetyDays.STUDENT || 0).toLocaleString() })}</li>
                                             </ul>
                                         </li>
                                     </ul>

@@ -25,10 +25,10 @@ export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
         return subjectStages.includes(context.stage[0] as LEARNING_STAGE);
     };
 
-    return <ContentSidebar buttonTitle={t("common:questionFinder.sidebar.switchContextButton")} {...rest}>
+    return <ContentSidebar buttonTitle={t("questions:questionFinder.sidebar.switchContextButton")} {...rest}>
         <div className="section-divider"/>
         <search>
-            <h3 className="h5">{t("common:questionFinder.sidebar.stageHeading")}</h3>
+            <h3 className="h5">{t("questions:questionFinder.sidebar.stageHeading")}</h3>
             <ul>
                 {[...new Set(Object.values(validStageSubjectPairs).flat())].map((stage, index) =>
                     <li key={index}>
@@ -42,7 +42,7 @@ export const QuestionDecksSidebar = (props: QuestionDecksSidebarProps) => {
                 )}
             </ul>
             <div className="section-divider"/>
-            <h3 className="h5">{t("common:questionFinder.sidebar.subjectHeading")}</h3>
+            <h3 className="h5">{t("questions:questionFinder.sidebar.subjectHeading")}</h3>
             <ul>
                 {Object.entries(validStageSubjectPairs)
                     .map(([subject, stages], index) =>

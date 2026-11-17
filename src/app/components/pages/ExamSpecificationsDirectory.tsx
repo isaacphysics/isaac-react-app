@@ -10,7 +10,7 @@ export const ExamSpecificationsDirectory = () => {
     const { t } = useTranslation();
     return <Container className="mb-7">
         <TitleAndBreadcrumb currentPageTitle={t("ada:title.examSpecifications")}/>
-        <MetaDescription description={t("common:examSpecifications.directory.metaDescription")}/>
+        <MetaDescription description={t("pages:examSpecifications.directory.metaDescription")}/>
         <Row className={"justify-content-center d-flex flex-row card-deck row-cols-1 row-cols-md-2 row-cols-xl-4 my-3"}>
             <Col className={"my-3"}>
                 <Card className={"cs-card-plain w-100"}>
@@ -20,14 +20,14 @@ export const ExamSpecificationsDirectory = () => {
                         </CardTitle>
                         <CardText>
                             <ul>
-                                <li>{t("common:examSpecifications.directory.ada.core")}</li>
-                                <li>{t("common:examSpecifications.directory.ada.advanced")}</li>
+                                <li>{t("pages:examSpecifications.directory.ada.core")}</li>
+                                <li>{t("pages:examSpecifications.directory.ada.advanced")}</li>
                             </ul>
                         </CardText>
                     </CardBody>
                     <CardFooter className={"border-top-0 pb-3"}>
                         <Button className="justify-content-end" color="keyline" tag={Link} to="/exam_specifications_ada">
-                            {t("common:examSpecifications.directory.showButton")}
+                            {t("pages:examSpecifications.directory.showButton")}
                         </Button>
                     </CardFooter>
                 </Card>
@@ -48,7 +48,7 @@ export const ExamSpecificationsDirectory = () => {
                     <CardFooter className={"border-top-0 pb-3"}>
                         <Button className="justify-content-end" color="keyline" tag={Link}
                             to="/exam_specifications_england">
-                            {t("common:examSpecifications.directory.showButton")}
+                            {t("pages:examSpecifications.directory.showButton")}
                         </Button>
                     </CardFooter>
                 </Card>
@@ -61,15 +61,15 @@ export const ExamSpecificationsDirectory = () => {
                         </CardTitle>
                         <CardText>
                             <ul>
-                                <li>{t("common:examSpecifications.directory.scotland.national5")}</li>
-                                <li>{t("common:examSpecifications.directory.scotland.higher")}</li>
-                                <li>{t("common:examSpecifications.directory.scotland.advancedHigher")}</li>
+                                <li>{t("pages:examSpecifications.directory.scotland.national5")}</li>
+                                <li>{t("pages:examSpecifications.directory.scotland.higher")}</li>
+                                <li>{t("pages:examSpecifications.directory.scotland.advancedHigher")}</li>
                             </ul>
                         </CardText>
                     </CardBody>
                     <CardFooter className={"border-top-0 pb-3"}>
                         <Button color="keyline" tag={Link} to="/exam_specifications_scotland">
-                            {t("common:examSpecifications.directory.showButton")}
+                            {t("pages:examSpecifications.directory.showButton")}
                         </Button>
                     </CardFooter>
                 </Card>
@@ -88,7 +88,7 @@ export const ExamSpecificationsDirectory = () => {
                         </CardText>
                     </CardBody>
                     <CardFooter className={"border-top-0 pb-3"}>
-                        <Button color="keyline" tag={Link} to="/exam_specifications_wales">{t("common:examSpecifications.directory.showButton")}</Button>
+                        <Button color="keyline" tag={Link} to="/exam_specifications_wales">{t("pages:examSpecifications.directory.showButton")}</Button>
                     </CardFooter>
                 </Card>
             </Col>

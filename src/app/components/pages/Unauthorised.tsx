@@ -9,9 +9,9 @@ export const Unauthorised = () => {
     const {pathname, state} = useLocation();
     return <Container>
         <div>
-            <TitleAndBreadcrumb breadcrumbTitleOverride={t("common:auth.unauthorised.breadcrumbTitle")} currentPageTitle={t("common:auth.unauthorised.title")} icon={{type: "icon", icon: "icon-error"}} />
+            <TitleAndBreadcrumb breadcrumbTitleOverride={t("account:auth.unauthorised.breadcrumbTitle")} currentPageTitle={t("account:auth.unauthorised.title")} icon={{type: "icon", icon: "icon-error"}} />
             <div className="my-4 h3">
-                {t("common:auth.unauthorised.message")}
+                {t("account:auth.unauthorised.message")}
             </div>
             <code>
                 {(state && state.overridePathname) || pathname}

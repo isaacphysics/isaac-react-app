@@ -10,7 +10,7 @@ export const SolvingPhysProblems = () => {
     return <Container className="physics">
         <Col>
             <div className="book-intro">
-                <TitleAndBreadcrumb className="mb-7" currentPageTitle={t("common:books.solvingPhysProblems.title")} />
+                <TitleAndBreadcrumb className="mb-7" currentPageTitle={t("pages:books.solvingPhysProblems.title")} />
                 <PageFragment fragmentId="solve_physics_problems_intro"/>
             </div>
         </Col>

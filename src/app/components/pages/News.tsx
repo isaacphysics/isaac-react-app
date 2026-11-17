@@ -45,8 +45,8 @@ export const News = () => {
         {allNews.length === 0 ? 
             <ShowLoadingQuery
                 query={newsQuery}
-                thenRender={() => <div className="w-100 text-start h4">{t("common:news.emptyState")}</div>}
-                defaultErrorTitle={t("common:news.errorTitle")}
+                thenRender={() => <div className="w-100 text-start h4">{t("pages:news.emptyState")}</div>}
+                defaultErrorTitle={t("pages:news.errorTitle")}
             /> : 
             <>
                 <h2 className="visually-hidden">News list</h2>

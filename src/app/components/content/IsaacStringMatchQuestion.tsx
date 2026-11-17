@@ -17,7 +17,7 @@ const IsaacStringMatchQuestion = ({doc, questionId, readonly}: IsaacQuestionProp
                 {doc.children}
             </IsaacContentValueOrChildren>
         </div>
-        <Input type={doc.multiLineEntry ? "textarea" : "text"} placeholder={t("common:questions.answerPlaceholder")}
+        <Input type={doc.multiLineEntry ? "textarea" : "text"} placeholder={t("questions:questions.answerPlaceholder")}
             maxLength={doc.multiLineEntry ? 250 : 75}
             spellCheck={false} className="mb-4"
             rows={doc.multiLineEntry ? 3 : undefined}

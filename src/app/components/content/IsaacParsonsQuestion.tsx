@@ -188,7 +188,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
                     Items in your answer can be indented using the [ and ] keys, or using the contained indent buttons.
                 </Label>
                 {!useSingleList && <Col md={6} className="parsons-available-items" aria-describedby={itemSectionInfoId}>
-                    <div className="h4">{t("common:questions.itemsArea.available")}</div>
+                    <div className="h4">{t("questions:questions.itemsArea.available")}</div>
                     <Droppable droppableId="availableItems">
                         {(provided: DroppableProvided) => {
                             return <div ref={provided.innerRef} className={classNames("parsons-items", {"empty": !(availableItems && availableItems.length > 0), "is-dragging": draggedElement})}>
@@ -205,7 +205,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
                     </Droppable>
                 </Col>}
                 <Col md={useSingleList ? 12 : 6} className={classNames("parsons-choice-items", {"no-print": attemptItems?.length === 0})} aria-describedby={itemSectionInfoId}>
-                    <div className="mt-4 mt-md-0 h4">{t("common:questions.itemsArea.yourAnswer")}</div>
+                    <div className="mt-4 mt-md-0 h4">{t("questions:questions.itemsArea.yourAnswer")}</div>
                     <Droppable droppableId="answerItems">
                         {(provided: DroppableProvided) => {
                             return <div id={`${questionId}-parsons-choice-area`} ref={provided.innerRef} className={classNames("parsons-items", {[`ghost-indent-${currentIndent}`]: isDefined(draggedElement) && canIndent && currentIndent !== null, "empty": !(attemptItems.length > 0), "is-dragging": draggedElement})}>
@@ -217,7 +217,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
                                 )}
                                 {attemptItems?.length === 0 &&
                                     <div className="text-muted text-center">
-                                        {readonly ? t("common:questions.itemsArea.empty") : t("common:questions.itemsArea.dragHint")}
+                                        {readonly ? t("questions:questions.itemsArea.empty") : t("questions:questions.itemsArea.dragHint")}
                                     </div>
                                 }
                                 {provided.placeholder}

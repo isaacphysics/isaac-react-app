@@ -31,7 +31,7 @@ export const InlineStringEntryZone = ({questionDTO, index, focusRef, setModified
                     correctnessClass(correctness)
                 )}
                 name={`Input field for part ${questionDTO?.title ?? (index+1)}`}
-                aria-label={t("common:questions.inlineInput.ariaLabel", { partName: questionDTO?.title ?? (index+1) })}
+                aria-label={t("questions:questions.inlineInput.ariaLabel", { partName: questionDTO?.title ?? (index+1) })}
                 style={contentStyle}
                 ref={focusRef}
                 value={currentAttempt?.value ?? ""}

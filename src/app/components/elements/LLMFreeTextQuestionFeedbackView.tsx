@@ -33,9 +33,9 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, max
     }, [hasSubmitted]);
 
     return <div ref={feedbackPanelRef} className={classNames("llm-feedback question-component", siteSpecific("p-xl-7 p-5", "p-md-7"))}>
-        <span className="h4 mb-0">{t("common:freeTextBuilder.llmFeedback.title")}</span>
+        <span className="h4 mb-0">{t("questions:freeTextBuilder.llmFeedback.title")}</span>
         <p className="mb-0">
-            {t("common:freeTextBuilder.llmFeedback.accuracyNote")}
+            {t("questions:freeTextBuilder.llmFeedback.accuracyNote")}
             {isAda && <>{" "}<Trans
                 i18nKey="ada:freeTextBuilder.llmFeedback.faqInfo"
                 components={{
@@ -46,15 +46,15 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, max
         <div className="prediction my-4">
             <div className='d-flex'>
                 <span className="icon icon-ai mt-1 me-2"/>
-                <strong>{t("common:freeTextBuilder.llmFeedback.prediction", { predictedMarks: validationResponse.marks, maxMarks })}</strong>
+                <strong>{t("questions:freeTextBuilder.llmFeedback.prediction", { predictedMarks: validationResponse.marks, maxMarks })}</strong>
             </div>
         </div>
         <div className="card table-responsive llm-mark-table-wrapper mb-4 rounded-2">
             <Table size='sm' className="mb-0" bordered={false} borderless={isAda}>
                 <thead>
                     <tr>
-                        <th>{t("common:freeTextBuilder.llmFeedback.markScheme")}</th>
-                        <th><span className='visually-hidden'>{t("common:freeTextBuilder.llmFeedback.predictedCorrect")}</span></th>
+                        <th>{t("questions:freeTextBuilder.llmFeedback.markScheme")}</th>
+                        <th><span className='visually-hidden'>{t("questions:freeTextBuilder.llmFeedback.predictedCorrect")}</span></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -62,7 +62,7 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, max
                         <td className="w-100">{mark.shortDescription}</td>
                         <td>
                             {mark.marks > 0 && <>
-                                <span className="visually-hidden">{t("common:freeTextBuilder.llmFeedback.predictedAwarded")}</span>
+                                <span className="visually-hidden">{t("questions:freeTextBuilder.llmFeedback.predictedAwarded")}</span>
                                 <span className={siteSpecific("icon-inline icon-correct", "icon icon-feedback-tick icon-sm")} />
                             </>}
                         </td>
@@ -73,23 +73,23 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, max
         {hasSubmitted && <>
             {!sentFeedback
                 ? <div className="feedback-collection">
-                    <p className="mb-4">{t("common:freeTextBuilder.llmFeedback.feedbackPrompt")}</p>
+                    <p className="mb-4">{t("questions:freeTextBuilder.llmFeedback.feedbackPrompt")}</p>
                     <ul className="no-bullet px-2 mb-4">
                         <li>
                             <StyledCheckbox
-                                id="disagree" label={<p>{t("common:freeTextBuilder.llmFeedback.disagree")}</p>}
+                                id="disagree" label={<p>{t("questions:freeTextBuilder.llmFeedback.disagree")}</p>}
                                 checked={feedback.disagree} onChange={() => setFeedback({...noFeedback, disagree: !feedback.disagree})}
                             />
                         </li>
                         <li>
                             <StyledCheckbox
-                                id="partlyAgree" label={<p>{t("common:freeTextBuilder.llmFeedback.partlyAgree")}</p>}
+                                id="partlyAgree" label={<p>{t("questions:freeTextBuilder.llmFeedback.partlyAgree")}</p>}
                                 checked={feedback.partlyAgree} onChange={() => setFeedback({...noFeedback, partlyAgree: !feedback.partlyAgree})}
                             />
                         </li>
                         <li>
                             <StyledCheckbox
-                                id="agree" label={<p>{t("common:freeTextBuilder.llmFeedback.agree")}</p>}
+                                id="agree" label={<p>{t("questions:freeTextBuilder.llmFeedback.agree")}</p>}
                                 checked={feedback.agree} onChange={() => setFeedback({...noFeedback, agree: !feedback.agree})}
                             />
                         </li>
@@ -101,11 +101,11 @@ export default function LLMFreeTextQuestionFeedbackView({validationResponse, max
                             setSentFeedback(true);
                         }}
                     >
-                        {t("common:freeTextBuilder.llmFeedback.submitButton")}
+                        {t("questions:freeTextBuilder.llmFeedback.submitButton")}
                     </Button>
                 </div>
                 : <div className="feedback-collection submitted">
-                    <span className="icon-feedback-sent-tick" /> {t("common:freeTextBuilder.llmFeedback.submitted")}
+                    <span className="icon-feedback-sent-tick" /> {t("questions:freeTextBuilder.llmFeedback.submitted")}
                 </div>
             }
         </>}

@@ -71,14 +71,14 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
     const { statusFilter, setStatusFilter, titleFilter, setTitleFilter, groupFilter, setGroupFilter, setByFilter, setSetByFilter, sortOrder, setSortOrder, assignmentQuery, ...rest } = props;
 
     const ORDER_NAMES: {[key in MyAssignmentsOrder]: string} = {
-        "startDate": t("common:assignments.sidebar.sortStartDateOldest"),
-        "-startDate": t("common:assignments.sidebar.sortStartDateNewest"),
-        "dueDate": t("common:assignments.sidebar.sortDueDateSoonest"),
-        "-dueDate": t("common:assignments.sidebar.sortDueDateLatest"),
-        "attempted": t("common:assignments.sidebar.sortAttemptedLowest"),
-        "-attempted": t("common:assignments.sidebar.sortAttemptedHighest"),
-        "correct": t("common:assignments.sidebar.sortCorrectnessLowest"),
-        "-correct": t("common:assignments.sidebar.sortCorrectnessHighest"),
+        "startDate": t("teaching:assignments.sidebar.sortStartDateOldest"),
+        "-startDate": t("teaching:assignments.sidebar.sortStartDateNewest"),
+        "dueDate": t("teaching:assignments.sidebar.sortDueDateSoonest"),
+        "-dueDate": t("teaching:assignments.sidebar.sortDueDateLatest"),
+        "attempted": t("teaching:assignments.sidebar.sortAttemptedLowest"),
+        "-attempted": t("teaching:assignments.sidebar.sortAttemptedHighest"),
+        "correct": t("teaching:assignments.sidebar.sortCorrectnessLowest"),
+        "-correct": t("teaching:assignments.sidebar.sortCorrectnessHighest"),
     };
 
     useEffect(() => {
@@ -95,7 +95,7 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
             return <>
                 <div className="section-divider"/>
                 <search data-testid="my-assignments-sidebar">
-                    <h3 className="h5">{t("common:assignments.sidebar.searchTitle")}</h3>
+                    <h3 className="h5">{t("teaching:assignments.sidebar.searchTitle")}</h3>
                     <SearchInputWithIcon
                         outerClassName='my-3'
                         type="search" value={titleFilter || ""}
@@ -103,7 +103,7 @@ export const MyAssignmentsSidebar = (props: MyAssignmentsSidebarProps) => {
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setTitleFilter(e.target.value)}
                     />
                     <div className="section-divider"/>
-                    <h3 className="h5">{t("common:assignments.sidebar.sortTitle")}</h3>
+                    <h3 className="h5">{t("teaching:assignments.sidebar.sortTitle")}</h3>
                     <Input type="select" className="ps-3 my-3" value={sortOrder} onChange={e => setSortOrder(e.target.value as MyAssignmentsOrder)}>
                         {Object.values(MyAssignmentsOrder).map(order => <option key={order} value={order}>{ORDER_NAMES[order]}</option>)}
                     </Input>

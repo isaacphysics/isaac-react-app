@@ -33,7 +33,7 @@ export function DifficultyFilter({difficultyOptions, difficulties, setDifficulti
     return <Container className="ms-0 ps-0 text-center" style={{width: 2 * focusPadding + 6 * (hexagon.halfWidth + 2 * hexagon.padding)}}>
         <span>{t("sci:label.practice")}</span>
         <svg width={`${2 * focusPadding + 6 * (hexagon.halfWidth + hexagon.padding)}`} height={`${2 * focusPadding + 4 * hexagon.quarterHeight + 2 * hexagon.padding}px`}>
-            <title>{t("common:svgFilter.title")}</title>
+            <title>{t("questions:svgFilter.title")}</title>
             <g transform={`translate(${focusPadding + hexagon.padding},${focusPadding})`}>
                 <g>
                     {practiceOptionsRow.map((difficultyOption, j) => {

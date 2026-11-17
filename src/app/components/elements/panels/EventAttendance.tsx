@@ -47,7 +47,7 @@ export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSc
     }
 
     return <>
-        {canRecordAttendance && atLeastOne(eventBookings?.length) && <Accordion id="record-event-attendance" trustedTitle={t("common:events.attendance.title")} disabled={event.isCancelled && t("common:events.attendance.cancelledEventNotice")}>
+        {canRecordAttendance && atLeastOne(eventBookings?.length) && <Accordion id="record-event-attendance" trustedTitle={t("events:events.attendance.title")} disabled={event.isCancelled && t("events:events.attendance.cancelledEventNotice")}>
             {isEventLeader(user) && <div className="bg-grey p-2 mb-3 text-center">
                 {t("common:label.eventLeaderRestriction")}
             </div>}
@@ -59,43 +59,43 @@ export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSc
                                 {t("common:table.actions")}
                             </th>
                             <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('bookingStatus'); setReverse(!reverse);}}>
-                                {t("common:events.attendance.table.attendanceHeader")}
+                                {t("events:events.attendance.table.attendanceHeader")}
                             </Button></th>
                             <th className="align-middle">
                                 <Button color="link" onClick={() => {setSortPredicate('userBooked.familyName'); setReverse(!reverse);}}>
                                     {t("common:table.name")}
                                 </Button>
-                                <Input className="w-auto" value={familyNameFilter} onChange={e => setFamilyNameFilter(e.target.value)} placeholder={t("common:events.attendance.table.surnameFilterPlaceholder")} />
+                                <Input className="w-auto" value={familyNameFilter} onChange={e => setFamilyNameFilter(e.target.value)} placeholder={t("events:events.attendance.table.surnameFilterPlaceholder")} />
                             </th>
                             <th className="align-middle">
-                                {t("common:events.bookingsTable.jobYearGroup")}
+                                {t("events:events.bookingsTable.jobYearGroup")}
                             </th>
                             <th className="align-middle">
                                 {t("common:label.school")}
                             </th>
                             <th className="align-middle">
-                                {t("common:events.bookingsTable.accountType")}
+                                {t("events:events.bookingsTable.accountType")}
                             </th>
                             <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('userBooked.email'); setReverse(!reverse);}}>
                                 {t("common:table.email")}
                             </Button></th>
                             <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('bookingDate'); setReverse(!reverse);}}>
-                                {t("common:events.bookingsTable.bookingCreated")}
+                                {t("events:events.bookingsTable.bookingCreated")}
                             </Button></th>
                             <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('updated'); setReverse(!reverse);}}>
-                                {t("common:events.bookingsTable.bookingUpdated")}
+                                {t("events:events.bookingsTable.bookingUpdated")}
                             </Button></th>
                             <th className="align-middle">
                                 {t("common:label.accessibilityRequirements")}
                             </th>
                             <th className="align-middle">
-                                {t("common:events.attendance.table.medicalRequirementsHeader")}
+                                {t("events:events.attendance.table.medicalRequirementsHeader")}
                             </th>
                             <th className="align-middle">
-                                {t("common:events.bookingsTable.emergencyName")}
+                                {t("events:events.bookingsTable.emergencyName")}
                             </th>
                             <th className="align-middle">
-                                {t("common:events.bookingsTable.emergencyPhone")}
+                                {t("events:events.bookingsTable.emergencyPhone")}
                             </th>
                         </tr>
                     </thead>
@@ -112,12 +112,12 @@ export const EventAttendance = ({user, eventId, event, eventBookings, userIdToSc
                                         {booking.bookingStatus != 'ATTENDED' && <Button color="keyline" className="btn-sm mb-2"
                                             onClick={() => recordEventAttendance({eventId, userId: userBooked.id as number, attended: true})}
                                         >
-                                            {t("common:events.attendance.markAttendedButton")}
+                                            {t("events:events.attendance.markAttendedButton")}
                                         </Button>}
                                         {booking.bookingStatus != 'ABSENT' && <Button color="keyline" className="btn-sm mb-2"
                                             onClick={() => recordEventAttendance({eventId, userId: userBooked.id as number, attended: false})}
                                         >
-                                            {t("common:events.attendance.markAbsentButton")}
+                                            {t("events:events.attendance.markAbsentButton")}
                                         </Button>}
                                     </td>
                                     <td className="align-middle text-center">{displayAttendanceAsSymbol(booking.bookingStatus)}</td>

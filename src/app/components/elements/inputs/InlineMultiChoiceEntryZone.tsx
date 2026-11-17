@@ -41,7 +41,7 @@ export const InlineMultiChoiceEntryZone = ({questionDTO, focusRef, setModified, 
                     data-unit={'None'}
                     onClick={() => {updateCurrentAttempt({newValue: undefined});}}
                 >
-                    <span className="fst-italic text-muted">{t("common:questions.multiChoice.clearOption")}</span>
+                    <span className="fst-italic text-muted">{t("questions:questions.multiChoice.clearOption")}</span>
                 </DropdownItem>
                 {questionDTO.choices?.map((item, i) => {
                     return <DropdownItem key={i}

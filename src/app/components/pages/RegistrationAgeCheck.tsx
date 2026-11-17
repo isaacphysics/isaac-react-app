@@ -51,7 +51,7 @@ export const RegistrationAgeCheck = () => {
 
     const goBack = () => {
         confirmThen(
-            t("common:auth.registration.goBackConfirm"),
+            t("account:auth.registration.goBackConfirm"),
             () => navigate("/register"));
     };
 
@@ -59,7 +59,7 @@ export const RegistrationAgeCheck = () => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={t("common:auth.registration.pageTitle", { siteTitle: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
+            <TitleAndBreadcrumb currentPageTitle={t("account:auth.registration.pageTitle", { siteTitle: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
         }
         sidebar={siteSpecific(
             <SignupSidebar activeTab={1}/>,
@@ -68,8 +68,8 @@ export const RegistrationAgeCheck = () => {
     >
         <Card className="my-7">
             <CardBody>
-                <h2 className={siteSpecific("h4", "h3")}>{t("common:auth.registration.ageCheck.ageQuestion")}</h2>
-                <p>{t("common:auth.registration.ageCheck.terms", { minAge: SITE_LOWER_AGE_LIMIT })}</p>
+                <h2 className={siteSpecific("h4", "h3")}>{t("account:auth.registration.ageCheck.ageQuestion")}</h2>
+                <p>{t("account:auth.registration.ageCheck.terms", { minAge: SITE_LOWER_AGE_LIMIT })}</p>
                 <Form onSubmit={submit}>
                     <fieldset>
                         <FormGroup check className="d-flex align-items-center my-2">
@@ -82,7 +82,7 @@ export const RegistrationAgeCheck = () => {
                                 color="primary"
                                 invalid={isInvalid}
                             />
-                            <Label for="registration-age-check-over" className="ms-2 mb-0">{t("common:auth.registration.ageCheck.optionOver", { minAgeWithConsent: SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT })}</Label>
+                            <Label for="registration-age-check-over" className="ms-2 mb-0">{t("account:auth.registration.ageCheck.optionOver", { minAgeWithConsent: SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT })}</Label>
                         </FormGroup>
                         <FormGroup check className="d-flex align-items-center my-2">
                             <Input
@@ -94,7 +94,7 @@ export const RegistrationAgeCheck = () => {
                                 color="primary"
                                 invalid={isInvalid}
                             />
-                            <Label for={`registration-age-check-${siteSpecific("additional_info", "sso_only")}`} className="ms-2 mb-0">{t("common:auth.registration.ageCheck.optionBetween", { minAge: SITE_LOWER_AGE_LIMIT, maxAgeWithConsent: SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT - 1 })}</Label>
+                            <Label for={`registration-age-check-${siteSpecific("additional_info", "sso_only")}`} className="ms-2 mb-0">{t("account:auth.registration.ageCheck.optionBetween", { minAge: SITE_LOWER_AGE_LIMIT, maxAgeWithConsent: SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT - 1 })}</Label>
                         </FormGroup>
                         <FormGroup check className="my-2">
                             <Input
@@ -106,10 +106,10 @@ export const RegistrationAgeCheck = () => {
                                 color="primary"
                                 invalid={isInvalid}
                             />
-                            <Label for="registration-age-check-under" className="ms-2 mb-0">{t("common:auth.registration.ageCheck.optionUnder", { maxAge: SITE_LOWER_AGE_LIMIT - 1 })}</Label>
+                            <Label for="registration-age-check-under" className="ms-2 mb-0">{t("account:auth.registration.ageCheck.optionUnder", { maxAge: SITE_LOWER_AGE_LIMIT - 1 })}</Label>
                         </FormGroup>
                         <FormFeedback className={classNames({"d-block": isInvalid})}>
-                            {t("common:auth.registration.ageCheck.selectionRequired")}
+                            {t("account:auth.registration.ageCheck.selectionRequired")}
                         </FormFeedback>
                     </fieldset>
                     {isAda && <hr/>}

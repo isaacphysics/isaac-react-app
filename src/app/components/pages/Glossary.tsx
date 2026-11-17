@@ -142,7 +142,7 @@ export const GlossarySearch = ({searchText, setSearchText}: GlossarySearchProps)
     <Input
         id="terms-search" name="query"
         type="search" value={internalSearchText || ""}
-        placeholder={t("common:glossary.search.label")} aria-label={t("common:glossary.search.label")}
+        placeholder={t("questions:glossary.search.label")} aria-label={t("questions:glossary.search.label")}
         onChange={(e: ChangeEvent<HTMLInputElement>) =>  {
             setSearchText(e.target.value);
             setInternalSearchText(e.target.value);
@@ -354,7 +354,7 @@ export const Glossary = () => {
         <PageContainer data-bs-theme={pageContext?.subject}
             pageTitle={<>
                 <TitleAndBreadcrumb 
-                    currentPageTitle={isPhy && isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) ? i18next.t("common:glossary.contextualTitle", { context: getHumanContext(pageContext) }) : i18next.t("common:title.glossary")}
+                    currentPageTitle={isPhy && isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) ? i18next.t("questions:glossary.contextualTitle", { context: getHumanContext(pageContext) }) : i18next.t("common:title.glossary")}
                     icon={{type: "icon", subject: pageContext?.subject, icon: "icon-tests"}}
                     intermediateCrumbs={crumb ? [crumb] : []}
                 />
@@ -377,7 +377,7 @@ export const Glossary = () => {
                     <Row className="no-print">
                         {isAda && <>
                             <Col md={{size: 4}}>
-                                <Label for='terms-search' className='visually-hidden'>{i18next.t("common:glossary.search.label")}</Label>
+                                <Label for='terms-search' className='visually-hidden'>{i18next.t("questions:glossary.search.label")}</Label>
                                 <GlossarySearch searchText={searchText} setSearchText={debouncedSearchHandler} />
                             </Col>
                             <Col className="mt-3 mt-md-0">
@@ -385,7 +385,7 @@ export const Glossary = () => {
                                 <StyledSelect inputId="topic-select"
                                     options={ topics.map(t => ({ value: t.id, label: t.title}))}
                                     name="topic-select"
-                                    placeholder={i18next.t("common:glossary.filters.topicPlaceholder")}
+                                    placeholder={i18next.t("questions:glossary.filters.topicPlaceholder")}
                                     onChange={e => setFilterTopic(topics.find(v => v.id === (e as Item<TAG_ID> | undefined)?.value)) }
                                     isClearable
                                 />
@@ -394,8 +394,8 @@ export const Glossary = () => {
                     </Row>
                     <Row className="only-print">
                         <Col>
-                            {searchText !== "" && <span className="pe-4"><Trans i18nKey="common:glossary.print.searchTerm" components={{ strong: <strong /> }} values={{ searchText }} /></span>}
-                            {isDefined(filterTopic) && <span className="pe-4"><Trans i18nKey="common:glossary.print.topicName" components={{ strong: <strong /> }} values={{ topicTitle: filterTopic.title }} /></span>}
+                            {searchText !== "" && <span className="pe-4"><Trans i18nKey="questions:glossary.print.searchTerm" components={{ strong: <strong /> }} values={{ searchText }} /></span>}
+                            {isDefined(filterTopic) && <span className="pe-4"><Trans i18nKey="questions:glossary.print.topicName" components={{ strong: <strong /> }} values={{ topicTitle: filterTopic.title }} /></span>}
                         </Col>
                     </Row>
                 </Col>
@@ -403,9 +403,9 @@ export const Glossary = () => {
             {(!glossaryTerms || Object.entries(glossaryTerms).length === 0) && <Row>
                 <div className={siteSpecific("text-center", "col-md-8 offset-md-2 py-4")}>
                     {/* Let users know that they need to select a subject */}
-                    {isPhy && !isDefined(filterSubject) && <p>{i18next.t("common:glossary.empty.selectSubject")}</p>}
-                    {(isAda || isDefined(filterSubject)) && searchText === "" && <p>{i18next.t("common:glossary.empty.noTerms")}</p>}
-                    {(isAda || isDefined(filterSubject)) && searchText !== "" &&  <p>{i18next.t("common:glossary.empty.noResults")}</p>}
+                    {isPhy && !isDefined(filterSubject) && <p>{i18next.t("questions:glossary.empty.selectSubject")}</p>}
+                    {(isAda || isDefined(filterSubject)) && searchText === "" && <p>{i18next.t("questions:glossary.empty.noTerms")}</p>}
+                    {(isAda || isDefined(filterSubject)) && searchText !== "" &&  <p>{i18next.t("questions:glossary.empty.noResults")}</p>}
                 </div>
             </Row>}
             {glossaryTerms && Object.keys(glossaryTerms).length > 0 && <Col className={classNames("p-4", {"pt-0": isAda, "pe-2 pt-md-2 mb-4 border-radius-2 list-results-container": isPhy})}>

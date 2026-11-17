@@ -30,7 +30,7 @@ export const BooksOverview = () => {
     return <PageContainer
         pageTitle={
             <TitleAndBreadcrumb 
-                currentPageTitle={t("common:books.overview.title")}
+                currentPageTitle={t("pages:books.overview.title")}
                 icon={{type: "icon", icon: "icon-book"}}
             />
         }
@@ -42,8 +42,8 @@ export const BooksOverview = () => {
         <PageMetadata title={"Isaac books: in print and online"} showSidebarButton sidebarButtonText={t("sci:button.viewAllBooks")}/>
         <PageFragment fragmentId="books_overview_fragment" />
 
-        <h3>{t("common:books.overview.exploreTitle")}</h3>
-        <span>{t("common:books.overview.exploreDescription")}</span>
+        <h3>{t("pages:books.overview.exploreTitle")}</h3>
+        <span>{t("pages:books.overview.exploreDescription")}</span>
         <div className="row mt-3 mb-7 row-cols-1 row-cols-md-2 row-cols-lg-1 row-cols-xxl-2">
             {ISAAC_BOOKS.filter(b => b.hidden !== BookHiddenState.HIDDEN).map((book, index) => {
                 return <BookCard key={index} {...book} />;

@@ -44,14 +44,14 @@ export const coordinateInputValidator = (input: (readonly string[])[]) => {
         });
     });
     if (containsComma) {
-        errors.push(i18next.t("common:questions.coordinate.noCommaError"));
+        errors.push(i18next.t("questions:questions.coordinate.noCommaError"));
     }
     if (containsOperator) {
-        errors.push(i18next.t("common:questions.coordinate.simplifyError"));
+        errors.push(i18next.t("questions:questions.coordinate.simplifyError"));
     }
     if (allBadChars.length > 0) {
         const uniqueBadChars = [...new Set(allBadChars.toString())].filter(e => e !== ",").join(" ");
-        errors.push(i18next.t("common:questions.coordinate.invalidCharsError", { invalidChars: uniqueBadChars }));
+        errors.push(i18next.t("questions:questions.coordinate.invalidCharsError", { invalidChars: uniqueBadChars }));
     }
     return errors;
 };
@@ -205,7 +205,7 @@ const IsaacCoordinateQuestion = ({doc, questionId, readonly}: IsaacQuestionProps
         ))}
         <QuestionInputValidation userInput={currentAttempt?.items?.map(answer => answer.coordinates ?? []) ?? []} validator={coordinateInputValidator}/>
         {!doc.numberOfCoordinates && <Button color="secondary" size="sm" className="mt-3" onClick={addCoord}>
-            {doc.buttonText ? <Markup encoding="latex">{doc.buttonText}</Markup> : t("common:questions.coordinate.addButton")}
+            {doc.buttonText ? <Markup encoding="latex">{doc.buttonText}</Markup> : t("questions:questions.coordinate.addButton")}
         </Button>}
     </div>;
 };

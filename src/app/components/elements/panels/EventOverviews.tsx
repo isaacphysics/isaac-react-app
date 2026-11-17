@@ -43,9 +43,9 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
         }
     }, [total]);
 
-    return <Accordion trustedTitle={t("common:events.overview.title")} index={0} startOpen>
+    return <Accordion trustedTitle={t("events:events.overview.title")} index={0} startOpen>
         {isEventLeader(user) && <div className="bg-grey p-2 mb-4 text-center">
-            {t("common:events.leaderRestriction")}
+            {t("events:events.leaderRestriction")}
         </div>}
         <div className="clearfix">
             <div className="float-start">
@@ -59,9 +59,9 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
                         });
                     }
                 }}>
-                    {t("common:events.loadMoreButton")}
+                    {t("events:events.loadMoreButton")}
                 </Button>
-                <span className="ms-2">{t("common:events.showingCount", { shownCount: eventOverviews?.length ?? 0, totalCount: total ?? 0 })}</span>
+                <span className="ms-2">{t("events:events.showingCount", { shownCount: eventOverviews?.length ?? 0, totalCount: total ?? 0 })}</span>
             </div>
             <div className="float-end mb-4">
                 <Label>
@@ -76,7 +76,7 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
 
         <ShowLoadingQuery
             query={eventOverviewQuery}
-            defaultErrorTitle={t("common:events.loadErrorTitle")}
+            defaultErrorTitle={t("events:events.loadErrorTitle")}
             thenRender={({eventOverviews}) => {
                 return <>
                     {atLeastOne(eventOverviews.length) && <div className="overflow-auto">
@@ -90,7 +90,7 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
                                         {t("common:table.title")}
                                     </Button></th>
                                     <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('date'); setReverse(!reverse);}}>
-                                        {t("common:events.tableDateHeader")}
+                                        {t("events:events.tableDateHeader")}
                                     </Button></th>
                                     <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('bookingDeadline'); setReverse(!reverse);}}>
                                         {t("common:label.bookingDeadline")}
@@ -102,13 +102,13 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
                                         {t("common:label.status")}
                                     </Button></th>
                                     <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('numberOfConfirmedBookings'); setReverse(!reverse);}}>
-                                        {t("common:events.tableConfirmedHeader")}
+                                        {t("events:events.tableConfirmedHeader")}
                                     </Button></th>
                                     <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('numberOfWaitingListBookings'); setReverse(!reverse);}}>
-                                        {t("common:events.tableWaitingHeader")}
+                                        {t("events:events.tableWaitingHeader")}
                                     </Button></th>
                                     <th className="align-middle"><Button color="link" onClick={() => {setSortPredicate('numberAttended'); setReverse(!reverse);}}>
-                                        {t("common:events.tableAttendedHeader")}
+                                        {t("events:events.tableAttendedHeader")}
                                     </Button></th>
                                 </tr>
                             </thead>
@@ -132,7 +132,7 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
                         </Table>
                     </div>}
                     {zeroOrLess(eventOverviews.length) && <p className="text-center">
-                        <strong>{t("common:events.emptyState")}</strong>
+                        <strong>{t("events:events.emptyState")}</strong>
                     </p>}
                 </>;
             }} />

@@ -95,24 +95,24 @@ const canSendPasswordResetRequest = function(user: AppGroupMembership, passwordR
 };
 
 const passwordResetInformation = function(member: AppGroupMembership, passwordRequestSent: boolean) {
-    let message = i18next.t("common:groups.member.passwordReset.cannotSend");
+    let message = i18next.t("teaching:groups.member.passwordReset.cannotSend");
     if (canSendPasswordResetRequest(member, passwordRequestSent)) {
-        message = i18next.t("common:groups.member.passwordReset.sendTooltip");
+        message = i18next.t("teaching:groups.member.passwordReset.sendTooltip");
     } else if (passwordRequestSent) {
-        message = i18next.t("common:groups.member.passwordReset.sentTooltip");
+        message = i18next.t("teaching:groups.member.passwordReset.sentTooltip");
     } else if (member.emailVerificationStatus == 'DELIVERY_FAILED') {
-        message = i18next.t("common:groups.member.passwordReset.deliveryFailedTooltip");
+        message = i18next.t("teaching:groups.member.passwordReset.deliveryFailedTooltip");
     }
     return message;
 };
 
 const confirmDeleteGroup = (dispatch: AppDispatch, deleteGroup: (groupId: number) => void, user: RegisteredUserDTO, groupToDelete: AppGroup) => {
     if (user.id === groupToDelete.ownerId) {
-        if (confirm(i18next.t("common:groups.delete.ownerConfirm", { groupName: groupToDelete.groupName }))) {
+        if (confirm(i18next.t("teaching:groups.delete.ownerConfirm", { groupName: groupToDelete.groupName }))) {
             deleteGroup(groupToDelete.id as number);
         }
     } else {
-        if (confirm(i18next.t("common:groups.delete.nonOwnerConfirm", { groupName: groupToDelete.groupName }))) {
+        if (confirm(i18next.t("teaching:groups.delete.nonOwnerConfirm", { groupName: groupToDelete.groupName }))) {
             void dispatch(showAdditionalManagerSelfRemovalModal({group: groupToDelete, user}));
         }
     }
@@ -136,7 +136,7 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
     }
 
     function confirmDeleteMember() {
-        if (confirm(t("common:groups.member.removeConfirm", { groupName: group.groupName }))) {
+        if (confirm(t("teaching:groups.member.removeConfirm", { groupName: group.groupName }))) {
             void deleteMember({groupId: group.id as number, userId: member.id as number});
         }
     }
@@ -156,20 +156,20 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
                     >
                         <span className="ps-1">{member.givenName} {member.familyName}</span>
                     </Link> :
-                    <span className="not-authorised"><Trans i18nKey="common:groups.member.nameNotSharing" components={{ struckOut: <span className="ps-1 struck-out" /> }} values={{ givenName: member.givenName, familyName: member.familyName }} /></span>
+                    <span className="not-authorised"><Trans i18nKey="teaching:groups.member.nameNotSharing" components={{ struckOut: <span className="ps-1 struck-out" /> }} values={{ givenName: member.givenName, familyName: member.familyName }} /></span>
                 }
             </div>
             <div>
                 {member.emailVerificationStatus == "DELIVERY_FAILED" &&
                     <Tooltip tipText={<>
-                        <Trans i18nKey="common:groups.member.emailDeliveryFailedTooltip" components={{ br: <br /> }} />
+                        <Trans i18nKey="teaching:groups.member.emailDeliveryFailedTooltip" components={{ br: <br /> }} />
                     </>} className="icon-email-status failed" />
                 }
                 {member.emailVerificationStatus == "NOT_VERIFIED" &&
-                    <Tooltip tipText={t("common:groups.member.emailUnverifiedTooltip")} className="icon-email-status unverified" />
+                    <Tooltip tipText={t("teaching:groups.member.emailUnverifiedTooltip")} className="icon-email-status unverified" />
                 }
                 {member.groupMembershipInformation && member.groupMembershipInformation.status == "INACTIVE" &&
-                    <Tooltip className="ms-1" tipText={t("common:groups.member.inactiveTooltip")}>{t("common:groups.member.inactiveLabel")}</Tooltip>
+                    <Tooltip className="ms-1" tipText={t("teaching:groups.member.inactiveTooltip")}>{t("teaching:groups.member.inactiveLabel")}</Tooltip>
                 }
             </div>
         </div>
@@ -182,11 +182,11 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
                     <DropdownMenu>
                         {isTeacherOrAbove(user) &&
                             <DropdownItem onClick={resetPassword} disabled={!canSendPasswordResetRequest(member, passwordRequestSent)}>
-                                {!passwordRequestSent ? t("common:button.resetPassword") : t("common:groups.member.passwordReset.sentLabel")}
+                                {!passwordRequestSent ? t("common:button.resetPassword") : t("teaching:groups.member.passwordReset.sentLabel")}
                             </DropdownItem>
                         }
                         {userHasAdditionalGroupPrivileges &&
-                            <DropdownItem onClick={confirmDeleteMember} aria-label={t("common:groups.member.removeAriaLabel")}>{t("common:button.remove")}</DropdownItem>
+                            <DropdownItem onClick={confirmDeleteMember} aria-label={t("teaching:groups.member.removeAriaLabel")}>{t("common:button.remove")}</DropdownItem>
                         }
                     </DropdownMenu>
                 </UncontrolledButtonDropdown>
@@ -196,13 +196,13 @@ const MemberInfo = ({group, member, user}: MemberInfoProps) => {
                         <Button color="link" size="sm" className="mx-2" onClick={resetPassword}
                             disabled={!canSendPasswordResetRequest(member, passwordRequestSent)}
                         >
-                            {!passwordRequestSent ? t("common:button.resetPassword") : t("common:groups.member.passwordReset.sentLabel")}
+                            {!passwordRequestSent ? t("common:button.resetPassword") : t("teaching:groups.member.passwordReset.sentLabel")}
                         </Button>
                     </Tooltip>
                 </>}
                 {userHasAdditionalGroupPrivileges &&
-                    <Tooltip tipText={t("common:groups.member.removeTooltip")} className="text-end d-none d-sm-block">
-                        <Button color="link" size="sm" className="mx-2" onClick={confirmDeleteMember} aria-label={t("common:groups.member.removeAriaLabel")}>
+                    <Tooltip tipText={t("teaching:groups.member.removeTooltip")} className="text-end d-none d-sm-block">
+                        <Button color="link" size="sm" className="mx-2" onClick={confirmDeleteMember} aria-label={t("teaching:groups.member.removeAriaLabel")}>
                             {t("common:button.remove")}
                         </Button>
                     </Tooltip>
@@ -251,7 +251,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
     function saveUpdatedGroup(event: React.FormEvent) {
         event?.preventDefault();
         if (newGroupName.trim().length === 0) {
-            dispatch(showErrorToast(t("common:groups.editor.renameErrorTitle"), t("common:groups.editor.renameErrorDetail")));
+            dispatch(showErrorToast(t("teaching:groups.editor.renameErrorTitle"), t("teaching:groups.editor.renameErrorDetail")));
             return;
         }
         if (!isGroupNameValid) {
@@ -315,14 +315,14 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                 <div>
                     <Form className="form-inline" onSubmit={saveUpdatedGroup}>
                         <Label htmlFor="groupName" className={"form-required fw-bold"}>
-                            {isUserGroupOwner || group.additionalManagerPrivileges ? t("common:groups.editor.renameLabel") : t("common:label.groupName") }
+                            {isUserGroupOwner || group.additionalManagerPrivileges ? t("teaching:groups.editor.renameLabel") : t("common:label.groupName") }
                         </Label>
                         <InputGroup className="flex-column flex-md-row align-items-center gap-2 stackable-input-group w-100">
                             <Input
                                 id="groupName"
                                 length={50}
                                 placeholder={t("common:label.groupName")} value={newGroupName}
-                                onChange={editGroupName} aria-label={t("common:groups.editor.nameAriaLabel")} disabled={!(isUserGroupOwner || group.additionalManagerPrivileges)}
+                                onChange={editGroupName} aria-label={t("teaching:groups.editor.nameAriaLabel")} disabled={!(isUserGroupOwner || group.additionalManagerPrivileges)}
                                 invalid={isGroupNameInvalid}
                                 valid={isGroupNameValid}
                                 className={"w-100 w-md-auto flex-md-fill"}
@@ -337,7 +337,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                                 {t("common:button.update")}
                             </Button>}
                             <FormFeedback id={"groupNameFeedback"}>
-                                {newGroupName.trim().length === 0 && t("common:groups.editor.nameEmpty")}
+                                {newGroupName.trim().length === 0 && t("teaching:groups.editor.nameEmpty")}
                                 {isDefined(existingGroupWithConflictingName) && `A${existingGroupWithConflictingName?.archived ? "n archived" : ""} group with that name already exists.`}
                             </FormFeedback>
                         </InputGroup>
@@ -349,7 +349,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                 <div>
                     <div className={"d-flex flex-column flex-md-row justify-content-between"}>
                         <div>
-                            <p className={"fw-bold"}>{t("common:groups.editor.managersTitle")}</p>
+                            <p className={"fw-bold"}>{t("teaching:groups.editor.managersTitle")}</p>
                             {additionalManagers && <Table className={classNames("group-table", {"mt-1": isAda})}>
                                 <tbody>
                                     {additionalManagers.map((manager, i) =>
@@ -360,7 +360,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                                                         <i className="icon icon-my-isaac me-2"/>,
                                                         <span className="icon-group-table-person"/>
                                                     )}
-                                                    {manager.givenName} {manager.familyName} {manager.id === group.ownerId && t("common:groups.editor.ownerLabel")} {user.id === manager.id && t("common:groups.editor.youLabel")}
+                                                    {manager.givenName} {manager.familyName} {manager.id === group.ownerId && t("teaching:groups.editor.ownerLabel")} {user.id === manager.id && t("teaching:groups.editor.youLabel")}
                                                 </div>
                                             </td>
                                         </tr>
@@ -372,7 +372,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                             <div>
                                 <Button className="w-100 d-inline-block text-nowrap" color="keyline" onClick={() => dispatch(showGroupManagersModal({group, user}))}>
                                     {(isUserGroupOwner || group.additionalManagerPrivileges) ?
-                                        `${additionalManagers.length > 1 ? "Edit" : "Add"} group managers` : t("common:groups.editor.moreInfoButton")
+                                        `${additionalManagers.length > 1 ? "Edit" : "Add"} group managers` : t("teaching:groups.editor.moreInfoButton")
                                     }
                                 </Button>
                             </div>}
@@ -385,7 +385,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                     <ShowLoading until={group.members}>
                         {group.members && <div data-testid="group-members" className={"d-flex flex-column gap-3"}>
                             <div className={"d-flex flex-column flex-md-row justify-content-between"}>
-                                <p className={"fw-bold"}>{t("common:groups.editor.membersTitle")}</p>
+                                <p className={"fw-bold"}>{t("teaching:groups.editor.membersTitle")}</p>
                                 <div className={"d-flex flex-column flex-md-row gap-1"}>
                                     <Button
                                         disabled={group.archived}
@@ -401,7 +401,7 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                                             color="keyline"
                                             onClick={() => dispatch(showGroupEmailModal(usersInGroup))}
                                         >
-                                            {t("common:groups.editor.emailButton")}
+                                            {t("teaching:groups.editor.emailButton")}
                                         </Button>
                                     }
                                 </div>
@@ -411,11 +411,11 @@ const GroupEditor = ({group, allGroups, user, ...rest}: GroupEditorProps) => {
                                     id="self-removal"
                                     onChange={toggleSelfRemoval}
                                     checked={!!group.selfRemoval}
-                                    label={<span>{t("common:groups.editor.selfRemovalLabel")}</span>}
+                                    label={<span>{t("teaching:groups.editor.selfRemovalLabel")}</span>}
                                 />
                             </div>
                             <div>
-                                {t("common:groups.editor.memberCount", { count: group.members.length })}
+                                {t("teaching:groups.editor.memberCount", { count: group.members.length })}
                                 {bigGroup && !isExpanded &&
                                     <ButtonDropdown className="float-end" toggle={() => setExpanded(true)}>
                                         <DropdownToggle caret>{t("common:button.show")}</DropdownToggle>
@@ -512,7 +512,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
         <CardBody>
             {showCreateGroup &&
                 <>
-                    <Button className={"d-block w-100"} onClick={() => {void dispatch(showCreateGroupModal({user}));}}>{t("common:groups.selector.createButton")}</Button>
+                    <Button className={"d-block w-100"} onClick={() => {void dispatch(showCreateGroupModal({user}));}}>{t("teaching:groups.selector.createButton")}</Button>
                     {siteSpecific(<div className="section-divider"/>, <hr/>)}
                 </>
             }
@@ -555,7 +555,7 @@ export const GroupSelector = ({user, groups, allGroups, selectedGroup, setSelect
                             </li>
                             : <div key={g.id} className="group-item p-2" data-testid={"group-item"}>
                                 <div className="d-flex justify-content-between align-items-center group-name-buttons">
-                                    <Button title={isStaff(user) ? t("common:groups.selector.groupIdTitle", { groupId: g.id }) : undefined} color="link" data-testid={"select-group"} className="text-start px-1 py-1 flex-fill group-name" onClick={() => setSelectedGroupId(g.id)}>
+                                    <Button title={isStaff(user) ? t("teaching:groups.selector.groupIdTitle", { groupId: g.id }) : undefined} color="link" data-testid={"select-group"} className="text-start px-1 py-1 flex-fill group-name" onClick={() => setSelectedGroupId(g.id)}>
                                         {g.groupName}
                                     </Button>
                                     {showArchived && (isPhy ?
@@ -614,7 +614,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
     const groupNameInputRef = useRef<HTMLInputElement>(null);
 
     const pageHelp = <span>
-        <Trans i18nKey="common:groups.page.helpText" components={{ br: <br />, inviteUsersText: <i /> }} />
+        <Trans i18nKey="teaching:groups.page.helpText" components={{ br: <br />, inviteUsersText: <i /> }} />
     </span>;
 
     const GroupsPhy = <PageContainer
@@ -649,7 +649,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
         <ShowLoadingQuery query={groupQuery} defaultErrorTitle={t("common:error.fetchGroups")}>
             {!isEmptyState ?
                 <>
-                    <p className={"mw-75"}>{t("common:groups.page.addTeachersInfo")}</p>
+                    <p className={"mw-75"}>{t("teaching:groups.page.addTeachersInfo")}</p>
                     <Row className="mb-7">
                         <Col lg={4}>
                             <GroupSelector user={user} groups={groups} allGroups={allGroups} selectedGroup={selectedGroup} setSelectedGroupId={setSelectedGroupId}
@@ -663,7 +663,7 @@ export const Groups = ({user}: {user: RegisteredUserDTO}) => {
                 :
                 <div className={"mb-7"}>
                     <p className={"mw-50"}>
-                        <Trans i18nKey="common:groups.page.emptyState" components={{ br: <br /> }} values={{ siteTitle: SITE_TITLE_SHORT }} />
+                        <Trans i18nKey="teaching:groups.page.emptyState" components={{ br: <br /> }} values={{ siteTitle: SITE_TITLE_SHORT }} />
                     </p>
                     <Button onClick={() => void dispatch(showCreateGroupModal({user}))}>
                         {t("common:button.createGroup")}

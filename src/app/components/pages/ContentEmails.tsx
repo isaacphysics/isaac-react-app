@@ -45,7 +45,7 @@ const ContentEmails = () => {
     const [sendProvidedEmailWithUserIds] = useSendProvidedEmailWithUserIdsMutation();
 
     return <Container id="admin-emails-page">
-        <TitleAndBreadcrumb currentPageTitle={t("common:admin.contentEmails.title")} icon={{type: "icon", icon: "icon-mail"}} />
+        <TitleAndBreadcrumb currentPageTitle={t("admin:admin.contentEmails.title")} icon={{type: "icon", icon: "icon-mail"}} />
 
         <Card className="p-3 my-3">
             <CardTitle tag="h2">{t("common:title.userSelection")}</CardTitle>
@@ -77,9 +77,9 @@ const ContentEmails = () => {
         </Card>
 
         <Card className="p-3 my-3">
-            <CardTitle tag="h2">{t("common:admin.contentEmails.template.title")}</CardTitle>
+            <CardTitle tag="h2">{t("admin:admin.contentEmails.template.title")}</CardTitle>
             <CardBody>
-                <Label>{t("common:admin.contentEmails.template.htmlLabel")}</Label>
+                <Label>{t("admin:admin.contentEmails.template.htmlLabel")}</Label>
                 <Input
                     id="email-html-input"
                     type = "textarea"
@@ -91,11 +91,11 @@ const ContentEmails = () => {
                 />
             </CardBody>
             <CardBody>
-                <Label>{t("common:admin.contentEmails.template.previewLabel")}</Label>
-                <iframe title={t("common:admin.contentEmails.template.iframeTitle")} srcDoc={htmlTemplate} className="email-html"/>
+                <Label>{t("admin:admin.contentEmails.template.previewLabel")}</Label>
+                <iframe title={t("admin:admin.contentEmails.template.iframeTitle")} srcDoc={htmlTemplate} className="email-html"/>
             </CardBody>
             <CardBody>
-                <Label>{t("common:admin.contentEmails.template.plaintextLabel")}</Label>
+                <Label>{t("admin:admin.contentEmails.template.plaintextLabel")}</Label>
                 <Input
                     id="email-plaintext-input"
                     type = "textarea"
@@ -127,17 +127,17 @@ const ContentEmails = () => {
         </Card>
 
         <Card className="p-3 my-3">
-            <CardTitle tag="h2">{t("common:admin.contentEmails.sendVia.title")}</CardTitle>
+            <CardTitle tag="h2">{t("admin:admin.contentEmails.sendVia.title")}</CardTitle>
             <CardBody>
-                <Label>{t("common:admin.contentEmails.sendVia.label")}</Label>
+                <Label>{t("admin:admin.contentEmails.sendVia.label")}</Label>
                 <Input
                     id="email-type-input" type="select" value={overrideEnvelopeFrom}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         setOverrideEnvelopeFrom(e.target.value);
                     }}
                 >
-                    <option value={undefined}>{t("common:admin.contentEmails.sendVia.isaac")}</option>
-                    <option value={mailgunAddress}>{t("common:admin.contentEmails.sendVia.mailgun")}</option>
+                    <option value={undefined}>{t("admin:admin.contentEmails.sendVia.isaac")}</option>
+                    <option value={mailgunAddress}>{t("admin:admin.contentEmails.sendVia.mailgun")}</option>
                 </Input>
             </CardBody>
         </Card>
@@ -148,13 +148,13 @@ const ContentEmails = () => {
                     {!emailSent ?
                         <React.Fragment>
                             {numberOfUsers >= RECIPIENT_NUMBER_WARNING_VALUE && <div className="alert alert-warning">
-                                <Trans i18nKey="common:admin.contentEmails.recipientWarning" components={{ warningLabel: <strong />, countEmphasis: <strong /> }} values={{ recipientCount: numberOfUsers }} />
+                                <Trans i18nKey="admin:admin.contentEmails.recipientWarning" components={{ warningLabel: <strong />, countEmphasis: <strong /> }} values={{ recipientCount: numberOfUsers }} />
                             </div>}
                             <Button
                                 type="button" color="secondary" className={siteSpecific("btn-xl", "form-control border-0")}
                                 disabled={!canSubmit}
                                 onClick={() => {
-                                    if (window.confirm(t("common:admin.contentEmails.sendConfirm", { emailType, count: numberOfUsers }))) {
+                                    if (window.confirm(t("admin:admin.contentEmails.sendConfirm", { emailType, count: numberOfUsers }))) {
                                         setEmailSent(true);
                                         void sendProvidedEmailWithUserIds({emailTemplate, emailType, ids: csvIDs});
                                     }

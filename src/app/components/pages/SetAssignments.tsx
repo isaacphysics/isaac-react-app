@@ -93,7 +93,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.title}
             reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder}
             setOrder={setBoardOrder} alignment="start">
-            {t("common:assignments.table.deckName")}
+            {t("teaching:assignments.table.deckName")}
         </SortItemHeader>
         <th colSpan={2} className="text-center align-middle">
             <div className="d-flex align-items-center">
@@ -107,7 +107,7 @@ const PhyTable = (props: SetAssignmentsTableProps) => {
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.visited}
             reverseOrder={AssignmentBoardOrder["-visited"]} currentOrder={boardOrder}
             setOrder={setBoardOrder}>
-            {t("common:assignments.table.lastViewed")}
+            {t("teaching:assignments.table.lastViewed")}
         </SortItemHeader>
         <th className="text-center align-middle">{t("common:button.manage")}</th>
     </tr>;
@@ -150,7 +150,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
         <SortItemHeader<AssignmentBoardOrder> colSpan={2} defaultOrder={AssignmentBoardOrder.title}
             reverseOrder={AssignmentBoardOrder["-title"]} currentOrder={boardOrder}
             setOrder={setBoardOrder} alignment="start">
-            {t("common:assignments.table.quizName")}
+            {t("teaching:assignments.table.quizName")}
         </SortItemHeader>
         <th colSpan={2} className="long-titled-col">
             {t("common:table.stagesAndDifficulties")} <i id={`difficulties-help`} className="ms-1 icon icon-info icon-inline icon-color-black position-relative" />
@@ -162,7 +162,7 @@ const CSTable = (props: SetAssignmentsTableProps) => {
         <SortItemHeader<AssignmentBoardOrder> defaultOrder={AssignmentBoardOrder.visited}
             reverseOrder={AssignmentBoardOrder["-visited"]} currentOrder={boardOrder}
             setOrder={setBoardOrder}>
-            {t("common:assignments.table.lastViewed")}
+            {t("teaching:assignments.table.lastViewed")}
         </SortItemHeader>
         <th>{t("common:button.manage")}</th>
         <th>{t("common:table.share")}</th>
@@ -240,13 +240,13 @@ const PhyAddGameboardButtonsSetAssignments = ({className, redirectBackTo}: { cla
             <Col md={6} lg={4} className="pt-1">
                 <Button tag={Link} to={"/physics/a_level/question_decks"}
                     onClick={() => setAssignBoardPath(redirectBackTo)} color="keyline" block>
-                    {t("common:assignments.add.topicDecksButton")}
+                    {t("teaching:assignments.add.topicDecksButton")}
                 </Button>
             </Col>
             <Col md={12} lg={4} className="pt-1">
                 <Button tag={Link} to={PATHS.GAMEBOARD_BUILDER} onClick={() => setAssignBoardPath(redirectBackTo)}
                     color="keyline" block>
-                    {t("common:assignments.add.createDeckButton")}
+                    {t("teaching:assignments.add.createDeckButton")}
                 </Button>
             </Col>
         </Row>
@@ -496,7 +496,7 @@ export const SetAssignments = () => {
                                     </Col>)}
                             </Row>
                             <div className="text-center mt-3 mb-4" style={{clear: "both"}}>
-                                <p><Trans i18nKey="common:assignments.pagination.showingCount" components={{ strongShown: <strong />, strongTotal: <strong /> }} values={{ shownCount: filteredBoards?.length, totalCount: boards.totalResults }} />
+                                <p><Trans i18nKey="teaching:assignments.pagination.showingCount" components={{ strongShown: <strong />, strongTotal: <strong /> }} values={{ shownCount: filteredBoards?.length, totalCount: boards.totalResults }} />
                                 </p>
                                 {boards.boards.length < boards.totalResults &&
                                     <Button onClick={viewMore} disabled={loading}>{loading ?

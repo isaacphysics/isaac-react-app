@@ -18,8 +18,8 @@ export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibil
 
     return <MyAccountTab
         leftColumn={<>
-            <h2 className="h3">{t("common:account.accessibility.title")}</h2>
-            <p>{t("common:account.accessibility.description")}</p>
+            <h2 className="h3">{t("account:account.accessibility.title")}</h2>
+            <p>{t("account:account.accessibility.description")}</p>
         </>}
         rightColumn={<>
             <div className="pt-2"/>
@@ -29,12 +29,12 @@ export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibil
                         setAccessibilitySettings((oldDs) => ({...oldDs, REDUCED_MOTION: e.target.checked}));
                     }}
                     color={siteSpecific("primary", "")}
-                    label={<p>{t("common:account.accessibility.reducedMotion.label")}</p>}
+                    label={<p>{t("account:account.accessibility.reducedMotion.label")}</p>}
                     id={"reduced-motion"}
                     aria-describedby="reduced-motion-helptext"
                     removeVerticalOffset
                 /></b>
-                <p>{t("common:account.accessibility.reducedMotion.helpText")}</p>
+                <p>{t("account:account.accessibility.reducedMotion.helpText")}</p>
             </WithLinkableSetting>
             <WithLinkableSetting id={"show-inaccessible-warning-feature"}>
                 <b><StyledCheckbox 
@@ -43,12 +43,12 @@ export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibil
                         setAccessibilitySettings((oldDs) => ({...oldDs, SHOW_INACCESSIBLE_WARNING: e.target.checked}));
                     }}
                     color={siteSpecific("primary", "")}
-                    label={<p>{t("common:account.accessibility.inaccessibleWarning.label")}</p>}
+                    label={<p>{t("account:account.accessibility.inaccessibleWarning.label")}</p>}
                     id={"show-inaccessible-tag"}
                     aria-describedby="show-inaccessible-helptext"
                     removeVerticalOffset
                 /></b>
-                <p id="show-inaccessible-helptext">{t("common:account.accessibility.inaccessibleWarning.helpText")}</p>
+                <p id="show-inaccessible-helptext">{t("account:account.accessibility.inaccessibleWarning.helpText")}</p>
             </WithLinkableSetting>
             <WithLinkableSetting id={"non-dragging-movement-feature"}>
                 <b><StyledCheckbox checked={accessibilitySettings.NON_DRAGGING_INPUTS ?? false}
@@ -56,12 +56,12 @@ export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibil
                         setAccessibilitySettings((oldDs) => ({...oldDs, NON_DRAGGING_INPUTS: e.target.checked}));
                     }}
                     color={siteSpecific("primary", "")}
-                    label={<p>{t("common:account.accessibility.nonDraggingInputs.label")}</p>}
+                    label={<p>{t("account:account.accessibility.nonDraggingInputs.label")}</p>}
                     id={"non-dragging-movement"}
                     aria-describedby="non-dragging-movement-helptext"
                     removeVerticalOffset
                 /></b>
-                <p id="non-dragging-helptext">{t("common:account.accessibility.nonDraggingInputs.helpText")}</p>
+                <p id="non-dragging-helptext">{t("account:account.accessibility.nonDraggingInputs.helpText")}</p>
             </WithLinkableSetting>
             {/* Seperate maths-specific setting from the general site-wide accessibility settings */}
             <div className="section-divider" />
@@ -72,12 +72,12 @@ export const UserAccessibilitySettings = ({ accessibilitySettings, setAccessibil
                         setAccessibilitySettings((oldDs) => ({...oldDs, PREFER_MATHML: e.target.checked}));
                     }}
                     color={siteSpecific("primary", "")}
-                    label={<p>{t("common:account.accessibility.mathml.label")}</p>}
+                    label={<p>{t("account:account.accessibility.mathml.label")}</p>}
                     id={"prefer-mathml"}
                     aria-describedby="mathml-helptext"
                     removeVerticalOffset
                 /></b>
-                <p id="mathml-helptext">{t("common:account.accessibility.mathml.helpText")}</p>
+                <p id="mathml-helptext">{t("account:account.accessibility.mathml.helpText")}</p>
             </WithLinkableSetting>
         </>}
     />;

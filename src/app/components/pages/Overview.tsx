@@ -59,53 +59,53 @@ export const TeacherOverview = () => {
             <GetStartedWithAda />
         </section>
         <section id="browse" className="py-3">
-            <h2>{t("common:overview.browse.sectionTitle")}</h2>
+            <h2>{t("pages:overview.browse.sectionTitle")}</h2>
             <ColumnSlice className={"row-cols-lg-4 row-cols-md-2"}>
                 <IconCard className={"without-margin"} card={{
-                    title: t("common:overview.teacher.groups.title"),
+                    title: t("pages:overview.teacher.groups.title"),
                     icon: {name: "icon-group", color: "secondary"},
-                    bodyText: t("common:overview.teacher.groups.description"),
+                    bodyText: t("pages:overview.teacher.groups.description"),
                     clickUrl: "/groups",
                     buttonText: t("common:button.manageGroups"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: t("common:overview.teacher.quizzes.title"),
+                    title: t("pages:overview.teacher.quizzes.title"),
                     icon: {name: "icon-file", color: "secondary"},
-                    bodyText: t("common:overview.teacher.quizzes.description"),
+                    bodyText: t("pages:overview.teacher.quizzes.description"),
                     clickUrl: "/quizzes/set",
-                    buttonText: t("common:overview.teacher.quizzes.buttonLabel"),
+                    buttonText: t("pages:overview.teacher.quizzes.buttonLabel"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
                     title: t("common:title.tests"),
                     icon: {name: "icon-school", color:"secondary"},
-                    bodyText: t("common:overview.teacher.tests.description"),
+                    bodyText: t("pages:overview.teacher.tests.description"),
                     clickUrl: "/set_tests",
-                    buttonText: t("common:overview.teacher.tests.buttonLabel"),
+                    buttonText: t("pages:overview.teacher.tests.buttonLabel"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
                     title: t("ada:title.reviewYourMarkbook"),
                     icon: {name: "icon-done-all", color: "secondary"},
-                    bodyText: t("common:overview.teacher.markbook.description"),
+                    bodyText: t("pages:overview.teacher.markbook.description"),
                     clickUrl: "/my_markbook",
                     buttonText: t("ada:button.viewMarkbook"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: t("common:overview.assigned.title"),
+                    title: t("pages:overview.assigned.title"),
                     icon: {name: "icon-person-check", color: "secondary"},
                     tag: workCounts.assignments > 0 ? `${workCounts.assignments} to do` : undefined,
-                    bodyText: t("common:overview.teacher.assigned.description"),
+                    bodyText: t("pages:overview.teacher.assigned.description"),
                     clickUrl: "/assignments",
-                    buttonText: t("common:overview.assigned.buttonLabel"),
+                    buttonText: t("pages:overview.assigned.buttonLabel"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: t("common:overview.teacher.account.title"),
+                    title: t("pages:overview.teacher.account.title"),
                     icon: {name: "icon-settings", color: "secondary"},
-                    bodyText: t("common:overview.teacher.account.description"),
+                    bodyText: t("pages:overview.teacher.account.description"),
                     clickUrl: "/account",
                     buttonText: t("common:title.accountSettings"),
                     buttonStyle: "link"
@@ -113,7 +113,7 @@ export const TeacherOverview = () => {
                 <IconCard className={"without-margin"} card={{
                     title: t("ada:title.teacherMentoring"),
                     icon: {name: "icon-group", color: "secondary"},
-                    bodyText: t("common:overview.teacher.mentoring.description"),
+                    bodyText: t("pages:overview.teacher.mentoring.description"),
                     clickUrl: "/teacher_mentoring",
                     buttonText: t("common:button.learnMore"),
                     buttonStyle: "link",
@@ -121,7 +121,7 @@ export const TeacherOverview = () => {
                 <IconCard className={"without-margin"} card={{
                     title: t("ada:title.needHelp"),
                     icon: {name: "icon-help", color: "secondary"},
-                    bodyText: t("common:overview.teacher.support.description"),
+                    bodyText: t("pages:overview.teacher.support.description"),
                     clickUrl: "/support/teacher/general",
                     buttonText: t("common:title.teacherSupport"),
                     buttonStyle: "link",
@@ -153,22 +153,22 @@ export const StudentOverview = () => {
             <Notifications notifications={notifications} />
         </section>
         <section id="browse" className="py-3">
-            <h2>{t("common:overview.browse.sectionTitle")}</h2>
+            <h2>{t("pages:overview.browse.sectionTitle")}</h2>
             <ColumnSlice className={"row-cols-lg-4 row-cols-md-2 mt-3"}>
                 <IconCard className={"without-margin"} card={{
-                    title: t("common:overview.assigned.title"),
+                    title: t("pages:overview.assigned.title"),
                     icon: {name: "icon-person-check", color: "secondary"},
                     tag: workCounts.assignments > 0 ? `${workCounts.assignments} to do` : undefined,
-                    bodyText: t("common:overview.student.assigned.description"),
+                    bodyText: t("pages:overview.student.assigned.description"),
                     clickUrl: "/assignments",
-                    buttonText: t("common:overview.assigned.buttonLabel"),
+                    buttonText: t("pages:overview.assigned.buttonLabel"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
                     title: t("common:title.tests"),
                     icon: {name: "icon-school", color:"secondary"},
                     tag: workCounts.tests > 0 ? `${workCounts.tests} to do` : undefined,
-                    bodyText: t("common:overview.student.tests.description"),
+                    bodyText: t("pages:overview.student.tests.description"),
                     clickUrl: "/tests",
                     buttonText: t("common:button.viewTests"),
                     buttonStyle: "link",
@@ -176,15 +176,15 @@ export const StudentOverview = () => {
                 <IconCard className={"without-margin"} card={{
                     title: t("common:title.myProgress"),
                     icon: {name: "icon-done-all", color: "secondary"},
-                    bodyText: t("common:overview.student.progress.description"),
+                    bodyText: t("pages:overview.student.progress.description"),
                     clickUrl: "/progress",
-                    buttonText: t("common:overview.student.progress.buttonLabel"),
+                    buttonText: t("pages:overview.student.progress.buttonLabel"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
-                    title: t("common:overview.teacher.account.title"),
+                    title: t("pages:overview.teacher.account.title"),
                     icon: {name: "icon-settings", color: "secondary"},
-                    bodyText: t("common:overview.teacher.account.description"),
+                    bodyText: t("pages:overview.teacher.account.description"),
                     clickUrl: "/account",
                     buttonText: t("common:title.accountSettings"),
                     buttonStyle: "link"
@@ -193,31 +193,31 @@ export const StudentOverview = () => {
                 <IconCard className={"without-margin"} card={{
                     title: t("ada:title.topics"),
                     icon: {name: "icon-lightbulb-empty", color: "secondary"},
-                    bodyText: t("common:overview.student.topics.description"),
+                    bodyText: t("pages:overview.student.topics.description"),
                     clickUrl: "/topics",
-                    buttonText: t("common:overview.student.topics.buttonLabel"),
+                    buttonText: t("pages:overview.student.topics.buttonLabel"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
                     title: t("common:title.questions"),
                     icon: {name: "icon-search", color: "secondary"},
-                    bodyText: t("common:overview.student.questions.description"),
+                    bodyText: t("pages:overview.student.questions.description"),
                     clickUrl: "/questions",
-                    buttonText: t("common:overview.student.questions.buttonLabel"),
+                    buttonText: t("pages:overview.student.questions.buttonLabel"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
                     title: t("ada:title.projects"),
                     icon: {name: "icon-globe", color: "secondary"},
-                    bodyText: t("common:overview.student.projects.description"),
+                    bodyText: t("pages:overview.student.projects.description"),
                     clickUrl: "/projects",
-                    buttonText: t("common:overview.student.projects.buttonLabel"),
+                    buttonText: t("pages:overview.student.projects.buttonLabel"),
                     buttonStyle: "link",
                 }}/>
                 <IconCard className={"without-margin"} card={{
                     title: t("ada:title.needHelp"),
                     icon: {name: "icon-help", color: "secondary"},
-                    bodyText: t("common:overview.student.support.description"),
+                    bodyText: t("pages:overview.student.support.description"),
                     clickUrl: "/support/student/general",
                     buttonText: t("ada:title.studentSupport"),
                     buttonStyle: "link",

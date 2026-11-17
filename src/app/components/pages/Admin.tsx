@@ -58,53 +58,53 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
 
     return <Container id="admin-page">
         <TitleAndBreadcrumb
-            currentPageTitle={t("common:admin.title", { siteTitle: SITE_TITLE_SHORT })} breadcrumbTitleOverride={t("common:title.adminTools")}
+            currentPageTitle={t("admin:admin.title", { siteTitle: SITE_TITLE_SHORT })} breadcrumbTitleOverride={t("common:title.adminTools")}
             icon={{"type": "icon", "icon": "icon-account"}}
         />
 
         <div className="py-4">
 
-            {t("common:admin.greeting", { givenName: user.givenName })}
+            {t("admin:admin.greeting", { givenName: user.givenName })}
 
             <Card className="p-3 my-3">
-                <CardTitle tag="h2">{t("common:admin.usefulLinks.title")}</CardTitle>
+                <CardTitle tag="h2">{t("admin:admin.usefulLinks.title")}</CardTitle>
                 <ListGroup className="flex-row border-0">
-                    <ListGroupItem className="w-auto border-0"><Link to="/admin/usermanager">{t("common:admin.usefulLinks.userManager")}</Link></ListGroupItem>
+                    <ListGroupItem className="w-auto border-0"><Link to="/admin/usermanager">{t("admin:admin.usefulLinks.userManager")}</Link></ListGroupItem>
                     <ListGroupItem className="w-auto border-0"><Link to="/admin/emails">{t("common:title.adminEmails")}</Link></ListGroupItem>
-                    <ListGroupItem className="w-auto border-0"><Link to="/equality">{t("common:admin.usefulLinks.equationBuilder")}</Link></ListGroupItem>
-                    <ListGroupItem className="w-auto border-0"><Link to="/free_text">{t("common:admin.usefulLinks.freeTextBuilder")}</Link></ListGroupItem>
+                    <ListGroupItem className="w-auto border-0"><Link to="/equality">{t("admin:admin.usefulLinks.equationBuilder")}</Link></ListGroupItem>
+                    <ListGroupItem className="w-auto border-0"><Link to="/free_text">{t("admin:admin.usefulLinks.freeTextBuilder")}</Link></ListGroupItem>
                     <ListGroupItem className="w-auto border-0"><Link to="/markdown">{t("common:title.markdownBuilder")}</Link></ListGroupItem>
                 </ListGroup>
             </Card>
 
             <Card className="p-3 mb-3">
-                <CardTitle tag="h2">{t("common:admin.console.title")}</CardTitle>
+                <CardTitle tag="h2">{t("admin:admin.console.title")}</CardTitle>
                 <CardBody>
                     <ul>
-                        <li><strong>{t("common:admin.console.apiVersionLabel")}</strong> {segueVersion}</li>
+                        <li><strong>{t("admin:admin.console.apiVersionLabel")}</strong> {segueVersion}</li>
                     </ul>
                 </CardBody>
             </Card>
 
             <Card className="p-3 mb-3">
-                <CardTitle tag="h2">{t("common:admin.tools.title")}</CardTitle>
+                <CardTitle tag="h2">{t("admin:admin.tools.title")}</CardTitle>
                 <CardBody>
-                    <h3>{t("common:admin.content.title")}</h3>
+                    <h3>{t("admin:admin.content.title")}</h3>
                     <ShowLoadingQuery
-                        defaultErrorTitle={t("common:admin.content.errorLoading")}
+                        defaultErrorTitle={t("admin:admin.content.errorLoading")}
                         query={liveContentVersionQuery}
                         thenRender={liveContentVersion => {
                             const displayVersion = newVersion || liveContentVersion || null;
                             return <>
-                                <strong>{t("common:admin.content.liveVersionLabel")}</strong>
+                                <strong>{t("admin:admin.content.liveVersionLabel")}</strong>
                                 {isDefined(displayVersion) && !contentVersionUpdateIsLoading &&
                                     <Form onSubmit={startVersionUpdate}>
                                         <InputGroup className={"separate-input-group"}>
                                             <Input
-                                                aria-label={t("common:admin.content.inputAriaLabel")}
+                                                aria-label={t("admin:admin.content.inputAriaLabel")}
                                                 type="text" value={displayVersion}
                                                 onChange={e => setNewVersion(e.target.value)}
-                                                placeholder={t("common:admin.content.inputPlaceholder")}
+                                                placeholder={t("admin:admin.content.inputPlaceholder")}
                                                 className={siteSpecific("", "h-100")}
                                             />
                                             <a
@@ -115,43 +115,43 @@ export const Admin = ({user}: {user: RegisteredUserDTO}) => {
                                                 href={`${EDITOR_COMPARE_URL}/${liveContentVersion}/${displayVersion}`}
                                                 target="_blank" rel="noopener"
                                             >
-                                                {t("common:admin.content.previewButton")}
+                                                {t("admin:admin.content.previewButton")}
                                             </a>
                                             <Button
                                                 type="button"
                                                 onClick={startVersionUpdate}
                                                 disabled={!isAdminOrEventManager(user) || displayVersion === liveContentVersion}
                                             >
-                                                {t("common:admin.content.setVersionButton")}
+                                                {t("admin:admin.content.setVersionButton")}
                                             </Button>
                                         </InputGroup>
                                     </Form>
                                 }
                                 {contentVersionUpdateIsLoading &&
                                     <Alert color="info">
-                                        <div className="h4">{t("common:admin.content.updatingTitle")}</div>
-                                        <p>{t("common:admin.content.updatingMessage", { currentVersion: liveContentVersion, newVersion })}</p>
+                                        <div className="h4">{t("admin:admin.content.updatingTitle")}</div>
+                                        <p>{t("admin:admin.content.updatingMessage", { currentVersion: liveContentVersion, newVersion })}</p>
                                         <IsaacSpinner />
                                     </Alert>
                                 }
                                 {contentVersionUpdateIsSuccess &&
                                     <Alert color="success">
-                                        <div className="h4">{t("common:admin.content.successMessage")}</div>
+                                        <div className="h4">{t("admin:admin.content.successMessage")}</div>
                                     </Alert>
                                 }
                                 {contentVersionUpdateIsError &&
                                     <Alert color="danger">
-                                        <div className="h4">{t("common:admin.content.errorMessage")}</div>
+                                        <div className="h4">{t("admin:admin.content.errorMessage")}</div>
                                     </Alert>
                                 }
                             </>;
                         }}
                     />
-                    <h3 className="mt-3">{t("common:admin.demonstration.title")}</h3>
+                    <h3 className="mt-3">{t("admin:admin.demonstration.title")}</h3>
                     <AnonymisationCheckboxes/>
 
                     {isAdmin(user) && <>
-                        <h3 className="mt-3">{t("common:admin.misuse.title")}</h3>
+                        <h3 className="mt-3">{t("admin:admin.misuse.title")}</h3>
                         <MisuseStats/>
                     </>}
                 </CardBody>

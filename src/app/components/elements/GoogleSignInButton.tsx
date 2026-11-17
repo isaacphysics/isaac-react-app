@@ -13,7 +13,7 @@ export const GoogleSignInButton = ({isSignup, knownRole}: {isSignup?: boolean, k
     const logInWithGoogle = () => dispatch(handleProviderLoginRedirect("GOOGLE", isSignup, knownRole));
 
     return <button className="d-flex w-100 align-items-center linked-account-button-outer bg-white mb-1 p-3" onClick={logInWithGoogle}>
-        <img className="authenticator-logo" src={"/assets/common/logos/google-logo.svg"} height={siteSpecific("20px", "auto")} alt={t("common:auth.google.logoAlt")}/>
+        <img className="authenticator-logo" src={"/assets/common/logos/google-logo.svg"} height={siteSpecific("20px", "auto")} alt={t("account:auth.google.logoAlt")}/>
         Google
         <Spacer />
         <i className="icon icon-chevron-right" color="primary" />

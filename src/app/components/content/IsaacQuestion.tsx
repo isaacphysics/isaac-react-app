@@ -108,7 +108,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
 
     const tooManySigFigsFeedback = <p className="fs-5">
         <Trans
-            i18nKey="common:questions.validation.tooManySigFigs"
+            i18nKey="questions:questions.validation.tooManySigFigs"
             components={{
                 b: <b />,
                 strong: <strong />,
@@ -119,7 +119,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
 
     const tooFewSigFigsFeedback = <p className="fs-5">
         <Trans
-            i18nKey="common:questions.validation.tooFewSigFigs"
+            i18nKey="questions:questions.validation.tooFewSigFigs"
             components={{
                 b: <b />,
                 strong: <strong />,
@@ -129,9 +129,9 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
     </p>;
 
     const invalidFormatFeeback = <p>
-        {t("common:questions.validation.invalidFormat")}<br/>
+        {t("questions:questions.validation.invalidFormat")}<br/>
         {invalidFormatErrorStdForm && <><Trans
-            i18nKey="common:questions.validation.stdFormSyntax"
+            i18nKey="questions:questions.validation.stdFormSyntax"
             components={{
                 caretCode: <code />,
                 doubleAsteriskCode: <code />,
@@ -198,7 +198,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
 
     // Determine Action Buttons
     const isLongRunningQuestionType = isLLMFreeTextQuestion;
-    const submitButtonLabel = isLongRunningQuestionType && questionPart?.loading ? t("common:questions.submit.marking") : t("common:questions.submit.check");
+    const submitButtonLabel = isLongRunningQuestionType && questionPart?.loading ? t("questions:questions.submit.marking") : t("questions:questions.submit.check");
     const fastTrackPrimaryAction = isFastTrack ? determineFastTrackPrimaryAction(fastTrackInfo) : null;
     const fastTrackSecondaryAction = isFastTrack ? determineFastTrackSecondaryAction(fastTrackInfo) : null;
 
@@ -247,16 +247,16 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                     className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : almost ? "almost" : ""}`}
                 >
                     <div className={classNames("pb-1", siteSpecific("response-heading", "h1"))} tabIndex={-1} ref={feedbackRef}>
-                        {correct ? t("common:questions.feedback.correct") :
-                            tooManySigFigsError ? t("common:questions.feedback.tooManySigFigs") :
-                                tooFewSigFigsError ? t("common:questions.feedback.tooFewSigFigs") :
-                                    almost ? t("common:questions.feedback.partlyCorrect") :
+                        {correct ? t("questions:questions.feedback.correct") :
+                            tooManySigFigsError ? t("questions:questions.feedback.tooManySigFigs") :
+                                tooFewSigFigsError ? t("questions:questions.feedback.tooFewSigFigs") :
+                                    almost ? t("questions:questions.feedback.partlyCorrect") :
                                         t("common:status.incorrect")
                         }
                     </div>
                     {validationResponse.explanation && <div className="mb-2">
                         {isInlineQuestion && numInlineQuestions && numInlineQuestions > 1 && isDefined(inlineContext?.feedbackIndex) ? <>
-                            <span>{t("common:questions.inlineFeedback.selectBox")}</span>
+                            <span>{t("questions:questions.inlineFeedback.selectBox")}</span>
                             <div className={`feedback-panel-${almost ? "light" : "dark"}`} role="note">
                                 <div className={`w-100 mt-2 d-flex feedback-panel-header justify-content-around`}>
                                     <Button color="transparent" onClick={() => {
@@ -265,7 +265,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                                         ◀
                                     </Button>
                                     <div className="text-nowrap align-self-center">
-                                        {t("common:questions.inlineFeedback.boxCounter", { boxIndex: inlineContext.feedbackIndex as number + 1, boxCount: numInlineQuestions })}
+                                        {t("questions:questions.inlineFeedback.boxCounter", { boxIndex: inlineContext.feedbackIndex as number + 1, boxCount: numInlineQuestions })}
                                     </div>
                                     <Button color="transparent" onClick={() => {
                                         inlineContext.setFeedbackIndex((inlineContext?.feedbackIndex as number + 1) % numInlineQuestions);

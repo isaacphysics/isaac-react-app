@@ -17,7 +17,7 @@ export const AdaNewsSection = ({isHomepage}: {isHomepage?: boolean}) => {
     const {setLinkedSetting} = useLinkableSetting();
 
     return ((news && news.length > 0) || showNewsletterPrompts) && <>
-        <h2 className={classNames({"font-size-1-75 mb-4": isHomepage})}>{t("common:news.sectionTitle")}</h2>
+        <h2 className={classNames({"font-size-1-75 mb-4": isHomepage})}>{t("pages:news.sectionTitle")}</h2>
         {news && news.length > 0 &&
             <>
                 <Row xs={12} data-testid={"news-pod-deck"} className="d-flex flex-row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 isaac-cards-body justify-content-around mt-3 mb-1">
@@ -31,11 +31,11 @@ export const AdaNewsSection = ({isHomepage}: {isHomepage?: boolean}) => {
             <Row xs={12} className={classNames({"pt-4": !isHomepage}, "mt-7")}>
                 <IconCard
                     card={{
-                        title: t("common:news.newsletterTitle"),
+                        title: t("pages:news.newsletterTitle"),
                         icon: {name: "icon-mail", color: "tertiary"},
-                        bodyText: t("common:news.newsletterBody"),
+                        bodyText: t("pages:news.newsletterBody"),
                         clickUrl: "/account#notifications",
-                        buttonText: t("common:news.subscribeButton"),
+                        buttonText: t("pages:news.subscribeButton"),
                         onButtonClick: () => {setLinkedSetting("news-preference");},
                         className: classNames({"bg-cultured-grey": isHomepage}, "px-0")
                     }}

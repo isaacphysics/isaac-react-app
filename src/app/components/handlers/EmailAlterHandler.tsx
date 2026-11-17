@@ -27,8 +27,8 @@ export const EmailAlterHandler = () => {
     const [sendVerificationEmail, {isUninitialized: verificationNotResent}] = useRequestEmailVerificationMutation();
 
     const successMessage = idsMatch
-        ? t("common:auth.emailVerification.verified")
-        : t("common:auth.emailVerification.userMismatch");
+        ? t("account:auth.emailVerification.verified")
+        : t("account:auth.emailVerification.userMismatch");
 
     useEffect(() => {
         if (userid && token) {
@@ -38,7 +38,7 @@ export const EmailAlterHandler = () => {
 
     return <Container id="email-verification">
         <TitleAndBreadcrumb 
-            currentPageTitle={t("common:auth.emailVerification.title")}
+            currentPageTitle={t("account:auth.emailVerification.title")}
             icon={{type: "icon", icon: "icon-mail"}}
         />
         <Row>
@@ -72,11 +72,11 @@ export const EmailAlterHandler = () => {
                                                 {t("common:button.resendVerificationEmail")}
                                             </Button>
                                             :
-                                            t("common:auth.emailVerification.sentTo", { email: (user && user.loggedIn && user.email) })
+                                            t("account:auth.emailVerification.sentTo", { email: (user && user.loggedIn && user.email) })
                                         }
                                     </p>
                                     : <p><Trans
-                                        i18nKey="common:auth.emailVerification.loginToResend"
+                                        i18nKey="account:auth.emailVerification.loginToResend"
                                         components={{
                                             accountLink: <Link to="/account" />,
                                         }}
@@ -86,7 +86,7 @@ export const EmailAlterHandler = () => {
                         }
                         {emailVerificationNotInitiated && <>
                             <div className="mb-4 h3">{t("sci:error.verifyEmail")}</div>
-                            <p>{t("common:auth.emailVerification.badParamsMessage")}</p>
+                            <p>{t("account:auth.emailVerification.badParamsMessage")}</p>
                         </>}
                     </CardBody>
                 </Card>

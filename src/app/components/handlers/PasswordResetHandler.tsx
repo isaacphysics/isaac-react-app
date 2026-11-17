@@ -38,20 +38,20 @@ export const ResetPasswordHandler = () => {
     }
 
     return <Container id="password-reset" className={"mb-7"}>
-        <TitleAndBreadcrumb breadcrumbTitleOverride={t("common:auth.passwordReset.breadcrumbTitle")} currentPageTitle={t("common:auth.passwordReset.title")} icon={{type: "icon", icon: "icon-account"}} className="mb-4" />
-        {isLoading && <div>{t("common:auth.passwordReset.verifyingToken")}</div>}
+        <TitleAndBreadcrumb breadcrumbTitleOverride={t("account:auth.passwordReset.breadcrumbTitle")} currentPageTitle={t("account:auth.passwordReset.title")} icon={{type: "icon", icon: "icon-account"}} className="mb-4" />
+        {isLoading && <div>{t("account:auth.passwordReset.verifyingToken")}</div>}
         <div>
             {(!!tokenVerifyError || !!passwordResetError) &&
                 <ExigentAlert data-testid={"warning-invalid-token"} color={"warning"}>
-                    <p className="alert-heading fw-bold">{t("common:auth.passwordReset.errorTitle")}</p>
+                    <p className="alert-heading fw-bold">{t("account:auth.passwordReset.errorTitle")}</p>
                     {tokenVerifyError ?
                         getRTKQueryErrorMessage(tokenVerifyError).message : getRTKQueryErrorMessage(passwordResetError).message}
                 </ExigentAlert>
             }
             {!token && 
                 <ExigentAlert color={"warning"}>
-                    <p className="alert-heading fw-bold">{t("common:auth.passwordReset.noTokenTitle")}</p>
-                    <p>{t("common:auth.passwordReset.noTokenMessage")}</p>
+                    <p className="alert-heading fw-bold">{t("account:auth.passwordReset.noTokenTitle")}</p>
+                    <p>{t("account:auth.passwordReset.noTokenMessage")}</p>
                 </ExigentAlert>
             }
             <Form onSubmit={submit}>

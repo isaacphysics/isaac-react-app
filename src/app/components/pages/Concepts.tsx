@@ -161,10 +161,10 @@ export const Concepts = () => {
                 {pageContext?.subject 
                     ? <div className="d-flex align-items-baseline flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap mt-3">
                         <p className="me-0 me-lg-3">
-                            <Trans i18nKey="common:concepts.filteredIntro" components={{ allConceptsLink: <Link to="/concepts" /> }} values={{ contextDescription: getHumanContext(pageContext) }} />
+                            <Trans i18nKey="questions:concepts.filteredIntro" components={{ allConceptsLink: <Link to="/concepts" /> }} values={{ contextDescription: getHumanContext(pageContext) }} />
                         </p>
                     </div> 
-                    : <p>{i18next.t("common:concepts.genericIntro")}</p>
+                    : <p>{i18next.t("questions:concepts.genericIntro")}</p>
                 }
             </PageMetadata>
             {isPhy && !pageContext?.subject && (!pageContext?.stage || pageContext.stage.length === 0) && <FilterSummary filterTags={filterTags} removeFilterTag={removeFilterTag} clearFilters={clearFilters}/>}
@@ -178,7 +178,7 @@ export const Concepts = () => {
 
                         return <>
                             {!!shortcutAndFilteredSearchResults.length && <ResultsListHeader>
-                                <Trans i18nKey="common:concepts.resultsCount" components={{ b: <b /> }} values={{ count: shortcutAndFilteredSearchResults.length }} />
+                                <Trans i18nKey="questions:concepts.resultsCount" components={{ b: <b /> }} values={{ count: shortcutAndFilteredSearchResults.length }} />
                             </ResultsListHeader>}
 
                             {shortcutAndFilteredSearchResults.length
@@ -187,7 +187,7 @@ export const Concepts = () => {
                             }
                         </>;
                     }}
-                    defaultErrorTitle={i18next.t("common:concepts.errorFetching")}
+                    defaultErrorTitle={i18next.t("questions:concepts.errorFetching")}
                 />
             </ResultsListContainer>
         </PageContainer>

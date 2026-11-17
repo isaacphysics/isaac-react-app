@@ -41,7 +41,7 @@ export const BookmarkButton = ({ doc }: { doc?: ContentDTO }) => {
             toggle={() => setShowBookmarkTooltip(!showBookmarkTooltip)}
             trigger="manual"
         >
-            <div className="popover-header">{t("common:bookmarks.saveConfirmation")}</div>
+            <div className="popover-header">{t("questions:bookmarks.saveConfirmation")}</div>
         </Tooltip>
     </>;
 };

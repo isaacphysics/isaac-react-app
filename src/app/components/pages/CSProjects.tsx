@@ -44,15 +44,15 @@ export const CSProjects = () => {
         {allProjects.length === 0 ?
             <ShowLoadingQuery
                 query={projectsQuery}
-                thenRender={() => <div className="w-100 text-start h4">{t("common:projects.emptyState")}</div>}
-                defaultErrorTitle={t("common:projects.errorTitle")}
+                thenRender={() => <div className="w-100 text-start h4">{t("pages:projects.emptyState")}</div>}
+                defaultErrorTitle={t("pages:projects.errorTitle")}
             /> :
             <>
                 <Row className="d-flex flex-row card-deck row-cols-1 row-cols-md-2 row-cols-lg-3 justify-content-between my-3">
                     {allProjects.map(n => <NewsCard key={n.id} newsItem={n} showTitle />)}
                 </Row>
                 <div className="w-100 d-flex justify-content-center mb-7">
-                    <Button className={"mt-3"} color="solid" disabled={disableLoadMore} onClick={() => setPage(p => p + 1)}>{t("common:projects.loadMoreButton")}</Button>
+                    <Button className={"mt-3"} color="solid" disabled={disableLoadMore} onClick={() => setPage(p => p + 1)}>{t("pages:projects.loadMoreButton")}</Button>
                 </div>
             </>
         }

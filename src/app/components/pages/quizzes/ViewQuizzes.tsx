@@ -95,10 +95,10 @@ export const ViewQuizzes = () => {
             <PageFragment fragmentId="help_toptext_practice_tests"/>
         </PageMetadata>
         {!user
-            ? <b>{i18next.t("common:tests.view.loginRequired")}</b>
+            ? <b>{i18next.t("teaching:tests.view.loginRequired")}</b>
             : <ShowLoading until={quizzes}>
                 {quizzes && <>
-                    {quizzes.length === 0 && <p><em>{i18next.t("common:tests.view.emptyState")}</em></p>}
+                    {quizzes.length === 0 && <p><em>{i18next.t("teaching:tests.view.emptyState")}</em></p>}
                     <Col xs={12} className="mb-4">
                         {isAda && <Input type="text" placeholder={i18next.t("ada:tests.view.filterPlaceholder")} value={filterText} onChange={(e) => setFilterText(e.target.value)} />}
                         <button className={`copy-test-filter-link m-0 ${copied ? "clicked" : ""}`} tabIndex={-1} onClick={() => {

@@ -35,7 +35,7 @@ export const OnlineCourses = () => {
         };
     }, [page]);
 
-    const metaDescription = t("common:onlineCourses.metaDescription");
+    const metaDescription = t("pages:onlineCourses.metaDescription");
 
     return <Container>
         <TitleAndBreadcrumb currentPageTitle={t("ada:title.onlineCourses")} />
@@ -44,15 +44,15 @@ export const OnlineCourses = () => {
         {allCourses.length === 0 ?
             <ShowLoadingQuery
                 query={onlineCourseQuery}
-                thenRender={() => <div className="w-100 text-start h4">{t("common:onlineCourses.emptyState")}</div>}
-                defaultErrorTitle={t("common:onlineCourses.errorTitle")}
+                thenRender={() => <div className="w-100 text-start h4">{t("pages:onlineCourses.emptyState")}</div>}
+                defaultErrorTitle={t("pages:onlineCourses.errorTitle")}
             /> :
             <>
                 <Row className="d-flex flex-row card-deck row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 justify-content-between my-3">
                     {allCourses.map(n => <NewsCard key={n.id} newsItem={n} showTitle />)}
                 </Row>
                 <div className="w-100 d-flex justify-content-center mb-7">
-                    <Button className={"mt-3"} color="solid" disabled={disableLoadMore} onClick={() => setPage(p => p + 1)}>{t("common:onlineCourses.loadMoreButton")}</Button>
+                    <Button className={"mt-3"} color="solid" disabled={disableLoadMore} onClick={() => setPage(p => p + 1)}>{t("pages:onlineCourses.loadMoreButton")}</Button>
                 </div>
             </>
         }

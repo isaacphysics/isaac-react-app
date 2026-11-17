@@ -44,7 +44,7 @@ import { Trans, useTranslation } from "react-i18next";
 import i18next from "i18next";
 
 // Avoid loading the (large) QRCode library unless necessary:
-const GroupQRPanel = lazy(() => import("../panels/GroupQRPanel").catch(() => ({default: () => <i>{i18next.t("common:groups.qr.loadError")}</i>})));
+const GroupQRPanel = lazy(() => import("../panels/GroupQRPanel").catch(() => ({default: () => <i>{i18next.t("teaching:groups.qr.loadError")}</i>})));
 
 const AdditionalManagerSelfRemovalModalBody = ({group}: {group: AppGroup}) => <p>
     You are about to remove yourself as a manager from &apos;{group.groupName}&apos;. This group will no longer appear on your
@@ -53,7 +53,7 @@ const AdditionalManagerSelfRemovalModalBody = ({group}: {group: AppGroup}) => <p
 </p>;
 export const additionalManagerSelfRemovalModal = (group: AppGroup, user: RegisteredUserDTO) => ({
     closeAction: () => store.dispatch(closeActiveModal()),
-    title: i18next.t("common:groups.managers.removeSelf.title"),
+    title: i18next.t("teaching:groups.managers.removeSelf.title"),
     body: <AdditionalManagerSelfRemovalModalBody group={group} />,
     buttons: [
         <Row key={0}>
@@ -89,21 +89,21 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
     return <div>
         <ShowLoadingQuery
             query={tokenQuery}
-            defaultErrorTitle={t("common:groups.invite.errorTitle")}
+            defaultErrorTitle={t("teaching:groups.invite.errorTitle")}
             thenRender={token => <div className="d-flex flex-column gap-3">
                 <div>
-                    {firstTime && <h2 className="h3">{t("common:groups.invite.membersHeading")}</h2>}
-                    <p>{t("common:groups.invite.shareIntro")}</p>
-                    <p className={"mb-0"}>{t("common:groups.invite.studentInfo")}</p>
+                    {firstTime && <h2 className="h3">{t("teaching:groups.invite.membersHeading")}</h2>}
+                    <p>{t("teaching:groups.invite.shareIntro")}</p>
+                    <p className={"mb-0"}>{t("teaching:groups.invite.studentInfo")}</p>
                 </div>
                 <div>
-                    <h2 className="h3">{t("common:groups.invite.linkHeading")}</h2>
-                    <p>{t("common:groups.invite.linkDescription")}</p>
+                    <h2 className="h3">{t("teaching:groups.invite.linkHeading")}</h2>
+                    <p>{t("teaching:groups.invite.linkDescription")}</p>
                     <ReadonlyClipboardInput data-testid={"share-link"} value={`${location.origin}/account?authToken=${token?.token}`} />
                 </div>
                 <div>
-                    <h2 className="h3">{t("common:groups.invite.qrHeading")}</h2>
-                    <p>{t("common:groups.invite.qrDescription")}</p>
+                    <h2 className="h3">{t("teaching:groups.invite.qrHeading")}</h2>
+                    <p>{t("teaching:groups.invite.qrDescription")}</p>
                     {showQR
                         ? <GroupQRPanel link={`${location.origin}/account?authToken=${token?.token}`} groupName={group.groupName} />
                         : <Button color={"keyline"} onClick={() => {
@@ -111,17 +111,17 @@ const CurrentGroupInviteModal = ({firstTime, group}: CurrentGroupInviteModalProp
                                 setShowQR(true);
                             });
                         }}>
-                            {t("common:groups.invite.qrButton")}
+                            {t("teaching:groups.invite.qrButton")}
                         </Button>
                     }
                 </div>
                 <div>
-                    <h2 className="h3">{t("common:groups.invite.codeHeading")}</h2>
-                    <p><Trans i18nKey="common:groups.invite.codeDescription" components={{ accountPage: <b />, teacherConnections: <b /> }} values={{ siteTitle: SITE_TITLE_SHORT }} /></p>
+                    <h2 className="h3">{t("teaching:groups.invite.codeHeading")}</h2>
+                    <p><Trans i18nKey="teaching:groups.invite.codeDescription" components={{ accountPage: <b />, teacherConnections: <b /> }} values={{ siteTitle: SITE_TITLE_SHORT }} /></p>
                     <ReadonlyClipboardInput data-testid={"share-code"} value={token?.token} />
                 </div>
                 <div>
-                    <h2 className="h3">{t("common:groups.invite.nextSteps")}</h2>
+                    <h2 className="h3">{t("teaching:groups.invite.nextSteps")}</h2>
                 </div>
             </div>}
         />
@@ -147,7 +147,7 @@ const GroupInvitationModalButtons = ({firstTime, group, user}: {firstTime: boole
                 void store.dispatch(closeActiveModal());
                 void store.dispatch(showGroupManagersModal({group, user}));
             }}>
-                {t("common:groups.invite.addManagers")}
+                {t("teaching:groups.invite.addManagers")}
             </Button>
         </Col>}
     </Row>;
@@ -155,7 +155,7 @@ const GroupInvitationModalButtons = ({firstTime, group, user}: {firstTime: boole
 
 export const groupInvitationModal = (group: AppGroup, user: RegisteredUserDTO, firstTime: boolean, backToCreateGroup?: () => void) => ({
     closeAction: () => store.dispatch(closeActiveModal()),
-    title: firstTime ? i18next.t("common:groups.invite.createdTitle") : i18next.t("common:button.inviteUsers"),
+    title: firstTime ? i18next.t("teaching:groups.invite.createdTitle") : i18next.t("common:button.inviteUsers"),
     body: <CurrentGroupInviteModal group={group} firstTime={firstTime} />,
     buttons: [
         <GroupInvitationModalButtons key={0} firstTime={firstTime} group={group} user={user} />
@@ -195,9 +195,9 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
     function promoteManager(manager: UserSummaryWithEmailAddressDTO) {
         let confirm_text;
         if (group?.additionalManagerPrivileges) {
-            confirm_text = t("common:groups.managers.promote.confirmWithPrivileges");
+            confirm_text = t("teaching:groups.managers.promote.confirmWithPrivileges");
         } else {
-            confirm_text = t("common:groups.managers.promote.confirmWithoutPrivileges");
+            confirm_text = t("teaching:groups.managers.promote.confirmWithoutPrivileges");
         }
 
         if (group?.id) {
@@ -241,20 +241,20 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
     </p>;
 
     return !group ? <Loading/> : <div className={"mb-4"}>
-        <h2 className="h3">{t("common:groups.managers.selectedGroup", { groupName: group.groupName })}</h2>
-        <h3 className="h4">{t("common:groups.managers.permissions.heading")}</h3>
+        <h2 className="h3">{t("teaching:groups.managers.selectedGroup", { groupName: group.groupName })}</h2>
+        <h3 className="h4">{t("teaching:groups.managers.permissions.heading")}</h3>
         <p>
-            {t("common:groups.managers.permissions.intro")}
+            {t("teaching:groups.managers.permissions.intro")}
             <ul>
-                <li>{t("common:groups.managers.permissions.students")}</li>
+                <li>{t("teaching:groups.managers.permissions.students")}</li>
                 <li>Set new assignments or tests</li>
-                <li>{t("common:groups.managers.permissions.progress")}</li>
+                <li>{t("teaching:groups.managers.permissions.progress")}</li>
             </ul>
             {t("site:groups.managers.permissions.note")}
         </p>
 
         {!userIsOwner && group.ownerSummary && <div>
-            <h3 className="h4">{t("common:groups.managers.ownerHeading")}</h3>
+            <h3 className="h4">{t("teaching:groups.managers.ownerHeading")}</h3>
             <Table className="group-table">
                 <tbody>
                     <tr key={group.ownerSummary.email} data-testid={"group-owner"}>
@@ -265,14 +265,14 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
             </Table>
         </div>}
 
-        <h3 className="h4">{t("common:groups.managers.currentHeading")}</h3>
+        <h3 className="h4">{t("teaching:groups.managers.currentHeading")}</h3>
 
         {additionalManagers.length == 0 &&
-            <p>{t("common:groups.managers.emptyState")}</p>}
+            <p>{t("teaching:groups.managers.emptyState")}</p>}
         {additionalManagers.length == 1 && user && additionalManagers[0].id == user.id &&
-            <p>{t("common:groups.managers.onlySelf")}</p>}
+            <p>{t("teaching:groups.managers.onlySelf")}</p>}
         {!(additionalManagers.length == 0 || (additionalManagers.length == 1 && user && additionalManagers[0].id == user.id)) &&
-            <p>{t("common:groups.managers.listIntro")}</p>}
+            <p>{t("teaching:groups.managers.listIntro")}</p>}
 
         <ul className="group-table p-0 mb-3">
             {additionalManagers && additionalManagers.map(manager =>
@@ -281,10 +281,10 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
                         <i className="icon icon-my-isaac me-2" />,
                         <span className="icon-group-table-person" />
                     )}
-                    <span>{manager.givenName} {manager.familyName} {user.id === manager.id && <span className={"text-muted"}>{t("common:groups.editor.youLabel")}</span>} ({manager.email})</span>
+                    <span>{manager.givenName} {manager.familyName} {user.id === manager.id && <span className={"text-muted"}>{t("teaching:groups.editor.youLabel")}</span>} ({manager.email})</span>
                     <Spacer />
                     {userIsOwner && <Button className="d-none d-lg-inline" size="sm" color={"keyline"} onClick={() => promoteManager(manager)}>
-                        {t("common:groups.managers.makeOwner")}
+                        {t("teaching:groups.managers.makeOwner")}
                     </Button>}
                     {(userIsOwner || user?.id === manager.id || group.additionalManagerPrivileges) && !(userIsOwner && below["md"](deviceSize)) &&
                         <Button className="d-inline ms-2" size="sm" color={"solid"}
@@ -298,7 +298,7 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
                             {t("common:table.actions")}
                         </DropdownToggle>
                         <DropdownMenu>
-                            <DropdownItem onClick={() => promoteManager(manager)}>{t("common:groups.managers.makeOwner")}</DropdownItem>
+                            <DropdownItem onClick={() => promoteManager(manager)}>{t("teaching:groups.managers.makeOwner")}</DropdownItem>
                             <DropdownItem onClick={() => (user?.id === manager.id) ? removeSelf(manager) : removeManager(manager)}>{t("common:button.remove")}</DropdownItem>
                         </DropdownMenu>
                     </UncontrolledDropdown>}
@@ -312,43 +312,43 @@ const CurrentGroupManagersModal = ({groupId, archived, userIsOwner, user}: {grou
                 checked={group.additionalManagerPrivileges}
                 className={classNames("mb-2", {"checkbox-bold": isAda})}
                 onChange={e => setAdditionalManagerPrivileges(e.target.checked)}
-                label={<span>{t("common:groups.managers.extraPrivilegesLabel")}</span>}
+                label={<span>{t("teaching:groups.managers.extraPrivilegesLabel")}</span>}
             />
             {group.additionalManagerPrivileges
                 ? <>
-                    <Trans i18nKey="common:groups.managers.cautionHeader" components={{ strong: <span className={"fw-bold"} /> }} />
+                    <Trans i18nKey="teaching:groups.managers.cautionHeader" components={{ strong: <span className={"fw-bold"} /> }} />
                     <ul>
-                        <li><Trans i18nKey="common:groups.managers.privilegeModifyAssignments" components={{ b: <b /> }} /></li>
-                        <li>{t("common:groups.managers.privilegeRemoveMembers")}</li>
-                        <li>{t("common:groups.managers.privilegeArchiveRename")}</li>
-                        <li>{t("common:groups.managers.privilegeManageManagers")}</li>
+                        <li><Trans i18nKey="teaching:groups.managers.privilegeModifyAssignments" components={{ b: <b /> }} /></li>
+                        <li>{t("teaching:groups.managers.privilegeRemoveMembers")}</li>
+                        <li>{t("teaching:groups.managers.privilegeArchiveRename")}</li>
+                        <li>{t("teaching:groups.managers.privilegeManageManagers")}</li>
                     </ul>
-                    {t("common:groups.managers.uncheckInstruction")}
+                    {t("teaching:groups.managers.uncheckInstruction")}
                 </>
                 : <>
-                    {t("common:groups.managers.enableIntro")}
+                    {t("teaching:groups.managers.enableIntro")}
                     <ul>
-                        <li><Trans i18nKey="common:groups.managers.privilegeModifyAssignments" components={{ b: <b /> }} /></li>
-                        <li>{t("common:groups.managers.privilegeRemoveMembers")}</li>
-                        <li>{t("common:groups.managers.privilegeArchiveRename")}</li>
-                        <li>{t("common:groups.managers.privilegeManageManagers")}</li>
+                        <li><Trans i18nKey="teaching:groups.managers.privilegeModifyAssignments" components={{ b: <b /> }} /></li>
+                        <li>{t("teaching:groups.managers.privilegeRemoveMembers")}</li>
+                        <li>{t("teaching:groups.managers.privilegeArchiveRename")}</li>
+                        <li>{t("teaching:groups.managers.privilegeManageManagers")}</li>
                     </ul>
                 </>
             }
         </Alert>}
 
         {(userIsOwner || group.additionalManagerPrivileges) && <>
-            <h3 className="mt-3 h4">{t("common:groups.managers.addSectionTitle")}</h3>
-            <p>{t("common:groups.managers.addInstructions", { siteTitle: SITE_TITLE_SHORT })}</p>
+            <h3 className="mt-3 h4">{t("teaching:groups.managers.addSectionTitle")}</h3>
+            <p>{t("teaching:groups.managers.addInstructions", { siteTitle: SITE_TITLE_SHORT })}</p>
             <Form onSubmit={addManager}>
-                <Input type="text" value={newManagerEmail} placeholder={t("common:groups.managers.emailPlaceholder")} onChange={event => setNewManagerEmail(event.target.value)}/>
+                <Input type="text" value={newManagerEmail} placeholder={t("teaching:groups.managers.emailPlaceholder")} onChange={event => setNewManagerEmail(event.target.value)}/>
                 <ShowLoadingQuery
                     query={tokenQuery}
                     placeholder={generateGroupLinkReminder()}
                     ifError={() => generateGroupLinkReminder()}
                     thenRender={generateGroupLinkReminder}
                 />
-                <Button block className={siteSpecific("groups-modal-btn", "")} onClick={addManager} disabled={!isDefined(newManagerEmail) || newManagerEmail === ""}>{t("common:groups.managers.addButton")}</Button>
+                <Button block className={siteSpecific("groups-modal-btn", "")} onClick={addManager} disabled={!isDefined(newManagerEmail) || newManagerEmail === ""}>{t("teaching:groups.managers.addButton")}</Button>
             </Form>
         </>}
     </div>;
@@ -357,7 +357,7 @@ export const groupManagersModal = (group: AppGroup, user: RegisteredUserDTO) => 
     const userIsOwner = user?.id === group.ownerId;
     return {
         closeAction: () => store.dispatch(closeActiveModal()),
-        title: userIsOwner ? i18next.t("common:groups.share.title") : i18next.t("common:groups.shared.title"),
+        title: userIsOwner ? i18next.t("teaching:groups.share.title") : i18next.t("teaching:groups.shared.title"),
         body: <CurrentGroupManagersModal groupId={group.id as number} archived={!!group.archived} userIsOwner={userIsOwner} user={user} />,
     };
 };
@@ -369,7 +369,7 @@ const CurrentGroupEmailModal = ({users}: GroupEmailModalProps) => {
     const { t } = useTranslation();
     return <Col>
         <Row>
-            {t("common:groups.email.infoText")}
+            {t("teaching:groups.email.infoText")}
         </Row>
         <Row className="my-3">
             <pre>
@@ -421,7 +421,7 @@ const GroupCreateModal = ({user}: GroupCreateModalProps) => {
         <Form onSubmit={submit}>
             <FormGroup className="form-group">
                 <Label className={classNames("fw-bold form-required")} htmlFor="group-name-input">
-                   {t("common:groups.create.nameLabel")}
+                   {t("teaching:groups.create.nameLabel")}
                 </Label>
                 {isAda && <p className="d-block input-description mb-2">{t("ada:groups.create.nameDescription")}</p>}
                 <Input invalid={submissionAttempted && !validateGroupName()} id={"group-name-input"} onChange={event => setNewGroupName(event.target.value)} data-testid={"group-name-input"} />
@@ -430,7 +430,7 @@ const GroupCreateModal = ({user}: GroupCreateModalProps) => {
                 </FormFeedback>
             </FormGroup>
             <Button block type={"submit"} className={"mt-4"}>
-                {t("common:groups.create.submitButton")}
+                {t("teaching:groups.create.submitButton")}
             </Button>
         </Form>
     </>;
@@ -450,7 +450,7 @@ const GroupArchiveModal = ({group, toggleArchived}: {group: AppGroup; toggleArch
 
     return <div className="d-flex flex-column gap-3">
         <p>Are you sure you want to archive &quot;{group.groupName}&quot;? You will no longer be able to set assignments or tests to this group, and the group will not be visible {siteSpecific(<>on the <strong>Assignment progress</strong> or <strong>Assignment schedule</strong> pages.</>, <>in the Markbook.</>)}</p>
-        <p>{t("common:groups.archive.unarchiveHint")}</p>
+        <p>{t("teaching:groups.archive.unarchiveHint")}</p>
         <div className="text-end">
             <Button color="keyline" className="me-2" onClick={() => dispatch(closeActiveModal())}>
                 {t("common:button.cancel")}
@@ -459,7 +459,7 @@ const GroupArchiveModal = ({group, toggleArchived}: {group: AppGroup; toggleArch
                 toggleArchived();
                 dispatch(closeActiveModal());
             }}>
-                {t("common:groups.archive.confirmButton")}
+                {t("teaching:groups.archive.confirmButton")}
             </Button>
         </div>
     </div>;
@@ -467,7 +467,7 @@ const GroupArchiveModal = ({group, toggleArchived}: {group: AppGroup; toggleArch
 
 export const groupArchiveModal = (group: AppGroup, toggleArchived: () => void): ActiveModalProps => ({
     closeAction: () => store.dispatch(closeActiveModal()),
-    title: i18next.t("common:groups.archive.title"),
+    title: i18next.t("teaching:groups.archive.title"),
     body: <GroupArchiveModal group={group} toggleArchived={toggleArchived} />,
     size: "md",
     centered: true

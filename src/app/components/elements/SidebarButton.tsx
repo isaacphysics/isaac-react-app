@@ -48,7 +48,7 @@ export const SidebarButton = ({ buttonTitle, absolute, ...rest }: SidebarButtonP
             }}
             style={{maxWidth: textRef?.current ? `${(!sticky ? textRef.current.clientWidth + 8 : 0) + 61}px` : "max-content"}}
         >
-            <span ref={textRef}>{buttonTitle ?? t("common:sidebar.toggleButton.label")}</span>
+            <span ref={textRef}>{buttonTitle ?? t("questions:sidebar.toggleButton.label")}</span>
         </AffixButton>,
         <button
             {...rest}

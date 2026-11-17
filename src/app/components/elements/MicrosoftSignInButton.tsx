@@ -12,8 +12,8 @@ export const MicrosoftSignInButton = ({isSignup, knownRole}: {isSignup?: boolean
     const logInWithMicrosoft = () => dispatch(handleProviderLoginRedirect("MICROSOFT", isSignup, knownRole));
 
     return <button className="d-flex w-100 align-items-center linked-account-button-outer bg-white mb-1 p-3" onClick={logInWithMicrosoft}>
-        <img className="authenticator-logo" src={"/assets/common/logos/microsoft-logo.svg"} alt={t("common:auth.microsoft.logoAlt")}/>
-        {t("common:auth.microsoft.buttonLabel")}
+        <img className="authenticator-logo" src={"/assets/common/logos/microsoft-logo.svg"} alt={t("account:auth.microsoft.logoAlt")}/>
+        {t("account:auth.microsoft.buttonLabel")}
         <Spacer />
         <i className="icon icon-chevron-right" color="primary" />
     </button>;

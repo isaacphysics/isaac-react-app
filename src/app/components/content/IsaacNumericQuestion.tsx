@@ -36,18 +36,18 @@ export const numericInputValidator = (input: string) => {
         errors.push(i18next.t("common:error.invalidCharacters", { badCharacters: uniqueBadChars }));
     }
     if (missingExponentSymbol.test(input)) {
-        errors.push(i18next.t("common:questions.numeric.exponentSymbol"));
+        errors.push(i18next.t("questions:questions.numeric.exponentSymbol"));
     } else if (operatorExpression.test(input)) {
-        errors.push(i18next.t("common:questions.numeric.simplifyToDecimal"));
+        errors.push(i18next.t("questions:questions.numeric.simplifyToDecimal"));
     }
     if (/.*?[0-9][, ][0-9]{3}.*?/.test(input)) {
-        errors.push(i18next.t("common:questions.numeric.noThousandSeparators"));
+        errors.push(i18next.t("questions:questions.numeric.noThousandSeparators"));
     } else {
         if (/ /.test(input.trim())) {
-            errors.push(i18next.t("common:questions.numeric.noSpaces"));
+            errors.push(i18next.t("questions:questions.numeric.noSpaces"));
         }
         if (/\d,\d|^,\d/.test(input.trim())) {
-            errors.push(i18next.t("common:questions.numeric.decimalSeparator"));
+            errors.push(i18next.t("questions:questions.numeric.decimalSeparator"));
         }
     }
     return errors;
@@ -94,7 +94,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
 
     const tooltip = <UncontrolledTooltip placement="auto" autohide target={helpTooltip}>
         <Trans
-            i18nKey="common:questions.numeric.inputHelp"
+            i18nKey="questions:questions.numeric.inputHelp"
             components={{
                 br1: <br />,
                 br2: <br />,
@@ -169,7 +169,7 @@ const IsaacNumericQuestion = ({doc, questionId, validationResponse, readonly}: I
                 {!readonly && isPhy && above['md'](deviceSize) && <Col xs={12}>
                     <Button className="numeric-help d-flex align-items-center m-0 p-0 pe-2 gap-2 text-muted small" type="button" color="link" size="sm" innerRef={helpTooltip}>
                         <i className="icon icon-info icon-color-grey"/>
-                        {t("common:questions.numeric.helpPrompt")}
+                        {t("questions:questions.numeric.helpPrompt")}
                     </Button>
                     {tooltip}
                 </Col>}

@@ -38,7 +38,7 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
 
     const SidebarContents = () => {
         const { t } = useTranslation();
-        return <ContentSidebar buttonTitle={hasSections ? t("common:tests.sidebar.sectionsButton") : t("common:button.details")}>
+        return <ContentSidebar buttonTitle={hasSections ? t("teaching:tests.sidebar.sectionsButton") : t("common:button.details")}>
             <div className="section-divider"/>
             <h3 className="mb-3 h5">{t("common:title.test")}</h3>
             <div className="mb-2">
@@ -72,9 +72,9 @@ export const QuizSidebar = (props: QuizSidebarProps) => {
                 <div className="d-flex flex-column sidebar-key">
                     {t("common:label.key")}
                     <ul>
-                        <KeyItem icon="not-started" text={t("common:tests.sidebar.statusNotStarted")}/>
-                        <KeyItem icon="in-progress" text={t("common:tests.sidebar.statusInProgress")}/>
-                        <KeyItem icon="correct" text={t("common:tests.sidebar.statusCompleted")}/>
+                        <KeyItem icon="not-started" text={t("teaching:tests.sidebar.statusNotStarted")}/>
+                        <KeyItem icon="in-progress" text={t("teaching:tests.sidebar.statusInProgress")}/>
+                        <KeyItem icon="correct" text={t("teaching:tests.sidebar.statusCompleted")}/>
                     </ul>
                 </div>
             </>}

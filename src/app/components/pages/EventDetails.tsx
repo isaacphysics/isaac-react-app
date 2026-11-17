@@ -102,14 +102,14 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                 <Row>
                     <Col className={classNames(firstColumnWidths, "align-items-start")}>
                         {siteSpecific(
-                            <b>{t("common:events.label.when")}</b>, 
+                            <b>{t("events:events.label.when")}</b>, 
                             <span className="d-inline-flex align-items-center"><i className="icon icon-md icon-event-upcoming me-2" color="secondary"/><b>{t("ada:events.details.when")}</b></span>
                         )}
                     </Col>
                     <Col className="d-md-flex flex-wrap">
                         <div>
                             <span className="me-1">{formatEventDetailsDate(event)}</span>
-                            {event.hasExpired && <span className="text-danger">{t("common:events.details.pastNotice")}</span>}
+                            {event.hasExpired && <span className="text-danger">{t("events:events.details.pastNotice")}</span>}
                         </div>
                     </Col>
                 </Row>
@@ -135,11 +135,11 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                         </Col>
                         <Col>
                             <div className="text-start">
-                                {atLeastOne(event.placesAvailable) && <>{t("common:events.details.spacesAvailable", { spacesAvailable: event.placesAvailable })}</>}
+                                {atLeastOne(event.placesAvailable) && <>{t("events:events.details.spacesAvailable", { spacesAvailable: event.placesAvailable })}</>}
                                 {zeroOrLess(event.placesAvailable) && <>
-                                    <strong className="text-danger">{t("common:events.details.full")}</strong>
+                                    <strong className="text-danger">{t("events:events.details.full")}</strong>
                                     {/* Tutors cannot book on full events, as they are considered students w.r.t. events */}
-                                    {event.isAStudentEvent && isTeacherOrAbove(user) && <> {t("common:events.details.fullStudentOnly")}</>}
+                                    {event.isAStudentEvent && isTeacherOrAbove(user) && <> {t("events:events.details.fullStudentOnly")}</>}
                                 </>}
                                 
                                 {canBeAddedToWaitingList && <>. {formatAvailabilityMessage(event)}</>}
@@ -166,18 +166,18 @@ const KeyEventInfo = ({user, event, eventId, isVirtual, canMakeABooking, booking
                                 <DateString>{event.bookingDeadline}</DateString>
                             </div>
                             {!event.isWithinBookingDeadline && !event.hasExpired &&
-                                <div className="text-danger">{t("common:events.details.deadlinePassed")}</div>
+                                <div className="text-danger">{t("events:events.details.deadlinePassed")}</div>
                             }
                         </Col>
                     </Row>
                 }
                 {(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "RESERVED") &&
                     <Row className="mt-2">
-                        {event.userBookingStatus === "CONFIRMED" && <strong className="text-success fs-6">{t("common:events.details.bookedConfirmation")}</strong>}
+                        {event.userBookingStatus === "CONFIRMED" && <strong className="text-success fs-6">{t("events:events.details.bookedConfirmation")}</strong>}
                         {event.userBookingStatus === 'RESERVED' && <span className="text-success">
-                            <strong className="fs-6">{t("common:events.details.reservedConfirmation")}</strong>
+                            <strong className="fs-6">{t("events:events.details.reservedConfirmation")}</strong>
                             <Button color="link text-success" className="d-block" onClick={openAndScrollToBookingForm}>
-                                <u>{t("common:events.details.completeRegistration")}</u>
+                                <u>{t("events:events.details.completeRegistration")}</u>
                             </Button>
                         </span>}
                     </Row>}
@@ -200,7 +200,7 @@ const BookingForm = ({user, event, eventId, pathname, canMakeABooking, bookingFo
 
     function stopBookingIfStudent() {
         setBookingFormOpen(false);
-        dispatch(showErrorToast(t("common:events.booking.cancelledTitle"), t("common:events.booking.cancelledMessage")));
+        dispatch(showErrorToast(t("events:events.booking.cancelledTitle"), t("events:events.booking.cancelledMessage")));
     }
 
     function checkTeacherStatusThenSubmitBooking(formEvent: React.FormEvent<HTMLFormElement>) {
@@ -240,7 +240,7 @@ const BookingForm = ({user, event, eventId, pathname, canMakeABooking, bookingFo
         {bookingFormOpen && user?.loggedIn && 'CONFIRMED' !== event.userBookingStatus && <span>
             <Card className="mb-4">
                 <CardBody>
-                    <h3>{t("common:events.booking.formTitle")}</h3>
+                    <h3>{t("events:events.booking.formTitle")}</h3>
                     <Form onSubmit={checkTeacherStatus ? checkTeacherStatusThenSubmitBooking : submitBooking}>
                         <EventBookingForm
                             event={event} targetUser={user}
@@ -249,7 +249,7 @@ const BookingForm = ({user, event, eventId, pathname, canMakeABooking, bookingFo
                         />
                         <div>
                             <p className="mb-3">
-                                <Trans i18nKey="common:events.booking.terms" components={{ teacherConnectionsLink: <Link to="/account#teacherconnections" target="_blank" />, br1: <br />, privacyPolicyLink: <Link to="/privacy" target="_blank" />, br2: <br />, emailPreferencesLink: <Link to="/account#emailpreferences" target="_blank" /> }} values={{ siteTitle: SITE_TITLE }} />
+                                <Trans i18nKey="events:events.booking.terms" components={{ teacherConnectionsLink: <Link to="/account#teacherconnections" target="_blank" />, br1: <br />, privacyPolicyLink: <Link to="/privacy" target="_blank" />, br2: <br />, emailPreferencesLink: <Link to="/account#emailpreferences" target="_blank" /> }} values={{ siteTitle: SITE_TITLE }} />
                             </p>
 
                             <div className="mt-4 mb-2 d-flex justify-content-center">
@@ -272,8 +272,8 @@ const BookingForm = ({user, event, eventId, pathname, canMakeABooking, bookingFo
                 {!isLoggedIn(user) && event.isNotClosed && !event.hasExpired &&
                     <Button onClick={loginAndReturn}>
                         {atLeastOne(event.placesAvailable) && event.isWithinBookingDeadline ?
-                            t("common:events.booking.loginToBook") :
-                            t("common:events.booking.loginToApply")
+                            t("events:events.booking.loginToBook") :
+                            t("events:events.booking.loginToApply")
                         }
                     </Button>
                 }
@@ -281,7 +281,7 @@ const BookingForm = ({user, event, eventId, pathname, canMakeABooking, bookingFo
                 {/* Options for logged-in users */}
                 {isLoggedIn(user) && !event.hasExpired && <>
                     {event.isReservationOnly && !canReserveSpaces && !isTeacherOrAbove(user) && !userBookedReservedOrOnWaitingList(user, event) && <Alert color={"warning"}>
-                        {t("common:events.booking.teacherReservationWarning")}
+                        {t("events:events.booking.teacherReservationWarning")}
                     </Alert>
                     }
                     {(canMakeABooking || canBeAddedToWaitingList) && !bookingFormOpen && !['CONFIRMED'].includes(event.userBookingStatus || '') &&
@@ -295,13 +295,13 @@ const BookingForm = ({user, event, eventId, pathname, canMakeABooking, bookingFo
                     <Button className="mb-3 me-3" onClick={() => {
                         dispatch(openActiveModal(reservationsModal({event})));
                     }}>
-                        {t("common:events.booking.manageReservations")}
+                        {t("events:events.booking.manageReservations")}
                     </Button>
                     }
                     {(event.userBookingStatus === "CONFIRMED" || event.userBookingStatus === "WAITING_LIST" || event.userBookingStatus === "RESERVED") &&
                     <Button className="mb-3 me-3 btn btn-keyline" onClick={() =>
                         confirmThen(
-                            t("common:events.booking.cancelConfirmMessage"),
+                            t("events:events.booking.cancelConfirmMessage"),
                             () => cancelMyBooking(eventId)
                         )
                     }>
@@ -353,7 +353,7 @@ const EventDetails = () => {
 
     return <ShowLoadingQuery
         query={eventQuery}
-        defaultErrorTitle={t("common:events.notFound")}
+        defaultErrorTitle={t("events:events.notFound")}
         thenRender={event => {
 
             const isTeacherEvent = event.tags?.includes("teacher") && !event.tags?.includes("student");
@@ -382,13 +382,13 @@ const EventDetails = () => {
                     doc={event}
                     badges={<>
                         <Badge color="primary" className="fs-6 rounded-pill">
-                            {isTeacherEvent ? t("common:events.details.teacherBadge") : t("common:events.details.studentBadge")}
+                            {isTeacherEvent ? t("events:events.details.teacherBadge") : t("events:events.details.studentBadge")}
                         </Badge>
                         {hasExpired && <Badge className="fs-6 rounded-pill" color="expired">
-                            {t("common:events.status.expired")}
+                            {t("events:events.status.expired")}
                         </Badge>}
                         {bookingDeadlineSoon && <Badge className="fs-6 rounded-pill" color="alert">
-                            {t("common:events.status.bookingDeadlineSoon")}
+                            {t("events:events.status.bookingDeadlineSoon")}
                         </Badge>}
                     </>}
                 >

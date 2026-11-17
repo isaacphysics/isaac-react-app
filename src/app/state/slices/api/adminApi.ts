@@ -25,7 +25,7 @@ export const adminApi = isaacApi.enhanceEndpoints({
             }),
             providesTags: ["MisuseStatistics"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:admin.misuseStatistics.errorTitle")
+                errorTitle: () => i18next.t("admin:admin.misuseStatistics.errorTitle")
             })
         }),
 
@@ -40,9 +40,9 @@ export const adminApi = isaacApi.enhanceEndpoints({
             }),
             invalidatesTags: ["MisuseStatistics"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:admin.misuseMonitor.resetErrorTitle"),
+                errorTitle: () => i18next.t("admin:admin.misuseMonitor.resetErrorTitle"),
                 onQuerySuccess: ({eventLabel}, _, {dispatch}) => {
-                    dispatch(showSuccessToast(i18next.t("common:admin.misuseMonitor.resetSuccessTitle"), i18next.t("common:admin.misuseMonitor.resetSuccessMessage", { eventLabel: eventLabel.replace("MisuseHandler", "") })));
+                    dispatch(showSuccessToast(i18next.t("admin:admin.misuseMonitor.resetSuccessTitle"), i18next.t("admin:admin.misuseMonitor.resetSuccessMessage", { eventLabel: eventLabel.replace("MisuseHandler", "") })));
                 },
             })
         }),
@@ -54,7 +54,7 @@ export const adminApi = isaacApi.enhanceEndpoints({
             }),
             providesTags: ["ContentErrors"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:admin.contentErrors.errorTitle"),
+                errorTitle: () => i18next.t("admin:admin.contentErrors.errorTitle"),
             })
         }),
 
@@ -63,7 +63,7 @@ export const adminApi = isaacApi.enhanceEndpoints({
                 url: "/admin/stats",
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:admin.siteStatistics.errorTitle"),
+                errorTitle: () => i18next.t("admin:admin.siteStatistics.errorTitle"),
             })
         }),
 
@@ -76,7 +76,7 @@ export const adminApi = isaacApi.enhanceEndpoints({
                 params
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:admin.users.searchErrorTitle"),
+                errorTitle: () => i18next.t("admin:admin.users.searchErrorTitle"),
             })
         }),
 
@@ -90,9 +90,9 @@ export const adminApi = isaacApi.enhanceEndpoints({
                 }
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:admin.users.mergeErrorTitle"),
+                errorTitle: () => i18next.t("admin:admin.users.mergeErrorTitle"),
                 onQuerySuccess: ({targetId, sourceId}, _, {dispatch}) => {
-                    dispatch(showSuccessToast(i18next.t("common:admin.users.mergeSuccessTitle"), i18next.t("common:admin.users.mergeSuccessMessage", { sourceId, targetId })));
+                    dispatch(showSuccessToast(i18next.t("admin:admin.users.mergeSuccessTitle"), i18next.t("admin:admin.users.mergeSuccessMessage", { sourceId, targetId })));
                 }
             })
         }),
@@ -103,9 +103,9 @@ export const adminApi = isaacApi.enhanceEndpoints({
                 method: "DELETE",
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:admin.users.deleteErrorTitle"),
-                successTitle: () => i18next.t("common:admin.users.deleteSuccessTitle"),
-                successMessage: () => i18next.t("common:admin.users.deleteSuccessMessage"),
+                errorTitle: () => i18next.t("admin:admin.users.deleteErrorTitle"),
+                successTitle: () => i18next.t("admin:admin.users.deleteSuccessTitle"),
+                successMessage: () => i18next.t("admin:admin.users.deleteSuccessMessage"),
             })
         }),
 
@@ -116,7 +116,7 @@ export const adminApi = isaacApi.enhanceEndpoints({
                 body: userIds,
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:admin.users.modifyRoleErrorTitle"),
+                errorTitle: () => i18next.t("admin:admin.users.modifyRoleErrorTitle"),
             })
         }),
 
@@ -127,7 +127,7 @@ export const adminApi = isaacApi.enhanceEndpoints({
                 body: emails,
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:admin.users.modifyEmailVerificationErrorTitle"),
+                errorTitle: () => i18next.t("admin:admin.users.modifyEmailVerificationErrorTitle"),
             })
         }),
 
@@ -137,7 +137,7 @@ export const adminApi = isaacApi.enhanceEndpoints({
                 method: "GET",
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:admin.users.getUserErrorTitle"),
+                errorTitle: () => i18next.t("admin:admin.users.getUserErrorTitle"),
             }),
         }),
 
@@ -146,7 +146,7 @@ export const adminApi = isaacApi.enhanceEndpoints({
                 url: `/users/school_lookup?user_ids=${userIds.join(",")}`,
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:admin.users.getSchoolLookupErrorTitle"),
+                errorTitle: () => i18next.t("admin:admin.users.getSchoolLookupErrorTitle"),
             })
         }),
 
@@ -160,7 +160,7 @@ export const adminApi = isaacApi.enhanceEndpoints({
             }),
             transformResponse: (response: {results: string[], totalResults: number}) => response.results,
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:questions.generateAnswerSpec.errorTitle"),
+                errorTitle: () => i18next.t("questions:questions.generateAnswerSpec.errorTitle"),
             })
         }),
     })

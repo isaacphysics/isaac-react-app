@@ -54,7 +54,7 @@ export const questionsApi = isaacApi.enhanceEndpoints({addTagTypes: ["CanAttempt
                 return currentArg !== previousArg;
             },
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:questions.search.errorTitle"),
+                errorTitle: () => i18next.t("questions:questions.search.errorTitle"),
             }),
         }),
 

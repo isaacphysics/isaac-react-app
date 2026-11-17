@@ -65,9 +65,9 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
 
     return <div  className="d-flex flex-column pb-4 container-override random-question-panel" >
         <div className="d-flex my-3 justify-content-between align-items-center">
-            <h2 className="m-0 h4">{t("common:subjectLanding.randomQuestion.title")}</h2>
+            <h2 className="m-0 h4">{t("pages:subjectLanding.randomQuestion.title")}</h2>
             <button className="btn btn-link invert-underline d-flex align-items-center gap-2 p-1" onClick={handleGetDifferentQuestion}>
-                {t("common:subjectLanding.randomQuestion.differentButton")}
+                {t("pages:subjectLanding.randomQuestion.differentButton")}
                 <i className="icon icon-refresh icon-color-black"/>
             </button>
         </div>
@@ -87,7 +87,7 @@ const RandomQuestionBanner = ({context}: {context?: PageContextState}) => {
                     } as ContentSummaryDTO]}/>
                     : <ul className="w-100 list-group ">
                         <li className="w-100 d-flex justify-content-center align-items-center content-summary-item list-group-item p-0">
-                            <span>{t("common:subjectLanding.randomQuestion.emptyState")}</span>
+                            <span>{t("pages:subjectLanding.randomQuestion.emptyState")}</span>
                         </li>
                     </ul>;
             }}
@@ -106,14 +106,14 @@ const BooksList = ({books, isFullWidth}: {books: BookInfo[], isFullWidth: boolea
     const { t } = useTranslation();
     return <div className="d-flex flex-column mt-3">
         <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-            <h2 className="h4 m-0"><Trans i18nKey="common:subjectLanding.books.title" components={{ emphasis: <span className="text-theme" /> }} values={{ bookCount: books.length }} /></h2>
+            <h2 className="h4 m-0"><Trans i18nKey="pages:subjectLanding.books.title" components={{ emphasis: <span className="text-theme" /> }} values={{ bookCount: books.length }} /></h2>
             <div className="section-divider-bold flex-grow-1"/>
         </div>
         <Row className={classNames("item-list-container row-cols-1", {"row-cols-md-2": isFullWidth})}>
             {books.slice(0, 4).map((book, index) => <BookCard key={index} {...book} />)}
         </Row>
         {books.length > 4 && <Button tag={Link} color="keyline" to={`/books`} className="btn mt-4 mb-2">
-            {t("common:subjectLanding.books.viewMore")}
+            {t("pages:subjectLanding.books.viewMore")}
         </Button>}
     </div>;
 };
@@ -122,7 +122,7 @@ const NewsList = ({news}: {news: IsaacPodDTO[]}) => {
     const { t } = useTranslation();
     return <div className="d-flex flex-column mt-3">
         <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
-            <h2 className="h4">{t("common:subjectLanding.news.title")}</h2>
+            <h2 className="h4">{t("pages:subjectLanding.news.title")}</h2>
             <div className="section-divider-bold flex-grow-1"/>
         </div>
         <Row className="h-100 item-list-container">
@@ -137,7 +137,7 @@ const EventsList = ({events}: {events: AugmentedEvent[]}) => {
     return <div className="d-flex flex-column mt-3">
         <div className="d-flex mb-3 align-items-center gap-4 white-space-pre">
             <h2 className="h4 m-0"><Trans
-                i18nKey="common:subjectLanding.events.heading"
+                i18nKey="pages:subjectLanding.events.heading"
                 components={{
                     theme: <span className="text-theme" />,
                 }}
@@ -171,7 +171,7 @@ const FooterRow = ({context, books, news, events}: FooterRowProps) => {
             ? <BooksList books={books} isFullWidth={noEvents} />
             : news?.length 
                 ? <NewsList news={news} />
-                : <p>{t("common:subjectLanding.footer.emptyState")}</p>
+                : <p>{t("pages:subjectLanding.footer.emptyState")}</p>
         }
         {!noEvents && <EventsList events={relevantEvents} />}
     </Row>;
@@ -206,7 +206,7 @@ export const SubjectLandingPage = () => {
     const pageContext = useUrlPageTheme();
     const deviceSize = useDeviceSize();
     const title = (pageContext?.subject === SUBJECTS.MATHS && pageContext.stage?.includes(STAGE.A_LEVEL))
-        ? t("common:subjectLanding.title.aLevelMaths") : getHumanContext(pageContext);
+        ? t("pages:subjectLanding.title.aLevelMaths") : getHumanContext(pageContext);
 
     return <Container data-bs-theme={pageContext?.subject}>
         <TitleAndBreadcrumb

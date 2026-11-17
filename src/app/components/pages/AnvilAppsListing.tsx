@@ -20,11 +20,11 @@ export const AnvilAppsListing = () => {
     if (!(pageContext.stage[0] in (VALID_APPS_CONTEXTS[pageContext.subject] || {}))) {
         return <Container data-bs-theme={pageContext?.subject}>
             <TitleAndBreadcrumb 
-                currentPageTitle={t("common:anvilApps.emptyTitle")}
+                currentPageTitle={t("questions:anvilApps.emptyTitle")}
                 intermediateCrumbs={crumb ? [crumb] : []}
                 icon={{ icon: "icon-revision", type: "icon" }}
             />
-            <p className="mt-4">{t("common:anvilApps.emptyMessage", { context: getHumanContext(pageContext) })}</p>
+            <p className="mt-4">{t("questions:anvilApps.emptyMessage", { context: getHumanContext(pageContext) })}</p>
         </Container>;
     }
 

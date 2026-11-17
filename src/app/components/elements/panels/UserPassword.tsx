@@ -52,7 +52,7 @@ const ThirdPartyAccount = ({provider, isLinked, imgCss} : {provider: Authenticat
         <span className="ms-2">{AUTHENTICATOR_FRIENDLY_NAMES_MAP[provider]}</span>
         <Spacer/>
         <span className="me-4 btn btn-link">
-            {isLinked ? <span>{t("common:account.linkedAccounts.unlink")}</span> : <span>{t("common:account.linkedAccounts.link")}</span>}
+            {isLinked ? <span>{t("account:account.linkedAccounts.unlink")}</span> : <span>{t("account:account.linkedAccounts.link")}</span>}
         </span>
     </button>;
 };
@@ -94,8 +94,8 @@ export const UserPassword = (
 
     return <MyAccountTab
         leftColumn={<>
-            <h2 className="h3">{t("common:account.security.title")}</h2>
-            <p>{t("common:account.security.description")}</p>
+            <h2 className="h3">{t("account:account.security.title")}</h2>
+            <p>{t("account:account.security.description")}</p>
         </>}
         rightColumn={<>
             <h3 className="h4">{t("common:label.password")}</h3>
@@ -105,7 +105,7 @@ export const UserPassword = (
                     <>
                         {!editingOtherUser && 
                         <FormGroup className="form-group">
-                            <Label htmlFor="password-current">{t("common:account.security.currentPasswordLabel")}</Label>
+                            <Label htmlFor="password-current">{t("account:account.security.currentPasswordLabel")}</Label>
                             <TogglablePasswordInput
                                 id="password-current" type="password" name="current-password"
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -160,7 +160,7 @@ export const UserPassword = (
                         {myUser.emailVerificationStatus !== "AGE_RESTRICTED" && <Row className="pb-4">
                             <Col className="text-center">
                                 <Button className="btn-keyline" onClick={resetPasswordIfValidEmail}>
-                                    {t("common:account.security.addPasswordButton")}
+                                    {t("account:account.security.addPasswordButton")}
                                 </Button>
                             </Col>
                         </Row>}
@@ -168,7 +168,7 @@ export const UserPassword = (
                     :
                     <React.Fragment>
                         <p>
-                            <strong className="d-block">{t("common:account.security.resetProcessing")}</strong>
+                            <strong className="d-block">{t("account:account.security.resetProcessing")}</strong>
                             <strong className="d-block">{t("common:status.checkInbox")}</strong>
                         </p>
                     </React.Fragment>
@@ -184,7 +184,7 @@ export const UserPassword = (
                     </Col>
                 </FormGroup>}
                 {unconnectedAccounts.length > 0 && <FormGroup className="form-group">
-                    <h3 className="h4">{t("common:account.linkedAccounts.otherTitle")}</h3>
+                    <h3 className="h4">{t("account:account.linkedAccounts.otherTitle")}</h3>
                     <Col>
                         {unconnectedAccounts.map((provider) => {
                             return <React.Fragment key={provider}>{authButtonsMap[provider](false)}</React.Fragment>;
@@ -195,9 +195,9 @@ export const UserPassword = (
             <React.Fragment>
                 {siteSpecific(<div className="section-divider-bold"/>, <hr className="text-center"/>)}
                 <FormGroup className="form-group">
-                    <h3 className="h4">{t("common:account.logOut.title")}</h3>
+                    <h3 className="h4">{t("account:account.logOut.title")}</h3>
                     <p>
-                        {t("common:account.logOut.description")}
+                        {t("account:account.logOut.description")}
                     </p>
                     <Col className="text-center mt-2 px-0">
                         <Button className={classNames("w-100 py-2", {"mt-3": isAda})} color="keyline" onClick={() => dispatch(logOutUserEverywhere())}>

@@ -38,7 +38,7 @@ export const IsaacFeaturedProfile = ({doc, contentIndex}: IsaacFeaturedProfilePr
         <Spacer/>
         {doc.emailAddress && <a href={"mailto:" + doc.emailAddress} className="mb-4">
             <img src='/assets/phy/icons/icon-mailto.png' alt=""/>
-            <span className="visually-hidden">{t("common:profiles.featured.emailLinkLabel", { name: doc.title })}</span>
+            <span className="visually-hidden">{t("pages:profiles.featured.emailLinkLabel", { name: doc.title })}</span>
         </a>}
     </div>;
 };

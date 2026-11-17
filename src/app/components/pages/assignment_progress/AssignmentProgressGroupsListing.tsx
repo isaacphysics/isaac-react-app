@@ -91,12 +91,12 @@ export const AssignmentProgressGroupsListing = ({user, groups}: {user: Registere
                 <CardBody>
                     <Row className="row-gap-2">
                         <Col xs={12} md={7} lg={4} xl={3} className="d-flex flex-column">
-                            <Label className="m-0">{t('common:AssignmentProgressGroupsListing.search-for-a-group')}</Label>
+                            <Label className="m-0">{t('teaching:AssignmentProgressGroupsListing.search-for-a-group')}</Label>
                             <SearchInputWithIcon onChange={(e) => setGroupSearch(e.target.value)}/>
                         </Col>
 
                         <Col xs={6} md={5} lg={{size: 3, offset: 5}} xl={{size: 2, offset: 7}} className="d-flex flex-column">
-                            <Label className="m-0">{t('common:groups.progress.sortLabel')}</Label>
+                            <Label className="m-0">{t('teaching:groups.progress.sortLabel')}</Label>
                             <StyledDropdown
                                 value={groupSortOrder}
                                 onChange={(e) => setGroupSortOrder?.(e.target.value as GroupSortOrder)}
@@ -126,8 +126,8 @@ export const AssignmentProgressGroupsListing = ({user, groups}: {user: Registere
                                     <div className={classNames("d-flex flex-column my-2 py-2 hf-12 text-center gap-2 justify-content-center", siteSpecific("bg-neutral-light", "bg-cultured-grey"))}>
                                         <span>
                                             { isGroupsEmptyState 
-                                                ? t('common:AssignmentProgressGroupsListing.you-have-no-teaching-groups-yet')
-                                                : t('common:AssignmentProgressGroupsListing.no-groups-match-your-criteria')
+                                                ? t('teaching:AssignmentProgressGroupsListing.you-have-no-teaching-groups-yet')
+                                                : t('teaching:AssignmentProgressGroupsListing.no-groups-match-your-criteria')
                                             }
                                         </span>
                                         { isGroupsEmptyState &&

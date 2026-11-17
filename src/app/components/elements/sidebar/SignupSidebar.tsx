@@ -11,14 +11,14 @@ export const SignupSidebar = ({activeTab, sso} : {activeTab: number, sso?: boole
 
     const goBack = (path: string) => {
         confirmThen(
-            t("common:auth.registration.goBackConfirm"),
+            t("account:auth.registration.goBackConfirm"),
             () => navigate(path)
         );
     };
 
     const handleSSOBack = (path: string) => {
         if (sso) {
-            window.alert(t("common:auth.registration.ssoVerified"));
+            window.alert(t("account:auth.registration.ssoVerified"));
         } else {
             goBack(path);
         }
@@ -28,10 +28,10 @@ export const SignupSidebar = ({activeTab, sso} : {activeTab: number, sso?: boole
         <div className="section-divider mt-4"/>
         <h3 className="mt-1 h5">{t("common:button.createAccount")}</h3>
         {/* Tabs are clickable iff their page could be reached with a Back button */}
-        <StyledTabPicker checkboxTitle={t("common:auth.sidebar.tabMethod")} checked={activeTab === 0} disabled={activeTab > 2} onChange={() => (activeTab === 1 || activeTab === 2) && goBack("/register")}/>
-        <StyledTabPicker checkboxTitle={t("common:auth.sidebar.tabAge")} checked={activeTab === 1} disabled={activeTab < 1 || activeTab > 2} onChange={() => activeTab === 2 && handleSSOBack("/register/student/age")}/>
+        <StyledTabPicker checkboxTitle={t("account:auth.sidebar.tabMethod")} checked={activeTab === 0} disabled={activeTab > 2} onChange={() => (activeTab === 1 || activeTab === 2) && goBack("/register")}/>
+        <StyledTabPicker checkboxTitle={t("account:auth.sidebar.tabAge")} checked={activeTab === 1} disabled={activeTab < 1 || activeTab > 2} onChange={() => activeTab === 2 && handleSSOBack("/register/student/age")}/>
         <StyledTabPicker checkboxTitle={t("common:title.accountDetails")} checked={activeTab === 2} disabled={activeTab !== 2} onChange={undefined}/>
         <StyledTabPicker checkboxTitle={t("common:button.joinGroup")} checked={activeTab === 4} disabled={activeTab !== 4} onChange={undefined}/>
-        <StyledTabPicker checkboxTitle={t("common:auth.sidebar.tabPreferences")} checked={activeTab === 3} disabled={activeTab !== 3} onChange={undefined}/>
+        <StyledTabPicker checkboxTitle={t("account:auth.sidebar.tabPreferences")} checked={activeTab === 3} disabled={activeTab !== 3} onChange={undefined}/>
     </ContentSidebar>;
 };

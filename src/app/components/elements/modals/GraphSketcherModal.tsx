@@ -152,10 +152,10 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
     return <div id='graph-sketcher-modal' ref={graphSketcherContainer} style={{border: '5px solid black'}}>
         <div className="graph-sketcher-ui">
             {/* do not use default <button>s -- these submit top-level forms (i.e. submit the question attempt) and can cause attempt spam timeout warnings */}
-            <div title={t("common:graphSketcher.controls.redoTooltip")} role="button" className={ [ 'button', isRedoable() ? 'visible' : 'hidden' ].join(' ') } onClick={redo} onKeyUp={redo} tabIndex={0} id="graph-sketcher-ui-redo-button">{t("common:graphSketcher.controls.redoButton")}</div>
-            <div title={t("common:graphSketcher.controls.undoTooltip")} role="button" className={ [ 'button', isUndoable() ? 'visible' : 'hidden' ].join(' ') } onClick={undo} onKeyUp={undo} tabIndex={0} id="graph-sketcher-ui-undo-button">{t("common:graphSketcher.controls.undoButton")}</div>
-            <div title={t("common:graphSketcher.controls.bezierTooltip")} role="button" className={ [ 'button', lineType === LineType.BEZIER ? 'active' : '' ].join(' ') } onClick={ () => setLineType(LineType.BEZIER) } onKeyUp={ () => setLineType(LineType.BEZIER) } tabIndex={0} id="graph-sketcher-ui-bezier-button">{t("common:graphSketcher.controls.bezierButton")}</div>
-            <div title={t("common:graphSketcher.controls.linearTooltip")} role="button" className={ [ 'button', lineType === LineType.LINEAR ? 'active' : '' ].join(' ') } onClick={ () => setLineType(LineType.LINEAR) } onKeyUp={ () => setLineType(LineType.LINEAR) } tabIndex={0} id="graph-sketcher-ui-linear-button">{t("common:graphSketcher.controls.linearButton")}</div>
+            <div title={t("questions:graphSketcher.controls.redoTooltip")} role="button" className={ [ 'button', isRedoable() ? 'visible' : 'hidden' ].join(' ') } onClick={redo} onKeyUp={redo} tabIndex={0} id="graph-sketcher-ui-redo-button">{t("questions:graphSketcher.controls.redoButton")}</div>
+            <div title={t("questions:graphSketcher.controls.undoTooltip")} role="button" className={ [ 'button', isUndoable() ? 'visible' : 'hidden' ].join(' ') } onClick={undo} onKeyUp={undo} tabIndex={0} id="graph-sketcher-ui-undo-button">{t("questions:graphSketcher.controls.undoButton")}</div>
+            <div title={t("questions:graphSketcher.controls.bezierTooltip")} role="button" className={ [ 'button', lineType === LineType.BEZIER ? 'active' : '' ].join(' ') } onClick={ () => setLineType(LineType.BEZIER) } onKeyUp={ () => setLineType(LineType.BEZIER) } tabIndex={0} id="graph-sketcher-ui-bezier-button">{t("questions:graphSketcher.controls.bezierButton")}</div>
+            <div title={t("questions:graphSketcher.controls.linearTooltip")} role="button" className={ [ 'button', lineType === LineType.LINEAR ? 'active' : '' ].join(' ') } onClick={ () => setLineType(LineType.LINEAR) } onKeyUp={ () => setLineType(LineType.LINEAR) } tabIndex={0} id="graph-sketcher-ui-linear-button">{t("questions:graphSketcher.controls.linearButton")}</div>
             <div title={t("common:button.deleteSelectedCurve")} role="button" className={'button'} tabIndex={0} id="graph-sketcher-ui-trash-button">{t("common:button.deleteSelectedCurve")}</div>
             <div title={t("common:button.deleteAllCurves")} role="button" className={'button'} tabIndex={0} id="graph-sketcher-ui-reset-button">{t("common:button.deleteAllCurves")}</div>
             <div className="button" role="button" onClick={close} onKeyUp={close} tabIndex={0} id="graph-sketcher-ui-submit-button">{t("common:button.submit")}</div>
@@ -210,7 +210,7 @@ const GraphSketcherModal = (props: GraphSketcherModalProps) => {
                         onClick={() => setDrawingColorName("Green")}
                     />
                 </svg>
-                <p className={"hover-text"}>{t("common:graphSketcher.controls.colorLabel")}</p>
+                <p className={"hover-text"}>{t("questions:graphSketcher.controls.colorLabel")}</p>
             </div>
             {showQuestionReminder && (questionDoc?.value || (questionDoc?.children && questionDoc?.children?.length > 0)) && <div className="question-reminder">
                 <IsaacContentValueOrChildren value={questionDoc.value} encoding={questionDoc.encoding}>

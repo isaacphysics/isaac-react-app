@@ -18,22 +18,22 @@ export function RevisionWarningAlert() {
         const timespan = !mostRecentAttemptDate 
             ? undefined 
             : mostRecentAttemptDate < new Date(new Date().setFullYear(new Date().getFullYear() - 1)) 
-                ? t("common:revision.alert.overOneYear") 
+                ? t("pages:revision.alert.overOneYear") 
                 : mostRecentAttemptDate < new Date(new Date().setMonth(new Date().getMonth() - 1)) 
-                    ? t("common:revision.alert.lastTwelveMonths") 
+                    ? t("pages:revision.alert.lastTwelveMonths") 
                     : mostRecentAttemptDate < new Date(new Date().setDate(new Date().getDate() - 7)) 
-                        ? t("common:revision.alert.lastMonth") 
-                        : t("common:revision.alert.lastWeek");
+                        ? t("pages:revision.alert.lastMonth") 
+                        : t("pages:revision.alert.lastWeek");
 
         return <Alert color="warning" className={"no-print"}>
             <span><Trans
-                i18nKey="common:revision.alert.modeNotice"
+                i18nKey="pages:revision.alert.modeNotice"
                 components={{
                     revisionModeLink: <TransAnchor href="\account#betafeatures" />,
                 }}
             /></span>
             {timespan && <>
-                <br/><br/><span>{t("common:revision.alert.correctAnswerTimespan", { timespan })}</span>
+                <br/><br/><span>{t("pages:revision.alert.correctAnswerTimespan", { timespan })}</span>
             </>}
         </Alert>;
     } else {

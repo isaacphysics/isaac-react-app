@@ -59,7 +59,7 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
             <div className="section-divider"/>
 
             {!pageContext?.subject && <>
-                <h3 className="h5">{t("common:glossary.sidebar.selectSubjectTitle")}</h3>
+                <h3 className="h5">{t("questions:glossary.sidebar.selectSubjectTitle")}</h3>
                 <ul>
                     {subjects.map(subject => <li key={subject.id}>
                         <StyledTabPicker checkboxTitle={subject.title} data-bs-theme={subject.id}
@@ -88,7 +88,7 @@ export const GlossarySidebar = (props: GlossarySidebarProps) => {
             </>}
 
             {isFullyDefinedContext(pageContext) && isSingleStageContext(pageContext) && <>
-                <h3 className="h5">{t("common:glossary.sidebar.switchStageTitle")}</h3>
+                <h3 className="h5">{t("questions:glossary.sidebar.switchStageTitle")}</h3>
                 <ul>
                     {PHY_NAV_SUBJECTS[pageContext.subject].map((stage, index) =>
                         <li key={index}>

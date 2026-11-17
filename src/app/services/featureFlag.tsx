@@ -93,11 +93,11 @@ const FeatureFlagModalBody = () => {
     const allFlags = Object.values(FeatureFlag).filter(f => f !== FeatureFlag._TEST_FEATURE) as FeatureFlag[]; 
 
     return <Col>
-        <p>{t("common:featureFlags.modal.description")}</p>
-        <p>{t("common:featureFlags.modal.howItWorks")}</p>
-        <p>{t("common:featureFlags.modal.overrideNote")}</p>
+        <p>{t("admin:featureFlags.modal.description")}</p>
+        <p>{t("admin:featureFlags.modal.howItWorks")}</p>
+        <p>{t("admin:featureFlags.modal.overrideNote")}</p>
 
-        <p className="mt-5">{t("common:featureFlags.modal.overridesLabel")}</p>
+        <p className="mt-5">{t("admin:featureFlags.modal.overridesLabel")}</p>
         {allFlags.length
             ? <ul className="list-unstyled ps-3">
                 {allFlags.map(flag => 
@@ -108,7 +108,7 @@ const FeatureFlagModalBody = () => {
                     </div>
                 )}
             </ul>
-            : <p><em>{t("common:featureFlags.modal.emptyState")}</em></p>
+            : <p><em>{t("admin:featureFlags.modal.emptyState")}</em></p>
         }
 
         <div className="d-flex w-100 justify-content-around mt-5">
@@ -118,7 +118,7 @@ const FeatureFlagModalBody = () => {
             </div>
             <div className="d-flex gap-2 align-items-center">
                 <i className="icon icon-dash" />
-                {t("common:featureFlags.modal.toggleAuto")}
+                {t("admin:featureFlags.modal.toggleAuto")}
             </div>
             <div className="d-flex gap-2 align-items-center">
                 <i className="icon icon-tick" />
@@ -130,7 +130,7 @@ const FeatureFlagModalBody = () => {
             saveOverridesToStorage(overrides);
             window.location.reload();
         }}>
-            {t("common:featureFlags.modal.applyButton")}
+            {t("admin:featureFlags.modal.applyButton")}
         </Button>
     </Col>;
 };

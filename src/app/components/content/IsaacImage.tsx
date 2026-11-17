@@ -19,7 +19,7 @@ export const FigureModal = ({path, altText, caption, toggle}: FigureModalProps) 
     return {
         closeAction: toggle,
         size: "xxl",
-        title: i18next.t("common:content.imagePreviewTitle"),
+        title: i18next.t("questions:content.imagePreviewTitle"),
         body: <div className="figure-panel">
             <figure className="text-center">
                 <img src={path} alt={altText} />
@@ -54,7 +54,7 @@ export const IsaacImage = ({doc}: IsaacImageProps) => {
     return <div className="figure-panel">
         <figure>
             <div className="text-center position-relative p-3 pb-5">
-                <button className="figure-fullscreen" aria-label={t("common:content.expandImageLabel")} onClick={() => {
+                <button className="figure-fullscreen" aria-label={t("questions:content.expandImageLabel")} onClick={() => {
                     dispatch(openActiveModal(FigureModal({
                         path, 
                         altText: doc.altText, 

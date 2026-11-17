@@ -99,14 +99,14 @@ export const assignMultipleQuiz = createAsyncThunk(
             const failedIds = quizStatuses.filter(q => isDefined(q.errorMessage));
             if (failedIds.length === 0) {
                 appDispatch(showSuccessToast(
-                    i18next.t("common:assignments.assign.successTitle", { count: successfulIds.length }),
+                    i18next.t("teaching:assignments.assign.successTitle", { count: successfulIds.length }),
                     `${successfulIds.length > 1 ? "All tests have" : "This test has"} been saved successfully`
                 ));
             } else {
                 // Show each group assignment error in a separate toast
                 failedIds.forEach(({groupId, errorMessage}) => {
                     appDispatch(showErrorToast(
-                        i18next.t("common:assignments.assign.errorTitle", { groupName: groupLookUp.get(groupId) ?? "unknown group" }),
+                        i18next.t("teaching:assignments.assign.errorTitle", { groupName: groupLookUp.get(groupId) ?? "unknown group" }),
                         errorMessage as string
                     ));
                 });
@@ -118,7 +118,7 @@ export const assignMultipleQuiz = createAsyncThunk(
                         ? "Some tests were saved successfully."
                         : `Test assigned to ${groupLookUp.get(successfulIds[0] as number)} was saved successfully.`}`;
                     appDispatch(showSuccessToast(
-                        i18next.t("common:assignments.assign.savedTitle", { count: successfulIds.length }),
+                        i18next.t("teaching:assignments.assign.savedTitle", { count: successfulIds.length }),
                         partialSuccessMessage
                     ));
                 }
@@ -383,7 +383,7 @@ export const useManageQuizAssignments = () => {
     const [markQuizAsCancelled, {isLoading: isCancelling}] = useCancelQuizAssignmentMutation();
 
     const cancel = (quiz: QuizAssignmentDTO) => confirmThen(
-        t("common:assignments.cancel.confirmMessage", { quizTitle: quiz.quizSummary?.title }),
+        t("teaching:assignments.cancel.confirmMessage", { quizTitle: quiz.quizSummary?.title }),
         () => markQuizAsCancelled(quiz.id as number)
     );
     const openExtendDueDateModal = (quiz: QuizAssignmentDTO) => dispatch(openActiveModal(extendDueDateModal({

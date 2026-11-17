@@ -52,7 +52,7 @@ export const QuizQuestion = ({doc}: { doc: ApiTypes.QuestionDTO }) => {
             {/* Validation Response */}
             {validated && <div className={`validation-response-panel p-2 mt-2 ${correct ? "correct" : ""}`}>
                 <div className="pb-1">
-                    <div className={siteSpecific("response-heading", "h1")}>{noAnswer ? t("common:questions.validation.notAnswered") : sigFigsError ? t("common:questions.validation.sigFigs") : correct ? t("common:questions.feedback.correct") : t("common:status.incorrect")}</div>
+                    <div className={siteSpecific("response-heading", "h1")}>{noAnswer ? t("questions:questions.validation.notAnswered") : sigFigsError ? t("questions:questions.validation.sigFigs") : correct ? t("questions:questions.feedback.correct") : t("common:status.incorrect")}</div>
                 </div>
                 {validationResponse && validationResponse.explanation && <div className="mb-1">
                     <IsaacContent doc={validationResponse.explanation as ContentDTO} />

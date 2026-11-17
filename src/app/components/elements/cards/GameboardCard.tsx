@@ -67,7 +67,7 @@ const CardUsageInfo = ({ gameboard, usageDisplay, className, ...rest }: CardUsag
             </Label> 
         </>}
         {usageDisplay?.type === "group" && <>
-            <Label className="d-block w-max-content text-center text-nowrap pt-3 pt-md-1" title={t("common:gameboard.card.groupsAssigned")}>
+            <Label className="d-block w-max-content text-center text-nowrap pt-3 pt-md-1" title={t("teaching:gameboard.card.groupsAssigned")}>
                 Assigned to
                 <div className="board-bubble-info">{usageDisplay.groupCount ?? 0}</div>
                 group{usageDisplay.groupCount !== 1 && "s"}
@@ -78,7 +78,7 @@ const CardUsageInfo = ({ gameboard, usageDisplay, className, ...rest }: CardUsag
                 ? <div className="d-flex align-items-center">
                     <span>
                         <Trans
-                            i18nKey="common:gameboard.usageInfo.beginsIn"
+                            i18nKey="teaching:gameboard.usageInfo.beginsIn"
                             components={{
                                 bold: <b />,
                             }}
@@ -178,7 +178,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
 
         <div className="d-flex flex-column flex-sm-row align-items-start mt-2">
             {gameboard?.contents?.length && <Button className="my-2 btn-underline order-1 order-sm-0" color="link" onClick={(e) => {e.preventDefault(); setShowMore(!showMore);}}>
-                {showMore ? t("common:gameboard.card.hideDetailsButton") : t("common:gameboard.card.showDetailsButton")}
+                {showMore ? t("teaching:gameboard.card.hideDetailsButton") : t("teaching:gameboard.card.showDetailsButton")}
             </Button>}
             <Spacer />
             <div className="d-flex gap-3 align-self-stretch align-items-center mb-2 order-0 order-sm-1">
@@ -212,7 +212,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
                 <Col xs={12} md={8} className="mt-sm-2">
                     <p className="mb-0 d-flex align-items-center gap-2">
                         <span>
-                            <strong>{t("common:gameboard.card.questionsLabel")}</strong>{" "}
+                            <strong>{t("teaching:gameboard.card.questionsLabel")}</strong>{" "}
                             {gameboard?.contents?.length || "0"}
                         </span>
                     </p>
@@ -227,7 +227,7 @@ export const GameboardCard = (props: GameboardCardProps) => {
                             <thead>
                                 <tr>
                                     <th className="w-50">
-                                        {t("common:gameboard.card.stagesHeader", { count: boardStagesAndDifficulties.length })}
+                                        {t("teaching:gameboard.card.stagesHeader", { count: boardStagesAndDifficulties.length })}
                                     </th>
                                     <th className="w-50">
                                         {`Difficult${boardStagesAndDifficulties.some(([, ds]) => ds.length > 1) ? "ies" : "y"}`}

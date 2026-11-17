@@ -43,7 +43,7 @@ export const TeacherFeatures = () => {
             Isaac provides you with a huge range of resources to support your teaching of science subjects – all for free.
         </PageMetadata>
         <Row className="my-4">
-            <h2 className="h4">{t("common:teacherFeatures.workflow.title")}</h2>
+            <h2 className="h4">{t("teaching:teacherFeatures.workflow.title")}</h2>
         </Row>
         <Row className="isaac-cards-body px-3 row-gap-4">
             <Col md={6} lg={4}>
@@ -90,7 +90,7 @@ export const TeacherFeatures = () => {
                 <TeacherFeatureCard
                     url = "/events?types=teacher"
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#use-with-class"
-                    title = {t("common:teacherFeatures.support.cpdTitle")}
+                    title = {t("teaching:teacherFeatures.support.cpdTitle")}
                     subtitle = "Free short courses to help you use Isaac: by topic or by level of experience with Isaac."
                 />
             </Col>
@@ -98,14 +98,14 @@ export const TeacherFeatures = () => {
                 <TeacherFeatureCard
                     url = "/teacher_emails"
                     imgSrc = "/assets/phy/icons/computer.svg"
-                    title = {t("common:teacherFeatures.support.emailsTitle")}
-                    subtitle = {t("common:teacherFeatures.support.emailsSubtitle")}
+                    title = {t("teaching:teacherFeatures.support.emailsTitle")}
+                    subtitle = {t("teaching:teacherFeatures.support.emailsSubtitle")}
                     disabled = {isDisabled}
                 />
             </Col>
         </Row>
         <Row className="my-4">
-            <h2 className="h4">{t("common:teacherFeatures.resources.title")}</h2>
+            <h2 className="h4">{t("teaching:teacherFeatures.resources.title")}</h2>
         </Row>
         <Row className="isaac-cards-body mb-7 px-3 row-gap-4">
             <Col md={6} lg={4}>

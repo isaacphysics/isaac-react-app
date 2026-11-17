@@ -15,7 +15,7 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
                 : ["ActiveAuthorisations"],
             transformResponse: anonymiseIfNeededWith(anonymisationFunctions.activeAuthorisations),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:groups.authorisations.loadTeachersErrorTitle")
+                errorTitle: () => i18next.t("teaching:groups.authorisations.loadTeachersErrorTitle")
             })
         }),
 
@@ -26,7 +26,7 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
                 : ["OtherAuthorisations"],
             transformResponse: anonymiseIfNeededWith(anonymisationFunctions.otherUserAuthorisations),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:groups.authorisations.loadStudentsErrorTitle")
+                errorTitle: () => i18next.t("teaching:groups.authorisations.loadStudentsErrorTitle")
             })
         }),
 
@@ -37,12 +37,12 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
                     if (error.status == 429) {
                         dispatch(showErrorToast(
                             i18next.t("common:error.tooManyAttempts"),
-                            i18next.t("common:groups.authorisations.rateLimitMessage")
+                            i18next.t("teaching:groups.authorisations.rateLimitMessage")
                         ));
                     } else {
                         dispatch(showErrorToast(
-                            i18next.t("common:groups.authorisations.connectionErrorTitle"),
-                            i18next.t("common:groups.authorisations.connectionErrorMessage")
+                            i18next.t("teaching:groups.authorisations.connectionErrorTitle"),
+                            i18next.t("teaching:groups.authorisations.connectionErrorMessage")
                         ));
                     }
                 }
@@ -56,10 +56,10 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
             }),
             invalidatesTags: ["ActiveAuthorisations", "Groups", "GroupMemberships", "MyGroupMemberships", "AllMyAssignments"],
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: () => i18next.t("common:groups.authorisations.grantSuccessTitle"),
-                successMessage: () => i18next.t("common:groups.authorisations.grantSuccessMessage"),
-                errorTitle: () => i18next.t("common:groups.authorisations.connectionErrorTitle"),
-                errorMessage: () => i18next.t("common:groups.authorisations.connectionErrorMessage")
+                successTitle: () => i18next.t("teaching:groups.authorisations.grantSuccessTitle"),
+                successMessage: () => i18next.t("teaching:groups.authorisations.grantSuccessMessage"),
+                errorTitle: () => i18next.t("teaching:groups.authorisations.connectionErrorTitle"),
+                errorMessage: () => i18next.t("teaching:groups.authorisations.connectionErrorMessage")
             })
         }),
 
@@ -70,9 +70,9 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
             }),
             invalidatesTags: ["ActiveAuthorisations"],
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: () => i18next.t("common:groups.authorisations.revokeSuccessTitle"),
-                successMessage: () => i18next.t("common:groups.authorisations.revokeSuccessMessage"),
-                errorTitle: () => i18next.t("common:groups.authorisations.revokeErrorTitle"),
+                successTitle: () => i18next.t("teaching:groups.authorisations.revokeSuccessTitle"),
+                successMessage: () => i18next.t("teaching:groups.authorisations.revokeSuccessMessage"),
+                errorTitle: () => i18next.t("teaching:groups.authorisations.revokeErrorTitle"),
             })
         }),
 
@@ -83,9 +83,9 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
             }),
             invalidatesTags: ["OtherAuthorisations"],
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: () => i18next.t("common:groups.authorisations.releaseSuccessTitle"),
-                successMessage: () => i18next.t("common:groups.authorisations.releaseSuccessMessage"),
-                errorTitle: () => i18next.t("common:groups.authorisations.releaseErrorTitle"),
+                successTitle: () => i18next.t("teaching:groups.authorisations.releaseSuccessTitle"),
+                successMessage: () => i18next.t("teaching:groups.authorisations.releaseSuccessMessage"),
+                errorTitle: () => i18next.t("teaching:groups.authorisations.releaseErrorTitle"),
             })
         }),
 
@@ -96,9 +96,9 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
             }),
             invalidatesTags: ["OtherAuthorisations"],
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: () => i18next.t("common:groups.authorisations.releaseSuccessTitle"),
-                successMessage: () => i18next.t("common:groups.authorisations.releaseAllSuccessMessage"),
-                errorTitle: () => i18next.t("common:groups.authorisations.releaseErrorTitle"),
+                successTitle: () => i18next.t("teaching:groups.authorisations.releaseSuccessTitle"),
+                successMessage: () => i18next.t("teaching:groups.authorisations.releaseAllSuccessMessage"),
+                errorTitle: () => i18next.t("teaching:groups.authorisations.releaseErrorTitle"),
             })
         })
     })

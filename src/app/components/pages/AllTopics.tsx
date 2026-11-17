@@ -41,8 +41,8 @@ const renderLink = (topic: AdaTopicBase) => {
             }
             {" "}
             {topic.comingSoonDate && !topic.new &&
-                <Badge color="light" className="border text-muted">{i18next.t("common:topics.badge.comingSoon", { date: topic.comingSoonDate })}</Badge>}
-            {topic.new && !topic.comingSoonDate && <Badge>{i18next.t("common:topics.badge.new")}</Badge>}
+                <Badge color="light" className="border text-muted">{i18next.t("pages:topics.badge.comingSoon", { date: topic.comingSoonDate })}</Badge>}
+            {topic.new && !topic.comingSoonDate && <Badge>{i18next.t("pages:topics.badge.new")}</Badge>}
         </>;
     }
 };
@@ -114,7 +114,7 @@ const TopicsListing = ({tagCols, age}: {tagCols: Tag[][], age: typeof TOPICS_STA
     }
 
     return <>
-        <h2 className="visually-hidden">{t("common:topics.listing.ageHeading", { ageGroup: age })}</h2>
+        <h2 className="visually-hidden">{t("pages:topics.listing.ageHeading", { ageGroup: age })}</h2>
         <Container className={"mb-4"}>
             <Row>
                 <Col lg={{size: 8, offset: 2}} className="py-md-4 row">
@@ -126,14 +126,14 @@ const TopicsListing = ({tagCols, age}: {tagCols: Tag[][], age: typeof TOPICS_STA
             <Container className={"mb-7 p-7 mx-auto"}>
                 <Row className={"align-items-center justify-content-center"}>
                     <Col xs={12} lg={6}>
-                        <h2 className={"font-size-1-75 mb-4"}>{t("common:topics.questionFinder.title")}</h2>
+                        <h2 className={"font-size-1-75 mb-4"}>{t("pages:topics.questionFinder.title")}</h2>
                         <p>
-                            {t("common:topics.questionFinder.description")}
+                            {t("pages:topics.questionFinder.description")}
                         </p>
-                        <p><Trans i18nKey="common:topics.questionFinder.students" components={{ bold: <b /> }} /></p>
-                        <p><Trans i18nKey="common:topics.questionFinder.teachers" components={{ bold: <b /> }} /></p>
+                        <p><Trans i18nKey="pages:topics.questionFinder.students" components={{ bold: <b /> }} /></p>
+                        <p><Trans i18nKey="pages:topics.questionFinder.teachers" components={{ bold: <b /> }} /></p>
                         <Button className={"mt-4"} tag={Link} to={PATHS.QUESTION_FINDER} color='dark-primary'>
-                            {t("common:topics.questionFinder.tryButton")}
+                            {t("pages:topics.questionFinder.tryButton")}
                         </Button>
                     </Col>
                     <Col xs={12} lg={6} className={"mt-4 mt-lg-0"}>
@@ -163,7 +163,7 @@ export const AllTopics = () => {
         }
     }, [location.hash, setStageTab]);
 
-    const metaDescription = t("common:topics.meta.description");
+    const metaDescription = t("pages:topics.meta.description");
 
     return <PageContainer id={"topics"}>
         <TitleAndBreadcrumb currentPageTitle={t("ada:title.topics")} />

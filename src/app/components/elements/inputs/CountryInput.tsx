@@ -24,7 +24,7 @@ export const CountryInput = ({className, userToUpdate, setUserToUpdate, countryC
     const {data: priorityCountryOptions} = useGetPriorityCountriesQuery();
 
     return <FormGroup className={className}>
-        <Label htmlFor={`${idPrefix}-country-select`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>{t("common:account.country.label")}</Label>
+        <Label htmlFor={`${idPrefix}-country-select`} className={classNames("fw-bold", (required ? "form-required" : "form-optional"))}>{t("account:account.country.label")}</Label>
         <p className="d-block input-description mb-2">
             {textOverride || t("site:account.country.description")}
         </p>
@@ -33,7 +33,7 @@ export const CountryInput = ({className, userToUpdate, setUserToUpdate, countryC
             value={(userToUpdate && userToUpdate.countryCode) || undefined}
             defaultValue={"blank"}
             invalid={submissionAttempted && required && !countryCodeValid}
-            feedback={t("common:account.country.validationError")}
+            feedback={t("account:account.country.validationError")}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setUserToUpdate(Object.assign({}, userToUpdate, e.target.value ? {countryCode: e.target.value} : {countryCode: null}))
             }

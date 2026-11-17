@@ -6,10 +6,10 @@ import { useTranslation } from "react-i18next";
 
 export const NewsSidebar = (props: ContentSidebarProps) => {
     const { t } = useTranslation();
-    return <ContentSidebar buttonTitle={t("common:sidebar.optionsButton")} hideButton optionBar={props.optionBar}>
+    return <ContentSidebar buttonTitle={t("questions:sidebar.optionsButton")} hideButton optionBar={props.optionBar}>
         <div className="section-divider"/>
         <AffixButton color="keyline" tag={Link} to={"/news"} affix={{affix: "icon-arrow-right", position: "suffix", type: "icon"}}>
-            {t("common:news.sidebar.seeAllNews")}
+            {t("pages:news.sidebar.seeAllNews")}
         </AffixButton>
     </ContentSidebar>;
 };

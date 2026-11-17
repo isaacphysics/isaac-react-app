@@ -40,7 +40,7 @@ export const HomepageYoutubeCookieHandler = () => {
                     <div className="d-flex align-items-center">
                         {/* eslint-disable-next-line jsx-a11y/anchor-has-content -- content in css */}
                         <a className="channel-icon" href={SOCIAL_LINKS.youtube.href}/>
-                        <a className="video-name" href="https://www.youtube.com/watch?v=kWA2AISiHXQ">{t("common:homepage.video.title")}</a>
+                        <a className="video-name" href="https://www.youtube.com/watch?v=kWA2AISiHXQ">{t("pages:homepage.video.title")}</a>
                     </div>
                     <div className="copy-container d-flex flex-column align-items-center">
                         <button className={classNames("copy-link m-0", {"copied" : linkCopied}, {"selected" : copyActive})} onClick={() => {
@@ -48,7 +48,7 @@ export const HomepageYoutubeCookieHandler = () => {
                             setLinkCopied(true);
                         }} onMouseLeave={() => setLinkCopied(false)}
                         onFocus={() => setCopyActive(true)} onBlur={() => setCopyActive(false)}/>
-                        <div className="copy-text">{linkCopied ? t("common:homepage.video.linkCopied") : t("common:homepage.video.copyLink")}</div>
+                        <div className="copy-text">{linkCopied ? t("pages:homepage.video.linkCopied") : t("pages:homepage.video.copyLink")}</div>
                     </div>
                 </div>
                 <button className={`youtube-play w-100 h-100 p-0 m-0 ${videoActive ? "selected" : ""}`} type="button" onClick={() => {
@@ -56,12 +56,12 @@ export const HomepageYoutubeCookieHandler = () => {
                     setAutoplay(true);
                 }} onFocus={() => setVideoActive(true)} onBlur={() => setVideoActive(false)}>
                 </button>
-                <img data-testid={"yt-thumbnail"} src="/assets/phy/isaac-homepage-video-thumbnail.jpeg" alt={t("common:homepage.video.thumbnailAlt")} className="w-100 h-100"/>
+                <img data-testid={"yt-thumbnail"} src="/assets/phy/isaac-homepage-video-thumbnail.jpeg" alt={t("pages:homepage.video.thumbnailAlt")} className="w-100 h-100"/>
             </div>
             {youtubeHomepageCookieText}
         </div>}
         afterAccepted={<IsaacVideo
-            doc={{src: `https://www.youtube-nocookie.com/embed/kWA2AISiHXQ?enablejsapi=1&rel=0&fs=1&autoplay=${autoplay ? 1 : 0}&modestbranding=1&origin=home`, altText: t("common:homepage.video.altText")}}
+            doc={{src: `https://www.youtube-nocookie.com/embed/kWA2AISiHXQ?enablejsapi=1&rel=0&fs=1&autoplay=${autoplay ? 1 : 0}&modestbranding=1&origin=home`, altText: t("pages:homepage.video.altText")}}
         />}
     />;
 };

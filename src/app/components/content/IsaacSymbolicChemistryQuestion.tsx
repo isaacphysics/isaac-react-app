@@ -118,8 +118,8 @@ const IsaacSymbolicChemistryQuestion = ({doc, questionId, readonly}: IsaacQuesti
             </IsaacContentValueOrChildren>
         </div>
         {showTextEntry
-            ? <i className="text-muted small d-print-none">{t("common:questions.chemistry.editPromptTextEntry")}</i>
-            : previewText && <i className="text-muted small d-print-none">{t("common:questions.chemistry.editPromptSingleBox")}</i>
+            ? <i className="text-muted small d-print-none">{t("questions:questions.chemistry.editPromptTextEntry")}</i>
+            : previewText && <i className="text-muted small d-print-none">{t("questions:questions.chemistry.editPromptSingleBox")}</i>
         }
         {showTextEntry && <SymbolicTextInput editorMode={editorMode} hiddenEditorRef={hiddenEditorRef}
             textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing} initialSeedText={initialSeed.mhchem}

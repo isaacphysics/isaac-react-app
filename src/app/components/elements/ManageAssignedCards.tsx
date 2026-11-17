@@ -33,7 +33,7 @@ export const ManageAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) 
                 {isDefined(assignment.groupName) &&
                     <p className="mb-0" data-testid={"gameboard-assigned-group"}>
                         <Trans
-                            i18nKey="common:assignments.manage.setGroup"
+                            i18nKey="teaching:assignments.manage.setGroup"
                             components={{
                                 strong: <strong />,
                             }}

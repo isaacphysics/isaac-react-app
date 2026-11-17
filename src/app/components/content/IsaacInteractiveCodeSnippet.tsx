@@ -50,7 +50,7 @@ const InteractiveCodeSnippetTimeoutError = ({doc}: {doc: InteractiveCodeSnippetD
                 If this doesn&apos;t help, <Button tag={Link} to={`/contact?subject=Code%20editor%20issue&message=${encodeURIComponent(plainTextUsefulInformation)}`} color={"link"}>report this to us</Button> and try again later.
             </p>
             <p>
-                <div className="h5">{t("common:codeEditor.timeout.infoHeading")}</div>
+                <div className="h5">{t("questions:codeEditor.timeout.infoHeading")}</div>
                 <small>
                     {Object.entries(usefulInformation).map(([key, value]) => (
                         <p className="mb-1" key={key}><strong>{usefulInformationLabels[key as keyof typeof usefulInformation]}: </strong>{value}</p>
@@ -137,20 +137,20 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
                         sendMessage({
                             type: "feedback",
                             succeeded: true,
-                            message: i18next.t("common:codeEditor.feedback.correct")
+                            message: i18next.t("questions:codeEditor.feedback.correct")
                         });
                     } else {
                         sendMessage({
                             type: "feedback",
                             succeeded: false,
-                            message: i18next.t("common:codeEditor.feedback.incorrect")
+                            message: i18next.t("questions:codeEditor.feedback.incorrect")
                         });
                     }
                 } else {
                     sendMessage({
                         type: "feedback",
                         succeeded: true,
-                        message: i18next.t("common:codeEditor.feedback.ranCorrectly")
+                        message: i18next.t("questions:codeEditor.feedback.ranCorrectly")
                     });
                 }
                 break;
@@ -173,7 +173,7 @@ export const IsaacInteractiveCodeSnippet = ({doc}: IsaacInteractiveCodeProps) =>
         </>
         : <>
             {iframeState !== "initialised" && <Loading className={"my-4"}/>}
-            <iframe title={t("common:codeEditor.iframeTitle")} src={CODE_EDITOR_BASE_URL + "/#" + uid.current} ref={iframeRef} onLoad={() => setIframeState("loaded")} className={"isaac-code-iframe w-100 mb-1"} style={
+            <iframe title={t("questions:codeEditor.iframeTitle")} src={CODE_EDITOR_BASE_URL + "/#" + uid.current} ref={iframeRef} onLoad={() => setIframeState("loaded")} className={"isaac-code-iframe w-100 mb-1"} style={
                 {
                     resize: "none",
                     height: iFrameHeight,

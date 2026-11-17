@@ -30,7 +30,7 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
     return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
         {above["lg"](deviceSize) && <div className="section-divider"/>}
         <search>
-            <h3 className="h5">{t("common:sidebar.search.decks")}</h3>
+            <h3 className="h5">{t("questions:sidebar.search.decks")}</h3>
             <SearchInputWithIcon 
                 data-testid="title-filter"
                 outerClassName="my-3"
@@ -39,23 +39,23 @@ export const MyGameboardsSidebar = (props: MyGameboardsSidebarProps) => {
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setBoardTitleFilter(e.target.value)}
             />
             <div className="section-divider"/>
-            <h3 className="mb-3 h5">{t("common:sidebar.filter.creator")}</h3>
+            <h3 className="mb-3 h5">{t("questions:sidebar.filter.creator")}</h3>
             <Input type="select" value={boardCreatorFilter} onChange={e => setBoardCreatorFilter(e.target.value as BoardCreators)}>
                 {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
             </Input>
-            <h3 className="mt-4 mb-3 h5">{t("common:gameboards.sidebar.filterCompletionTitle")}</h3>
+            <h3 className="mt-4 mb-3 h5">{t("teaching:gameboards.sidebar.filterCompletionTitle")}</h3>
             <Input type="select" value={boardCompletionFilter} onChange={e => setBoardCompletionFilter(e.target.value as BoardCompletions)}>
                 {Object.values(BoardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
             </Input>
             <div className="section-divider"/>
-            <h3 className="mb-4 h5">{t("common:sidebar.display.title")}</h3>
+            <h3 className="mb-4 h5">{t("questions:sidebar.display.title")}</h3>
             <div className="d-flex flex-xl-column flex-xxl-row">
-                <Input className="w-auto" type="select" aria-label={t("common:sidebar.display.modeLabel")} data-testid="display-select" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
+                <Input className="w-auto" type="select" aria-label={t("questions:sidebar.display.modeLabel")} data-testid="display-select" value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
                     {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
                 </Input>
                 {deviceSize === "xl" ? <div className="mt-2"/> : <Spacer/>}
-                <div className="select-pretext me-2">{t("common:sidebar.display.limit")}</div>
-                <Input disabled={forceAllBoards} className="w-auto" type="select" aria-label={t("common:sidebar.display.limitLabel")} data-testid="limit-select" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
+                <div className="select-pretext me-2">{t("questions:sidebar.display.limit")}</div>
+                <Input disabled={forceAllBoards} className="w-auto" type="select" aria-label={t("questions:sidebar.display.limitLabel")} data-testid="limit-select" value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
                 </Input>
             </div>

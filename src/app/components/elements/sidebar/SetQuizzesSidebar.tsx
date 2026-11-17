@@ -22,7 +22,7 @@ export const SetQuizzesSidebar = (props: SetQuizzesSidebarProps) => {
                 outerClassName="my-3"
                 id="available-quizzes-title-filter" type="search"
                 value={titleFilter} onChange={event => setTitleFilter(event.target.value)}
-                placeholder={t("common:tests.search.placeholder")}
+                placeholder={t("teaching:tests.search.placeholder")}
             />
         </search>
     </ContentSidebar>;

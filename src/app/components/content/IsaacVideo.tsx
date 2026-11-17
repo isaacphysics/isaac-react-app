@@ -80,7 +80,7 @@ export function IsaacVideo(props: IsaacVideoProps) {
     const pageId = page && page !== NOT_FOUND && page.id || undefined;
     const embedSrc = src && rewrite(src);
     const errorSrc = src || altText || "Unknown embedded video.";
-    const altTextToUse = t("common:video.embed.accessibilityLabel", { videoDescription: altText || src });
+    const altTextToUse = t("questions:video.embed.accessibilityLabel", { videoDescription: altText || src });
     const printSummary = 'Embedded YouTube video' + (altText ? `: ${altText}` : '') + ` (${src}).`;
 
     const videoRef = useCallback( (node: any) => { // This isn't great but I couldn't figure out the actual type

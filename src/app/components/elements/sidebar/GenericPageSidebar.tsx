@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 export const GenericPageSidebar = (props: ContentSidebarProps) => {
     const { t } = useTranslation();
     // Default sidebar for general pages that don't have a custom sidebar
-    return <ContentSidebar buttonTitle={t("common:sidebar.optionsButton")} hideButton optionBar={props.optionBar}>
+    return <ContentSidebar buttonTitle={t("questions:sidebar.optionsButton")} hideButton optionBar={props.optionBar}>
         <div className="section-divider"/>
         <AffixButton color="keyline" tag={Link} to={"/"} affix={{affix: "icon-arrow-right", position: "suffix", type: "icon"}}>
             {t("common:navigation.sidebar.homepageLink")}

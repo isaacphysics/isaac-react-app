@@ -72,7 +72,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
     const [deleteUserBooking] = useDeleteUserBookingMutation();
     const [resendUserConfirmationEmail] = useResendUserConfirmationEmailMutation();
 
-    return <Accordion id="manage-current-bookings" trustedTitle={t("common:events.manageBookings.title")}>
+    return <Accordion id="manage-current-bookings" trustedTitle={t("events:events.manageBookings.title")}>
         {isEventLeader(user) && <div className="bg-grey p-2 mb-3 text-center">
             {t("common:label.eventLeaderRestriction")}
         </div>}
@@ -97,7 +97,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                             </th>
                             <th className="align-middle">
                                 <Button color="link" onClick={setSortPredicateAndDirection('userBooked.role')}>
-                                    {t("common:events.bookingsTable.accountType")}
+                                    {t("events:events.bookingsTable.accountType")}
                                 </Button>
                             </th>
                             <th className="align-middle">
@@ -106,7 +106,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                 </Button>
                             </th>
                             <th className="align-middle">
-                                {t("common:events.bookingsTable.jobYearGroup")}
+                                {t("events:events.bookingsTable.jobYearGroup")}
                             </th>
                             <th className="align-middle">
                                 <Button color="link" onClick={setSortPredicateAndDirection('bookingStatus')}>
@@ -115,12 +115,12 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                             </th>
                             <th className="align-middle">
                                 <Button color="link" onClick={setSortPredicateAndDirection('bookingDate')}>
-                                    {t("common:events.bookingsTable.bookingCreated")}
+                                    {t("events:events.bookingsTable.bookingCreated")}
                                 </Button>
                             </th>
                             <th className="align-middle">
                                 <Button color="link" onClick={setSortPredicateAndDirection('updated')}>
-                                    {t("common:events.bookingsTable.bookingUpdated")}
+                                    {t("events:events.bookingsTable.bookingUpdated")}
                                 </Button>
                             </th>
                             <th className="align-middle">
@@ -131,23 +131,23 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                             </th>}
                             <th className="align-middle">
                                 <Button color="link" onClick={setSortPredicateAndDirection('reservedById')}>
-                                    {t("common:events.manageBookings.table.reservedById")}
+                                    {t("events:events.manageBookings.table.reservedById")}
                                 </Button>
                             </th>
                             <th className="align-middle">
-                                {t("common:events.booking.teachingExperience")}
+                                {t("events:events.booking.teachingExperience")}
                             </th>
                             <th className="align-middle">
                                 {t("common:label.accessibilityRequirements")}
                             </th>
                             <th className="align-middle">
-                                {t("common:events.manageBookings.table.medicalDietary")}
+                                {t("events:events.manageBookings.table.medicalDietary")}
                             </th>
                             <th className="align-middle">
-                                {t("common:events.bookingsTable.emergencyName")}
+                                {t("events:events.bookingsTable.emergencyName")}
                             </th>
                             <th className="align-middle">
-                                {t("common:events.bookingsTable.emergencyPhone")}
+                                {t("events:events.bookingsTable.emergencyPhone")}
                             </th>
                         </tr>
                     </thead>
@@ -160,17 +160,17 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                         {(['WAITING_LIST', 'CANCELLED'].includes(booking.bookingStatus as string)) &&
                                             <Button color="keyline" block className="btn-sm mb-1" onClick={() =>
                                                 confirmThen(
-                                                    t("common:events.manageBookings.confirmPromote"),
+                                                    t("events:events.manageBookings.confirmPromote"),
                                                     () => promoteUserBooking({eventId, userId})
                                                 )
                                             }>
-                                                {t("common:events.manageBookings.actions.promote")}
+                                                {t("events:events.manageBookings.actions.promote")}
                                             </Button>
                                         }
                                         {(['WAITING_LIST', 'CONFIRMED'].includes(booking.bookingStatus as string)) &&
                                             <Button color="keyline" block className="btn-sm mb-1" onClick={() =>
                                                 confirmThen(
-                                                    t("common:events.manageBookings.confirmCancel"),
+                                                    t("events:events.manageBookings.confirmCancel"),
                                                     () => cancelUserBooking({eventId, userId})
                                                 )
                                             }>
@@ -180,7 +180,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                         {isAdmin(user) &&
                                             <Button color="keyline" block className="btn-sm mb-1" onClick={() =>
                                                 confirmThen(
-                                                    t("common:events.manageBookings.confirmDelete"),
+                                                    t("events:events.manageBookings.confirmDelete"),
                                                     () => deleteUserBooking({eventId, userId})
                                                 )
                                             }>
@@ -189,11 +189,11 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                                         }
                                         <Button color="keyline" block className="btn-sm mb-1" onClick={() =>
                                             confirmThen(
-                                                t("common:events.manageBookings.confirmResendEmail"),
+                                                t("events:events.manageBookings.confirmResendEmail"),
                                                 () => resendUserConfirmationEmail({eventId, userId})
                                             )
                                         }>
-                                            {t("common:events.manageBookings.actions.resendEmail")}
+                                            {t("events:events.manageBookings.actions.resendEmail")}
                                         </Button>
                                     </td>
                                     <td className="align-middle text-center">
@@ -238,7 +238,7 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                             const usersWithStatus = relevantUsers(key);
                             if (atLeastOne(usersWithStatus.length)) {
                                 return <DropdownItem key={index} onClick={() => dispatch(showGroupEmailModal(usersWithStatus))}>
-                                    {t("common:events.manageBookings.emailDropdown.item", { bookingStatus: bookingStatusMap[key as BookingStatus] })}
+                                    {t("events:events.manageBookings.emailDropdown.item", { bookingStatus: bookingStatusMap[key as BookingStatus] })}
                                 </DropdownItem>;
                             }
                         })}
@@ -248,13 +248,13 @@ export const ManageExistingBookings = ({user, eventId, eventBookings, userIdToSc
                     color="keyline" className="btn-md mt-1"
                     href={`${API_PATH}/events/${eventId}/bookings/download`}
                 >
-                    {t("common:events.manageBookings.exportCsv")}
+                    {t("events:events.manageBookings.exportCsv")}
                 </Button>
             </div>
         </div>}
 
         {(!eventBookings || zeroOrLess(eventBookings.length)) && <p className="text-center m-0">
-            <strong>{t("common:events.manageBookings.emptyState")}</strong>
+            <strong>{t("events:events.manageBookings.emptyState")}</strong>
         </p>}
     </Accordion>;
 };

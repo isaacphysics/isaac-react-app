@@ -29,7 +29,7 @@ export const StudentChallenges = () => {
                                 card={{
                                     title: t("ada:title.nextChallenge"),
                                     icon: {name: "icon-events", color: "tertiary"},
-                                    bodyText: t("common:challenges.emptyState.subscribedMessage"),
+                                    bodyText: t("pages:challenges.emptyState.subscribedMessage"),
                                 }}
                                 className={"mx-n3"}
                             />
@@ -38,9 +38,9 @@ export const StudentChallenges = () => {
                                 card={{
                                     title: t("ada:title.nextChallenge"),
                                     icon: {name: "icon-events", color: "tertiary"},
-                                    bodyText: t("common:challenges.emptyState.unsubscribedMessage"),
+                                    bodyText: t("pages:challenges.emptyState.unsubscribedMessage"),
                                     clickUrl: "/account#notifications",
-                                    buttonText: t("common:challenges.emptyState.notifyButton"),
+                                    buttonText: t("pages:challenges.emptyState.notifyButton"),
                                     onButtonClick: () => {setLinkedSetting("events-preference");}
                                 }}
                                 className={"mx-n3"}

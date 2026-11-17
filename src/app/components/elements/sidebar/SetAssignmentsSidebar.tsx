@@ -33,7 +33,7 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
     return <ContentSidebar {...rest} className={classNames(rest.className, "pt-0")}>
         {above["lg"](deviceSize) && <div className="section-divider"/>}
         <search>
-            <h3 className="h5">{t("common:sidebar.search.decks")}</h3>
+            <h3 className="h5">{t("questions:sidebar.search.decks")}</h3>
             <SearchInputWithIcon
                 outerClassName="my-3"
                 type="search" value={boardTitleFilter || ""}
@@ -41,28 +41,28 @@ export const SetAssignmentsSidebar = (props: SetAssignmentsSidebarProps) => {
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setBoardTitleFilter(e.target.value)}
             />
             <div className="section-divider"/>
-            <h3 className="mb-3 h5">{t("common:assignments.sidebar.subjectFilterTitle")}</h3>
+            <h3 className="mb-3 h5">{t("teaching:assignments.sidebar.subjectFilterTitle")}</h3>
             <Input type="select" value={boardSubject} onChange={e => setBoardSubject(e.target.value as BoardSubjects)}>
                 {Object.values(BoardSubjects).map(subject => <option key={subject} value={subject}>{subject}</option>)}
             </Input>
-            <h3 className="my-3 h5">{t("common:sidebar.filter.creator")}</h3>
+            <h3 className="my-3 h5">{t("questions:sidebar.filter.creator")}</h3>
             <Input type="select" value={boardCreator} onChange={e => setBoardCreator(e.target.value as BoardCreators)}>
                 {Object.values(BoardCreators).map(creator => <option key={creator} value={creator}>{creator}</option>)}
             </Input>
             <div className="section-divider"/>
-            <h3 className="mb-3 h5">{t("common:sidebar.display.title")}</h3>
+            <h3 className="mb-3 h5">{t("questions:sidebar.display.title")}</h3>
             <div className="d-flex flex-xl-column flex-xxl-row">
-                <Input className="w-auto" type="select" aria-label={t("common:sidebar.display.modeLabel")} value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
+                <Input className="w-auto" type="select" aria-label={t("questions:sidebar.display.modeLabel")} value={displayMode} onChange={e => setDisplayMode(e.target.value as BoardViews)}>
                     {Object.values(BoardViews).map(view => <option key={view} value={view}>{view}</option>)}
                 </Input>
                 {deviceSize === "xl" ? <div className="mt-2"/> : <Spacer/>}
-                <div className="select-pretext me-2">{t("common:sidebar.display.limit")}</div>
-                <Input disabled={forceAllBoards} className="w-auto" type="select" aria-label={t("common:sidebar.display.limitLabel")} value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
+                <div className="select-pretext me-2">{t("questions:sidebar.display.limit")}</div>
+                <Input disabled={forceAllBoards} className="w-auto" type="select" aria-label={t("questions:sidebar.display.limitLabel")} value={displayLimit} onChange={e => setDisplayLimit(e.target.value as BoardLimit)}>
                     {Object.values(BoardLimit).map(limit => <option key={limit} value={limit}>{limit}</option>)}
                 </Input>
             </div>
             <h3 className="my-3 h5">{t("common:label.sortBy")}</h3>
-            <Input type="select" className="mb-3" aria-label={t("common:assignments.sidebar.sortOrderLabel")} value={sortOrder} onChange={e => setSortOrder(e.target.value as AssignmentBoardOrder)} disabled={sortDisabled}>
+            <Input type="select" className="mb-3" aria-label={t("teaching:assignments.sidebar.sortOrderLabel")} value={sortOrder} onChange={e => setSortOrder(e.target.value as AssignmentBoardOrder)} disabled={sortDisabled}>
                 {Object.values(AssignmentBoardOrder).filter(
                     order => !['attempted', '-attempted', 'correct', '-correct'].includes(order)
                 ).map(order => <option key={order} value={order}>{BOARD_ORDER_NAMES[order]}</option>)}

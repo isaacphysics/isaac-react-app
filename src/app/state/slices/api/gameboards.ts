@@ -43,7 +43,7 @@ export const assignGameboard = createAsyncThunk(
         if (groups.length === 0) {
             appDispatch(showErrorToast(
                 i18next.t("site:gameboard.assign.failedTitle"),
-                i18next.t("common:gameboard.assign.noGroupsErrorTitle")
+                i18next.t("teaching:gameboard.assign.noGroupsErrorTitle")
             ));
             return rejectWithValue(null);
         }

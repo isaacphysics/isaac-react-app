@@ -21,34 +21,34 @@ export const AggregateQuestionStats = ({userProgress}: {userProgress?: UserProgr
     const partPercentageThisYear = safePercentage(partCorrectThisYear, partAttemptThisYear);
 
     return <div>
-        <strong>{t("common:questionStats.aggregate.correctQuestionsTitle")}</strong>
+        <strong>{t("questions:questionStats.aggregate.correctQuestionsTitle")}</strong>
         <Row className="mb-3">
             <Col md={6}>
-                <p className="mb-0">{t("common:questionStats.aggregate.thisAcademicYear")}</p>
+                <p className="mb-0">{t("questions:questionStats.aggregate.thisAcademicYear")}</p>
                 <ProgressBar percentage={fullPercentageThisYear || 0}>
-                    {fullPercentageThisYear == null ? t("common:status.noData") : t("common:questionStats.aggregate.correctCountOfAttempted", { correctCount: fullCorrectThisYear, attemptedCount: fullAttemptThisYear })}
+                    {fullPercentageThisYear == null ? t("common:status.noData") : t("questions:questionStats.aggregate.correctCountOfAttempted", { correctCount: fullCorrectThisYear, attemptedCount: fullAttemptThisYear })}
                 </ProgressBar>
             </Col>
             <Col md={6}>
-                <p className="mb-0">{t("common:questionStats.aggregate.sinceAccountCreation")}</p>
+                <p className="mb-0">{t("questions:questionStats.aggregate.sinceAccountCreation")}</p>
                 <ProgressBar percentage={fullPercentage || 0}>
-                    {fullPercentage == null ? t("common:status.noData") : t("common:questionStats.aggregate.correctCountOfAttempted", { correctCount: fullCorrect, attemptedCount: fullAttempt })}
+                    {fullPercentage == null ? t("common:status.noData") : t("questions:questionStats.aggregate.correctCountOfAttempted", { correctCount: fullCorrect, attemptedCount: fullAttempt })}
                 </ProgressBar>
             </Col>
         </Row>
 
-        <strong>{t("common:questionStats.aggregate.correctPartsTitle")}</strong>
+        <strong>{t("questions:questionStats.aggregate.correctPartsTitle")}</strong>
         <Row className="mb-3">
             <Col md={6}>
-                <p className="mb-0">{t("common:questionStats.aggregate.thisAcademicYear")}</p>
+                <p className="mb-0">{t("questions:questionStats.aggregate.thisAcademicYear")}</p>
                 <ProgressBar percentage={partPercentageThisYear || 0}>
-                    {partPercentageThisYear == null ? t("common:status.noData") : t("common:questionStats.aggregate.correctCountOfAttempted", { correctCount: partCorrectThisYear, attemptedCount: partAttemptThisYear })}
+                    {partPercentageThisYear == null ? t("common:status.noData") : t("questions:questionStats.aggregate.correctCountOfAttempted", { correctCount: partCorrectThisYear, attemptedCount: partAttemptThisYear })}
                 </ProgressBar>
             </Col>
             <Col md={6}>
-                <p className="mb-0">{t("common:questionStats.aggregate.sinceAccountCreation")}</p>
+                <p className="mb-0">{t("questions:questionStats.aggregate.sinceAccountCreation")}</p>
                 <ProgressBar percentage={partPercentage || 0}>
-                    {partPercentage == null ? t("common:status.noData") : t("common:questionStats.aggregate.correctCountOfAttempted", { correctCount: partCorrect, attemptedCount: partAttempt })}
+                    {partPercentage == null ? t("common:status.noData") : t("questions:questionStats.aggregate.correctCountOfAttempted", { correctCount: partCorrect, attemptedCount: partAttempt })}
                 </ProgressBar>
             </Col>
         </Row>

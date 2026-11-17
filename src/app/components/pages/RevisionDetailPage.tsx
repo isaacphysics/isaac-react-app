@@ -37,7 +37,7 @@ export const RevisionPage = () => {
     >
         <ShowLoadingQuery
             query={revisionPageQuery}
-            defaultErrorTitle={t("common:revision.page.loadError")}
+            defaultErrorTitle={t("pages:revision.page.loadError")}
             maintainOnRefetch
             thenRender={(page, isStale) => {
                 // show the loading placeholder only if the page itself is changing (to give instant click feedback).
@@ -60,14 +60,14 @@ const RevisionPageInternal = ({page}: {page: IsaacRevisionDetailPageDTO}) => {
         <PageMetadata doc={page} />
 
         <MetadataContainer className="d-flex flex-column gap-2">
-            {!!page.gameboards?.length && <MetadataContainerLink id="introduction" title={t("common:revision.sections.introTitle")} />}
+            {!!page.gameboards?.length && <MetadataContainerLink id="introduction" title={t("pages:revision.sections.introTitle")} />}
             <MetadataContainerLink id="revision" title={t("common:title.revision")} />
             {!!relevantTests.length && <MetadataContainerLink id="tests" title={t("sci:title.practiceTests")} />}
         </MetadataContainer>
 
         {!!page.gameboards?.length && <>
-            <h3 className="mb-3 h4" id="introduction">{t("common:revision.sections.introTitle")}</h3>
-            <span>{t("common:revision.sections.introDescription")}</span>
+            <h3 className="mb-3 h4" id="introduction">{t("pages:revision.sections.introTitle")}</h3>
+            <span>{t("pages:revision.sections.introDescription")}</span>
             <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView
                     type="gameboard"
@@ -83,7 +83,7 @@ const RevisionPageInternal = ({page}: {page: IsaacRevisionDetailPageDTO}) => {
 
         {!!relevantTests.length && <>
             <h3 className="mt-4 mb-3 h4" id="tests">{t("sci:title.practiceTests")}</h3>
-            <span>{t("common:revision.sections.testsDescription")}</span>
+            <span>{t("pages:revision.sections.testsDescription")}</span>
             <div className="mt-3 mb-7 list-results-container p-2">
                 <ListView
                     type="quiz"

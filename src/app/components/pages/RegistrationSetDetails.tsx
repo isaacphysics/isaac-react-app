@@ -148,19 +148,19 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
     const goBack = () => {
         if (isPhy || userRole === "STUDENT") {
             confirmThen(
-                t("common:auth.registration.goBackConfirm"),
+                t("account:auth.registration.goBackConfirm"),
                 () => navigate("/register/student/age"));
         }
         else { // teachers skip age check on Ada
             confirmThen(
-                t("common:auth.registration.goBackConfirm"),
+                t("account:auth.registration.goBackConfirm"),
                 () => navigate("/register"));
         }
     };
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={t("common:auth.registration.pageTitle", { siteTitle: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
+            <TitleAndBreadcrumb currentPageTitle={t("account:auth.registration.pageTitle", { siteTitle: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
         }
         sidebar={siteSpecific(
             <SignupSidebar activeTab={2} sso={isSSO} />,
@@ -171,7 +171,7 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
             <CardBody>
                 {(createNewUserError || updateCurrentUserError) &&
                     <ExigentAlert color="warning">
-                        <p className="alert-heading fw-bold">{t("common:auth.registration.errorHeading")}</p>
+                        <p className="alert-heading fw-bold">{t("account:auth.registration.errorHeading")}</p>
                         {createNewUserError && <p>{getRTKQueryErrorMessage(createNewUserError).message}</p>}
                         {updateCurrentUserError && <p>{getRTKQueryErrorMessage(updateCurrentUserError).message}</p>}
                     </ExigentAlert>
@@ -252,14 +252,14 @@ export const RegistrationSetDetails = ({userRole}: RegistrationSetDetailsProps) 
                                 onChange={(e) => setTosAccepted(e?.target.checked)}
                                 invalid={attemptedSignUp && !tosAccepted}
                                 label={<span className={classNames({"form-required": isPhy})}><Trans
-                                    i18nKey="common:auth.registration.termsAccept"
+                                    i18nKey="account:auth.registration.termsAccept"
                                     components={{
                                         termsLink: <TransAnchor href="/terms" target="_blank" />,
                                     }}
                                 /></span>}
                             />
                             <FormFeedback className="mt-0">
-                                {t("common:auth.registration.termsRequired")}
+                                {t("account:auth.registration.termsRequired")}
                             </FormFeedback>
                         </FormGroup>
                         {isAda && <hr className="text-center"/>}

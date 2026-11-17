@@ -86,7 +86,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 <div className={classNames("form-group w-100 d-flex justify-content-end align-items-center m-0", {"mb-3": isAda}, {"align-items-center": isPhy})}>
                     {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-stage-select">{t("common:label.stage")}</Label>}
                     {!userContext.hasDefaultPreferences && (userContext.explanation.stage == CONTEXT_SOURCE.TRANSIENT || userContext.explanation.examBoard == CONTEXT_SOURCE.TRANSIENT) &&
-                        <button className="icon-reset mb-1" aria-label={t("common:contextPicker.resetButton")} onClick={() => {
+                        <button className="icon-reset mb-1" aria-label={t("pages:contextPicker.resetButton")} onClick={() => {
                             dispatch(transientUserContextSlice.actions.setExamBoard(undefined));
                             dispatch(transientUserContextSlice.actions.setStage(undefined));
                         }}/>

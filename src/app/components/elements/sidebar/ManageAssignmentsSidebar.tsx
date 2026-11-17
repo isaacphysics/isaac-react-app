@@ -29,11 +29,11 @@ export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, se
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
 
-    return <ContentSidebar buttonTitle={i18next.t("common:assignments.manageSidebar.title")}>
+    return <ContentSidebar buttonTitle={i18next.t("teaching:assignments.manageSidebar.title")}>
         <div className="section-divider" />
 
         {assignmentsSetByMe && assignmentsSetByMe.length > 0 && <>
-            <h3 className="h5">{i18next.t("common:assignments.manageSidebar.dateShownLabel")}</h3>
+            <h3 className="h5">{i18next.t("teaching:assignments.manageSidebar.dateShownLabel")}</h3>
             <ButtonGroup className={"w-100"}>
                 <Button size={above["lg"](deviceSize) ? "md" : "sm"} className={"border-end-0 px-1 px-lg-3"} id={"start-date-button"}
                     color={viewBy === "startDate" ? "solid" : "keyline"}
@@ -61,7 +61,7 @@ export const ManageAssignmentsSidebar = ({groups, assignmentsSetByMe, viewBy, se
         />
 
         {isTeacherOrAbove(user) && <>
-            <h3 className="mt-3 h5">{i18next.t("common:assignments.manageSidebar.filterByWorkTypeLabel")}</h3>
+            <h3 className="mt-3 h5">{i18next.t("teaching:assignments.manageSidebar.filterByWorkTypeLabel")}</h3>
             <StyledSelect inputId="work-types-filter" isMulti isClearable placeholder={i18next.t("common:label.all")}
                 value={workTypesToInclude}
                 onChange={selectOnChange(setWorkTypesToInclude, false)}

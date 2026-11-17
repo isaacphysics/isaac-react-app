@@ -20,12 +20,12 @@ export const TutorFeatures = () => {
         <TitleAndBreadcrumb currentPageTitle={t("sci:title.tutorFeatures")} icon={{type: "icon", icon: "icon-account"}}/>
         <PageMetadata noTitle>
             {isDisabled && <Button tag={Link} size="lg" color="keyline" to={isLoggedIn(user) ? "/tutor_account_request" : "/register"} className="float-end">
-                {isLoggedIn(user) ? t("sci:button.upgradeAccount") : t("common:teacherFeatures.tutor.getButton")}
+                {isLoggedIn(user) ? t("sci:button.upgradeAccount") : t("teaching:teacherFeatures.tutor.getButton")}
             </Button>}
-            {t("common:teacherFeatures.tutor.description")}
+            {t("teaching:teacherFeatures.tutor.description")}
         </PageMetadata>
         <Row className="my-4">
-            <h2 className="h4">{t("common:teacherFeatures.tutor.workflowTitle")}</h2>
+            <h2 className="h4">{t("teaching:teacherFeatures.tutor.workflowTitle")}</h2>
         </Row>
         <Row className="isaac-cards-body px-3 row-gap-4">
             <Col md={6} lg={4}>
@@ -41,8 +41,8 @@ export const TutorFeatures = () => {
                 <TeacherFeatureCard
                     url = {PATHS.SET_ASSIGNMENTS}
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#set-assignments"
-                    title = {t("common:teacherFeatures.tutor.assignmentsTitle")}
-                    subtitle = {t("common:teacherFeatures.tutor.assignmentsSubtitle")}
+                    title = {t("teaching:teacherFeatures.tutor.assignmentsTitle")}
+                    subtitle = {t("teaching:teacherFeatures.tutor.assignmentsSubtitle")}
                     disabled = {isDisabled}
                 />
             </Col>
@@ -50,14 +50,14 @@ export const TutorFeatures = () => {
                 <TeacherFeatureCard
                     url = {PATHS.ASSIGNMENT_PROGRESS}
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#track-progress"
-                    title = {t("common:teacherFeatures.tutor.progressTitle")}
-                    subtitle = {t("common:teacherFeatures.tutor.progressSubtitle")}
+                    title = {t("teaching:teacherFeatures.tutor.progressTitle")}
+                    subtitle = {t("teaching:teacherFeatures.tutor.progressSubtitle")}
                     disabled = {isDisabled}
                 />
             </Col>
         </Row>
         <Row className="my-4">
-            <h2 className="h4">{t("common:teacherFeatures.tutor.resourcesTitle")}</h2>
+            <h2 className="h4">{t("teaching:teacherFeatures.tutor.resourcesTitle")}</h2>
         </Row>
         <Row className="isaac-cards-body mb-7 px-3 row-gap-4">
             <Col sm={6} md={4}>
@@ -72,7 +72,7 @@ export const TutorFeatures = () => {
                 <TeacherFeatureCard
                     url = "/pages/order_books"
                     imgSrc = "/assets/phy/icons/teacher_features_sprite.svg#skills-book-cover"
-                    title = {t("common:teacherFeatures.tutor.booksTitle")}
+                    title = {t("teaching:teacherFeatures.tutor.booksTitle")}
                     subtitle = {t("sci:label.skillsMasteryBooksDescription")}
                 />
             </Col>
@@ -80,7 +80,7 @@ export const TutorFeatures = () => {
                 <TeacherFeatureCard
                     url = "/physics/a_level/question_decks"
                     imgSrc = "/assets/phy/icons/key_stage_sprite.svg#triple"
-                    title = {t("common:teacherFeatures.tutor.decksTitle")}
+                    title = {t("teaching:teacherFeatures.tutor.decksTitle")}
                     subtitle = {t("sci:label.questionDecksDescription")}
                 />
             </Col>

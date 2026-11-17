@@ -34,7 +34,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
         <Card className="mb-3 bg-neutral-light">
             <CardBody>
                 <legend><Trans
-                    i18nKey="common:events.booking.accountSection"
+                    i18nKey="events:events.booking.accountSection"
                     components={{
                         accountLink: <TransAnchor href="/account" target="_blank" className="text-theme" />,
                     }}
@@ -65,8 +65,8 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                             <Input id="account-email" name="email" type="email" disabled value={targetUser.email || ""} invalid={targetUser.emailVerificationStatus != 'VERIFIED'} />
                             <FormFeedback>
                                 {editingSelf ?
-                                    t("common:events.booking.emailVerifySelf") :
-                                    t("common:events.booking.emailVerifyOther")
+                                    t("events:events.booking.emailVerifySelf") :
+                                    t("events:events.booking.emailVerifyOther")
                                 }
                             </FormFeedback>
                         </Col>
@@ -93,10 +93,10 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                             {targetUser.emailVerificationStatus !== "VERIFIED" && verificationNotResent && <Button
                                 color="link" className="btn-underline" onClick={requestVerificationEmail}
                             >
-                                {t("common:events.booking.verifyEmailBtn")}
+                                {t("events:events.booking.verifyEmailBtn")}
                             </Button>}
                             {targetUser.emailVerificationStatus !== "VERIFIED" && verifyEmailRequestSucceeded && <span>
-                                {t("common:events.booking.emailSent", { email: targetUser.email })}
+                                {t("events:events.booking.emailSent", { email: targetUser.email })}
                             </span>}
                         </Col>
                     </Row>}
@@ -106,7 +106,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                 </div>}
                 {editingSelf && <div className="text-center alert-warning p-1">
                     <Trans
-                        i18nKey="common:events.booking.updateInfo"
+                        i18nKey="events:events.booking.updateInfo"
                         components={{
                             accountLink: <TransAnchor href="/account" target="_blank" />,
                         }}
@@ -118,16 +118,16 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
         {/* Event Booking Details */}
         <Card className="mb-3">
             <CardBody>
-                <legend>{t("common:events.booking.detailsTitle")}</legend>
+                <legend>{t("events:events.booking.detailsTitle")}</legend>
 
                 <div>
                     {targetUser.role != 'STUDENT' && <React.Fragment>
-                        <Label htmlFor="job-title" className="form-required">{t("common:events.booking.jobTitle")}</Label>
+                        <Label htmlFor="job-title" className="form-required">{t("events:events.booking.jobTitle")}</Label>
                         <Input
                             id="job-title" name="job-title" type="text" value={additionalInformation.jobTitle  || ""}
                             onChange={event => updateAdditionalInformation({jobTitle: event.target.value})}
                         />
-                        <Label htmlFor="experience-level">{t("common:events.booking.teachingExperience")}</Label>
+                        <Label htmlFor="experience-level">{t("events:events.booking.teachingExperience")}</Label>
                         <Input
                             id="experience-level" name="experience-level" type="text" value={additionalInformation.experienceLevel  || ""}
                             onChange={event => updateAdditionalInformation({experienceLevel: event.target.value})}
@@ -136,25 +136,25 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                     {targetUser.role == 'STUDENT' && <React.Fragment>
                         <Label htmlFor="year-group" className="form-required">
                             {/* Based on the options, if only teacher roles are avalable use "Role" */}
-                            { !event.isStudentOnly && !event.isAStudentEvent ? t("common:label.role") : t("common:events.booking.yearGroup") }
+                            { !event.isStudentOnly && !event.isAStudentEvent ? t("common:label.role") : t("events:events.booking.yearGroup") }
                         </Label>
                         <Input
                             type="select" id="year-group" name="year-group" value={additionalInformation.yearGroup || ""}
                             onChange={event => updateAdditionalInformation({yearGroup: event.target.value})}
                         >
                             <option value="" />
-                            {event.isAStudentEvent && <option value="9">{t("common:events.booking.year9")}</option>}
-                            {event.isAStudentEvent && <option value="10">{t("common:events.booking.year10")}</option>}
-                            {event.isAStudentEvent && <option value="11">{t("common:events.booking.year11")}</option>}
-                            {event.isAStudentEvent && <option value="12">{t("common:events.booking.year12")}</option>}
-                            {event.isAStudentEvent && <option value="13">{t("common:events.booking.year13")}</option>}
-                            {!event.isStudentOnly && <option value="TEACHER">{t("common:events.booking.naTeacher")}</option>}
-                            {!event.isStudentOnly && <option value="OTHER">{t("common:events.booking.naOther")}</option>}
+                            {event.isAStudentEvent && <option value="9">{t("events:events.booking.year9")}</option>}
+                            {event.isAStudentEvent && <option value="10">{t("events:events.booking.year10")}</option>}
+                            {event.isAStudentEvent && <option value="11">{t("events:events.booking.year11")}</option>}
+                            {event.isAStudentEvent && <option value="12">{t("events:events.booking.year12")}</option>}
+                            {event.isAStudentEvent && <option value="13">{t("events:events.booking.year13")}</option>}
+                            {!event.isStudentOnly && <option value="TEACHER">{t("events:events.booking.naTeacher")}</option>}
+                            {!event.isStudentOnly && <option value="OTHER">{t("events:events.booking.naOther")}</option>}
                         </Input>
                         {event.isStudentOnly && <div className="text-muted">{studentOnlyEventMessage(event.id)}</div>}
                         {isAda && (event.isATeacherEvent || additionalInformation.yearGroup == 'TEACHER') && <div className="mt-2 text-end">
                             <Trans
-                                i18nKey="common:events.booking.upgradeLink"
+                                i18nKey="events:events.booking.upgradeLink"
                                 components={{
                                     teacherAccountLink: <TransAnchor href="/pages/teacher_accounts" target="_blank" />,
                                 }}
@@ -167,11 +167,11 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                     <div>
                         <Label htmlFor="medical-reqs">
                             <span className={siteSpecific("d-flex align-items-center", "")}>
-                                {t("common:events.booking.dietary")}
+                                {t("events:events.booking.dietary")}
                                 <i id="dietary-reqs-help" aria-haspopup="true" className={classNames("ms-2 icon icon-info icon-inline", siteSpecific("icon-color-grey", "icon-color-black"))} />
                             </span>
                             <UncontrolledTooltip placement="bottom" target="dietary-reqs-help">
-                                {t("common:events.booking.dietaryHelp")}
+                                {t("events:events.booking.dietaryHelp")}
                             </UncontrolledTooltip>
                         </Label>
                         <Input
@@ -187,7 +187,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                                 <i id="access-reqs-help" aria-haspopup="true" className={classNames("ms-2 icon icon-info icon-inline", siteSpecific("icon-color-grey", "icon-color-black"))} />
                             </span>
                             <UncontrolledTooltip placement="bottom" target="access-reqs-help">
-                                {t("common:events.booking.accessibilityHelp")}
+                                {t("events:events.booking.accessibilityHelp")}
                             </UncontrolledTooltip>
                         </Label>
                         <Input
@@ -198,7 +198,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
 
                     {additionalInformation.yearGroup != 'TEACHER' && additionalInformation.yearGroup != 'OTHER' && <Row>
                         <Col xs={12}>
-                            <div className="mt-3 h5">{t("common:events.booking.emergency")}</div>
+                            <div className="mt-3 h5">{t("events:events.booking.emergency")}</div>
                         </Col>
                         <Col md={6}>
                             <Label htmlFor="emergency-name" className="form-required">
@@ -211,7 +211,7 @@ export const EventBookingForm = ({event, targetUser, additionalInformation, upda
                         </Col>
                         <Col md={6}>
                             <Label htmlFor="emergency-number" className="form-required">
-                                {t("common:events.booking.emergencyPhone")}
+                                {t("events:events.booking.emergencyPhone")}
                             </Label>
                             <Input
                                 id="emergency-number" name="emergency-number" type="text" value={additionalInformation.emergencyNumber || ""}

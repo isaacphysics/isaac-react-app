@@ -88,7 +88,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                     type: donut(),
                 },
                 donut: {
-                    title: i18next.t("common:progress.charts.bySubjectTitle", { subject: topTagLevel }),
+                    title: i18next.t("teaching:progress.charts.bySubjectTitle", { subject: topTagLevel }),
                     label: {format: (value) => `${value}`}
                 },
                 bindto: `#${subId}-categoryChart`,
@@ -104,7 +104,7 @@ export const QuestionProgressCharts = (props: QuestionProgressChartsProps) => {
                 type: donut()
             },
             donut: {
-                title: isAllZero(topicColumns) ? i18next.t("common:status.noData") : i18next.t("common:progress.charts.byTopicTitle"),
+                title: isAllZero(topicColumns) ? i18next.t("common:status.noData") : i18next.t("teaching:progress.charts.byTopicTitle"),
                 label: {format: (value) => `${value}`}
             },
             bindto: `#${subId}-topicChart`,

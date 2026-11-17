@@ -42,7 +42,7 @@ export const EmailInput = ({className, userToUpdate, setUserToUpdate, emailIsVal
             aria-describedby="emailValidationMessage"
         />
         <FormFeedback id="emailValidationMessage">
-            {t("common:auth.emailInput.validationError")}
+            {t("account:auth.emailInput.validationError")}
         </FormFeedback>
     </FormGroup>;
 };

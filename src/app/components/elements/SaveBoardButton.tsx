@@ -36,7 +36,7 @@ export const SaveBoardButton = (props: SaveBoardButtonProps) => {
         if (!user || !board) return;
         const confirmMessage = board.ownerUserId === user.id && !board.tags?.includes("ISAAC_BOARD")
             ? i18next.t("site:gameboard.save.unsaveOwnerConfirm", { boardTitle: board.title })
-            : i18next.t("common:gameboard.save.unsaveConfirm", { boardTitle: board.title });
+            : i18next.t("teaching:gameboard.save.unsaveConfirm", { boardTitle: board.title });
         if (confirm(confirmMessage)) {
             setJustLinked(false);
             void dispatch(unlinkUserFromGameboard({

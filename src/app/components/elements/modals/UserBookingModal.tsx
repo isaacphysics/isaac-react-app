@@ -24,8 +24,8 @@ export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, sele
         closeAction: () => {store.dispatch(closeActiveModal());},
 
         title: eventBookingIds.includes(selectedUser.id as number) && zeroOrLess(selectedEvent.placesAvailable) ?
-            i18next.t("common:events.userBooking.waitingListTitle", { givenName: selectedUser.givenName, familyName: selectedUser.familyName }) :
-            i18next.t("common:events.userBooking.bookingTitle", { givenName: selectedUser.givenName, familyName: selectedUser.familyName }),
+            i18next.t("events:events.userBooking.waitingListTitle", { givenName: selectedUser.givenName, familyName: selectedUser.familyName }) :
+            i18next.t("events:events.userBooking.bookingTitle", { givenName: selectedUser.givenName, familyName: selectedUser.familyName }),
 
         body: function UserBookingModalBody() {
             const { t } = useTranslation();
@@ -45,7 +45,7 @@ export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, sele
             function makeUserBooking(formEvent: React.FormEvent) {
                 if (formEvent) {formEvent.preventDefault();}
                 if (additionalInformation.authorisation === undefined || (additionalInformation.authorisation === "OTHER" && additionalInformation.authorisationOther === undefined)) {
-                    dispatch(showErrorToast(t("common:error.eventBookingFailed"), t("common:events.userBooking.errorMessage")));
+                    dispatch(showErrorToast(t("common:error.eventBookingFailed"), t("events:events.userBooking.errorMessage")));
                     return;
                 }
                 bookUserOnEvent({eventId: selectedEvent.id as string, userId: selectedUser.id as number, additionalInformation})
@@ -60,21 +60,21 @@ export function userBookingModal(selectedUser: UserSummaryForAdminUsersDTO, sele
                 <span>
                     <p>
                         <small>
-                            {t("common:events.userBooking.dataWarning", { siteTitle: SITE_TITLE_SHORT })}
+                            {t("events:events.userBooking.dataWarning", { siteTitle: SITE_TITLE_SHORT })}
                         </small>
                     </p>
 
                     <Label htmlFor="form-authorisation" className="form-required">
-                        {t("common:events.userBooking.authorisationLabel")}
+                        {t("events:events.userBooking.authorisationLabel")}
                     </Label>
                     <Input
                         type="select" id="form-authorisation" name="form-authorisation" value={additionalInformation.authorisation || ""}
                         onChange={event => updateAdditionalInformation({authorisation: event.target.value})}
                     >
                         <option value="" />
-                        <option value="Telephone-Owner">{t("common:events.userBooking.optionTelephoneOwner")}</option>
-                        <option value="Email-Owner">{t("common:events.userBooking.optionEmailOwner")}</option>
-                        <option value="OTHER">{t("common:events.userBooking.optionOther")}</option>
+                        <option value="Telephone-Owner">{t("events:events.userBooking.optionTelephoneOwner")}</option>
+                        <option value="Email-Owner">{t("events:events.userBooking.optionEmailOwner")}</option>
+                        <option value="OTHER">{t("events:events.userBooking.optionOther")}</option>
                     </Input>
                     {additionalInformation.authorisation === "OTHER" && <Input
                         type="text" className="mt-2" value={additionalInformation.authorisationOther || ""}

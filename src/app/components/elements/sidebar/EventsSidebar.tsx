@@ -17,10 +17,10 @@ export const EventsSidebar = (props: SidebarProps) => {
     const query: EventsPageQueryParams = queryString.parse(location.search);
     const user = useAppSelector(selectors.user.orNull);
 
-    return <ContentSidebar buttonTitle={t("common:events.sidebar.filterButtonTitle")} {...props}>
+    return <ContentSidebar buttonTitle={t("events:events.sidebar.filterButtonTitle")} {...props}>
         <Form tag={"search"}>
             {above["lg"](deviceSize) && <div className="section-divider mt-7"/>}
-            <h3 className="mb-3 h5">{t("common:events.sidebar.eventTypeLabel")}</h3>
+            <h3 className="mb-3 h5">{t("events:events.sidebar.eventTypeLabel")}</h3>
             <ul>
                 {Object.entries(EventStatusFilter)
                     .filter(([_statusLabel, statusValue]) => (user && user.loggedIn) || statusValue !== EventStatusFilter["My booked events"])
@@ -67,7 +67,7 @@ export const EventsSidebar = (props: SidebarProps) => {
             </ul>
 
             <div className="section-divider"/>
-            <h3 className="mb-3 h5">{t("common:events.sidebar.stagesLabel")}</h3>
+            <h3 className="mb-3 h5">{t("events:events.sidebar.stagesLabel")}</h3>
             <ul>
                 {Object.entries(EventStageMap).map(([label, value]) =>
                     <li key={value}>

@@ -29,13 +29,13 @@ const SetFeedbackModeModalBody = ({quiz}: SetFeedbackModeModalProps) => {
         if (isDefined(quiz.id) && mode !== quiz?.quizFeedbackMode) {
             await updateQuiz({quizAssignmentId: quiz.id, update: {quizFeedbackMode: mode}});
             dispatch(closeActiveModal());
-            dispatch(showSuccessToast("Success!", t("common:assignments.feedbackMode.updateSuccess")));
+            dispatch(showSuccessToast("Success!", t("teaching:assignments.feedbackMode.updateSuccess")));
         }
     };
 
     return <>
         <p className="mb-5">
-            {t("common:assignments.feedbackMode.description")}
+            {t("teaching:assignments.feedbackMode.description")}
         </p>
         <Label for="feedbackMode" className="me-2">
             {t("common:label.feedbackMode")}
@@ -60,7 +60,7 @@ const SetFeedbackModeModalBody = ({quiz}: SetFeedbackModeModalProps) => {
 
 export const setFeedbackModeModal = (props: SetFeedbackModeModalProps) : ActiveModalProps => {
     return {
-        title: i18next.t("common:assignments.feedbackMode.title"),
+        title: i18next.t("teaching:assignments.feedbackMode.title"),
         body: <SetFeedbackModeModalBody {...props} />
     };
 };

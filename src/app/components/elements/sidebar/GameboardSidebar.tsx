@@ -46,7 +46,7 @@ const AssignmentDetails = ({ assignment, multipleAssignments }: { assignment: As
     return <>
         {multipleAssignments && <div className="section-divider"/>}
         <div><Trans
-            i18nKey="common:gameboard.assignment.assignedTo"
+            i18nKey="teaching:gameboard.assignment.assignedTo"
             components={{
                 emphasis: <b />,
                 emphasis2: <b />,
@@ -54,14 +54,14 @@ const AssignmentDetails = ({ assignment, multipleAssignments }: { assignment: As
             values={{ groupName, assigner }}
         /></div>
         {startDate && <div><Trans
-            i18nKey="common:gameboard.assignment.setLabel"
+            i18nKey="teaching:gameboard.assignment.setLabel"
             components={{
                 b: <b />,
             }}
             values={{ setDate: getFriendlyDaysUntil(startDate) }}
         /></div>}
         {dueDate && <div><Trans
-            i18nKey="common:gameboard.assignment.dueLabel"
+            i18nKey="teaching:gameboard.assignment.dueLabel"
             components={{
                 b: <b />,
             }}

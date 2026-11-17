@@ -42,7 +42,7 @@ export const assignmentsApi = isaacApi.injectEndpoints({
             }),
             providesTags: ["AssignmentProgress"],
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:assignments.progress.loadErrorTitle")
+                errorTitle: () => i18next.t("teaching:assignments.progress.loadErrorTitle")
             }),
             transformResponse: anonymiseIfNeededWith(anonymisationFunctions.progressState)
         }),

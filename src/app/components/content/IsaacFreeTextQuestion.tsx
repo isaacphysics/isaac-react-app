@@ -55,10 +55,10 @@ const FreeTextValidation = ({validValue, wordLimit, charLimit}: Validation) => {
     const { t } = useTranslation();
     return validValue ? null
         : <Alert color="warning" className={"no-print"}>
-            <strong>{t("common:questions.freeText.validationWarningLabel")}</strong>
+            <strong>{t("questions:questions.freeText.validationWarningLabel")}</strong>
             <ul>
-                {charLimit.exceeded && <li>{t("common:questions.validation.charLimitExceeded", { currentCount: charLimit.current, limit: charLimit.limit })}</li>}
-                {wordLimit.exceeded && <li>{t("common:questions.validation.wordLimitExceeded", { currentCount: wordLimit.current, limit: wordLimit.limit })}</li>}
+                {charLimit.exceeded && <li>{t("questions:questions.validation.charLimitExceeded", { currentCount: charLimit.current, limit: charLimit.limit })}</li>}
+                {wordLimit.exceeded && <li>{t("questions:questions.validation.wordLimitExceeded", { currentCount: wordLimit.current, limit: wordLimit.limit })}</li>}
             </ul>
         </Alert>;
 };
@@ -80,7 +80,7 @@ const IsaacFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
             </div>
             <FormGroup className="form-group">
                 <Input type="textarea"
-                    placeholder={t("common:questions.answerPlaceholder")}
+                    placeholder={t("questions:questions.answerPlaceholder")}
                     spellCheck={true}
                     rows={3}
                     value={currentAttemptValue}

@@ -58,12 +58,12 @@ export const Book = () => {
     >
         <ShowLoadingQuery
             query={bookIndexPageQuery}
-            defaultErrorTitle={t("common:books.index.loadError")}
+            defaultErrorTitle={t("pages:books.index.loadError")}
             thenRender={(definedBookIndexPage) => {
                 return pageId
                     ? <ShowLoadingQuery
                         query={bookDetailPageQuery}
-                        defaultErrorTitle={t("common:books.detail.loadError")}
+                        defaultErrorTitle={t("pages:books.detail.loadError")}
                         maintainOnRefetch
                         thenRender={(bookDetailPage) => {
                             return <WithFigureNumbering doc={bookDetailPage}>

@@ -35,14 +35,14 @@ export const ContentPropertyTags = ({ deprecated, supersededByPath, tags, ...res
             href={supersededByPath}
             onClick={(e) => e.stopPropagation()}
             target="_blank"
-        >{t("common:contentPropertyTags.supersededLabel")}</a>}
+        >{t("questions:contentPropertyTags.supersededLabel")}</a>}
 
         {deprecated && isTeacherOrAbove(user) && <span
             className="pill-tag-outline mw-max-content" 
-        >{t("common:contentPropertyTags.deprecatedLabel")}</span>}
+        >{t("questions:contentPropertyTags.deprecatedLabel")}</span>}
 
         {tags?.includes("nofilter") && isStaff(user) && <span
             className="pill-tag-outline mw-max-content" 
-        >{t("common:contentPropertyTags.noFilterLabel")}</span>}
+        >{t("questions:contentPropertyTags.noFilterLabel")}</span>}
     </div>;
 };

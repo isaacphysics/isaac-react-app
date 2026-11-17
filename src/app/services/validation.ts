@@ -140,23 +140,23 @@ export function validateRequiredFields(user?: Immutable<ValidationUser> | null, 
 
 export function validateBookingSubmission(event: AugmentedEvent, user: Immutable<UserSummaryWithEmailAddressDTO>, additionalInformation: AdditionalInformation) {
     if (!validateUserSchool(Object.assign({password: null}, user))) {
-        return Object.assign({}, FAILURE_TOAST, {title: i18next.t("common:events.bookingValidation.schoolRequiredTitle"), body: i18next.t("common:events.bookingValidation.schoolRequiredBody")});
+        return Object.assign({}, FAILURE_TOAST, {title: i18next.t("events:events.bookingValidation.schoolRequiredTitle"), body: i18next.t("events:events.bookingValidation.schoolRequiredBody")});
     }
 
     // validation for users / forms that indicate the booker is not a teacher
     if (isStudent(user) && !(additionalInformation.yearGroup == 'TEACHER' || additionalInformation.yearGroup == 'OTHER')) {
         if (!additionalInformation.yearGroup) {
-            return Object.assign({}, FAILURE_TOAST, {title:i18next.t("common:events.bookingValidation.yearGroupRequiredTitle"), body: i18next.t("common:events.bookingValidation.yearGroupRequiredBody")});
+            return Object.assign({}, FAILURE_TOAST, {title:i18next.t("events:events.bookingValidation.yearGroupRequiredTitle"), body: i18next.t("events:events.bookingValidation.yearGroupRequiredBody")});
         }
 
         if (!event.isVirtual && (!additionalInformation.emergencyName || !additionalInformation.emergencyNumber)) {
-            return Object.assign({}, FAILURE_TOAST, {title: i18next.t("common:events.bookingValidation.emergencyContactRequiredTitle"), body: i18next.t("common:events.bookingValidation.emergencyContactRequiredBody")});
+            return Object.assign({}, FAILURE_TOAST, {title: i18next.t("events:events.bookingValidation.emergencyContactRequiredTitle"), body: i18next.t("events:events.bookingValidation.emergencyContactRequiredBody")});
         }
     }
 
     // validation for users that are teachers or tutors
     if (!isStudent(user) && !additionalInformation.jobTitle) {
-        return Object.assign({}, FAILURE_TOAST, {title: i18next.t("common:events.bookingValidation.jobTitleRequiredTitle"), body: i18next.t("common:events.bookingValidation.jobTitleRequiredBody")});
+        return Object.assign({}, FAILURE_TOAST, {title: i18next.t("events:events.bookingValidation.jobTitleRequiredTitle"), body: i18next.t("events:events.bookingValidation.jobTitleRequiredBody")});
     }
 
     return true;

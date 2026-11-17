@@ -75,7 +75,7 @@ function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, 
     >
         {item
             ? <DropZoneItem item={item} id={item.replacementId as string} isCorrect={isCorrect} type={"drop-zone"} overrideOver={isOver}/>
-            : <>&nbsp;<span className={"visually-hidden"}>{altText || t("common:markup.inlineDropZone.ariaLabel")}</span></>
+            : <>&nbsp;<span className={"visually-hidden"}>{altText || t("questions:markup.inlineDropZone.ariaLabel")}</span></>
         }
     </span>;
 
@@ -107,7 +107,7 @@ function InlineDropRegion({divId, zoneId, emptyWidth, emptyHeight, rootElement, 
                 data-unit={'None'}
                 onClick={() => {dropRegionContext?.onSelect(NULL_CLOZE_ITEM, droppableId, true);}}
             >
-                <span className="fst-italic">{t("common:markup.inlineDropZone.clearButton")}</span>
+                <span className="fst-italic">{t("questions:markup.inlineDropZone.clearButton")}</span>
             </DropdownItem>
             {dropdownItems.map((item, i) => {
                 return <DropdownItem key={i}

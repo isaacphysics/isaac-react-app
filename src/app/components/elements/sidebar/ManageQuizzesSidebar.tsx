@@ -52,17 +52,17 @@ export const ManageQuizzesSidebar = (props: ManageQuizzesSidebarProps) => {
                 outerClassName="mt-3 mb-4"
                 id="manage-quizzes-title-filter" type="search"
                 value={manageQuizzesTitleFilter} onChange={event => setManageQuizzesTitleFilter(event.target.value)}
-                placeholder={t("common:tests.search.placeholder")} aria-label={t("common:label.searchByTitle")}
+                placeholder={t("teaching:tests.search.placeholder")} aria-label={t("common:label.searchByTitle")}
             />
-            <h3 className="h5">{t("common:tests.filters.searchGroupLabel")}</h3>
+            <h3 className="h5">{t("teaching:tests.filters.searchGroupLabel")}</h3>
             <SearchInputWithIcon
                 outerClassName="my-3"
                 id="manage-quizzes-group-name-filter" type="search"
                 value={manageQuizzesGroupNameFilter} onChange={event => setManageQuizzesGroupNameFilter(event.target.value)}
-                placeholder={t("common:label.groupName")}  aria-label={t("common:tests.filters.searchGroupLabel")}
+                placeholder={t("common:label.groupName")}  aria-label={t("teaching:tests.filters.searchGroupLabel")}
             />
             <div className="section-divider"/>
-            <h3 className="h5">{t("common:tests.filters.dateSectionTitle")}</h3>
+            <h3 className="h5">{t("teaching:tests.filters.dateSectionTitle")}</h3>
             <div className="d-flex align-items-center">
                 <span className="quiz-filter-date-span">{t("ada:tests.filters.startDateLabel")}</span>
                 {dateFilterTypeSelector(quizSetDateFilterType, setQuizSetDateFilterType)}

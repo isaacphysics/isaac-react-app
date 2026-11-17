@@ -119,7 +119,7 @@ function UserContextRow({
 
             <div className="remove-stage-container">
                 {tutorOrAbove && userContexts.length > 1 && <Button close
-                    className="close float-none bg-white p-2" aria-label={t("common:account.context.removeRow")}
+                    className="close float-none bg-white p-2" aria-label={t("account:account.context.removeRow")}
                     disabled={userContexts.length <= 1}
                     onClick={() => setUserContexts(userContexts.filter((_uc, i) => i !== index))}
                 />}
@@ -202,12 +202,12 @@ export function UserContextAccountInput({
                             setUserContexts([...userContexts, {stage: newStage, examBoard: newExamBoard}]);
                         }}
                         disabled={!validateUserContexts(userContexts)}>
-                        {t("common:account.context.addContentButton")}
+                        {t("account:account.context.addContentButton")}
                     </Button>
                 </Col>}
             {isPhy && tutorOrAbove && validateUserContexts(userContexts) && !isAllStages && <div className="mb-3 ms-2 align-content-center remove-stage-container">
                 <Button
-                    aria-label={t("common:account.context.addStageLabel")}
+                    aria-label={t("account:account.context.addStageLabel")}
                     className={`ms-2 align-middle btn-plus float-none pointer-cursor bg-transparent`}
                     onClick={() => setUserContexts([...userContexts, {}])}
                 />

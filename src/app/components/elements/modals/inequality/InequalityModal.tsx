@@ -265,8 +265,8 @@ const InequalityMenu = React.forwardRef<HTMLDivElement, InequalityMenuProps>(({o
                         </div>
                         : <div className="top-menu chemistry elements text-entry">
                             <div className="input-box">
-                                <Input id="chem-text-entry-box" type="text" placeholder={t("common:inequality.chemistry.placeholder")} onMouseDown={e => e.currentTarget.focus()} value={unparsedChemicalElements || ""} onChange={onUnparsedChemicalElementsChange} />
-                                {upperCaseWarning && <p className="uppercase-warning">{t("common:inequality.chemistry.uppercaseWarning")}</p>}
+                                <Input id="chem-text-entry-box" type="text" placeholder={t("questions:inequality.chemistry.placeholder")} onMouseDown={e => e.currentTarget.focus()} value={unparsedChemicalElements || ""} onChange={onUnparsedChemicalElementsChange} />
+                                {upperCaseWarning && <p className="uppercase-warning">{t("questions:inequality.chemistry.uppercaseWarning")}</p>}
                             </div>
                             <div className="items-box">
                                 <ul className="sub-menu elements">
@@ -528,7 +528,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
             onClick={() => sketch.current?.centre()}
             onKeyUp={() => sketch.current?.centre()}
         >
-            {t("common:inequality.centreButton")}
+            {t("questions:inequality.centreButton")}
         </div>
         <div
             className="inequality-ui help button"
@@ -544,7 +544,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
         >
             {t("common:button.reset")}
         </div>
-        <div id="inequality-trash" className={"inequality-ui trash button trash-with-reset"}>{t("common:inequality.trashButton")}</div>
+        <div id="inequality-trash" className={"inequality-ui trash button trash-with-reset"}>{t("questions:inequality.trashButton")}</div>
 
         {showQuestionReminder && (questionDoc?.value || (questionDoc?.children && questionDoc?.children?.length > 0)) && <div className="question-reminder">
             <IsaacContentValueOrChildren value={questionDoc.value} encoding={questionDoc.encoding}>
@@ -558,7 +558,7 @@ const InequalityModal = ({availableSymbols, logicSyntax, editorMode, close, onEd
             >{t("common:modal.questionReminder.hideButton")}</div>
         </div>}
 
-        <div className="orientation-warning">{t("common:inequality.orientationWarning")}</div>
+        <div className="orientation-warning">{t("questions:inequality.orientationWarning")}</div>
 
         <InequalityMenu
             menuItems={menuItems}

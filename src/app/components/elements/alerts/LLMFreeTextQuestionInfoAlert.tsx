@@ -26,12 +26,12 @@ function LoggedOutCopy({doc}: InfoBannerProps) {
     }
 
     return <>
-        <div className="h4">{isAda && <i className="icon icon-inline-sm icon-lock me-1"/>} {t("common:freeTextBuilder.infoAlert.loggedOutTitle")}</div>
+        <div className="h4">{isAda && <i className="icon icon-inline-sm icon-lock me-1"/>} {t("questions:freeTextBuilder.infoAlert.loggedOutTitle")}</div>
         <p>
-            {t("common:freeTextBuilder.infoAlert.loggedOutDescription")}
+            {t("questions:freeTextBuilder.infoAlert.loggedOutDescription")}
         </p>
         <p>
-            {t("common:freeTextBuilder.infoAlert.loggedOutDataPrivacy")}
+            {t("questions:freeTextBuilder.infoAlert.loggedOutDataPrivacy")}
         </p>
         {isAda && <p>
             <Trans
@@ -51,7 +51,7 @@ function LoggedOutCopy({doc}: InfoBannerProps) {
                 </Link>
             </Col>
             {navigation.nextItem && <Col className="col-auto mt-4 mt-md-0">
-                <Link to={{pathname: navigation.nextItem.to, search: navigation.search}}>{t("common:freeTextBuilder.infoAlert.skipQuestion")}</Link> <strong>&gt;</strong>
+                <Link to={{pathname: navigation.nextItem.to, search: navigation.search}}>{t("questions:freeTextBuilder.infoAlert.skipQuestion")}</Link> <strong>&gt;</strong>
             </Col>}
         </Row>
     </>;
@@ -62,15 +62,15 @@ function OpenAIUnder13Copy({doc}: InfoBannerProps) {
     const navigation = useNavigation(doc);
 
     return <>
-        <h4>{t("common:freeTextBuilder.infoAlert.under13Title")}</h4>
+        <h4>{t("questions:freeTextBuilder.infoAlert.under13Title")}</h4>
         <p>
-            {t("common:freeTextBuilder.infoAlert.under13Description")}
+            {t("questions:freeTextBuilder.infoAlert.under13Description")}
         </p>
         <p>
-            {t("common:freeTextBuilder.infoAlert.under13Consequence")}
+            {t("questions:freeTextBuilder.infoAlert.under13Consequence")}
         </p>
         {navigation.nextItem && <Button tag={Link} color="keyline" className="bg-white w-100 w-sm-auto mt-2 mt-sm-0" to={{pathname: navigation.nextItem.to, search: navigation.search}}>
-            {t("common:freeTextBuilder.infoAlert.skipQuestion")}
+            {t("questions:freeTextBuilder.infoAlert.skipQuestion")}
         </Button>}
     </>;
 };
@@ -94,9 +94,9 @@ function OpenAIConsentCopy({doc}: InfoBannerProps) {
     }
 
     return <>
-        <div className="h4">{t("common:freeTextBuilder.infoAlert.consentTitle")}</div>
+        <div className="h4">{t("questions:freeTextBuilder.infoAlert.consentTitle")}</div>
         <p>
-            {t("common:freeTextBuilder.infoAlert.consentDescription")}
+            {t("questions:freeTextBuilder.infoAlert.consentDescription")}
             {isAda && <> <Trans
                 i18nKey="ada:freeTextBuilder.infoAlert.consentFaq"
                 components={{
@@ -106,7 +106,7 @@ function OpenAIConsentCopy({doc}: InfoBannerProps) {
         </p>
         <p>
             <Trans
-                i18nKey="common:freeTextBuilder.infoAlert.consentPrivacy"
+                i18nKey="questions:freeTextBuilder.infoAlert.consentPrivacy"
                 components={{
                     privacyPolicyLink: <TransAnchor href="https://openai.com/policies/eu-privacy-policy" target="_blank" rel="noopener noreferrer" />,
                 }}
@@ -114,7 +114,7 @@ function OpenAIConsentCopy({doc}: InfoBannerProps) {
         </p>
         <p>
             <Trans
-                i18nKey="common:freeTextBuilder.infoAlert.consentWithdraw"
+                i18nKey="questions:freeTextBuilder.infoAlert.consentWithdraw"
                 components={{
                     accountSettingsLink: <Link to={`/account#${ACCOUNT_TAB[ACCOUNT_TAB.betafeatures]}`} />,
                 }}
@@ -122,10 +122,10 @@ function OpenAIConsentCopy({doc}: InfoBannerProps) {
         </p>
         <div className="mt-4">
             <Button color="solid" className="me-2 w-100 w-sm-auto" onClick={provideConsent}>
-                {t("common:freeTextBuilder.infoAlert.consentButton")}
+                {t("questions:freeTextBuilder.infoAlert.consentButton")}
             </Button>
             {navigation.nextItem && <Button tag={Link} color="keyline" className="bg-white w-100 w-sm-auto mt-2 mt-sm-0" to={{pathname: navigation.nextItem.to, search: navigation.search}}>
-                {t("common:freeTextBuilder.infoAlert.skipQuestion")}
+                {t("questions:freeTextBuilder.infoAlert.skipQuestion")}
             </Button>}
         </div>
     </>;
@@ -136,9 +136,9 @@ function GeneralInfoCopy(_props: InfoBannerProps) {
     const {setLinkedSetting} = useLinkableSetting();
 
     return <>
-        <div className="h4">{t("common:freeTextBuilder.infoAlert.generalTitle")}</div>
+        <div className="h4">{t("questions:freeTextBuilder.infoAlert.generalTitle")}</div>
         <p>
-            {t("common:freeTextBuilder.infoAlert.generalAccuracy")}
+            {t("questions:freeTextBuilder.infoAlert.generalAccuracy")}
             {isAda && <>{" "}<Trans
                 i18nKey="ada:label.faqMoreInfo"
                 components={{
@@ -148,7 +148,7 @@ function GeneralInfoCopy(_props: InfoBannerProps) {
         </p>
         <p>
             <Trans
-                i18nKey="common:freeTextBuilder.infoAlert.generalDataPrivacy"
+                i18nKey="questions:freeTextBuilder.infoAlert.generalDataPrivacy"
                 components={{
                     accountSettingsLink: <Link to={`/account#${ACCOUNT_TAB[ACCOUNT_TAB.betafeatures]}`} onClick={() => setLinkedSetting("consent-to-openai-marking-feature")} />,
                 }}

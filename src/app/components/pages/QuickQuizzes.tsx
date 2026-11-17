@@ -13,7 +13,7 @@ export const QuickQuizzes = () => {
 
     return <Container data-bs-theme={pageContext?.subject}>
         <TitleAndBreadcrumb 
-            currentPageTitle={t("common:quickQuizzes.title")}
+            currentPageTitle={t("teaching:quickQuizzes.title")}
             intermediateCrumbs={crumb ? [crumb] : undefined}
             icon={pageContext?.subject ? {
                 type: "icon", 

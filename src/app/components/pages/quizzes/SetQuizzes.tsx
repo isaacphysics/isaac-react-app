@@ -146,7 +146,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
 
     const innerTableHeaders : InnerTableHeader[] = [
         {title: i18next.t("common:label.groupName"), sort: compareGroupNames},
-        above["md"](deviceSize) ? {title: i18next.t("common:tests.assignment.header.creationDate"), sort: compareCreationDates} : undefined,
+        above["md"](deviceSize) ? {title: i18next.t("teaching:tests.assignment.header.creationDate"), sort: compareCreationDates} : undefined,
         above["sm"](deviceSize) ? {title: i18next.t("common:label.startDate"), sort: compareStartDates} : undefined,
         {title: i18next.t("common:table.dueDate"), sort: compareDueDates}
     ].filter(isDefined);
@@ -188,7 +188,7 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                         <span>group{(!assignedGroups || assignedGroups.length != 1) && "s"}</span>
                         <UncontrolledTooltip placement={"top"} target={"#group-td-" + index}>{assignedGroups.length === 0 ?
                             i18next.t("common:status.noGroupsAssigned")
-                            : (i18next.t("common:tests.assignment.assignedTooltip", { groupNames: assignedGroups.map(g => g.group).join(", ") }))}
+                            : (i18next.t("teaching:tests.assignment.assignedTooltip", { groupNames: assignedGroups.map(g => g.group).join(", ") }))}
                         </UncontrolledTooltip>
                     </td>
                     <td className={classNames("set-quiz-table-title align-middle ps-4")}>{quizTitle}</td>
@@ -254,17 +254,17 @@ function QuizAssignment({assignedGroups, index}: QuizAssignmentProps) {
                                 <td className={isPhy ? "text-start" : "text-center"}>
                                     <UncontrolledButtonDropdown>
                                         <DropdownToggle caret className={`text-nowrap ${below["md"](deviceSize) ? "btn-collapsed" : "btn-full"}`} size="sm" color="link">
-                                            {i18next.t("common:tests.assignment.more")}
+                                            {i18next.t("teaching:tests.assignment.more")}
                                         </DropdownToggle>
                                         <DropdownMenu>
                                             {assignedGroup.assignment.dueDate && <DropdownItem 
                                                 color="tertiary" size="sm" disabled={isUpdatingQuiz || !assignedGroup.assignment?.dueDate} 
                                                 onClick={() => openExtendDueDateModal(assignedGroup.assignment)}
                                             >
-                                                {i18next.t("common:tests.assignment.extendDueDate")}
+                                                {i18next.t("teaching:tests.assignment.extendDueDate")}
                                             </DropdownItem>}
                                             <DropdownItem color="tertiary" size="sm" onClick={() => cancel(assignedGroup.assignment)} disabled={isCancelling}>
-                                                {isCancelling ? <><IsaacSpinner size="sm" /> {i18next.t("common:tests.assignment.cancelling")}</> : i18next.t("common:tests.assignment.cancelTest")}
+                                                {isCancelling ? <><IsaacSpinner size="sm" /> {i18next.t("teaching:tests.assignment.cancelling")}</> : i18next.t("teaching:tests.assignment.cancelTest")}
                                             </DropdownItem>
                                         </DropdownMenu>
                                     </UncontrolledButtonDropdown>
@@ -312,7 +312,7 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
 
     const pageTitle= t("site:tests.set.title");
     const pageHelp = <span>
-        <Trans i18nKey="common:tests.set.help" components={{ br: <br /> }} values={{ siteName: SITE_TITLE_SHORT }} />
+        <Trans i18nKey="teaching:tests.set.help" components={{ br: <br /> }} values={{ siteName: SITE_TITLE_SHORT }} />
     </span>;
 
     const rowFiltersView = above["md"](deviceSize);
@@ -392,9 +392,9 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
                 [siteSpecific("Set tests", "Available tests")]:
                 <ShowLoading until={undeprecatedQuizzes}>
                     {undeprecatedQuizzes && <>
-                        <p>{t("common:tests.set.available.intro")}</p>
+                        <p>{t("teaching:tests.set.available.intro")}</p>
 
-                        {undeprecatedQuizzes.length === 0 && <p><em>{t("common:tests.set.available.empty")}</em></p>}
+                        {undeprecatedQuizzes.length === 0 && <p><em>{t("teaching:tests.set.available.empty")}</em></p>}
 
                         <ListView type="quiz" items={undeprecatedQuizzes} isQuizSetter/>
                     </>}
@@ -404,7 +404,7 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
                 <>
                     {isAda && <div className="d-flex justify-content-center mb-4">
                         <Button color="tertiary" size="sm" onClick={() => setShowFilters(s => !s)}>
-                            {showFilters ? t("common:tests.filters.hide") : t("common:tests.filters.show")}
+                            {showFilters ? t("teaching:tests.filters.hide") : t("teaching:tests.filters.show")}
                         </Button>
                     </div>}
 
@@ -430,12 +430,12 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
 
                     <ShowLoadingQuery
                         query={quizAssignmentsQuery}
-                        ifError={() => <Alert color="warning">{t("common:tests.set.loadError")}</Alert>}
+                        ifError={() => <Alert color="warning">{t("teaching:tests.set.loadError")}</Alert>}
                         thenRender={quizAssignments => {
                             let quizAssignmentsWithGroupNames: AppQuizAssignment[] = quizAssignments.map(assignment => {
                                 const groupName = persistence.load(KEY.ANONYMISE_GROUPS) === "YES"
-                                    ? t("common:groups.demo.name", { groupId: assignment.groupId })
-                                    : groupIdToName[assignment.groupId as number] ?? t("common:groups.unknown.label");
+                                    ? t("teaching:groups.demo.name", { groupId: assignment.groupId })
+                                    : groupIdToName[assignment.groupId as number] ?? t("teaching:groups.unknown.label");
                                 return {...assignment, groupName};
                             }).reverse();
 
@@ -475,7 +475,7 @@ export const SetQuizzes = ({user}: SetQuizzesPageProps) => {
                             quizAssignment.sort((a, b) => a.assignedGroups[0].assignment.quizSummary?.title?.localeCompare(b.assignedGroups[0].assignment.quizSummary?.title ?? "") ?? 0);
 
                             return <>
-                                {quizAssignments.length === 0 && <p>{t("common:tests.set.emptyState")}</p>}
+                                {quizAssignments.length === 0 && <p>{t("teaching:tests.set.emptyState")}</p>}
                                 {quizAssignments.length > 0 && <Table borderless={isAda} className="w-100 set-quiz-table">
                                     {isAda && <colgroup>
                                         <col width={"120px"}/>

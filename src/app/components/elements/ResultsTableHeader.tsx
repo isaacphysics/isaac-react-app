@@ -16,9 +16,9 @@ const AssignmentProgressSettings = () => {
 
     return <div className="d-flex w-100 flex-column flex-md-row content-metadata-container my-0 align-items-stretch align-items-md-center px-4 px-sm-5 px-md-0 pb-3">
         <div className="d-flex flex-row flex-md-column flex-grow-1 align-items-center py-2 py-md-0">
-            <span>{t("common:progress.settings.displayModeLabel")}</span>
+            <span>{t("teaching:progress.settings.displayModeLabel")}</span>
             <Spacer />
-            <StyledToggle falseLabel={t("common:progress.settings.fractionsOption")} trueLabel={t("common:progress.settings.percentagesOption")}
+            <StyledToggle falseLabel={t("teaching:progress.settings.fractionsOption")} trueLabel={t("teaching:progress.settings.percentagesOption")}
                 checked={assignmentProgressContext?.formatAsPercentage}
                 onChange={(e) => assignmentProgressContext?.setFormatAsPercentage?.(e.currentTarget.checked)}
             />
@@ -57,21 +57,21 @@ const AssignmentProgressLegend = () => {
     const key = "key-progress-legend";
 
     return <div className="mb-2">
-        <Label htmlFor={key} className="mt-2">{t("common:progress.legend.title")}</Label>
+        <Label htmlFor={key} className="mt-2">{t("teaching:progress.legend.title")}</Label>
         <div className="d-flex flex-row flex-sm-column justify-content-between">
             {context?.attemptedOrCorrect === "CORRECT" 
                 ? <ul id={key} className="block-grid-xs-1 block-grid-sm-2 block-grid-md-5 flex-grow-1 pe-2 ps-0 ps-sm-2 m-0">
-                    <LegendKey cellClass="completed" description={t("common:progress.legend.fullCorrect")}/>
-                    <LegendKey cellClass="passed" description={t("common:progress.legend.passedCorrect", { passPercentage: passMark * 100 })}/>
-                    <LegendKey cellClass="in-progress" description={t("common:progress.legend.inProgressCorrect", { failThresholdPercentage: 100 - passMark * 100 })}/>
-                    <LegendKey cellClass="failed" description={t("common:progress.legend.failedCorrect", { failThresholdPercentage: 100 - passMark * 100 })}/>
+                    <LegendKey cellClass="completed" description={t("teaching:progress.legend.fullCorrect")}/>
+                    <LegendKey cellClass="passed" description={t("teaching:progress.legend.passedCorrect", { passPercentage: passMark * 100 })}/>
+                    <LegendKey cellClass="in-progress" description={t("teaching:progress.legend.inProgressCorrect", { failThresholdPercentage: 100 - passMark * 100 })}/>
+                    <LegendKey cellClass="failed" description={t("teaching:progress.legend.failedCorrect", { failThresholdPercentage: 100 - passMark * 100 })}/>
                     <LegendKey cellClass="" description={t("common:status.notAttempted")}/>
                 </ul>
                 : <ul id={key} className="block-grid-xs-1 block-grid-sm-2 block-grid-md-4 flex-grow-1 pe-2 ps-0 ps-sm-2 m-0">
-                    <LegendKey cellClass="fully-attempted" description={t("common:progress.legend.fullAttempted")}/>
-                    <LegendKey cellClass="passed" description={t("common:progress.legend.passedAttempted", { passPercentage: passMark * 100 })}/>
-                    <LegendKey cellClass="in-progress" description={t("common:progress.legend.inProgressAttempted", { failThresholdPercentage: 100 - passMark * 100 })}/>
-                    <LegendKey cellClass="" description={t("common:progress.legend.failedAttempted", { failThresholdPercentage: 100 - passMark * 100 })}/>
+                    <LegendKey cellClass="fully-attempted" description={t("teaching:progress.legend.fullAttempted")}/>
+                    <LegendKey cellClass="passed" description={t("teaching:progress.legend.passedAttempted", { passPercentage: passMark * 100 })}/>
+                    <LegendKey cellClass="in-progress" description={t("teaching:progress.legend.inProgressAttempted", { failThresholdPercentage: 100 - passMark * 100 })}/>
+                    <LegendKey cellClass="" description={t("teaching:progress.legend.failedAttempted", { failThresholdPercentage: 100 - passMark * 100 })}/>
                 </ul>
             }
         </div>
@@ -95,7 +95,7 @@ const AdaAssignmentProgressKey = ({isAssignment}: {isAssignment?: boolean}) => {
             ? <>
                 <div className="d-flex flex-column flex-sm-row flex-md-col column-gap-4 row-gap-2">
                     <KeyItem icon={ICON.correct} label={t("common:status.correct")} />
-                    {isAssignment && <KeyItem icon={ICON.partial} label={t("common:progress.legend.partiallyCorrect")} />}
+                    {isAssignment && <KeyItem icon={ICON.partial} label={t("teaching:progress.legend.partiallyCorrect")} />}
                 </div>
                 <div className="d-flex flex-column flex-sm-row flex-md-col column-gap-4 row-gap-2">
                     <KeyItem icon={ICON.incorrect} label={t("common:status.incorrect")} />
@@ -104,8 +104,8 @@ const AdaAssignmentProgressKey = ({isAssignment}: {isAssignment?: boolean}) => {
             </>
             : <>
                 <div className="d-flex flex-column flex-md-row column-gap-4 row-gap-2">
-                    <KeyItem icon={ICON.correct} label={t("common:progress.legend.fullyAttempted")} />
-                    {isAssignment && <KeyItem icon={ICON.partial} label={t("common:progress.legend.partiallyAttempted")} />}
+                    <KeyItem icon={ICON.correct} label={t("teaching:progress.legend.fullyAttempted")} />
+                    {isAssignment && <KeyItem icon={ICON.partial} label={t("teaching:progress.legend.partiallyAttempted")} />}
                     <KeyItem icon={ICON.notAttempted} label={t("common:status.notAttempted")} />
                 </div>
             </>
@@ -130,7 +130,7 @@ export const ResultsTableHeader = ({headerText, settingsVisible, setSettingsVisi
             {headerText}
             <Spacer />
             {isPhy && <button onClick={() => setSettingsVisible(o => !o)} className="d-flex align-items-center bg-transparent gap-2 invert-underline">
-                {settingsVisible ? t("common:progress.settings.hideButton") : t("common:progress.settings.showButton")}
+                {settingsVisible ? t("teaching:progress.settings.hideButton") : t("teaching:progress.settings.showButton")}
                 <i className={classNames("icon icon-cog anim-rotate-45", {"active": settingsVisible})}/>
             </button>}
         </div>

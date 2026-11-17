@@ -138,7 +138,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
 
     const cloneGameboard = useCallback((gameboard: GameboardDTO) => {
-        setGameboardTitle(gameboard.title ? i18next.t("common:gameboard.clone.copiedTitle", { gameboardTitle: gameboard.title }) : "");
+        setGameboardTitle(gameboard.title ? i18next.t("teaching:gameboard.clone.copiedTitle", { gameboardTitle: gameboard.title }) : "");
         setQuestionOrder(loadGameboardQuestionOrder(gameboard) || []);
         setSelectedQuestions(loadGameboardSelectedQuestions(gameboard) || new Map<string, ContentSummary>());
         setWildcardId(isStaff(user) && gameboard.wildCard && gameboard.wildCard.id || undefined);
@@ -251,7 +251,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
     useEffect(() => {
         if (blocker.state === "blocked") {
-            if (window.confirm(i18next.t("common:gameboard.builder.leaveConfirm"))) {
+            if (window.confirm(i18next.t("teaching:gameboard.builder.leaveConfirm"))) {
                 logEvent(eventLog, "LEAVE_GAMEBOARD_BUILDER", {});
                 void dispatch(logAction({type: "LEAVE_GAMEBOARD_BUILDER", events: eventLog}));
                 blocker.proceed?.();
@@ -298,8 +298,8 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
     const undoButtonProps = {
         color: "keyline",
-        "aria-label": t("common:gameboard.builder.undoLabel"),
-        title: t("common:gameboard.builder.undoLabel"),
+        "aria-label": t("teaching:gameboard.builder.undoLabel"),
+        title: t("teaching:gameboard.builder.undoLabel"),
         onClick: () => {
             const newQuestion = undoStack.pop();
             redoStack.push(currentQuestions);
@@ -310,8 +310,8 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
 
     const redoButtonProps = {
         color: "keyline",
-        "aria-label": t("common:gameboard.builder.redoLabel"),
-        title: t("common:gameboard.builder.redoLabel"),
+        "aria-label": t("teaching:gameboard.builder.redoLabel"),
+        title: t("teaching:gameboard.builder.redoLabel"),
         onClick: () => {
             const newQuestion = redoStack.pop();
             undoStack.push(currentQuestions);
@@ -329,7 +329,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                 {submissionAttempted && !allInputIsValid  &&
                     <ExigentAlert color={"warning"}>
                         <p className={"fw-bold alert-heading"}>{t("site:gameboard.builder.createError")}</p>
-                        <p>{t("common:gameboard.builder.createErrorDetail")}</p>
+                        <p>{t("teaching:gameboard.builder.createErrorDetail")}</p>
                     </ExigentAlert>
                 }
                 <Form onSubmit={submit}>
@@ -337,7 +337,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         <Col>
                             <Label className={"fw-bold form-required"} htmlFor="gameboard-builder-name">{t("common:table.title")}</Label>
                             <p className="d-block input-description mb-2">
-                                {t("common:gameboard.builder.titleHelp")}
+                                {t("teaching:gameboard.builder.titleHelp")}
                             </p>
                             <FormGroup>
                                 <Input id="gameboard-builder-name"
@@ -350,7 +350,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                     invalid={submissionAttempted && !titleIsValid}
                                 />
                                 <FormFeedback>
-                                    {t("common:gameboard.builder.titleError")}
+                                    {t("teaching:gameboard.builder.titleError")}
                                 </FormFeedback>
                             </FormGroup>
                         </Col>
@@ -359,7 +359,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                     {isStaff(user) && <Row className="mt-2 align-items-end">
                         <Col xs={6} sm={4}>
                             <FormGroup>
-                                <Label htmlFor="gameboard-builder-tag-as" className={"fw-bold form-optional"}>{t("common:gameboard.builder.tagLabel")}</Label>
+                                <Label htmlFor="gameboard-builder-tag-as" className={"fw-bold form-optional"}>{t("teaching:gameboard.builder.tagLabel")}</Label>
                                 <StyledSelect inputId="gameboard-builder-tag-as"
                                     isMulti
                                     options={siteSpecific([
@@ -381,7 +381,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                     className={"fw-bold form-optional"}>{t("site:gameboard.builder.idLabel")}</Label>
                                 <Input id="gameboard-builder-url"
                                     type="text"
-                                    placeholder={t("common:gameboard.builder.idPlaceholder")}
+                                    placeholder={t("teaching:gameboard.builder.idPlaceholder")}
                                     value={gameboardURL ?? ""}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         setGameboardURL(e.target.value);
@@ -389,20 +389,20 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                     invalid={!isValidGameboardId(gameboardURL)}
                                 />
                                 <FormFeedback>
-                                    {t("common:gameboard.builder.idError")}
+                                    {t("teaching:gameboard.builder.idError")}
                                 </FormFeedback>
                             </FormGroup>
                         </Col>
                         <Col xs={12} sm={4}>
                             <FormGroup>
-                                <Label htmlFor="gameboard-builder-wildcard" className={"fw-bold"}>{t("common:gameboard.builder.wildcardLabel")}</Label>
+                                <Label htmlFor="gameboard-builder-wildcard" className={"fw-bold"}>{t("teaching:gameboard.builder.wildcardLabel")}</Label>
                                 <Input id="gameboard-builder-wildcard"
                                     type="select" value={wildcardId}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                         setWildcardId(e.target.value);
                                     }}
                                 >
-                                    <option value="">{t("common:gameboard.builder.wildcardNone")}</option>
+                                    <option value="">{t("teaching:gameboard.builder.wildcardNone")}</option>
                                     {isDefined(wildcards) && wildcards.map((wildcard) => {
                                         return <option key={wildcard.id} value={wildcard.id}>{wildcard.title}</option>;
                                     })}
@@ -415,7 +415,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                         <div>
                             <span className="fw-bold form-required">{t("common:title.questions")}</span>
                             <p className="d-none d-sm-block input-description mb-0">
-                                {t("common:gameboard.builder.questionsLimit", { maxQuestions: QUESTIONS_PER_GAMEBOARD })}
+                                {t("teaching:gameboard.builder.questionsLimit", { maxQuestions: QUESTIONS_PER_GAMEBOARD })}
                             </p>
                         </div>
                         <div className={"d-flex flex-row gap-2"}>
@@ -482,7 +482,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                     }));
                                 }}
                             >
-                                {t("common:gameboard.builder.addQuestionsButton")} <i className={classNames("icon ms-2", siteSpecific("icon-plus icon-color-black-hoverable", "icon-sm icon-add-circle"))}/>
+                                {t("teaching:gameboard.builder.addQuestionsButton")} <i className={classNames("icon ms-2", siteSpecific("icon-plus icon-color-black-hoverable", "icon-sm icon-add-circle"))}/>
                             </Button>
                         </ShowLoading>
                         <Button

@@ -31,7 +31,7 @@ export const ProviderCallbackHandler = () => {
 
     return <React.Fragment>
         <div className="w-100 text-center">
-            <div className="pt-7 pb-2 h2">{t("common:auth.callback.signingIn")}</div>
+            <div className="pt-7 pb-2 h2">{t("account:auth.callback.signingIn")}</div>
             <IsaacSpinner />
         </div>
     </React.Fragment>;

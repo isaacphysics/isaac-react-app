@@ -24,21 +24,21 @@ export const TeacherMentoring = () => {
     const groupJoinPrompt = <Callout className="pb-4" style="regular">
         {user?.loggedIn
             ? <span>
-                <Trans i18nKey="common:teacherMentoring.join.loggedIn" components={{ strong: <strong />, joinLink: <Link to={`/account?authToken=${MENTORING_GROUP_AUTH_TOKEN}`} /> }} values={{ groupName: MENTORING_GROUP_NAME }} />
+                <Trans i18nKey="teaching:teacherMentoring.join.loggedIn" components={{ strong: <strong />, joinLink: <Link to={`/account?authToken=${MENTORING_GROUP_AUTH_TOKEN}`} /> }} values={{ groupName: MENTORING_GROUP_NAME }} />
             </span>
-            : <><Trans i18nKey="common:teacherMentoring.join.notLoggedIn" components={{ strong: <strong/>, authLink: <Link to={`/account?authToken=${MENTORING_GROUP_AUTH_TOKEN}`} /> }} /></>
+            : <><Trans i18nKey="teaching:teacherMentoring.join.notLoggedIn" components={{ strong: <strong/>, authLink: <Link to={`/account?authToken=${MENTORING_GROUP_AUTH_TOKEN}`} /> }} /></>
         }
-        <p className="mt-2 mb-0">{t("common:teacherMentoring.join.freeNote")}</p>
+        <p className="mt-2 mb-0">{t("teaching:teacherMentoring.join.freeNote")}</p>
     </Callout>;
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={t("common:teacherMentoring.page.title")} />
+        <TitleAndBreadcrumb currentPageTitle={t("teaching:teacherMentoring.page.title")} />
         <Row className="mb-3">
             <Col lg={{size: 8, offset: 2}}>
                 <PageFragment fragmentId={"teacher_mentoring_intro"} />
                 {!userInGroup && groupJoinPrompt}
                 <PageFragment fragmentId={"teacher_mentoring_info"} />
-                {isTeacherOrAbove(user) ? <PageFragment fragmentId={"teacher_mentoring_tabs"} /> : <b>{t("common:teacherMentoring.page.teacherNotice")}</b>}
+                {isTeacherOrAbove(user) ? <PageFragment fragmentId={"teacher_mentoring_tabs"} /> : <b>{t("teaching:teacherMentoring.page.teacherNotice")}</b>}
             </Col>
         </Row>
     </Container>;

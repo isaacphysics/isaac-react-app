@@ -41,7 +41,7 @@ const ExtendDueDateModalBody = ({currDueDate, numericQuizAssignmentId}: ExtendDu
                 .then((result) => {
                     if (mutationSucceeded(result)) {
                         dispatch(showSuccessToast(
-                            t("common:assignments.extendDueDate.successToastTitle"), t("common:assignments.extendDueDate.successToastMessage", { dueDate: dueDate.toLocaleDateString() })
+                            t("teaching:assignments.extendDueDate.successToastTitle"), t("teaching:assignments.extendDueDate.successToastMessage", { dueDate: dueDate.toLocaleDateString() })
                         ));
                         dispatch(closeActiveModal());
                     }
@@ -50,10 +50,10 @@ const ExtendDueDateModalBody = ({currDueDate, numericQuizAssignmentId}: ExtendDu
     };
 
     return <>
-        <p className="px-1">{t("common:assignments.extendDueDate.confirmationText")}</p>
+        <p className="px-1">{t("teaching:assignments.extendDueDate.confirmationText")}</p>
         <hr className="text-center"/>
         <div className="p-2">
-            <Label for="dueDate" className="pe-1">{t("common:assignments.extendDueDate.inputLabel")}
+            <Label for="dueDate" className="pe-1">{t("teaching:assignments.extendDueDate.inputLabel")}
                 <DateInput id="dueDate" value={dueDate} invalid={dueDate && ((dueDate < currDueDate) || dueDate <= TODAY())}
                     yearRange={yearRange} noClear disabled={isUpdatingQuiz} className="text-center"
                     onChange={(e) => e.target.valueAsDate && setDueDate(e.target.valueAsDate)}
@@ -61,7 +61,7 @@ const ExtendDueDateModalBody = ({currDueDate, numericQuizAssignmentId}: ExtendDu
             </Label>
             {dueDate && (dueDate < currDueDate || dueDate <= TODAY()) && 
             <p className={"text-danger"}>
-                {t("common:assignments.extendDueDate.validationError")}
+                {t("teaching:assignments.extendDueDate.validationError")}
             </p>}
             <Button
                 className="mt-2 mb-2"

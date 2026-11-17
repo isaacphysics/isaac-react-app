@@ -137,19 +137,19 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
         <FormGroup>
             <Label data-testid="modal-start-date-selector" className="w-100 pb-2">
                 <span className="form-optional">{t("common:label.startDateLabel")}</span>
-                <DateInput value={scheduledStartDate} placeholder={t("common:assignments.startDatePlaceholder")}
+                <DateInput value={scheduledStartDate} placeholder={t("teaching:assignments.startDatePlaceholder")}
                     yearRange={yearRange} invalid={validationAttempted && startDateInvalid}
                     onChange={setScheduledStartDateAtSevenAM}/>
-                <FormFeedback>{startDateInvalid && t("common:assignments.setModal.startDateFuture")}</FormFeedback>
+                <FormFeedback>{startDateInvalid && t("teaching:assignments.setModal.startDateFuture")}</FormFeedback>
             </Label>
         </FormGroup>
         <FormGroup>
             <Label data-testid="modal-due-date-selector" className="w-100 pb-2">
                 <span className="form-required">{t("common:label.dueDateLabel")}</span>
-                <DateInput value={dueDate} placeholder={t("common:assignments.dueDatePlaceholder")} yearRange={yearRange} invalid={validationAttempted && (dueDateInvalid || !dueDate)}
+                <DateInput value={dueDate} placeholder={t("teaching:assignments.dueDatePlaceholder")} yearRange={yearRange} invalid={validationAttempted && (dueDateInvalid || !dueDate)}
                     onChange={e => {setUserSelectedDueDate(true); setDueDate(e.target.valueAsDate ?? undefined);}}/>
-                <FormFeedback>{!dueDate && t("common:assignments.setModal.dueDateRequired")}</FormFeedback>
-                <FormFeedback>{dueDateInvalid && t("common:assignments.setModal.dueDateAfterStart")}</FormFeedback>
+                <FormFeedback>{!dueDate && t("teaching:assignments.setModal.dueDateRequired")}</FormFeedback>
+                <FormFeedback>{dueDateInvalid && t("teaching:assignments.setModal.dueDateAfterStart")}</FormFeedback>
             </Label>
         </FormGroup>
         <FormGroup>
@@ -157,8 +157,8 @@ const AssignGroup = ({groups, currentAssignees, board, closeModal}: AssignGroupP
                 <span>{t("common:label.notes")}</span>
                 <Input type="textarea" spellCheck={true} rows={3} value={assignmentNotes}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAssignmentNotes(e.target.value)}/>
-                <p className="mt-1 mb-0"><small>{t("common:assignments.setModal.notesCharacterCount", { characterCount: (assignmentNotes || '').length })}</small></p>
-                <FormFeedback>{notesInvalid && t("common:assignments.notesMaxLengthError")}</FormFeedback>
+                <p className="mt-1 mb-0"><small>{t("teaching:assignments.setModal.notesCharacterCount", { characterCount: (assignmentNotes || '').length })}</small></p>
+                <FormFeedback>{notesInvalid && t("teaching:assignments.notesMaxLengthError")}</FormFeedback>
             </Label>}
         </FormGroup>
         
@@ -197,13 +197,13 @@ const AssignmentDisplay = ({board, currentAssignees, setCurrentAssignees, unassi
                     <li data-testid="current-assignment" key={assignee.groupId}
                         className="my-1 px-1 d-flex justify-content-between">
                         <span className="flex-grow-1">{assignee.groupName}</span>
-                        <button className="close bg-transparent invert-underline" aria-label={t("common:assignments.setModal.unassignGroup")} 
+                        <button className="close bg-transparent invert-underline" aria-label={t("teaching:assignments.setModal.unassignGroup")} 
                             onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>
                             {t("common:button.unassign")}
                         </button>
                     </li>
                 )}</ul>
-                : <p className="p-2">{t("common:assignments.setModal.noGroups")}</p>}
+                : <p className="p-2">{t("teaching:assignments.setModal.noGroups")}</p>}
         </div>
         <div className="py-2 d-flex flex-column">
             <span className={classNames("mb-2", {"d-flex align-items-center": isPhy})}>
@@ -225,12 +225,12 @@ const AssignmentDisplay = ({board, currentAssignees, setCurrentAssignees, unassi
                                     : assignee.startDate).toDateString()}
                             </span>
                         </>}
-                        <button className={classNames("close bg-transparent", {"mt-n1": isPhy})} aria-label={t("common:assignments.setModal.unassignGroup")} onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>
+                        <button className={classNames("close bg-transparent", {"mt-n1": isPhy})} aria-label={t("teaching:assignments.setModal.unassignGroup")} onClick={() => confirmUnassignBoard(assignee.groupId, assignee.groupName)}>
                             ×
                         </button>
                     </li>
                 )}</ul>
-                : <p className="p-2">{t("common:assignments.setModal.noGroups")}</p>}
+                : <p className="p-2">{t("teaching:assignments.setModal.noGroups")}</p>}
         </div>
     </>;
 };
@@ -250,7 +250,7 @@ const SetAssignmentsModalContent = (props: SetAssignmentsModalProps) => {
     
     return <div>
         <p className="px-1"> 
-            {t("common:assignments.setModal.schedulingInfo")}
+            {t("teaching:assignments.setModal.schedulingInfo")}
         </p>
         <hr className="text-center"/>
         <AssignGroup {...props} closeModal={toggle} currentAssignees={currentAssignees}/>
@@ -265,7 +265,7 @@ export const SetAssignmentsModal = (props: SetAssignmentsModalProps): ActiveModa
     return {
         closeAction: toggle,
         size: "md",
-        title: i18next.t("common:assignments.setModal.title", { boardTitle: board?.title }),
+        title: i18next.t("teaching:assignments.setModal.title", { boardTitle: board?.title }),
         body: <SetAssignmentsModalContent {...props} />,
         buttons: [<Button key={0} aria-label={i18next.t("common:button.closeModal")} color="keyline" className="w-100" onClick={toggle}>{i18next.t("common:button.close")}</Button>]
     };

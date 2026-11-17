@@ -153,12 +153,12 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const pageTitle = `${quizTitle} ${(assignmentNotYetStarted ? `(starts ${formatDate(assignmentStartDate)})` : "results")}`;
 
     const pageHelp = <span>
-        {t("common:tests.feedback.helpText")}
+        {t("teaching:tests.feedback.helpText")}
     </span>;
 
     const buildErrorComponent = (error: FetchBaseQueryError | SerializedError | undefined) => <>
         <Alert color="danger">
-            <div className="alert-heading h4">{t("common:tests.feedback.errorTitle")}</div>
+            <div className="alert-heading h4">{t("teaching:tests.feedback.errorTitle")}</div>
             <p>{getRTKQueryErrorMessage(error)?.message}</p>
         </Alert>
     </>;
@@ -175,8 +175,8 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
             ifError={buildErrorComponent}
             thenRender={quizAssignment => <>
                 {assignmentNotYetStarted && <div className="mb-4 alert alert-info px-3 py-2 mt-4">
-                    <span className="alert-heading fw-bold">{t("common:tests.feedback.notStartedHeading")} </span>
-                    <span>{t("common:tests.feedback.releaseDate", { startDate: formatDate(assignmentStartDate) })}</span>
+                    <span className="alert-heading fw-bold">{t("teaching:tests.feedback.notStartedHeading")} </span>
+                    <span>{t("teaching:tests.feedback.releaseDate", { startDate: formatDate(assignmentStartDate) })}</span>
                 </div>}
 
                 <div className={classNames("d-flex align-items-center flex-wrap mb-4 gap-2", siteSpecific("mt-md-4", "mt-xl-4"))}>

@@ -30,10 +30,10 @@ export const UserTheme = ({setDisplaySettings}: UserThemeProps) => {
 
     return <MyAccountTab
         leftColumn={<>
-            <h2 className="h3">{t("common:account.theme.title")}</h2>
+            <h2 className="h3">{t("account:account.theme.title")}</h2>
         </>}
         rightColumn={<>
-            <span>{t("common:account.theme.description")}</span>
+            <span>{t("account:account.theme.description")}</span>
             <div className="d-flex gap-4 mt-4">
                 {Object.values(lightnessThemes).map((theme) => <ThemeSelector 
                     key={theme.value}
@@ -43,7 +43,7 @@ export const UserTheme = ({setDisplaySettings}: UserThemeProps) => {
                 />)}
             </div>
             <Alert color="warning" className="mt-4">
-                <Trans i18nKey="common:account.theme.darkModeWarning" components={{ lineBreak1: <br />, lineBreak2: <br />, contactLink: <Link to="/contact?subject=Dark%20mode%20issue" /> }} />
+                <Trans i18nKey="account:account.theme.darkModeWarning" components={{ lineBreak1: <br />, lineBreak2: <br />, contactLink: <Link to="/contact?subject=Dark%20mode%20issue" /> }} />
             </Alert>
         </>}
     />;

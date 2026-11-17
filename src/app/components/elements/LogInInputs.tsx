@@ -32,12 +32,12 @@ export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {remembe
     }, []);
 
     return <>
-        <h2 className="h3" ref={ref} tabIndex={-1}>{t("common:auth.tfa.title")}</h2>
-        <p>{t("common:auth.tfa.description")}</p>
+        <h2 className="h3" ref={ref} tabIndex={-1}>{t("account:auth.tfa.title")}</h2>
+        <p>{t("account:auth.tfa.description")}</p>
         <FormGroup className="form-group">
             <Label htmlFor="verification-code">{t("common:label.verificationCode")}</Label>
             <Input
-                id="verification-code" type="text" name="verification-code" placeholder={t("common:auth.tfa.codePlaceholder")}
+                id="verification-code" type="text" name="verification-code" placeholder={t("account:auth.tfa.codePlaceholder")}
                 innerRef={inputRef}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setMfaVerificationCode(e.target.value)
@@ -48,13 +48,13 @@ export const TFAInput = React.forwardRef(function TFAForm({rememberMe}: {remembe
                 autoFocus
             />
             <FormFeedback id="verification-code-validation-message">
-                {isNaN(Number(mfaVerificationCode)) && t("common:auth.tfa.codeInvalid")}
+                {isNaN(Number(mfaVerificationCode)) && t("account:auth.tfa.codeInvalid")}
             </FormFeedback>
         </FormGroup>
         <FormGroup className="form-group">
             <Button
                 id="submit-verification-code"
-                tag="input" value={t("common:auth.tfa.verifyButton")}
+                tag="input" value={t("account:auth.tfa.verifyButton")}
                 color="secondary" type="submit" className="mb-2" block
                 disabled={isNaN(Number(mfaVerificationCode))}
                 onClick={(event) => {
@@ -84,7 +84,7 @@ export const PasswordResetButton = ({email, isValidEmail, setPasswordResetAttemp
     return !passwordResetRequest ?
         <div className={"d-flex justify-content-end " + (small ? "mt-1 w-100 text-end" : "")}>
             <Button className="text-end" color="link" onClick={attemptPasswordReset}>
-                {small ? <small>{t("common:auth.password.forgotten")}</small> : t("common:auth.password.forgotten")}
+                {small ? <small>{t("account:auth.password.forgotten")}</small> : t("account:auth.password.forgotten")}
             </Button>
         </div>
         :
@@ -100,7 +100,7 @@ export const PasswordResetButton = ({email, isValidEmail, setPasswordResetAttemp
 
 export const SsoHelpLink = () => 
     <Link className="justify-content-end d-flex" to="/pages/single_sign_on" target='_blank'>
-        {i18next.t("common:auth.sso.learnMore")}
+        {i18next.t("account:auth.sso.learnMore")}
     </Link>;
 
 interface EmailPasswordInputsProps {
@@ -140,7 +140,7 @@ export const EmailPasswordInputs =({setEmail, setPassword, validEmail, validPass
                 required
             />
             <FormFeedback id="passwordValidationMessage">
-                {!validPassword && t("common:auth.login.passwordLength", { minLength: MINIMUM_PASSWORD_LENGTH })}
+                {!validPassword && t("account:auth.login.passwordLength", { minLength: MINIMUM_PASSWORD_LENGTH })}
             </FormFeedback>
         </div>
     </>;

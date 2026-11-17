@@ -67,7 +67,7 @@ export const RegistrationTeacherConnect = () => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={t("common:auth.registration.pageTitle", { siteTitle: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}}/>
+            <TitleAndBreadcrumb currentPageTitle={t("account:auth.registration.pageTitle", { siteTitle: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}}/>
         }
         sidebar={siteSpecific(
             <SignupSidebar activeTab={4}/>,
@@ -77,7 +77,7 @@ export const RegistrationTeacherConnect = () => {
         <Card className={"my-7"}>
             <CardBody>
                 <Form onSubmit={submit}>
-                    <h2 className="h3">{t("common:auth.teacherConnect.heading")}</h2>
+                    <h2 className="h3">{t("account:auth.teacherConnect.heading")}</h2>
                     {siteSpecific(
                         <>
                             <p><Trans
@@ -119,12 +119,12 @@ export const RegistrationTeacherConnect = () => {
                                 </div>
                             </InputGroup>
                             <FormFeedback id="codeValidationMessage">
-                                {t("common:auth.teacherConnect.codeError")}
+                                {t("account:auth.teacherConnect.codeError")}
                             </FormFeedback>
                         </FormGroup>
                         {activeAuthorisations && activeAuthorisations.length > 0 &&
                             <div className="mb-3">
-                                <div className="h5">{t("common:auth.teacherConnect.connectedTeachers")}</div>
+                                <div className="h5">{t("account:auth.teacherConnect.connectedTeachers")}</div>
                                 <ul>
                                     {activeAuthorisations.map((auth) => (
                                         <li key={auth.id}>{extractTeacherName(auth)} - ({auth.email})</li>
@@ -138,7 +138,7 @@ export const RegistrationTeacherConnect = () => {
                         {siteSpecific(
                             <>
                                 <Col xs={6} md={4} lg={3}>
-                                    <Button className="w-100 my-2 px-2" color="keyline" onClick={continueToNext}>{t("common:auth.teacherConnect.skipButton")}</Button>
+                                    <Button className="w-100 my-2 px-2" color="keyline" onClick={continueToNext}>{t("account:auth.teacherConnect.skipButton")}</Button>
                                 </Col>
                                 <Col xs={6} md={4} lg={3}>
                                     <Button className="w-100 my-2 px-2" color="solid" disabled={!activeAuthorisations?.length} onClick={continueToNext}>{t("common:button.continue")}</Button>

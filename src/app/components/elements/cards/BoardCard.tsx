@@ -63,7 +63,7 @@ const HexagonGroupsButton = ({toggleAssignModal, boardSubjects, assignees, id}: 
     <button onClick={toggleAssignModal} id={id} className="d-flex justify-content-center bg-white board-subject-hexagon-size">
         <div className="board-subject-hexagon-container justify-content-center">
             {generateGameboardSubjectHexagons(boardSubjects)}
-            <span className="groups-assigned" title={i18next.t("common:gameboard.card.groupsAssigned")}>
+            <span className="groups-assigned" title={i18next.t("teaching:gameboard.card.groupsAssigned")}>
                 <strong>{isDefined(assignees) ? assignees.length : <Spinner size="sm" />}</strong>{" "}
                 group{(!assignees || assignees.length != 1) && "s"}
                 {isDefined(assignees) &&
@@ -107,15 +107,15 @@ const AdaCircle = ({hexagonId, percentageDisplayed, assignees, toggleAssignModal
         <Circle radius={24} properties={{fill: "#000"}}/>
         <foreignObject className={classNames("board-percent-completed", {"set-assignments": isSetAssignments})} x={0} y={0} width={48} height={48}>
             {isSetAssignments
-                ? <div title={t("common:gameboard.card.groupsAssigned")}>
+                ? <div title={t("teaching:gameboard.card.groupsAssigned")}>
                     {isDefined(assignees)
                         ? <span className={assignees.length >= 100 ? "font-size-1" : "font-size-1-25"}>{assignees.length}</span>
                         : <Spinner size="sm" />
-                    }<br/><small>{t("common:gameboard.assignments.groupCount", { count: assignees.length })}</small>
+                    }<br/><small>{t("teaching:gameboard.assignments.groupCount", { count: assignees.length })}</small>
                     {isDefined(assignees) &&
                         <UncontrolledTooltip placement={"top"} target={"#" + hexagonId}>{assignees.length === 0 ?
-                            t("common:gameboard.assignments.noGroupsQuizAssigned")
-                            : (t("common:gameboard.assignments.assignedTo", { groupNames: assignees.map(g => g.groupName).join(", ") }))}
+                            t("teaching:gameboard.assignments.noGroupsQuizAssigned")
+                            : (t("teaching:gameboard.assignments.assignedTo", { groupNames: assignees.map(g => g.groupName).join(", ") }))}
                         </UncontrolledTooltip>
                     }
                 </div>
@@ -205,7 +205,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                 <td colSpan={siteSpecific(1, isSetAssignments ? 2 : 4)} className="align-middle">
                     <a href={boardLink} className={isAda ? "fw--semi-bold" : ""}>{board.title}</a>
                     {isPhy && <span className="text-muted"><br/><Trans
-                        i18nKey="common:gameboard.card.createdBy"
+                        i18nKey="teaching:gameboard.card.createdBy"
                         components={{
                             owner: <span data-testid={"owner"} />,
                         }}
@@ -221,7 +221,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                     <div className="d-flex gap-2 align-items-center">
                         {isPhy && <SaveBoardButton board={board} color="keyline" size="sm" />}
                         <Button className="set-assignments-button" color={siteSpecific("keyline", "solid")} size="sm" onClick={openAssignModal}>
-                            {isSetAssignments ? t("common:gameboard.assignments.assignUnassignButton") : t("common:button.assign")}
+                            {isSetAssignments ? t("teaching:gameboard.assignments.assignUnassignButton") : t("common:button.assign")}
                         </Button>
                     </div>
                 </td>
@@ -239,7 +239,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                     <td colSpan={siteSpecific(1, isSetAssignments ? 2 : 4)} className="align-middle">
                         <a href={boardLink} className={isAda ? "fw--semi-bold" : ""}>{board.title}</a>
                         {isPhy && <span className="text-muted"><br/><Trans
-                            i18nKey="common:gameboard.card.createdBy"
+                            i18nKey="teaching:gameboard.card.createdBy"
                             components={{
                                 owner: <span data-testid={"owner"} />,
                             }}
@@ -273,7 +273,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                             <div className="d-flex gap-2">
                                 <SaveBoardButton board={board} color="keyline" size="sm" />
                                 <Button className="set-assignments-button" color={siteSpecific("keyline", "solid")} size="sm" onClick={openAssignModal}>
-                                    {isSetAssignments ? t("common:gameboard.assignments.assignUnassignButton") : t("common:button.assign")}
+                                    {isSetAssignments ? t("teaching:gameboard.assignments.assignUnassignButton") : t("common:button.assign")}
                                 </Button>
                             </div>
                         </td>,
@@ -303,7 +303,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                     <Col>
                         {isDefined(board.creationDate) && <p className="mb-0" data-testid={"created-date"}>
                             <Trans
-                                i18nKey="common:gameboard.card.createdDate"
+                                i18nKey="teaching:gameboard.card.createdDate"
                                 components={{
                                     strong: <strong />,
                                 }}
@@ -312,7 +312,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                         </p>}
                         {isDefined(board.lastVisited) && <p className="mb-0" data-testid={"last-visited"}>
                             <Trans
-                                i18nKey="common:gameboard.card.lastVisited"
+                                i18nKey="teaching:gameboard.card.lastVisited"
                                 components={{
                                     strong: <strong />,
                                 }}
@@ -329,9 +329,9 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                     <Row className={"mb-2"}>
                         <Col xs={8} sm={7} md={8}>
                             <Link className={"d-inline-block w-100 h4"} to={boardLink}>{board.title}</Link>
-                            <span data-testid={"owner"}><b>{t("common:gameboard.card.byLabel")}</b>: {formatBoardOwner(user, board)}</span><br/>
+                            <span data-testid={"owner"}><b>{t("teaching:gameboard.card.byLabel")}</b>: {formatBoardOwner(user, board)}</span><br/>
                             <span data-testid={"created-date"}><b>{t("common:label.created")}</b>: {formatDate(board.creationDate)}</span><br/>
-                            <span data-testid={"last-visited"}><b>{t("common:gameboard.card.lastVisitedLabel")}</b>: {formatDate(board.lastVisited)}</span><br/>
+                            <span data-testid={"last-visited"}><b>{t("teaching:gameboard.card.lastVisitedLabel")}</b>: {formatDate(board.lastVisited)}</span><br/>
                         </Col>
                         {isSetAssignments ? (
                             <Col>
@@ -365,7 +365,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                                 </Col>
                         )}
                         <Col className="pt-3">
-                            <b>{t("common:gameboard.card.stagesDifficulties")}</b>:
+                            <b>{t("teaching:gameboard.card.stagesDifficulties")}</b>:
                             <br/> 
                             <p>
                                 {boardStagesAndDifficulties.map(([stage,difficulties], _) =>
@@ -380,7 +380,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
                         <ShareLink linkUrl={boardLink} gameboardId={board.id} reducedWidthLink clickAwayClose className="d-inline-block me-2" innerClassName="btn-keyline" outline />
                         <SaveBoardButton board={board} color="keyline" size="sm" />
                         {isSetAssignments && <Button className={"d-block w-100 assign-button"} color="solid" onClick={openAssignModal}>
-                            {t("common:gameboard.assignments.assignUnassignButton")}
+                            {t("teaching:gameboard.assignments.assignUnassignButton")}
                         </Button>}
                     </CardFooter>
                 </CardBody>

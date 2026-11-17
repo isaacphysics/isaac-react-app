@@ -30,12 +30,12 @@ export const AccessingAssignedQuestionOutsideAssignmentWarning = ({question, ass
         if (activeAssignmentsWithQuestion?.length) {
             // warn
             return <Alert color="warning" className="mb-4">
-                <span><Trans i18nKey="common:assignments.warning.outsideAssignment" components={{ strong: <strong /> }} /></span>
+                <span><Trans i18nKey="teaching:assignments.warning.outsideAssignment" components={{ strong: <strong /> }} /></span>
 
                 <ul className="mt-3">
                     {activeAssignmentsWithQuestion.map((a) => <li key={a.id}>
                         <Trans
-                            i18nKey="common:assignments.warning.assignmentDetail"
+                            i18nKey="teaching:assignments.warning.assignmentDetail"
                             components={{
                                 assignmentLink: <Link to={`/assignment/${a.id}/view`} />,
                                 strong: <b />,

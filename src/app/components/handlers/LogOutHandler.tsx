@@ -12,7 +12,7 @@ export const LogOutHandler = () => {
     return <>
         <div className="w-100 text-center">
             <div className="pt-7 pb-2 h2">
-                {t("common:auth.logout.loggingOut")}
+                {t("account:auth.logout.loggingOut")}
             </div>
             <IsaacSpinner />
         </div>

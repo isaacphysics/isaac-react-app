@@ -79,7 +79,7 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
                         outerClassName="my-3" 
                         type="search" 
                         onChange={(e) => setQuizTitleFilter(e.target.value)}
-                        placeholder={t("common:tests.search.placeholder")} aria-label={t("common:label.searchByTitle")}
+                        placeholder={t("teaching:tests.search.placeholder")} aria-label={t("common:label.searchByTitle")}
                     />
                     <div className="section-divider"/>
                     <h3 className="mb-3 h5">{t("common:label.filterByStatus")}</h3>
@@ -97,10 +97,10 @@ export const MyQuizzesSidebar = (props: MyQuizzesSidebarProps) => {
                         </Input>
                     </>}
                     <div className="section-divider mt-4"/>
-                    <h3 className="mb-3 h5">{t("common:sidebar.display.title")}</h3>
+                    <h3 className="mb-3 h5">{t("questions:sidebar.display.title")}</h3>
                     <StyledDropdown value={displayMode} onChange={() => setDisplayMode(d => d === "table" ? "cards" : "table")}>
-                        <option value="table">{t("common:tests.sidebar.displayTableOption")}</option>
-                        <option value="cards">{t("common:tests.sidebar.displayCardOption")}</option>
+                        <option value="table">{t("teaching:tests.sidebar.displayTableOption")}</option>
+                        <option value="cards">{t("teaching:tests.sidebar.displayCardOption")}</option>
                     </StyledDropdown>
                 </search>
             </>;

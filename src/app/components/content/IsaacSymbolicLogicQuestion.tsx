@@ -111,7 +111,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
         <div
             role={readonly ? undefined : "button"} className={classNames("eqn-editor-preview rounded mt-2", {"empty": !previewText, "text-body-tertiary": previewText && emptySubmission})} tabIndex={readonly ? undefined : 0}
             onClick={openInequality} onKeyDown={ifKeyIsEnter(openInequality)}
-            dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : t("common:questions.symbolicLogic.emptyPreview") }}
+            dangerouslySetInnerHTML={{ __html: previewText ? katex.renderToString(previewText) : t("questions:questions.symbolicLogic.emptyPreview") }}
         />
         {!readonly && <SymbolicTextInput editorMode={editorMode} hiddenEditorRef={hiddenEditorRef}
             textInput={textInput} setTextInput={setTextInput} setHasStartedEditing={setHasStartedEditing}

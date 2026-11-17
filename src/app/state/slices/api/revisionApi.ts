@@ -10,7 +10,7 @@ const revisionApi = isaacApi.injectEndpoints({
                 url: `/pages/revision/detail/${id}`
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:revision.errorTitle")
+                errorTitle: () => i18next.t("pages:revision.errorTitle")
             }),
             providesTags: (page) => {
                 const boards = page?.gameboards?.map((gb) => ({type: "Gameboard" as const, id: gb.id})) || [];

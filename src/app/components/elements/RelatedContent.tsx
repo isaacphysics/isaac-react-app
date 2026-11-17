@@ -73,13 +73,13 @@ function renderQuestions(audienceQuestions: ContentSummaryDTO[], remainingQuesti
                 <hr/>
                 <div className="d-lg-flex text-start">
                     {audienceQuestions.length > 0 && <div className={classNames({"w-lg-50": remainingQuestions.length > 0})}>
-                        <div className="ps-3 h4">{i18next.t("common:relatedContent.questions.specificationHeader")}</div>
+                        <div className="ps-3 h4">{i18next.t("questions:relatedContent.questions.specificationHeader")}</div>
                         <ListGroup>
                             {audienceQuestions.map(contentSummary => renderItem(contentSummary))}
                         </ListGroup>
                     </div>}
                     {remainingQuestions.length > 0 && <div className={classNames("mt-4 mt-lg-0", {"w-lg-50": audienceQuestions.length > 0})}>
-                        <div className="ps-3 h4">{i18next.t("common:relatedContent.questions.outsideSpecificationHeader")}</div>
+                        <div className="ps-3 h4">{i18next.t("questions:relatedContent.questions.outsideSpecificationHeader")}</div>
                         <ListGroup>
                             {remainingQuestions.map(contentSummary => renderItem(contentSummary))}
                         </ListGroup>

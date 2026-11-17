@@ -22,7 +22,7 @@ export const RegistrationAgeCheckParentalConsent = () => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={t("common:auth.parentalConsent.title")} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
+            <TitleAndBreadcrumb currentPageTitle={t("account:auth.parentalConsent.title")} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
         }
         sidebar={siteSpecific(
             <SignupSidebar activeTab={1}/>,
@@ -31,8 +31,8 @@ export const RegistrationAgeCheckParentalConsent = () => {
     >
         <Card className="my-7">
             <CardBody>
-                <p>{t("common:auth.parentalConsent.permissionIntro")}</p>
-                <p><Trans i18nKey="common:auth.parentalConsent.privacyNote" components={{ privacyLink: <Link to={"/privacy"} /> }} /></p>
+                <p>{t("account:auth.parentalConsent.permissionIntro")}</p>
+                <p><Trans i18nKey="account:auth.parentalConsent.privacyNote" components={{ privacyLink: <Link to={"/privacy"} /> }} /></p>
                 <div className="d-flex align-items-center">
                     <Input
                         id="consent-checkbox" name="consent-checkbox" type="checkbox"
@@ -40,7 +40,7 @@ export const RegistrationAgeCheckParentalConsent = () => {
                         color="primary"
                         onChange={(e) => setParentalConsentCheckboxChecked(e?.target.checked)}
                     />
-                    <Label for="consent-checkbox" className="ms-2 mb-0">{t("common:auth.parentalConsent.checkboxLabel")}</Label>
+                    <Label for="consent-checkbox" className="ms-2 mb-0">{t("account:auth.parentalConsent.checkboxLabel")}</Label>
                 </div>
                 {siteSpecific(<br/>, <hr/>)}
                 <Row className="justify-content-end">

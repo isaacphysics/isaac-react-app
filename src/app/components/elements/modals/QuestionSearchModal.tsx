@@ -182,7 +182,7 @@ export const QuestionSearchModal = (
     const addSelectionsRow = <div className="d-flex flex-column sticky-bottom align-items-center pt-3 pb-5 bg-white">
         <div className="flex-grow-1 mb-1">
             <strong className={classNames({"text-danger": selectedQuestions.size > QUESTIONS_PER_GAMEBOARD})}>
-                {t("common:questionFinder.selection.selectedCount", { count: selectedQuestions.size })}
+                {t("questions:questionFinder.selection.selectedCount", { count: selectedQuestions.size })}
             </strong>
         </div>
         <div>
@@ -222,7 +222,7 @@ export const QuestionSearchModal = (
         searchExamBoards.map(eb => {return {value: eb, label: examBoardLabelMap[eb]};}),
         siteSpecific(selectionList, searchTopics.map(t => tags.getById(t as TAG_ID)).map(tag => {return {value: tag.id, label: tag.title};})),
         searchFastTrack ? [{value: "fasttrack", label: "FastTrack"}] : [],
-        searchBookmarks ? [{value: "bookmarked", label: i18next.t("common:questionFinder.filter.bookmarked")}] : [],
+        searchBookmarks ? [{value: "bookmarked", label: i18next.t("questions:questionFinder.filter.bookmarked")}] : [],
     ].flat(), [searchBook, searchBookmarks, searchDifficulties, searchFastTrack, searchStages, searchExamBoards, selectionList, searchTopics]);
 
     const removeFilterTag = (filter: string) => {
@@ -376,7 +376,7 @@ export const QuestionSearchModal = (
                                     reverseOrder={SortOrder.DESC}
                                     currentOrder={questionsSort['title']}
                                     alignment="start"
-                                >{t("common:questionFinder.results.titleColumn")}</SortItemHeader>
+                                >{t("questions:questionFinder.results.titleColumn")}</SortItemHeader>
                                 <th className={siteSpecific("w-25", "w-20")}>{t("common:label.topic")}</th>
                                 <th className="w-15">{t("common:label.stage")}</th>
                                 <th className="w-15">{t("common:label.difficulty")}</th>
@@ -387,7 +387,7 @@ export const QuestionSearchModal = (
                             <ShowLoadingQuery
                                 query={searchQuestionsQuery}
                                 placeholder={<tr><td colSpan={isAda ? 6 : 5}><Loading/></td></tr>}
-                                defaultErrorTitle={t("common:questionFinder.results.loadError")}
+                                defaultErrorTitle={t("questions:questionFinder.results.loadError")}
                                 thenRender={({results: questions}) => {
                                     if (!questions) return <></>;
                                     const sortedQuestions = sortAndFilterBySearch(questions);

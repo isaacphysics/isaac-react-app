@@ -67,7 +67,7 @@ const GroupQRCodePanel = ({link, groupName}: {link: string, groupName?: string})
             <img
                 className="wf-20 pb-0"
                 src={'data:image/svg+xml;base64,' + qrCodeStringBase64SVG}
-                alt={t("common:groups.qrCode.altText", { url: link })}
+                alt={t("teaching:groups.qrCode.altText", { url: link })}
             />
             <figcaption className="text-center pb-3">Scan to join {groupName ? <b>{groupName}</b> : "the group"}!</figcaption>
         </figure>}

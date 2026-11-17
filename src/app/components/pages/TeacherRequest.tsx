@@ -73,7 +73,7 @@ export const TeacherRequest = () => {
         ""
     );
 
-    const message = t("common:auth.teacherRequest.emailBody", { requestLine: `Please could you convert my ${SITE_TITLE_SHORT} account into a teacher account.`, school, verificationMessage: teacherVerificationMethodMessage, otherInformation, firstName, lastName });
+    const message = t("account:auth.teacherRequest.emailBody", { requestLine: `Please could you convert my ${SITE_TITLE_SHORT} account into a teacher account.`, school, verificationMessage: teacherVerificationMethodMessage, otherInformation, firstName, lastName });
     const isValidEmail = validateEmail(emailAddress);
 
     const [getSchoolById] = useLazyGetSchoolByIdQuery();
@@ -101,7 +101,7 @@ export const TeacherRequest = () => {
 
     // Direct private tutors and parents towards the tutor account request page
     const noSchool = <p>
-        <Trans i18nKey="common:auth.teacherRequest.noSchool" components={{ contactFormLink: <Link to="/contact?preset=teacherRequest" />, tutorAccountLink: <Link to="/tutor_account_request" /> }} values={{ siteTitle: SITE_TITLE }} />
+        <Trans i18nKey="account:auth.teacherRequest.noSchool" components={{ contactFormLink: <Link to="/contact?preset=teacherRequest" />, tutorAccountLink: <Link to="/tutor_account_request" /> }} values={{ siteTitle: SITE_TITLE }} />
     </p>;
 
     const invalidDetails = siteSpecific(
@@ -110,7 +110,7 @@ export const TeacherRequest = () => {
     );
 
     return <Container id="contact-page" className="pb-7">
-        <TitleAndBreadcrumb currentPageTitle={t("common:auth.teacherRequest.title")} icon={{type: "icon", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb currentPageTitle={t("account:auth.teacherRequest.title")} icon={{type: "icon", icon: "icon-account"}}/>
         <div className="pt-4">
             <Row>
                 <Col size={9}>
@@ -125,7 +125,7 @@ export const TeacherRequest = () => {
                                         {t("sci:status.alreadyHaveTeacherAccount")}
                                     </span>
                                     <p className="mt-3">
-                                        <Trans i18nKey="common:auth.teacherRequest.teacherFaq" components={{ faqLink: <Link to="/support/teacher/general" /> }} />
+                                        <Trans i18nKey="account:auth.teacherRequest.teacherFaq" components={{ faqLink: <Link to="/support/teacher/general" /> }} />
                                     </p>
                                 </Col>
                             </Row>
@@ -134,7 +134,7 @@ export const TeacherRequest = () => {
                             <Row>
                                 <Col className="text-center">
                                     <p className="mt-3">
-                                        {t("common:auth.teacherRequest.submitted")}
+                                        {t("account:auth.teacherRequest.submitted")}
                                     </p>
                                     <p>
                                         {t("common:label.accountVerificationNote")}
@@ -207,7 +207,7 @@ export const TeacherRequest = () => {
                                         </Col>}
                                         <Col size={12} md={siteSpecific(6, 12)}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="other-info-input">{t("common:auth.teacherRequest.otherInfo")}</Label>
+                                                <Label htmlFor="other-info-input">{t("account:auth.teacherRequest.otherInfo")}</Label>
                                                 <Input id="other-info-input" type="textarea" name="other-info"
                                                     onChange={e => setOtherInformation(e.target.value)}/>
                                             </FormGroup>
@@ -228,7 +228,7 @@ export const TeacherRequest = () => {
                                     <Row>
                                         <Col>
                                             <small className="text-danger text-start">
-                                                <Trans i18nKey="common:auth.teacherRequest.noSchoolError" components={{ accountLink: <Link to="/account" />, tutorAccountLink: <Link to="/tutor_account_request" /> }} values={{ siteTitle: SITE_TITLE }} />
+                                                <Trans i18nKey="account:auth.teacherRequest.noSchoolError" components={{ accountLink: <Link to="/account" />, tutorAccountLink: <Link to="/tutor_account_request" /> }} values={{ siteTitle: SITE_TITLE }} />
                                             </small>
                                         </Col>
                                     </Row>
@@ -236,7 +236,7 @@ export const TeacherRequest = () => {
                                     {!allowedDomain &&
                                     <Row>
                                         <Col>
-                                            <small className="text-danger text-start"><Trans i18nKey="common:auth.teacherRequest.wrongEmailError" components={{ accountLink: <Link to="/account" /> }} />
+                                            <small className="text-danger text-start"><Trans i18nKey="account:auth.teacherRequest.wrongEmailError" components={{ accountLink: <Link to="/account" /> }} />
                                             </small>
                                         </Col>
                                     </Row>
@@ -245,7 +245,7 @@ export const TeacherRequest = () => {
                                 <CardFooter>
                                     <div>
                                         <Alert color="danger" isOpen={!!errorMessage}><><Trans
-                                            i18nKey="common:auth.teacherRequest.submitError"
+                                            i18nKey="account:auth.teacherRequest.submitError"
                                             components={{
                                                 webmasterContact: <TransAnchor href={`mailto:${WEBMASTER_EMAIL}`} />,
                                             }}

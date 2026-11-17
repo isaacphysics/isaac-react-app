@@ -29,7 +29,7 @@ export const LogIn = () => {
     const subHeadingRef = useRef<HTMLHeadingElement>(null);
 
     useEffect( () => {
-        document.title = i18next.t("common:auth.pageTitle", { siteName: SITE_TITLE });
+        document.title = i18next.t("account:auth.pageTitle", { siteName: SITE_TITLE });
         if (!(window as any).followedAtLeastOneSoftLink) {
             return;
         }
@@ -56,7 +56,7 @@ export const LogIn = () => {
                     <CardBody>
                         <Form name="login" onSubmit={validateAndLogIn} noValidate>
                             <h1 className={classNames("h-title", {"h2 mb-4": isAda})} ref={headingRef} tabIndex={-1}>
-                                {t("common:auth.login.heading")}
+                                {t("account:auth.login.heading")}
                             </h1>
                             {totpChallengePending ?
                                 <TFAInput ref={subHeadingRef} rememberMe={rememberMe} />
@@ -103,7 +103,7 @@ export const LogIn = () => {
                                     </Row>
 
                                     {siteSpecific(<div className="section-divider"/>, <hr className="text-center mb-4"/>)}
-                                    <div className={classNames("text-start mb-3", siteSpecific("h4", "h3"))}>{t("common:auth.page.ssoHeading")}</div>
+                                    <div className={classNames("text-start mb-3", siteSpecific("h4", "h3"))}>{t("account:auth.page.ssoHeading")}</div>
                                     <div className="d-flex flex-column gap-2">
                                         {isAda && <RaspberryPiSignInButton/>}
                                         <GoogleSignInButton/>

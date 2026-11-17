@@ -10,7 +10,7 @@ export const StreakPanel = ({userProgress}: {userProgress?: UserProgress | null}
     const currentDailyStreak = userProgress?.userSnapshot?.dailyStreakRecord?.currentStreak || 0;
     return <div className={"d-flex flex-column align-items-center"}>
         <b className={"text-center-width mb-2"}>
-            {t("common:progress.streak.title")}
+            {t("teaching:progress.streak.title")}
         </b>
         <Row>
             <Col size={4} className="d-md-none"/>

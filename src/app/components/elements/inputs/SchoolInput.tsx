@@ -121,7 +121,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 isClearable
                 isDisabled={disableInput}
                 inputId={`school-input-${randomNumber}`}
-                placeholder={t("common:account.school.placeholder")}
+                placeholder={t("account:account.school.placeholder")}
                 value={schoolValue}
                 components={customComponents}
                 className={classNames("basic-multi-select", {"react-select-error": isInvalid})}
@@ -129,7 +129,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
                 onChange={handleSetSchool}
                 loadOptions={searchSchoolsFn}
                 filterOption={() => true}
-                formatCreateLabel={(input) => t("common:account.school.useAsName", { schoolName: input })}
+                formatCreateLabel={(input) => t("account:account.school.useAsName", { schoolName: input })}
                 styles={reactSelectDarkModeStyles}
             />
         </React.Fragment>}
@@ -153,7 +153,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
             >
             </StyledCheckbox>
             <FormFeedback>
-                {t("common:account.school.validationError")}
+                {t("account:account.school.validationError")}
             </FormFeedback>
         </div>}
     </FormGroup>;

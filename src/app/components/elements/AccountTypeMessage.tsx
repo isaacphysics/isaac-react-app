@@ -22,7 +22,7 @@ export const AccountTypeMessage = ({role, hideUpgradeMessage}: { role?: UserRole
 
     return <div>
         <Trans
-            i18nKey="common:account.roleMessage"
+            i18nKey="account:account.roleMessage"
             components={{
                 strong: <strong />,
             }}

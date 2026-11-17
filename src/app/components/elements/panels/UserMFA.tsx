@@ -74,30 +74,30 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
             <CardBody className="pt-0 px-0">
                 <Row>
                     {siteSpecific(<div className="section-divider-bold"/>, <hr className="my-3"/>)}
-                    <h3 className="h4">{t("common:account.mfa.title")}</h3>
+                    <h3 className="h4">{t("account:account.mfa.title")}</h3>
                 </Row>
                 {!editingOtherUser && userAuthSettings && userAuthSettings.hasSegueAccount ?
                     <Col>
                         <Row>
                             <Col>
-                                <p><strong>{t("common:account.mfa.statusLabel")} </strong>{userAuthSettings.mfaStatus || successfulMFASetup ? t("common:account.mfa.statusEnabled") : t("common:account.mfa.statusDisabled")}</p>
+                                <p><strong>{t("account:account.mfa.statusLabel")} </strong>{userAuthSettings.mfaStatus || successfulMFASetup ? t("account:account.mfa.statusEnabled") : t("account:account.mfa.statusDisabled")}</p>
                             </Col>
                         </Row>
                         {isDefined(totpSharedSecret) && isDefined(totpSharedSecret.sharedSecret) ?
                             <Form onSubmit={setupMFA}>
                                 <Row>
                                     <Col>
-                                        <div className="h5">{t("common:account.mfa.configureTitle")}</div>
-                                        <p><Trans i18nKey="common:account.mfa.stepOne" components={{ strong: <strong /> }} /></p>
+                                        <div className="h5">{t("account:account.mfa.configureTitle")}</div>
+                                        <p><Trans i18nKey="account:account.mfa.stepOne" components={{ strong: <strong /> }} /></p>
                                         <div className="qrcode-mfa vertical-center">
                                             {qrCodeStringBase64SVG && <img
                                                 src={'data:image/svg+xml;base64,' + qrCodeStringBase64SVG}
-                                                alt={t("common:account.mfa.qrAltText", { authenticatorUrl: authenticatorURL })}
+                                                alt={t("account:account.mfa.qrAltText", { authenticatorUrl: authenticatorURL })}
                                             />}
                                         </div>
 
                                         <FormGroup className="form-group">
-                                            <p><Trans i18nKey="common:account.mfa.stepTwo" components={{ strong: <strong /> }} /></p>
+                                            <p><Trans i18nKey="account:account.mfa.stepTwo" components={{ strong: <strong /> }} /></p>
                                             <Label htmlFor="setup-verification-code">{t("common:label.verificationCode")}</Label>
                                             <Input
                                                 id="setup-verification-code" type="text" name="setup-verification-code"
@@ -111,7 +111,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                                                 className="btn-keyline w-100"
                                                 disabled={!mfaVerificationCode}
                                             >
-                                                {userAuthSettings.mfaStatus ? t("common:account.mfa.changeDeviceButton") : t("common:account.mfa.enableButton")}
+                                                {userAuthSettings.mfaStatus ? t("account:account.mfa.changeDeviceButton") : t("account:account.mfa.enableButton")}
                                             </Button>
                                         </FormGroup>
                                     </Col>
@@ -126,7 +126,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                                             className="btn-keyline w-100"
                                             onClick={() => newMFASecret()}
                                         >
-                                            {userAuthSettings.mfaStatus ? t("common:account.mfa.changeDeviceButton") : t("common:account.mfa.enableButton")}
+                                            {userAuthSettings.mfaStatus ? t("account:account.mfa.changeDeviceButton") : t("account:account.mfa.enableButton")}
                                         </Button>
                                     </FormGroup>
                                 </Col>
@@ -154,7 +154,7 @@ const UserMFA = ({userToUpdate, userAuthSettings, editingOtherUser}: UserMFAProp
                                     className="btn-keyline"
                                     onClick={() => userToUpdate.id && disableAccountMFA(userToUpdate.id)}
                                 >
-                                    {t("common:account.mfa.disableForUserButton")}
+                                    {t("account:account.mfa.disableForUserButton")}
                                 </Button>
                             </FormGroup>
                         </p>}

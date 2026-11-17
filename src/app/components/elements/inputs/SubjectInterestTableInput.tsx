@@ -16,28 +16,28 @@ export const SubjectInterestTableInput = (props: SubjectInterestTableInputProps<
 
     return <FormGroup className="form-group">
         <Label htmlFor="phy-subject-table" className="mb-0">
-            {t("common:subjectInterests.title")}
+            {t("account:subjectInterests.title")}
         </Label>
         <Table id="phy_subject-table" borderless>
             <thead>
                 <tr>
                     <td/>
-                    <th scope="col" className="table-title"><Trans i18nKey="common:subjectInterests.gcseHeader" components={{ br: <br />, small: <small /> }} /></th>
-                    <th scope="col" className="table-title"><Trans i18nKey="common:subjectInterests.aLevelHeader" components={{ br: <br />, small: <small /> }} /></th>
-                    <th scope="col" className="table-title"><Trans i18nKey="common:subjectInterests.universityHeader" components={{ br: <br />, small: <small /> }} /></th>
+                    <th scope="col" className="table-title"><Trans i18nKey="account:subjectInterests.gcseHeader" components={{ br: <br />, small: <small /> }} /></th>
+                    <th scope="col" className="table-title"><Trans i18nKey="account:subjectInterests.aLevelHeader" components={{ br: <br />, small: <small /> }} /></th>
+                    <th scope="col" className="table-title"><Trans i18nKey="account:subjectInterests.universityHeader" components={{ br: <br />, small: <small /> }} /></th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <th scope="row"><span className="d-none d-lg-block d-md-block">{t("sci:label.physics")}</span>
-                        <span className="d-block d-md-none">{t("common:subjectInterests.physicsShort")}</span></th>
+                        <span className="d-block d-md-none">{t("account:subjectInterests.physicsShort")}</span></th>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"PHYSICS_GCSE"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"PHYSICS_ALEVEL"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"PHYSICS_UNI"} setStateFunction={setStateFunction}/></td>
                 </tr>
                 <tr>
                     <th scope="row"><span className="d-none d-lg-block d-md-block">{t("sci:label.chemistry")}</span>
-                        <span className="d-block d-md-none">{t("common:subjectInterests.chemistryShort")}</span></th>
+                        <span className="d-block d-md-none">{t("account:subjectInterests.chemistryShort")}</span></th>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"CHEMISTRY_GCSE"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"CHEMISTRY_ALEVEL"} setStateFunction={setStateFunction}/></td>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"CHEMISTRY_UNI"} setStateFunction={setStateFunction}/></td>
@@ -49,8 +49,8 @@ export const SubjectInterestTableInput = (props: SubjectInterestTableInputProps<
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"MATHS_UNI"} setStateFunction={setStateFunction}/></td>
                 </tr>
                 <tr>
-                    <th scope="row"><span className="d-none d-lg-block d-md-block">{t("common:subjectInterests.engineering")}</span>
-                        <span className="d-block d-md-none">{t("common:subjectInterests.engineeringShort")}</span></th>
+                    <th scope="row"><span className="d-none d-lg-block d-md-block">{t("account:subjectInterests.engineering")}</span>
+                        <span className="d-block d-md-none">{t("account:subjectInterests.engineeringShort")}</span></th>
                     <td/>
                     <td/>
                     <td><SubjectInterestInput stateObject={stateObject} propertyName={"ENGINEERING_UNI"} setStateFunction={setStateFunction}/></td>

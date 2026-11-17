@@ -10,7 +10,7 @@ export const AnvilAppsListingSidebar = (props: ContentSidebarProps) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const context = useAppSelector(selectors.pageContext.context);
-    return <ContentSidebar buttonTitle={t("common:tools.listing.seeAllButton")} {...props}>
+    return <ContentSidebar buttonTitle={t("pages:tools.listing.seeAllButton")} {...props}>
         <div className="section-divider"/>
         <h3 className="h5">{t("common:label.selectStage")}</h3>
         <ul>

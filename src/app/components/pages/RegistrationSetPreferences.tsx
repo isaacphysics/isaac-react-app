@@ -83,7 +83,7 @@ export const RegistrationSetPreferences = () => {
 
     return <PageContainer
         pageTitle={
-            <TitleAndBreadcrumb currentPageTitle={t("common:account.preferences.title")} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
+            <TitleAndBreadcrumb currentPageTitle={t("account:account.preferences.title")} className="mb-4" icon={{type: "icon", icon: "icon-account"}} />
         }
         sidebar={siteSpecific(
             <SignupSidebar activeTab={3}/>,
@@ -102,7 +102,7 @@ export const RegistrationSetPreferences = () => {
                     leftColumn = {<>
                         <h2 className={siteSpecific("h4", "h3")}>{t("common:title.preferences")}</h2>
                         <p>
-                            {t("common:account.preferences.description")}
+                            {t("account:account.preferences.description")}
                         </p></>}
                     rightColumn = {<Form onSubmit={submit}>
                         <UserContextAccountInput user={userToUpdate} userContexts={userContexts}
@@ -132,10 +132,10 @@ export const RegistrationSetPreferences = () => {
                         {siteSpecific(<div className="section-divider"/>, <hr/>)}
                         <Row className="justify-content-end">
                             <Col xs={12} sm={siteSpecific(4,5)} lg={6} className={classNames("d-flex justify-content-end", {"justify-content-lg-end": isAda})}>
-                                <Button className={`my-2 px-2 w-100 ${siteSpecific("px-lg-0", "px-lg-3")}`}  color="keyline" onClick={() => navigate("/register/success")}>{t("common:account.preferences.skipButton")}</Button>
+                                <Button className={`my-2 px-2 w-100 ${siteSpecific("px-lg-0", "px-lg-3")}`}  color="keyline" onClick={() => navigate("/register/success")}>{t("account:account.preferences.skipButton")}</Button>
                             </Col>
                             <Col xs={12} sm={5} lg={6} className="d-flex">
-                                <Button type="submit" className={`btn my-2 px-2 w-100 ${siteSpecific("px-lg-0", "px-lg-3")}`} color="solid" disabled={!canSavePreferences}>{t("common:account.preferences.saveButton")}</Button>
+                                <Button type="submit" className={`btn my-2 px-2 w-100 ${siteSpecific("px-lg-0", "px-lg-3")}`} color="solid" disabled={!canSavePreferences}>{t("account:account.preferences.saveButton")}</Button>
                             </Col>
                         </Row>
                     </Form>}

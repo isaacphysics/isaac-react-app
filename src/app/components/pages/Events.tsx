@@ -59,7 +59,7 @@ export const Events = () => {
     }, [typeFilter, statusFilter, stageFilter, getEventsList]);
 
     const pageHelp = <span>
-        {t("common:events.page.help")}
+        {t("events:events.page.help")}
     </span>;
 
     const AdaEventFilters = () => {
@@ -131,14 +131,14 @@ export const Events = () => {
             {isAda && <AdaEventFilters/>}
             <ShowLoadingQuery
                 query={eventsQuery}
-                defaultErrorTitle={t("common:events.page.errorLoading")}
+                defaultErrorTitle={t("events:events.page.errorLoading")}
                 thenRender={({events, total}) => {
                     const numberOfLoadedEvents = events.length;
 
                     return <div className="my-4">
-                        <h2 className="visually-hidden">{t("common:events.page.listHeading")}</h2>
+                        <h2 className="visually-hidden">{t("events:events.page.listHeading")}</h2>
                         <div className="d-flex flex-col justify-content-end mb-2">
-                            {t("common:events.page.showingCount", { loadedCount: numberOfLoadedEvents, total })}
+                            {t("events:events.page.showingCount", { loadedCount: numberOfLoadedEvents, total })}
                         </div>
 
                         <Row className={`row-cols-1 row-cols-sm-2 ${siteSpecific("row-cols-lg-2 row-cols-xl-3", "row-cols-lg-3")}`}>
@@ -153,13 +153,13 @@ export const Events = () => {
                                 onClick={() => {
                                     void getEventsList({startIndex: numberOfLoadedEvents, limit: EVENTS_PER_PAGE, typeFilter, statusFilter, stageFilter});
                                 }}>
-                                {t("common:events.loadMoreButton")}
+                                {t("events:events.loadMoreButton")}
                             </Button>
                         </div>}
 
                         {/* No Results */}
                         {total === 0 && <div className="text-center">
-                            <p>{t("common:events.page.noResults")}</p>
+                            <p>{t("events:events.page.noResults")}</p>
                         </div>}
                     </div>;
                 }}

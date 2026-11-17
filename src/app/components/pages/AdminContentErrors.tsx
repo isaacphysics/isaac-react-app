@@ -31,7 +31,7 @@ const ContentErrorRow = (errorRecord: ContentErrorItem, index: number) => {
     const { t } = useTranslation();
     return <tr key={index}>
         <td className="text-break">
-            <a href={EDITOR_URL + errorRecord.partialContent.canonicalSourceFile} title={t("common:admin.contentErrors.row.tooltipContentId", { contentId: errorRecord.partialContent.id })} target="_blank" rel="noopener">
+            <a href={EDITOR_URL + errorRecord.partialContent.canonicalSourceFile} title={t("admin:admin.contentErrors.row.tooltipContentId", { contentId: errorRecord.partialContent.id })} target="_blank" rel="noopener">
                 {errorRecord.partialContent.canonicalSourceFile || errorRecord.partialContent.id}
             </a>
         </td>
@@ -94,28 +94,28 @@ export const AdminContentErrors = () => {
             </Col>
         </Row>
         <ShowLoadingQuery
-            defaultErrorTitle={t("common:admin.contentErrors.loadingError")}
+            defaultErrorTitle={t("admin:admin.contentErrors.loadingError")}
             query={errorsQuery}
             thenRender={errors => {
                 return <div>
                     <Row>
                         <Col>
                             <p className="mt-2">
-                                <strong>{t("common:admin.contentErrors.stats.contentVersionLabel")}</strong> {errors.currentLiveVersion}
+                                <strong>{t("admin:admin.contentErrors.stats.contentVersionLabel")}</strong> {errors.currentLiveVersion}
                             </p>
                             <p>
-                                <strong>{t("common:admin.contentErrors.stats.criticalErrorsLabel")}</strong> {errors.failedFiles},&nbsp;
-                                <strong>{t("common:admin.contentErrors.stats.filesWithErrorsLabel")}</strong> {errors.brokenFiles},&nbsp;
-                                <strong>{t("common:admin.contentErrors.stats.totalErrorsLabel")}</strong> {errors.totalErrors}
+                                <strong>{t("admin:admin.contentErrors.stats.criticalErrorsLabel")}</strong> {errors.failedFiles},&nbsp;
+                                <strong>{t("admin:admin.contentErrors.stats.filesWithErrorsLabel")}</strong> {errors.brokenFiles},&nbsp;
+                                <strong>{t("admin:admin.contentErrors.stats.totalErrorsLabel")}</strong> {errors.totalErrors}
                             </p>
                         </Col>
                     </Row>
                     <Row>
                         <Col lg={6} className="mb-2">
                             <Label htmlFor="file-path-filter" className="w-100">
-                                {t("common:admin.contentErrors.filters.filePathLabel")}
+                                {t("admin:admin.contentErrors.filters.filePathLabel")}
                             </Label>
-                            <Input id="file-path-filter" type="text" defaultValue={pathFilter} onChange={(e) => setPathFilter(e.target.value)} placeholder={t("common:admin.contentErrors.filters.filePathPlaceholder")}/>
+                            <Input id="file-path-filter" type="text" defaultValue={pathFilter} onChange={(e) => setPathFilter(e.target.value)} placeholder={t("admin:admin.contentErrors.filters.filePathPlaceholder")}/>
                         </Col>
                         <Col lg={6} className="mb-2">
                             <Label htmlFor="exclude-file-path-filter" className="w-100">
@@ -125,12 +125,12 @@ export const AdminContentErrors = () => {
                         </Col>
                         <Col lg={12} className="mb-2">
                             <Label htmlFor="error-message-filter" className="w-100">
-                                {t("common:admin.contentErrors.filters.errorMessageLabel")}
+                                {t("admin:admin.contentErrors.filters.errorMessageLabel")}
                             </Label>
-                            <Input id="error-message-filter" type="text" onChange={(e) => setErrorFilter(e.target.value)} placeholder={t("common:admin.contentErrors.filters.errorMessagePlaceholder")}/>
+                            <Input id="error-message-filter" type="text" onChange={(e) => setErrorFilter(e.target.value)} placeholder={t("admin:admin.contentErrors.filters.errorMessagePlaceholder")}/>
                         </Col>
                         <Col lg={6} className="mb-2">
-                            <Label htmlFor="critical-filter-select">{t("common:admin.contentErrors.filters.severityLabel")}</Label>
+                            <Label htmlFor="critical-filter-select">{t("admin:admin.contentErrors.filters.severityLabel")}</Label>
                             <StyledSelect
                                 inputId="critical-filter-select"
                                 isMulti
@@ -144,7 +144,7 @@ export const AdminContentErrors = () => {
                             />
                         </Col>
                         <Col lg={6} className="mb-2">
-                            <Label htmlFor="published-filter-select">{t("common:admin.contentErrors.filters.publishedStatusLabel")}</Label>
+                            <Label htmlFor="published-filter-select">{t("admin:admin.contentErrors.filters.publishedStatusLabel")}</Label>
                             <StyledSelect
                                 inputId="published-filter-select"
                                 isMulti
@@ -167,10 +167,10 @@ export const AdminContentErrors = () => {
                                     </colgroup>
                                     <tbody>
                                         <tr>
-                                            <th>{t("common:admin.contentErrors.table.fileHeader")}</th>
-                                            <th title={t("common:admin.contentErrors.table.publishedTooltip")}>{t("common:admin.contentErrors.table.publishedHeader")}</th>
-                                            <th title="Files with critical errors will not be available on Isaac!">{t("common:admin.contentErrors.table.criticalErrorHeader")}</th>
-                                            <th>{t("common:admin.contentErrors.table.errorMessagesHeader")}</th>
+                                            <th>{t("admin:admin.contentErrors.table.fileHeader")}</th>
+                                            <th title={t("admin:admin.contentErrors.table.publishedTooltip")}>{t("admin:admin.contentErrors.table.publishedHeader")}</th>
+                                            <th title="Files with critical errors will not be available on Isaac!">{t("admin:admin.contentErrors.table.criticalErrorHeader")}</th>
+                                            <th>{t("admin:admin.contentErrors.table.errorMessagesHeader")}</th>
                                         </tr>
                                         {errors.errorsList
                                             .filter((error) => ((error.partialContent.canonicalSourceFile || error.partialContent.id) ?? "").includes(pathFilter))

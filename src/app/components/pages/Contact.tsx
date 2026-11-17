@@ -35,24 +35,24 @@ const determineUrlQueryPresets = (user?: Immutable<PotentialUser> | null) => {
 
     if (urlQuery?.preset === "teacherRequest" && user?.loggedIn && !isTeacherOrAbove(user)) {
         presetSubject = i18next.t("common:label.teacherAccountRequestSubject");
-        presetMessage = i18next.t("common:contact.preset.teacherAccountMessage", { siteTitle: SITE_TITLE }) + user.givenName + " " + user.familyName;
+        presetMessage = i18next.t("pages:contact.preset.teacherAccountMessage", { siteTitle: SITE_TITLE }) + user.givenName + " " + user.familyName;
     } else if (urlQuery?.preset === 'accountDeletion' && user?.loggedIn) {
-        presetSubject = i18next.t("common:contact.preset.accountDeletionSubject");
-        presetMessage = i18next.t("common:contact.preset.accountDeletionMessage", { siteTitle: SITE_TITLE }) + user.givenName + " " + user.familyName;
+        presetSubject = i18next.t("pages:contact.preset.accountDeletionSubject");
+        presetMessage = i18next.t("pages:contact.preset.accountDeletionMessage", { siteTitle: SITE_TITLE }) + user.givenName + " " + user.familyName;
     } else if (urlQuery?.preset === 'contentProblem') {
-        presetSubject = i18next.t("common:contact.preset.contentProblemSubject");
-        presetPlaceholder = i18next.t("common:contact.preset.contentProblemPlaceholder");
+        presetSubject = i18next.t("pages:contact.preset.contentProblemSubject");
+        presetPlaceholder = i18next.t("pages:contact.preset.contentProblemPlaceholder");
         if (urlQuery?.accordion) {
             presetSubject += ` in "${urlQuery.accordion}"`;
         } else if (urlQuery?.page) {
             presetSubject += ` in "${urlQuery.page}"`;
         }
         if (urlQuery?.section != null) {
-            presetSubject += i18next.t("common:contact.preset.contentProblemSection", { sectionName: urlQuery.section });
+            presetSubject += i18next.t("pages:contact.preset.contentProblemSection", { sectionName: urlQuery.section });
         }
     } else if (urlQuery?.preset === 'notFound') {
-        presetSubject = i18next.t("common:contact.preset.pageNotFoundSubject");
-        presetMessage = i18next.t("common:contact.preset.pageNotFoundMessage", { pageName: urlQuery?.page });
+        presetSubject = i18next.t("pages:contact.preset.pageNotFoundSubject");
+        presetMessage = i18next.t("pages:contact.preset.pageNotFoundMessage", { pageName: urlQuery?.page });
     }
     return [
         urlQuery.subject as string || presetSubject,
@@ -109,9 +109,9 @@ export const Contact = () => {
             <Row>
                 <Col size={12} md={{size: 3, order: 1}} xs={{order: 2}} className="mt-4 mt-md-0">
                     <div>
-                        <div className="h3">{t("common:contact.faq.heading")}</div>
+                        <div className="h3">{t("pages:contact.faq.heading")}</div>
                         <p> <Trans
-                            i18nKey="common:contact.faq.text"
+                            i18nKey="pages:contact.faq.text"
                             components={{
                                 studentFaqLink: <TransAnchor href="/support/student" />,
                                 teacherFaqLink: <TransAnchor href="/support/teacher" />,
@@ -127,16 +127,16 @@ export const Contact = () => {
                             }}
                         /></p>
                     </>}
-                    <div className="h3">{t("common:contact.problems.heading")}</div>
+                    <div className="h3">{t("pages:contact.problems.heading")}</div>
                     <p><Trans
-                        i18nKey="common:contact.problems.text"
+                        i18nKey="pages:contact.problems.text"
                         components={{
                             webmasterEmailLink: <TransAnchor href={`mailto:${WEBMASTER_EMAIL}`} />,
                         }}
                         values={{ webmasterEmail: WEBMASTER_EMAIL }}
                     /></p>
                     <div className="h3">{t("common:label.followUs")}</div>
-                    <p>{t("common:contact.social.text")}</p>
+                    <p>{t("pages:contact.social.text")}</p>
                     {Object.entries(SOCIAL_LINKS).map(([_, {name, href}], i) => <>{i > 0 && <br/>}<a href={href}>{name}</a></>)}
                 </Col>
                 <Col size={12} md={{size: 9, order: 2}} xs={{order: 1}}>
@@ -145,7 +145,7 @@ export const Contact = () => {
                             <Row>
                                 <Col className="text-center">
                                     <div className="h3" ref={successRef} tabIndex={-1}>
-                                        {t("common:contact.form.successMessage")}
+                                        {t("pages:contact.form.successMessage")}
                                     </div>
                                 </Col>
                             </Row>:
@@ -156,7 +156,7 @@ export const Contact = () => {
                                 setMessageSent(true);
                             }}>
                                 <CardBody>
-                                    <h2 className="h3">{t("common:contact.form.heading")}</h2>
+                                    <h2 className="h3">{t("pages:contact.form.heading")}</h2>
                                     <PageFragment fragmentId="contact_intro"/>
                                     <Row>
                                         <Col size={12} md={6}>
@@ -192,7 +192,7 @@ export const Contact = () => {
                                         </Col>
                                         <Col size={12} md={6}>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="subject-input" className="form-required">{t("common:contact.form.subjectLabel")}</Label>
+                                                <Label htmlFor="subject-input" className="form-required">{t("pages:contact.form.subjectLabel")}</Label>
                                                 <Input id="subject-input" type="text" name="subject" defaultValue={subject}
                                                     onChange={e => setSubject(e.target.value)} required/>
                                             </FormGroup>
@@ -201,19 +201,19 @@ export const Contact = () => {
                                     <Row>
                                         <Col>
                                             <FormGroup className="form-group">
-                                                <Label htmlFor="message-input" className="form-required">{t("common:contact.form.messageLabel")}</Label>
+                                                <Label htmlFor="message-input" className="form-required">{t("pages:contact.form.messageLabel")}</Label>
                                                 <Input id="message-input" type="textarea" name="message" rows={7} value={message}
                                                     placeholder={presetPlaceholder} maxLength={CONTACT_FORM_CHAR_LENGTH_LIMIT}
                                                     onChange={e => setMessage(e.target.value)} required/>
                                             </FormGroup>
-                                            {reachedMaxLength && <Alert color="warning">{t("common:contact.form.maxLengthWarning")}</Alert>}
+                                            {reachedMaxLength && <Alert color="warning">{t("pages:contact.form.maxLengthWarning")}</Alert>}
                                         </Col>
                                     </Row>
                                 </CardBody>
                                 <CardFooter>
                                     <div>
                                         <Alert color="danger" isOpen={!!errorMessage}><><Trans
-                                            i18nKey="common:contact.form.errorMessage"
+                                            i18nKey="pages:contact.form.errorMessage"
                                             components={{
                                                 webmasterEmailLink: <TransAnchor href={`mailto:${WEBMASTER_EMAIL}`} />,
                                             }}

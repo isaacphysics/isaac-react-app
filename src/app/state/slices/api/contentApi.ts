@@ -23,7 +23,7 @@ const contentApi = isaacApi.injectEndpoints({
                 });
             },
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:news.displayErrorTitle")
+                errorTitle: () => i18next.t("pages:news.displayErrorTitle")
             }),
             keepUnusedDataFor: 60
         }),

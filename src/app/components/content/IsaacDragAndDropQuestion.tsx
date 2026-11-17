@@ -65,12 +65,12 @@ const ItemSection = ({id, items}: {id: string, items: Immutable<ReplaceableItem>
     const itemSectionInfoId = `item-section-info-${uuid_v4()}`;
 
     return <div className={"mb-3"}>
-        <Label className="mt-3">{t("common:dragAndDrop.itemSectionLabel")}</Label>
+        <Label className="mt-3">{t("questions:dragAndDrop.itemSectionLabel")}</Label>
         <Label className={"visually-hidden"} id={itemSectionInfoId}>
-            {t("common:dragAndDrop.keyboardInstructions")}
+            {t("questions:dragAndDrop.keyboardInstructions")}
         </Label>
         <SortableContext items={itemIds} strategy={() => null}>
-            <div aria-describedby={itemSectionInfoId} ref={setNodeRef} aria-label={t("common:dragAndDrop.unselectedItems")} className={`item-section rounded p-2 bg-inline-question ${isOverContainer ? "border border-dark" : "border-light"}`}>
+            <div aria-describedby={itemSectionInfoId} ref={setNodeRef} aria-label={t("questions:dragAndDrop.unselectedItems")} className={`item-section rounded p-2 bg-inline-question ${isOverContainer ? "border border-dark" : "border-light"}`}>
                 {items.map((item, i) => <DropZoneItem key={i} item={item} id={item.replacementId as string} type={"item-section"} />)}
             </div>
         </SortableContext>
@@ -461,38 +461,38 @@ const IsaacDragAndDropQuestion = ({doc, questionId, readonly, validationResponse
         restoreFocus: false,
         announcements: {
             onDragStart({active}) {
-                return i18next.t("common:dragAndDrop.pickup", { itemText: active.data.current?.text });
+                return i18next.t("questions:dragAndDrop.pickup", { itemText: active.data.current?.text });
             },
             onDragOver({active, over}) {
-                if (!over) return usingKeyboard ? undefined : i18next.t("common:dragAndDrop.offTarget", { itemText: active.data.current?.text });
+                if (!over) return usingKeyboard ? undefined : i18next.t("questions:dragAndDrop.offTarget", { itemText: active.data.current?.text });
 
-                if (active.id === over.id) return i18next.t("common:dragAndDrop.overPreviousPosition", { itemText: active.data.current?.text });
+                if (active.id === over.id) return i18next.t("questions:dragAndDrop.overPreviousPosition", { itemText: active.data.current?.text });
 
                 if (!isDropZone(over)) {
-                    return i18next.t("common:questions.dragAndDrop.announceSwapWithItem", { activeItemText: active.data.current?.text, overItemText: over.data.current?.text });
+                    return i18next.t("questions:questions.dragAndDrop.announceSwapWithItem", { activeItemText: active.data.current?.text, overItemText: over.data.current?.text });
                 } else if (over.id === CLOZE_ITEM_SECTION_ID) {
-                    return i18next.t("common:dragAndDrop.overItemsSection");
+                    return i18next.t("questions:dragAndDrop.overItemsSection");
                 } else {
                     const dropZoneIndex = (over.id as string).replace(CLOZE_DROP_ZONE_ID_PREFIX, "");
-                    return i18next.t("common:questions.dragAndDrop.announceOverDropZone", { dropZoneNumber: dropZoneIndex });
+                    return i18next.t("questions:questions.dragAndDrop.announceOverDropZone", { dropZoneNumber: dropZoneIndex });
                 }
             },
             onDragEnd({active, over}) {
-                if (!over) return i18next.t("common:dragAndDrop.dropped", { itemText: active.data.current?.text });
+                if (!over) return i18next.t("questions:dragAndDrop.dropped", { itemText: active.data.current?.text });
 
-                if (active.id === over.id) return i18next.t("common:dragAndDrop.returnedPreviousPosition", { itemText: active.data.current?.text });
+                if (active.id === over.id) return i18next.t("questions:dragAndDrop.returnedPreviousPosition", { itemText: active.data.current?.text });
 
                 if (!isDropZone(over)) {
-                    return i18next.t("common:questions.dragAndDrop.announceSwappedWithItem", { activeItemText: active.data.current?.text, overItemText: over.data.current?.text });
+                    return i18next.t("questions:questions.dragAndDrop.announceSwappedWithItem", { activeItemText: active.data.current?.text, overItemText: over.data.current?.text });
                 } else if (over.id === CLOZE_ITEM_SECTION_ID) {
-                    return i18next.t("common:dragAndDrop.droppedIntoItemsSection");
+                    return i18next.t("questions:dragAndDrop.droppedIntoItemsSection");
                 } else {
                     const dropZoneIndex = (over.id as string).replace(CLOZE_DROP_ZONE_ID_PREFIX, "");
-                    return i18next.t("common:questions.dragAndDrop.announceDroppedIntoDropZone", { itemText: active.data.current?.text, dropZoneNumber: dropZoneIndex });
+                    return i18next.t("questions:questions.dragAndDrop.announceDroppedIntoDropZone", { itemText: active.data.current?.text, dropZoneNumber: dropZoneIndex });
                 }
             },
             onDragCancel({active}) {
-                return i18next.t("common:dragAndDrop.cancelled", { itemText: active.data.current?.text });
+                return i18next.t("questions:dragAndDrop.cancelled", { itemText: active.data.current?.text });
             }
         },
         screenReaderInstructions: { draggable: "" }

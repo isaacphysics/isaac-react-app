@@ -43,7 +43,7 @@ export const gameboardApi = isaacApi.injectEndpoints({
                 url: "gameboards/wildcards"
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: () => i18next.t("common:gameboard.wildcards.errorTitle")
+                errorTitle: () => i18next.t("teaching:gameboard.wildcards.errorTitle")
             }),
             keepUnusedDataFor: 60
         }),

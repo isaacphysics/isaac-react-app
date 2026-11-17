@@ -29,8 +29,8 @@ export const TeachingOrders = () => {
     const [fragmentId, setFragmentId] = useState<string>("");
 
     const metaDescription = (stageTab === TEACHING_ORDER_STAGE.CORE_Y1 || stageTab === TEACHING_ORDER_STAGE.CORE_Y2)
-        ? t("common:teachingOrders.metaDescription.core")
-        : t("common:teachingOrders.metaDescription.advanced");
+        ? t("pages:teachingOrders.metaDescription.core")
+        : t("pages:teachingOrders.metaDescription.advanced");
 
     const tabTitlesToContent: {[title: string]: ReactElement} = {};
     for (const stageName of Object.values(TEACHING_ORDER_STAGE)) {

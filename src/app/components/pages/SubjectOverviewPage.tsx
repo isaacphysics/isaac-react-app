@@ -26,7 +26,7 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
     const cards: (CustomListViewItemProps['item'] | null)[] = [
         {
             title: "11–14",
-            subtitle: t("common:overview.stage1114.subtitle", { subject: humanSubject, subjectName: humanSubject }),
+            subtitle: t("pages:overview.stage1114.subtitle", { subject: humanSubject, subjectName: humanSubject }),
             icon: {
                 type: "img" as const,
                 icon: `/assets/phy/icons/redesign/subject-${context.subject}.svg`,
@@ -37,7 +37,7 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
         },
         {
             title: "GCSE",
-            subtitle: t("common:overview.gcse.subtitle", { subject: humanSubject, subjectName: humanSubject }),
+            subtitle: t("pages:overview.gcse.subtitle", { subject: humanSubject, subjectName: humanSubject }),
             icon: {
                 type: "img" as const,
                 icon: `/assets/phy/icons/redesign/subject-${context.subject}.svg`,
@@ -48,7 +48,7 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
         },
         {
             title: t("common:label.aLevel"),
-            subtitle: t("common:overview.aLevel.subtitle", { subject: humanSubject, subjectName: humanSubject }),
+            subtitle: t("pages:overview.aLevel.subtitle", { subject: humanSubject, subjectName: humanSubject }),
             icon: {
                 type: "img" as const,
                 icon: `/assets/phy/icons/redesign/subject-${context.subject}.svg`,
@@ -59,7 +59,7 @@ const SubjectCards = ({context}: { context: PageContextState }) => {
         },
         {
             title: t("common:label.university"),
-            subtitle: t("common:overview.university.subtitle", { subject: humanSubject }),
+            subtitle: t("pages:overview.university.subtitle", { subject: humanSubject }),
             icon: {
                 type: "img" as const,
                 icon: `/assets/phy/icons/redesign/subject-${context.subject}.svg`,
@@ -94,7 +94,7 @@ const ExampleQuestions = ({ subject, className }: { subject: Subject, className:
 
     return <ShowLoadingQuery
         query={gameboardByIdQuery}
-        defaultErrorTitle={t("common:overview.exampleQuestions.errorTitle")}
+        defaultErrorTitle={t("pages:overview.exampleQuestions.errorTitle")}
         ifNotFound={RenderNothing}
         uninitializedPlaceholder={RenderNothing}
         maintainOnRefetch
@@ -106,7 +106,7 @@ export const SubjectOverviewPage = () => {
     const { t } = useTranslation();
     const pageContext = useUrlPageTheme();
 
-    if (!isDefined(pageContext?.subject)) return <>{t("common:overview.notFound")}</>;
+    if (!isDefined(pageContext?.subject)) return <>{t("pages:overview.notFound")}</>;
 
     const humanSubject = pageContext?.subject && HUMAN_SUBJECTS[pageContext.subject];
 
@@ -120,33 +120,33 @@ export const SubjectOverviewPage = () => {
             } : undefined}
         />
         {humanSubject && <div>
-            <PageMetadata title={t("common:overview.pageTitle", { subject: humanSubject })} />
+            <PageMetadata title={t("pages:overview.pageTitle", { subject: humanSubject })} />
             <p>
                 Welcome to Isaac {humanSubject}, part of <a href="/">Isaac Science</a>! 
                 The place to learn maths and science by solving problems. 
                 Isaac Science also includes {Object.keys(PHY_NAV_SUBJECTS)
                     .filter(x => x !== pageContext.subject)
-                    .map(x => <a key={x} href={`/${x}`}>{t("common:overview.welcome.subjectLink", { subjectName: HUMAN_SUBJECTS[x] })}</a>)
+                    .map(x => <a key={x} href={`/${x}`}>{t("pages:overview.welcome.subjectLink", { subjectName: HUMAN_SUBJECTS[x] })}</a>)
                     .reduce((prev, curr, index, arr) => index === arr.length - 1 ? <>{prev}, and {curr}</> : <>{prev}, {curr}</>)
                 }.
                 Our resources include questions, tests, concept pages and books.
             </p>
             <p>
                 <Trans
-                    i18nKey="common:overview.freeAccount"
+                    i18nKey="pages:overview.freeAccount"
                     components={{
                         teacherFeaturesLink: <TransAnchor href="/teacher_features" />,
                     }}
                 />
             </p>
             <p>
-                {t("common:overview.examIndependent", { subject: humanSubject })} 
+                {t("pages:overview.examIndependent", { subject: humanSubject })} 
             </p>
 
             <SubjectCards context={pageContext}/>
 
             <p className="mt-3">
-                {t("common:overview.difficulty.intro")} 
+                {t("pages:overview.difficulty.intro")} 
             </p>
             
             <div className="d-flex flex-row w-100 justify-content-center">
@@ -163,8 +163,8 @@ export const SubjectOverviewPage = () => {
             <p className="mt-3">
                 Across Isaac {humanSubject},
                 <ul>
-                    <li>{t("common:overview.difficulty.practiceDesc")}</li>
-                    <li>{t("common:overview.difficulty.challengeDesc")} </li>
+                    <li>{t("pages:overview.difficulty.practiceDesc")}</li>
+                    <li>{t("pages:overview.difficulty.challengeDesc")} </li>
                 </ul>
             </p>
 

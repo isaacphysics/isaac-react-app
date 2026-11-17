@@ -29,42 +29,42 @@ interface ConfidenceVariables {
 // "color" only applies to Physics.
 const getConfidenceOptions = (t: TFunction): {[option in ConfidenceType]: ConfidenceVariables} => ({
     "question": {
-        title: t("common:confidence.question.title"),
+        title: t("questions:confidence.question.title"),
         states: {
             initial: {
-                question: t("common:confidence.question.initial.question"),
+                question: t("questions:confidence.question.initial.question"),
                 options: [
-                    {label: t("common:confidence.options.low"), color: "negative"},
-                    {label: t("common:confidence.options.medium"), color: "neutral"},
-                    {label: t("common:confidence.options.high"), color: "positive"}
+                    {label: t("questions:confidence.options.low"), color: "negative"},
+                    {label: t("questions:confidence.options.medium"), color: "neutral"},
+                    {label: t("questions:confidence.options.high"), color: "positive"}
                 ]
             },
             followUp: {
-                question: t("common:confidence.question.followUp.question"),
+                question: t("questions:confidence.question.followUp.question"),
                 options: [
-                    {label: t("common:confidence.options.low"), color: "negative"},
-                    {label: t("common:confidence.options.medium"), color: "neutral"},
-                    {label: t("common:confidence.options.high"), color: "positive"}
+                    {label: t("questions:confidence.options.low"), color: "negative"},
+                    {label: t("questions:confidence.options.medium"), color: "neutral"},
+                    {label: t("questions:confidence.options.high"), color: "positive"}
                 ]
             }
         }
     },
     "quick_question": {
-        title: t("common:confidence.quickQuestion.title"),
+        title: t("questions:confidence.quickQuestion.title"),
         states: {
             initial: {
-                question: t("common:confidence.quickQuestion.initial.question"),
+                question: t("questions:confidence.quickQuestion.initial.question"),
                 options: [
-                    {label: t("common:confidence.options.low"), color: "negative"},
-                    {label: t("common:confidence.options.medium"), color: "neutral"},
-                    {label: t("common:confidence.options.high"), color: "positive"}
+                    {label: t("questions:confidence.options.low"), color: "negative"},
+                    {label: t("questions:confidence.options.medium"), color: "neutral"},
+                    {label: t("questions:confidence.options.high"), color: "positive"}
                 ]
             },
             followUp: {
-                question: t("common:confidence.quickQuestion.followUp.question"),
+                question: t("questions:confidence.quickQuestion.followUp.question"),
                 options: [
                     {label: t("common:status.no"), color:"negative"},
-                    {label: t("common:confidence.options.partly"), color: "neutral"},
+                    {label: t("questions:confidence.options.partly"), color: "neutral"},
                     {label: t("common:status.yes"), color: "secondary"}
                 ]
             }
@@ -86,9 +86,9 @@ interface ConfidenceQuestionsProps {
 
 const confidenceInformationModal = () => openActiveModal({
     closeAction: () => store.dispatch(closeActiveModal()),
-    title: i18next.t("common:confidence.infoModal.title"),
+    title: i18next.t("questions:confidence.infoModal.title"),
     body: <div className="mb-4">
-        {i18next.t("common:confidence.infoModal.body", { siteName: SITE_TITLE_SHORT })}
+        {i18next.t("questions:confidence.infoModal.body", { siteName: SITE_TITLE_SHORT })}
     </div>
 });
 

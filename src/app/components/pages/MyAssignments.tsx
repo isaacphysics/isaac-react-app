@@ -55,13 +55,13 @@ const AdaAssignmentView = (props: AdaAssignmentProps) => {
             </Col>
             <Col md={8} lg={5}>
                 <Label className="w-100">
-                    {t("common:assignments.filter.nameLabel")} 
+                    {t("teaching:assignments.filter.nameLabel")} 
                     <Input type="text" onChange={(e) => setTitleFilter(e.target.value)} placeholder={t("common:title.search")}/>
                 </Label>
             </Col>
             <Col sm={6} lg={{size: 2, offset: 1}}>
                 <Label className="w-100">
-                    {t("common:assignments.filter.groupLabel")}
+                    {t("teaching:assignments.filter.groupLabel")}
                     <Input type="select" value={groupFilter} onChange={e => setGroupFilter(e.target.value)}>
                         {["All", ...getDistinctAssignmentGroups(assignments)].map(group => <option key={group} value={group}>{group}</option>)}
                     </Input>
@@ -101,7 +101,7 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
     const [limit, setLimit] = useState(INITIAL_NO_ASSIGNMENTS);
 
     const pageHelp = <span>
-        <Trans i18nKey="common:assignments.help.overdueExplanation" components={{ br: <br />, statusTodo: <strong />, statusOlder: <strong /> }} />
+        <Trans i18nKey="teaching:assignments.help.overdueExplanation" components={{ br: <br />, statusTodo: <strong />, statusOlder: <strong /> }} />
     </span>;
 
     const myAssignmentOptionProps = {
@@ -132,7 +132,7 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
             <div className={classNames({"pt-2 card-body": isAda})}>
                 <ShowLoadingQuery
                     query={assignmentQuery}
-                    defaultErrorTitle={t("common:assignments.error.fetchError")}
+                    defaultErrorTitle={t("teaching:assignments.error.fetchError")}
                     thenRender={(assignments) => 
                     {
                         const myAssignments = filterAssignmentsByStatus(assignments);
@@ -185,7 +185,7 @@ export const MyAssignments = ({user}: {user: RegisteredUserDTO}) => {
                                     <Trans i18nKey="site:assignments.pagination.showingInfo" components={{ boldShown: <strong />, boldTotal: <strong /> }} values={{ shownCount: limit, totalCount: filteredAssignments.length }} />
                                 </p>
                                 <Button color="solid" className="mb-2" onClick={_event => setLimit(limit + NO_ASSIGNMENTS_INCREMENT)}>
-                                    {t("common:assignments.pagination.showMore")}
+                                    {t("teaching:assignments.pagination.showMore")}
                                 </Button>
                             </div>} 
                         </>;

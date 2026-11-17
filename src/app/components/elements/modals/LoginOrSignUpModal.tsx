@@ -55,18 +55,18 @@ const LoginOrSignUpBody = () => {
             </div>
             <div className={"px-3 mb-4"}>
                 <h1 className={"h2 mb-lg-3 mt-2"}>
-                    {t("common:auth.modalTitle")}<br/>
+                    {t("account:auth.modalTitle")}<br/>
                 </h1>
-                <p><Trans i18nKey="common:auth.modalBody" components={{ saveProgress: <b />, signUpFree: <b /> }} /></p>
+                <p><Trans i18nKey="account:auth.modalBody" components={{ saveProgress: <b />, signUpFree: <b /> }} /></p>
                 <br/>
-                <p>{t("common:auth.orSection")}</p>
+                <p>{t("account:auth.orSection")}</p>
                 <Button size={"sm"} color="keyline" onClick={closeModal} block>
-                    {t("common:auth.continueGuest")}
+                    {t("account:auth.continueGuest")}
                 </Button>
             </div>
         </Col>
         <Col lg={6} id={"login-modal-form"}>
-            {!totpChallengePending && <span className={"d-block d-lg-none pb-3"}><Trans i18nKey="common:auth.formIntro" components={{ emphasis: <b /> }} /></span>}
+            {!totpChallengePending && <span className={"d-block d-lg-none pb-3"}><Trans i18nKey="account:auth.formIntro" components={{ emphasis: <b /> }} /></span>}
             <Form name="login" onSubmit={validateAndLogIn} noValidate>
                 {totpChallengePending ?
                     <TFAInput rememberMe={rememberMe} />

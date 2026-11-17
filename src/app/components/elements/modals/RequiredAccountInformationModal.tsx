@@ -106,7 +106,7 @@ const RequiredAccountInfoBody = () => {
             {submissionAttempted && !allRequiredInformationIsPresent(userToUpdate, userPreferencesToUpdate, userContexts) &&
                 <ExigentAlert color="warning">
                     <p className="alert-heading fw-bold">{t("common:error.updateAccount")}</p>
-                    <p>{t("common:account.update.fillAllFields")}</p>
+                    <p>{t("account:account.update.fillAllFields")}</p>
                 </ExigentAlert>
             }
             {updateCurrentUserError &&
@@ -177,7 +177,7 @@ const RequiredAccountInfoBody = () => {
             </Row>
             <div className="text-muted small pb-2">
                 <Trans
-                    i18nKey="common:account.requiredInfo.privacyNote"
+                    i18nKey="account:account.requiredInfo.privacyNote"
                     components={{
                         privacyPolicyLink: <TransAnchor target="_blank" href="/privacy" />,
                     }}
@@ -209,7 +209,7 @@ const RequiredAccountInfoBody = () => {
         <CardBody className="py-0">
             <Row className="text-center pb-3">
                 <Col md={{size: 6, offset: 3}}>
-                    <Button type="submit" color="secondary" className="w-100 my-1">{isMobile() ? t("common:button.update") : t("common:account.requiredInfo.updateButtonDesktop")}</Button>
+                    <Button type="submit" color="secondary" className="w-100 my-1">{isMobile() ? t("common:button.update") : t("account:account.requiredInfo.updateButtonDesktop")}</Button>
                 </Col>
             </Row>
         </CardBody>

@@ -29,8 +29,8 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
                 <thead>
                     <tr>
                         <th>{t("common:label.emailType")}</th>
-                        <th className="d-none d-sm-table-cell">{t("common:account.emailPreferences.descriptionHeader")}</th>
-                        <th className="text-center">{t("common:account.emailPreferences.preferenceHeader")}</th>
+                        <th className="d-none d-sm-table-cell">{t("account:account.emailPreferences.descriptionHeader")}</th>
+                        <th className="text-center">{t("account:account.emailPreferences.preferenceHeader")}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,7 +55,7 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
                         <td className="text-center">
                             <TrueFalseRadioInput
                                 id={`${idPrefix}news`} stateObject={emailPreferences}
-                                propertyName="NEWS_AND_UPDATES" accessibleName={t("common:account.emailPreferences.newsLabel")}
+                                propertyName="NEWS_AND_UPDATES" accessibleName={t("account:account.emailPreferences.newsLabel")}
                                 setStateFunction={setEmailPreferences} submissionAttempted={submissionAttempted}
                             />
                         </td>
@@ -89,12 +89,12 @@ export const UserEmailPreferencesInput = ({emailPreferences, setEmailPreferences
             </WithLinkableSetting>
 
             <WithLinkableSetting className={"email-preference"} id={"news-preference"}>
-                <h5>{t("common:account.emailPreferences.tipsLabel")}</h5>
+                <h5>{t("account:account.emailPreferences.tipsLabel")}</h5>
                 <span className="d-block mb-4">{isaacEmailPreferenceDescriptions.news}</span>
                 
                 <TrueFalseRadioInput
                     id={`${idPrefix}news`} stateObject={emailPreferences}
-                    propertyName="NEWS_AND_UPDATES" accessibleName={t("common:account.emailPreferences.tipsLabel")}
+                    propertyName="NEWS_AND_UPDATES" accessibleName={t("account:account.emailPreferences.tipsLabel")}
                     setStateFunction={setEmailPreferences} submissionAttempted={submissionAttempted}
                     className="d-flex gap-2"
                 />

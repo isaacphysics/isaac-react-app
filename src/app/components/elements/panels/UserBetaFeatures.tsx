@@ -24,7 +24,7 @@ export const RevisionModeInput = ({displaySettings, setDisplaySettings}: Revisio
             setDisplaySettings((oldDs) => ({...oldDs, HIDE_QUESTION_ATTEMPTS: e.target.checked}));
         }}
         color={siteSpecific("primary", "")}
-        label={<p>{t("common:account.betaFeatures.hideAttemptsLabel")}</p>}
+        label={<p>{t("account:account.betaFeatures.hideAttemptsLabel")}</p>}
         id={"hide-previous-q-attempts"}
         aria-describedby="revision-helptext"
         removeVerticalOffset
@@ -37,8 +37,8 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
 
     return <MyAccountTab
         leftColumn={<>
-            <h2 className="h3">{t("common:account.betaFeatures.title")}</h2>
-            <p>{t("common:account.betaFeatures.description", { siteTitle: SITE_TITLE })}</p>
+            <h2 className="h3">{t("account:account.betaFeatures.title")}</h2>
+            <p>{t("account:account.betaFeatures.description", { siteTitle: SITE_TITLE })}</p>
         </>}
         rightColumn={<>
             <div className="pt-2"/>
@@ -52,12 +52,12 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
                     onChange={e => {
                         setDisplaySettings((oldDs) => ({...oldDs, CHEM_TEXT_ENTRY: e.target.checked}));
                     }}
-                    label={<p><b>{t("common:account.betaFeatures.chemEntryLabel")}</b></p>}
+                    label={<p><b>{t("account:account.betaFeatures.chemEntryLabel")}</b></p>}
                     id={"show-chem-text-entry-checkbox"}
                     removeVerticalOffset
                     aria-describedby="chem-text-entry-helptext"
                 />
-                <p id="chem-text-entry-helptext"><Trans i18nKey="common:account.betaFeatures.chemEntryHelp" components={{ guidanceLink: <Link to="/pages/chemistry_text_entry" target="_blank" /> }} /></p>
+                <p id="chem-text-entry-helptext"><Trans i18nKey="account:account.betaFeatures.chemEntryHelp" components={{ guidanceLink: <Link to="/pages/chemistry_text_entry" target="_blank" /> }} /></p>
             </WithLinkableSetting>}
 
             {/* Enabled for staff on Isaac so they can test questions, but not being pursued further for now (these questions should not be published) */}
@@ -68,13 +68,13 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
                         onChange={e => {
                             setConsentSettings((oldCS) => ({...oldCS, OPENAI: e.target.checked}));
                         }}
-                        label={<p><b>{t("common:account.betaFeatures.openAiConsentLabel")}</b></p>}
+                        label={<p><b>{t("account:account.betaFeatures.openAiConsentLabel")}</b></p>}
                         id={"consent-to-openai-marking"}
                         removeVerticalOffset
                         aria-describedby="llm-helptext"
                     />
                     <p id="llm-helptext"> 
-                        {t("common:account.betaFeatures.openAiHelp")}
+                        {t("account:account.betaFeatures.openAiHelp")}
                         {isAda && <>{" "}<Trans i18nKey="ada:label.faqMoreInfo" components={{ faqLink: <Link to="/support/student/general#llm_questions" target="_blank" /> }} /></>}
                     </p>
                 </WithLinkableSetting>

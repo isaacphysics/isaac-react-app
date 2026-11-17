@@ -82,16 +82,16 @@ function QuizDetails({quizContents: {sections, questions, pageLink}, attempt}: F
         return attempt.feedbackMode === "NONE" ?
             <div className="h4">{t("common:status.noFeedback")}</div>
             : attempt.feedbackMode === "OVERALL_MARK" ?
-                <div className="h4">{t("common:tests.details.overallMark", { correct: attempt.quiz?.individualFeedback?.overallMark?.correct, total: attempt.quiz?.total })}</div>
+                <div className="h4">{t("teaching:tests.details.overallMark", { correct: attempt.quiz?.individualFeedback?.overallMark?.correct, total: attempt.quiz?.total })}</div>
                 :
                 <table className="quiz-marks-table">
                     <tbody>
                         <tr>
-                            <th>{t("common:tests.details.overallMarkLabel")}</th>
+                            <th>{t("teaching:tests.details.overallMarkLabel")}</th>
                             <td>{attempt.quiz?.individualFeedback?.overallMark?.correct} / {attempt.quiz?.total}</td>
                         </tr>
                         <tr>
-                            <th colSpan={2}>{t("common:tests.details.sectionBreakdown")}</th>
+                            <th colSpan={2}>{t("teaching:tests.details.sectionBreakdown")}</th>
                         </tr>
                         {Object.keys(sections).map((k, index) => {
                             const section = sections[k];
@@ -134,7 +134,7 @@ function QuizHeader(quizProps: QuizProps) {
     const { t } = useTranslation();
 
     if (!isFullQuizProps(quizProps) && !quizProps.preview) {
-        return <p data-testid="quiz-action">{t("common:tests.header.freeAttempt")}</p>;
+        return <p data-testid="quiz-action">{t("teaching:tests.header.freeAttempt")}</p>;
     }
 
     const {quiz, preview, attempt} = quizProps as QuizProps & FullQuizInfo;
@@ -143,7 +143,7 @@ function QuizHeader(quizProps: QuizProps) {
         return <>
             <EditContentButton doc={quiz} />
             <div data-testid="quiz-action">
-                <p>{t("common:tests.header.preview")}</p>
+                <p>{t("teaching:tests.header.preview")}</p>
             </div>
         </>;
     } else if (isDefined(attempt.quizAssignment)) {
@@ -151,10 +151,10 @@ function QuizHeader(quizProps: QuizProps) {
         return <>
             <p className="d-flex">
                 <span>
-                    {t("common:tests.header.setBy", { teacherName: extractTeacherName(assignment.assignerSummary ?? null) })}
-                    {isDefined(attempt.completedDate) && <><br />{t("common:tests.header.completedDate", { date: formatDate(attempt.completedDate) })}</>}
+                    {t("teaching:tests.header.setBy", { teacherName: extractTeacherName(assignment.assignerSummary ?? null) })}
+                    {isDefined(attempt.completedDate) && <><br />{t("teaching:tests.header.completedDate", { date: formatDate(attempt.completedDate) })}</>}
                 </span>
-                {isDefined(assignment.dueDate) && <><Spacer/>{isDefined(attempt.completedDate) ? t("common:tests.header.wasDue") : t("common:label.due")}&nbsp;{formatDate(assignment.dueDate)}</>}
+                {isDefined(assignment.dueDate) && <><Spacer/>{isDefined(attempt.completedDate) ? t("teaching:tests.header.wasDue") : t("common:label.due")}&nbsp;{formatDate(assignment.dueDate)}</>}
             </p>
             {assignment?.creationDate && assignment?.creationDate.valueOf() > QUIZ_VIEW_STUDENT_ANSWERS_RELEASE_TIMESTAMP && !isDefined(attempt.completedDate) && <Alert color={siteSpecific("info", "warning")}>
                 {siteSpecific(<>
@@ -190,15 +190,15 @@ export function QuizRubricButton({rubric}: {rubric?: ContentDTO}) {
     const openQuestionModal = () => {
         dispatch(openActiveModal({
             closeAction: () => {dispatch(closeActiveModal());}, size: "lg",
-            title: t("common:tests.rubric.modalTitle"), body: <QuizRubric rubric={rubric} />
+            title: t("teaching:tests.rubric.modalTitle"), body: <QuizRubric rubric={rubric} />
         }));
     };
 
     if (rubric) {
         return <Button color={"keyline"} className={siteSpecific("btn-lg text-nowrap", "mb-4 bg-light")}
-            title={t("common:tests.rubric.buttonTooltip")} onClick={openQuestionModal}
+            title={t("teaching:tests.rubric.buttonTooltip")} onClick={openQuestionModal}
         >
-            {t("common:tests.rubric.showButton")}
+            {t("teaching:tests.rubric.showButton")}
         </Button>;
     }
 }
@@ -218,13 +218,13 @@ function QuizSection(quizProps: QuizProps & FullQuizInfo) {
             <Col className={classNames("py-lg-4 question-panel", {"mw-760": isAda})}>
                 {viewingAsSomeoneElse && <div className="mb-2">
                     <Trans
-                        i18nKey="common:tests.viewingAs.notification"
+                        i18nKey="teaching:tests.viewingAs.notification"
                         components={{
                             strong: <b />,
                         }}
                         values={{ givenName: studentUser?.givenName, familyName: studentUser?.familyName }}
                     />{quizAssignmentId && <> <Trans
-                        i18nKey="common:tests.viewingAs.returnLink"
+                        i18nKey="teaching:tests.viewingAs.returnLink"
                         components={{
                             feedbackLink: <Link to={`/test/assignment/${quizAssignmentId}/feedback`} />,
                         }}
@@ -250,7 +250,7 @@ function QuizSection(quizProps: QuizProps & FullQuizInfo) {
             </Col>
         </Row>
         :
-        <Alert color="danger">{t("common:tests.section.notFound", { page })}</Alert>
+        <Alert color="danger">{t("teaching:tests.section.notFound", { page })}</Alert>
     ;
 }
 
@@ -277,7 +277,7 @@ const generateQuizTitle = (quiz: IsaacQuizDTO | DetailedQuizSummaryDTO | undefin
         quizTitle += " Feedback";
     }
     if (isDefined(studentUser)) {
-        quizTitle += i18next.t("common:tests.title.studentSuffix", { givenName: studentUser.givenName, familyName: studentUser.familyName });
+        quizTitle += i18next.t("teaching:tests.title.studentSuffix", { givenName: studentUser.givenName, familyName: studentUser.familyName });
     }
 
     return quizTitle;
@@ -302,7 +302,7 @@ const QuizTitle = (quizProps: QuizProps) => {
 
         const sections = attempt.quiz?.children;
         const section = sections && sections[page - 1] as IsaacQuizSectionDTO;
-        const sectionTitle = section?.title ?? t("common:tests.section.fallbackTitle", { page });
+        const sectionTitle = section?.title ?? t("teaching:tests.section.fallbackTitle", { page });
         return <TitleAndBreadcrumb currentPageTitle={sectionTitle} help={pageHelp}
             intermediateCrumbs={[...crumbs, {title: quizTitle, replace: true, to: pageLink()}]}
             icon={{"type": "icon", "icon": "icon-tests"}}
@@ -326,7 +326,7 @@ export function QuizPagination({page, quizContents: {sections, pageLink}, finalL
 
     return <div className="d-flex w-100 justify-content-between align-items-center">
         <Button color="keyline" size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} to={backLink}>{t("common:button.back")}</Button>
-        <div className="d-none d-md-block">{t("common:tests.pagination.position", { page, sectionCount })}</div>
+        <div className="d-none d-md-block">{t("teaching:tests.pagination.position", { page, sectionCount })}</div>
         <Button color="secondary" size={below["sm"](deviceSize) ? "sm" : ""} tag={Link} to={nextLink}>{finalSection ? finalLabel : t("common:button.next")}</Button>
     </div>;
 }
@@ -343,13 +343,13 @@ function QuizOverview(props: QuizProps & { viewingAsSomeoneElse: boolean }) {
         {!isDefined(studentUser?.id) && <QuizHeader {...props as QuizProps & FullQuizInfo} />}
         {viewingAsSomeoneElse && <div className="mb-2">
             <Trans
-                i18nKey="common:tests.viewingAs.notification"
+                i18nKey="teaching:tests.viewingAs.notification"
                 components={{
                     strong: <b />,
                 }}
                 values={{ givenName: studentUser?.givenName, familyName: studentUser?.familyName }}
             />{quizAssignmentId && <> <Trans
-                i18nKey="common:tests.viewingAs.returnLink"
+                i18nKey="teaching:tests.viewingAs.returnLink"
                 components={{
                     feedbackLink: <Link to={`/test/assignment/${quizAssignmentId}/feedback`} />,
                 }}
@@ -391,7 +391,7 @@ export function QuizContentsComponent(props: QuizProps) {
         totalSections: Object.keys(sections).length,
         currentSection: props.page ? props.page : undefined,
         sectionStates: Object.values(sections).map(section => sectionState(section)),
-        sectionTitles: Object.keys(sections).map(k => sections[k].title || t("common:tests.sidebar.fallbackTitle", { id: k })),
+        sectionTitles: Object.keys(sections).map(k => sections[k].title || t("teaching:tests.sidebar.fallbackTitle", { id: k })),
     };
 
     return <>

@@ -14,9 +14,9 @@ export const ProgrammesSidebar = ({programmes, ...rest}: ProgrammesSidebarProps)
     const navigate = useNavigate();
     const location = useLocation();
 
-    return <ContentSidebar buttonTitle={t("common:programmes.sidebar.toggleLabel")} {...rest}>
+    return <ContentSidebar buttonTitle={t("pages:programmes.sidebar.toggleLabel")} {...rest}>
         <div className="section-divider"/>
-        <h3 className="h5">{t("common:programmes.sidebar.title")}</h3>
+        <h3 className="h5">{t("pages:programmes.sidebar.title")}</h3>
         <ul>
             <li>
                 {programmes?.map((programme) =>

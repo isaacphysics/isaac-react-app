@@ -21,7 +21,7 @@ export const UserEmailPreferencesPanel = ({emailPreferences, setEmailPreferences
     if (error && error.type === "generalError") {
         errorMessage = error.generalError;
     } else  if (submissionAttempted && !validateEmailPreferences(emailPreferences)) {
-        errorMessage = t("common:account.emailPreferences.validationError");
+        errorMessage = t("account:account.emailPreferences.validationError");
     }
 
     return <>

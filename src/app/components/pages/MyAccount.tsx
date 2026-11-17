@@ -93,15 +93,15 @@ const showChangeSchoolModal = () => (dispatch: AppDispatch) => {
         closeAction: () => {
             dispatch(closeActiveModal());
         },
-        title: i18next.t("common:account.changeSchools.title"),
+        title: i18next.t("account:account.changeSchools.title"),
         body: <>
             <p className="px-1">
-                {i18next.t("common:account.changeSchools.intro")}
+                {i18next.t("account:account.changeSchools.intro")}
             </p>
             <ol type='1'>
                 <li>
                     <Trans
-                        i18nKey="common:account.changeSchools.checkGroups"
+                        i18nKey="account:account.changeSchools.checkGroups"
                         components={{
                             strong: <strong />,
                             groupsLink: <TransAnchor target="_blank" href="/groups" />,
@@ -110,7 +110,7 @@ const showChangeSchoolModal = () => (dispatch: AppDispatch) => {
                 </li>
                 <li>
                     <Trans
-                        i18nKey="common:account.changeSchools.checkConnections"
+                        i18nKey="account:account.changeSchools.checkConnections"
                         components={{
                             strong: <strong />,
                             connectionsLink: <TransAnchor target="_blank" href="/account#teacherconnections" />,
@@ -119,7 +119,7 @@ const showChangeSchoolModal = () => (dispatch: AppDispatch) => {
                 </li>
             </ol>
             <p><strong><Trans
-                i18nKey="common:account.changeSchools.faqReference"
+                i18nKey="account:account.changeSchools.faqReference"
                 components={{
                     faqLink: <TransAnchor target="_blank" href="/support/teacher/general#moving_schools" />,
                 }}
@@ -199,7 +199,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
     }, [userToUpdate?.registeredContexts]);
     const contextsChanged = useMemo(() => !hashEqual(userToUpdate?.registeredContexts?.length ? userToUpdate?.registeredContexts : [{}], userContextsToUpdate, {unorderedArrays: true}), [userContextsToUpdate, userToUpdate]);
 
-    const pageTitle = editingOtherUser ? t("common:account.editUser.title") : t("site:account.title");
+    const pageTitle = editingOtherUser ? t("account:account.editUser.title") : t("site:account.title");
 
     const formSpecificTabs = [ACCOUNT_TAB.passwordreset, ACCOUNT_TAB.teacherconnections];
 
@@ -234,7 +234,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
     useEffect(() => {
         // the blocker is triggered by page navigations, but not hash changes
         if (blocker.state === "blocked") {
-            if (window.confirm(i18next.t("common:account.unsavedChanges.leaveConfirm"))) {
+            if (window.confirm(i18next.t("account:account.unsavedChanges.leaveConfirm"))) {
                 blocker.proceed?.();
             } else {
                 blocker.reset?.();
@@ -245,7 +245,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
     const safelyChangeTab = useCallback((newTab: ACCOUNT_TAB) => {
         // use this in place of setActiveTab to prevent losing unsaved changes when switching tabs
         if (isBlocked) {
-            if (window.confirm(i18next.t("common:account.unsavedChanges.tabSwitchConfirm"))) {
+            if (window.confirm(i18next.t("account:account.unsavedChanges.tabSwitchConfirm"))) {
                 resetState();
                 setActiveTab(newTab);
             }
@@ -397,9 +397,9 @@ export const MyAccount = ({user}: AccountPageProps) => {
             setSaving(false);
             return;
         } else if (activeTab !== ACCOUNT_TAB.account) {
-            dispatch(showErrorToast(t("common:account.updateError.toastTitle"), t("common:account.updateError.toastMessage")));
+            dispatch(showErrorToast(t("account:account.updateError.toastTitle"), t("account:account.updateError.toastMessage")));
         } else {
-            dispatch(showErrorToast(i18next.t("common:account.updateError.toastTitle"), i18next.t("common:account.updateError.genericToastMessage")));
+            dispatch(showErrorToast(i18next.t("account:account.updateError.toastTitle"), i18next.t("account:account.updateError.genericToastMessage")));
         }
         setSaving(false);
     }
@@ -573,7 +573,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
                         {isPhy && <div className="section-divider-bold"/>}
                         <div className={classNames("d-flex justify-content-center", {"col-12 col-md-6 offset-md-3": isAda})}>
                             <Input
-                                form="my-account" type="submit" value={i18next.t("common:account.saveButton")} className={classNames("btn btn-solid border-0", {"w-100": isAda})}
+                                form="my-account" type="submit" value={i18next.t("account:account.saveButton")} className={classNames("btn btn-solid border-0", {"w-100": isAda})}
                                 disabled={!accountInfoChanged}
                             />
                         </div>

@@ -70,7 +70,7 @@ function EditorListener() {
             </Col>
         </Row>
         : <div>
-            <em>{t("common:editorRenderer.waitingContent", { siteTitle: SITE_TITLE })}</em>
+            <em>{t("questions:editorRenderer.waitingContent", { siteTitle: SITE_TITLE })}</em>
         </div>;
 }
 

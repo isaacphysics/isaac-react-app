@@ -145,7 +145,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                 <button
                     className="d-flex bg-opacity-10 p-0 bg-white"
                     onClick={handleFilterPanelExpansion}
-                    aria-label={t("common:questionFinder.filters.togglePanel")}
+                    aria-label={t("questions:questionFinder.filters.togglePanel")}
                     aria-expanded={filtersVisible}
                     aria-controls="question-finder-filters-options"
                 >
@@ -289,7 +289,7 @@ export function QuestionFinderFilterPanel(props: QuestionFinderFilterPanelProps)
                                     color="primary"
                                     checked={excludeBooks}
                                     onChange={() => setExcludeBooks(p => !p)}
-                                    label={<span className="me-2">{t("common:questionFinder.filters.excludeSkillsBook")}</span>}
+                                    label={<span className="me-2">{t("questions:questionFinder.filters.excludeSkillsBook")}</span>}
                                 />
                             </CheckboxWrapper>
                         </li>

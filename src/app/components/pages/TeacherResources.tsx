@@ -15,7 +15,7 @@ import i18next from "i18next";
 
 export const TeacherResources = () => {
     const { t } = useTranslation();
-    useEffect( () => {document.title = i18next.t("common:teacherResources.meta.title", { siteTitle: SITE_TITLE });}, []);
+    useEffect( () => {document.title = i18next.t("pages:teacherResources.meta.title", { siteTitle: SITE_TITLE });}, []);
     const {data: studentChallengesPods} = useGetNewsPodListQuery({subject: "student_challenges"});
     const featuredStudentChallengePod = studentChallengesPods?.[0];
 
@@ -26,15 +26,15 @@ export const TeacherResources = () => {
                 <ColumnSlice>
                     <TextBlock className="text-white">
                         <h1 id="resources-header-heading" className="font-size-1-75 font-size-md-2-5">
-                            <Trans i18nKey="common:teacherResources.header.title" components={{ decorativeSlash: <span className="text-pink" />, br: <br /> }} />
+                            <Trans i18nKey="pages:teacherResources.header.title" components={{ decorativeSlash: <span className="text-pink" />, br: <br /> }} />
                         </h1>
                         <p>
-                            {t("common:teacherResources.header.description")}
+                            {t("pages:teacherResources.header.description")}
                         </p>
                         {(!isLoggedIn(user) && <>
-                            <Button color="keyline" className="bg-white" to="/register" tag={Link}>{t("common:teacherResources.header.signupButton")}</Button>    
+                            <Button color="keyline" className="bg-white" to="/register" tag={Link}>{t("pages:teacherResources.header.signupButton")}</Button>    
                         </>) || isTeacherOrAbove(user) && <>
-                            <Button color="keyline" className="bg-white" to="/dashboard" tag={Link}>{t("common:teacherResources.header.dashboardButton")}</Button>
+                            <Button color="keyline" className="bg-white" to="/dashboard" tag={Link}>{t("pages:teacherResources.header.dashboardButton")}</Button>
                         </> || <>
                             <Button color="keyline" className="bg-white" to="/teacher_account_request" tag={Link}>{t("ada:button.upgradeToTeacherAccount")}</Button>    
                         </>}
@@ -53,8 +53,8 @@ export const TeacherResources = () => {
                     </ImageBlock>
                     <TextBlock>
                         <h2>{t("ada:title.curriculum")}</h2>
-                        <p>{t("common:teacherResources.curriculum.description")}</p>
-                        <p>{t("common:teacherResources.curriculum.descriptionTwo")}</p>
+                        <p>{t("pages:teacherResources.curriculum.description")}</p>
+                        <p>{t("pages:teacherResources.curriculum.descriptionTwo")}</p>
                         <Button tag={Link} to={"/topics"}>{t("ada:button.exploreAllTopics")}</Button>
                     </TextBlock>
                 </ColumnSlice>
@@ -64,14 +64,14 @@ export const TeacherResources = () => {
             <Container className="homepage-padding mw-1600 position-relative" fluid>
                 <img className="full-background-img" src="/assets/cs/decor/swirls.svg" alt=""/>
                 <TextBlock md={8} className={classNames({"mb-3": !isLoggedIn(user)})}>
-                    <h2 id="tools-header">{t("common:teacherResources.tools.title")}</h2>
-                    <p>{t("common:teacherResources.tools.description")}</p>
+                    <h2 id="tools-header">{t("pages:teacherResources.tools.title")}</h2>
+                    <p>{t("pages:teacherResources.tools.description")}</p>
                     <div className="pb-2 mb-3">
                         {(!isLoggedIn(user) && <> 
                             <Button className="me-3" to={"/register"} tag={Link}>{t("common:button.createAccount")}</Button>
                             <Button color="keyline" to={"/login"} tag={Link}>{t("common:button.logIn")}</Button>
                         </>) || (isTeacherOrAbove(user) && <>
-                            <Button to={"/dashboard"} tag={Link}>{t("common:teacherResources.tools.dashboardButton")}</Button>
+                            <Button to={"/dashboard"} tag={Link}>{t("pages:teacherResources.tools.dashboardButton")}</Button>
                         </>) || <>
                             <Button to={"/teacher_account_request"} tag={Link}>{t("ada:button.upgradeToTeacherAccount")}</Button>
                         </>}
@@ -79,33 +79,33 @@ export const TeacherResources = () => {
                 </TextBlock>
                 <ColumnSlice>
                     <IconCard card={{
-                        title: t("common:teacherResources.tools.preferencesCard.title"),
+                        title: t("pages:teacherResources.tools.preferencesCard.title"),
                         icon: {name: "icon-tune", color: "secondary"},
-                        bodyText: t("common:teacherResources.tools.preferencesCard.description"),
+                        bodyText: t("pages:teacherResources.tools.preferencesCard.description"),
                         clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/account" : undefined,
                         buttonText: t("common:title.preferences"),
                         buttonStyle: "link",
                     }}/>
                     <IconCard card={{
-                        title: t("common:teacherResources.tools.groupsCard.title"),
+                        title: t("pages:teacherResources.tools.groupsCard.title"),
                         icon: {name: "icon-group", color: "secondary"},
-                        bodyText: t("common:teacherResources.tools.groupsCard.description"),
+                        bodyText: t("pages:teacherResources.tools.groupsCard.description"),
                         clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/groups" : undefined,
                         buttonText: t("common:button.createGroup"),
                         buttonStyle: "link",
                     }}/>
                     <IconCard card={{
-                        title: t("common:teacherResources.tools.assignmentsCard.title"),
+                        title: t("pages:teacherResources.tools.assignmentsCard.title"),
                         icon: {name: "icon-file", color: "secondary"},
-                        bodyText: t("common:teacherResources.tools.assignmentsCard.description"),
+                        bodyText: t("pages:teacherResources.tools.assignmentsCard.description"),
                         clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/quizzes/set" : undefined,
-                        buttonText: t("common:teacherResources.tools.assignmentsCard.button"),
+                        buttonText: t("pages:teacherResources.tools.assignmentsCard.button"),
                         buttonStyle: "link",
                     }}/>
                     <IconCard card={{
                         title: t("ada:title.reviewYourMarkbook"),
                         icon: {name: "icon-search", color: "secondary"},
-                        bodyText: t("common:teacherResources.tools.markbookCard.description"),
+                        bodyText: t("pages:teacherResources.tools.markbookCard.description"),
                         clickUrl: isLoggedIn(user) && isTeacherOrAbove(user) ? "/my_markbook" : undefined,
                         buttonText: t("ada:button.viewMarkbook"),
                         buttonStyle: "link",
@@ -117,23 +117,23 @@ export const TeacherResources = () => {
             <Container className="homepage-padding mw-1600" fluid>
                 <TextBlock md={{size: 10, offset: 1}} lg={{size: 8, offset: 2}} className="backslash-left text-white">
                     <div className="h2">
-                        {t("common:teacherResources.testimonial.quote")}
+                        {t("pages:teacherResources.testimonial.quote")}
                     </div>
-                    <p>{t("common:teacherResources.testimonial.attribution")}</p>
+                    <p>{t("pages:teacherResources.testimonial.attribution")}</p>
                 </TextBlock>
             </Container>
         </section>
         <section id="cpd" className="bg-white">
             <Container className="homepage-padding mw-1600" fluid>
                 <TextBlock md={8}>
-                    <h2>{t("common:teacherResources.cpd.title")}</h2>
-                    <p>{t("common:teacherResources.cpd.description")}</p>
+                    <h2>{t("pages:teacherResources.cpd.title")}</h2>
+                    <p>{t("pages:teacherResources.cpd.description")}</p>
                 </TextBlock>
                 <ColumnSlice className="row-gap-5">
                     <AdaCard card={{
-                        title: t("common:teacherResources.cpd.coursesCard.title"),
+                        title: t("pages:teacherResources.cpd.coursesCard.title"),
                         image: {src: "/assets/cs/decor/teacher-2.png"},
-                        bodyText: t("common:teacherResources.cpd.coursesCard.description"),
+                        bodyText: t("pages:teacherResources.cpd.coursesCard.description"),
                         clickUrl: "/pages/online_courses",
                         buttonText: t("common:button.learnMore"),
                         className: "bg-cultured-grey",
@@ -141,7 +141,7 @@ export const TeacherResources = () => {
                     <AdaCard card={{
                         title: t("ada:title.teacherMentoring"),
                         image: {src: "/assets/cs/decor/teacher-3.png"},
-                        bodyText: t("common:teacherResources.cpd.mentoringCard.description"),
+                        bodyText: t("pages:teacherResources.cpd.mentoringCard.description"),
                         clickUrl: "/teacher_mentoring",
                         buttonText: t("common:button.learnMore"),
                         className: "bg-cultured-grey",
@@ -155,7 +155,7 @@ export const TeacherResources = () => {
                 <ColumnSlice>
                     <TextBlock>
                         <h2>{t("ada:title.studentChallenges")}</h2>
-                        <p>{t("common:teacherResources.challenges.description")}</p>
+                        <p>{t("pages:teacherResources.challenges.description")}</p>
                         <Button tag={Link} to={"/pages/student_challenges"}>{t("common:button.findOutMore")}</Button>
                     </TextBlock>
                     {featuredStudentChallengePod ? <IconCard card={{
@@ -177,30 +177,30 @@ export const TeacherResources = () => {
         <section id="more-resources" className="bg-white">
             <Container className="homepage-padding mw-1600" fluid>
                 <TextBlock md={8}>
-                    <h2>{t("common:teacherResources.moreResources.title")}</h2>
-                    <p>{t("common:teacherResources.moreResources.description")}</p>
+                    <h2>{t("pages:teacherResources.moreResources.title")}</h2>
+                    <p>{t("pages:teacherResources.moreResources.description")}</p>
                 </TextBlock>
                 <ColumnSlice className="row-gap-5">
                     <AdaCard card={{
-                        title: t("common:teacherResources.moreResources.researchCard.title"),
+                        title: t("pages:teacherResources.moreResources.researchCard.title"),
                         image: {src: "/assets/cs/decor/teacher-4.png"},
-                        bodyText: t("common:teacherResources.moreResources.researchCard.description"),
+                        bodyText: t("pages:teacherResources.moreResources.researchCard.description"),
                         buttonText: t("common:button.learnMore"),
                         clickUrl: "https://www.raspberrypi.org/research/projects",
                         className: "bg-cultured-grey",
                     }}/>
                     <AdaCard card={{
-                        title: t("common:teacherResources.moreResources.helloWorldCard.title"),
+                        title: t("pages:teacherResources.moreResources.helloWorldCard.title"),
                         image: {src: "/assets/cs/decor/hello-world.png"},
-                        bodyText: t("common:teacherResources.moreResources.helloWorldCard.description"),
+                        bodyText: t("pages:teacherResources.moreResources.helloWorldCard.description"),
                         buttonText: t("common:button.learnMore"),
                         clickUrl: "https://www.raspberrypi.org/hello-world",
                         className: "bg-cultured-grey",
                     }}/>
                     <AdaCard card={{
-                        title: t("common:teacherResources.moreResources.codeClassroomCard.title"),
+                        title: t("pages:teacherResources.moreResources.codeClassroomCard.title"),
                         image: {src: "/assets/cs/decor/code-editor.png"},
-                        bodyText: t("common:teacherResources.moreResources.codeClassroomCard.description"),
+                        bodyText: t("pages:teacherResources.moreResources.codeClassroomCard.description"),
                         buttonText: t("common:button.learnMore"),
                         clickUrl: "https://editor.raspberrypi.org/en/education",
                         className: "bg-cultured-grey",
@@ -215,8 +215,8 @@ export const TeacherResources = () => {
                         <img className="px-md-2 px-xl-4" src="/assets/cs/decor/isaac-subject-logos.svg" alt=""/>
                     </ImageBlock>
                     <TextBlock>
-                        <h2>{t("common:teacherResources.tryIsaac.title")}</h2>
-                        <p>{t("common:teacherResources.tryIsaac.description")}</p>
+                        <h2>{t("pages:teacherResources.tryIsaac.title")}</h2>
+                        <p>{t("pages:teacherResources.tryIsaac.description")}</p>
                         <ExternalLink asButton href='https://isaacscience.org'>
                             {t("ada:button.goToIsaacScience")}
                         </ExternalLink>
@@ -230,7 +230,7 @@ export const TeacherResources = () => {
                     <img className="full-background-img border-radius-3 bg-dark-pink-300" src="/assets/cs/decor/help-slice-purple.svg" alt=""/>
                     <TextBlock className="py-3 text-center text-white">
                         <div className="h3">{t("ada:title.needHelp")}</div>
-                        <p>{t("common:teacherResources.help.description")}</p>
+                        <p>{t("pages:teacherResources.help.description")}</p>
                         <Button color="keyline" className="bg-white" to="/support/teacher/general" tag={Link}>{t("common:title.teacherSupport")}</Button>
                     </TextBlock>
                 </div>

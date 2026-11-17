@@ -19,7 +19,7 @@ export function LLMFreeTextQuestionRemainingAttemptsView({canAttemptQuestionType
     
     return <p>
         <span aria-haspopup="true" className="btn-link has-tip" id="attempt-limit-help">
-            {t("common:freeTextBuilder.attempts.remaining", { count: remainingAttempts })}
+            {t("questions:freeTextBuilder.attempts.remaining", { count: remainingAttempts })}
             <i className={classNames("icon icon-info icon-inline mx-2")} />
         </span>
         <UncontrolledTooltip innerClassName="attempt-limit-tooltip" placement="bottom" target="attempt-limit-help">

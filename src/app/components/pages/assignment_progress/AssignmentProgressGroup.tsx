@@ -59,8 +59,8 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
         <div className="d-flex align-items-center assignment-progress-group w-100 p-3">
             <div className="d-flex flex-column">
                 <span className="d-inline-flex flex-wrap">
-                    <b data-testid="assignment-name">{(quiz ? assignment.quizSummary?.title : assignment.gameboard?.title) ?? t("common:groups.progress.fallbackTitle")}</b>
-                    {isScheduled && <em className="mx-1">{t("common:groups.progress.scheduledBadge")}</em>}
+                    <b data-testid="assignment-name">{(quiz ? assignment.quizSummary?.title : assignment.gameboard?.title) ?? t("teaching:groups.progress.fallbackTitle")}</b>
+                    {isScheduled && <em className="mx-1">{t("teaching:groups.progress.scheduledBadge")}</em>}
                     <a className="new-tab-link" href={quiz 
                         ? `${PATHS.PREVIEW_TEST}/${assignment.quizSummary?.id}` 
                         : isAssignmentsV2Link ? `/assignment/${assignment.id}/view` : `${PATHS.GAMEBOARD}#${assignment.gameboard?.id}`
@@ -71,11 +71,11 @@ const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQ
                 <div className="d-flex flex-column flex-sm-row align-items-start gap-2 me-2">
                     {isScheduled && <Badge className="d-flex align-items-center text-black fw-bold" color={siteSpecific("neutral-light", "cultured-grey")}>
                         <i className="icon icon-event-upcoming me-2" color="primary"/>
-                        {t("common:groups.progress.startDate", { startDate: formatDate(assignment.scheduledStartDate) })}
+                        {t("teaching:groups.progress.startDate", { startDate: formatDate(assignment.scheduledStartDate) })}
                     </Badge>}
                     {assignment.dueDate && <Badge className="d-flex align-items-center text-black fw-bold" color={siteSpecific("neutral-light", "cultured-grey")}>
                         <i className="icon icon-event-upcoming me-2" color="primary"/>
-                        {t("common:assignments.progress.dueDate", { dueDate: formatDate(assignment.dueDate) })}
+                        {t("teaching:assignments.progress.dueDate", { dueDate: formatDate(assignment.dueDate) })}
                     </Badge>}
                     {/* // TODO: restore this badge when group progress data is available at this level */}
                     {/* <Badge className="d-flex align-items-center me-2 text-black fw-bold" color="cultured-grey">
@@ -124,7 +124,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
     return <PageContainer
         pageTitle={
             <TitleAndBreadcrumb
-                currentPageTitle={group?.groupName ?? t("common:groups.progress.title")}
+                currentPageTitle={group?.groupName ?? t("teaching:groups.progress.title")}
                 intermediateCrumbs={[{title: t("site:groups.progress.breadcrumbTitle"), to: PATHS.ASSIGNMENT_PROGRESS}]}
                 icon={{type: "icon", icon: "icon-group"}}
             />
@@ -163,15 +163,15 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
             <CardBody className="d-flex flex-column flex-lg-row assignment-progress-group-overview row-gap-2">
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
                     <i className={"icon icon-group icon-sm me-2"} color="secondary"/>
-                    {groupMembers?.length ? t("common:groups.progress.studentCount", { count: groupMembers?.length }) : t("common:groups.progress.unknownCount")}
+                    {groupMembers?.length ? t("teaching:groups.progress.studentCount", { count: groupMembers?.length }) : t("teaching:groups.progress.unknownCount")}
                 </div>
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
                     <i className={"icon icon-file icon-sm me-2"} color="secondary"/>
-                    {t("common:assignments.counts.assignments", { count: groupBoardAssignments?.length })}
+                    {t("teaching:assignments.counts.assignments", { count: groupBoardAssignments?.length })}
                 </div>
                 <div className="d-flex align-items-center flex-grow-1 fw-bold">
                     <i className={"icon icon-school icon-sm me-2"} color="secondary"/>
-                    {t("common:assignments.counts.tests", { count: groupQuizAssignments?.length })}
+                    {t("teaching:assignments.counts.tests", { count: groupQuizAssignments?.length })}
                 </div>
             </CardBody>
         </Card>
@@ -181,18 +181,18 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
             <CardBody>
                 <Row className="mb-3">
                     <Col xs={12}>
-                        <h2 className="h3">{t("common:groups.progress.sectionTitle")}</h2>
-                        <span>{t("common:groups.progress.sectionDescription")}</span>
+                        <h2 className="h3">{t("teaching:groups.progress.sectionTitle")}</h2>
+                        <span>{t("teaching:groups.progress.sectionDescription")}</span>
                     </Col>
                     <Col xs={12} sm={6} lg={4}>
-                        <Label className="m-0 fw-bold mt-2 mt-lg-3">{t("common:groups.progress.searchLabel")}</Label>
+                        <Label className="m-0 fw-bold mt-2 mt-lg-3">{t("teaching:groups.progress.searchLabel")}</Label>
                         <Input
                             onChange={(e) => setSearchText(e.target.value)}
                             placeholder={`Search for ${activeTab === "assignments" ? "assignments" : "tests"}...`}
                         />
                     </Col>
                     <Col xs={12} sm={6} lg={{size: 4, offset: 4}} className="d-flex flex-column">
-                        <Label for="sort-by-dropdown" className="m-0 fw-bold mt-2 mt-lg-3">{t("common:groups.progress.sortLabel")}</Label>
+                        <Label for="sort-by-dropdown" className="m-0 fw-bold mt-2 mt-lg-3">{t("teaching:groups.progress.sortLabel")}</Label>
                         <StyledDropdown
                             value={Object.values(AssignmentOrder).findIndex(item => item.type === pageSettings.assignmentOrder.type && item.order === pageSettings.assignmentOrder.order)}
                             onChange={(e) => pageSettings.setAssignmentOrder(Object.values(AssignmentOrder)[parseInt(e.target.value)])}

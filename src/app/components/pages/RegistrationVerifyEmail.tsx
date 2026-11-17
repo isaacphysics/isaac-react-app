@@ -64,7 +64,7 @@ export const RegistrationVerifyEmail = () => {
                 <CardBody>
                     {!emailVerified && userFromParamVerificationFailed &&
                         <ExigentAlert color="warning">
-                            <p className="alert-heading fw-bold">{t("common:auth.verifyEmail.failedTitle")}</p>
+                            <p className="alert-heading fw-bold">{t("account:auth.verifyEmail.failedTitle")}</p>
                             <p>{getRTKQueryErrorMessage(userFromParamVerificationErrored).message}</p>
                         </ExigentAlert>
                     }
@@ -72,14 +72,14 @@ export const RegistrationVerifyEmail = () => {
                         {emailVerified ?
                             <h2>Welcome to Ada Computer Science!</h2>
                             :
-                            <h2>{t("common:auth.verifyEmail.title")}</h2>
+                            <h2>{t("account:auth.verifyEmail.title")}</h2>
                         }
                     </Row>
                     <Row className="justify-content-center">    
                         {emailVerified ?
-                            <p>{t("common:auth.verifyEmail.verifiedMessage")}</p>
+                            <p>{t("account:auth.verifyEmail.verifiedMessage")}</p>
                             :
-                            <p>{t("common:auth.verifyEmail.unverifiedMessage")}</p>
+                            <p>{t("account:auth.verifyEmail.unverifiedMessage")}</p>
                         }
                     </Row>
                     <Row className="justify-content-center">
@@ -93,14 +93,14 @@ export const RegistrationVerifyEmail = () => {
                         <Row className="justify-content-center">
                             {verifyingCurrentUser ?
                                 <>
-                                    <div className="mb-3 h4">{t("common:auth.verifyEmail.resendPrompt")}</div>
+                                    <div className="mb-3 h4">{t("account:auth.verifyEmail.resendPrompt")}</div>
                                     <p>
                                         {verificationNotResent ?
                                             <Button onClick={requestNewVerificationEmail}>
                                                 {t("common:button.resendVerificationEmail")}
                                             </Button>
                                             :
-                                            t("common:auth.verifyEmail.sentMessage", { emailAddress: (user && user.loggedIn && user.email) })
+                                            t("account:auth.verifyEmail.sentMessage", { emailAddress: (user && user.loggedIn && user.email) })
                                         }
                                     </p>
                                     {/*<p>    TODO: Allow email address to be changed from this page
@@ -110,7 +110,7 @@ export const RegistrationVerifyEmail = () => {
                                     </p>*/}
                                 </>
                                 :
-                                <p><Trans i18nKey="common:auth.verifyEmail.loginFirstMessage" components={{ loginLink: <Link to="/login" /> }} /></p>
+                                <p><Trans i18nKey="account:auth.verifyEmail.loginFirstMessage" components={{ loginLink: <Link to="/login" /> }} /></p>
                             }
                         </Row>
                     }
@@ -127,7 +127,7 @@ export const RegistrationVerifyEmail = () => {
                         emailVerified &&
                             <Row className="justify-content-center">
                                 <Col xs={3}>
-                                    <p><Trans i18nKey="common:auth.verifyEmail.continueLoginMessage" components={{ loginLink: <Link to="/login" /> }} /></p>
+                                    <p><Trans i18nKey="account:auth.verifyEmail.continueLoginMessage" components={{ loginLink: <Link to="/login" /> }} /></p>
                                 </Col>
                             </Row>
                     }

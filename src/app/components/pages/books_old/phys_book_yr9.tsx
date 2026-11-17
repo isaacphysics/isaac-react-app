@@ -10,13 +10,13 @@ export const PhysBookYrNine = () => {
     const { t } = useTranslation();
 
     const pageHelp = <span>
-        {t("common:books.yr9.helpText")}
+        {t("pages:books.yr9.helpText")}
     </span>;
 
     return <Container className="physics">
         <Col>
             <div className="book-intro">
-                <TitleAndBreadcrumb className="mb-7" currentPageTitle={t("common:books.yr9.title")} help={pageHelp} />
+                <TitleAndBreadcrumb className="mb-7" currentPageTitle={t("pages:books.yr9.title")} help={pageHelp} />
                 <img className="book-cover" src="/assets/phy/books/phys_book_yr9.jpg" alt={t("sci:label.bookCoverAltText")}/>
                 <PageFragment fragmentId="phys_book_yr9_intro"/>
             </div>
@@ -41,10 +41,10 @@ export const PhysBookYrNine = () => {
                     </Row>
                     <Row className="mb-4">
                         <Col md={6} className="p-2">
-                            <BookChapter chapterId={'yr9_phys_ch5_boards'} chapterTitle={t("sci:books.chapters.calculationPractice")} chapterSubHeading={t("common:books.yr9.chapter5Subheading")}  chapterIcon={'5'} chapterSubject={SUBJECTS.PHYSICS}/>
+                            <BookChapter chapterId={'yr9_phys_ch5_boards'} chapterTitle={t("sci:books.chapters.calculationPractice")} chapterSubHeading={t("pages:books.yr9.chapter5Subheading")}  chapterIcon={'5'} chapterSubject={SUBJECTS.PHYSICS}/>
                         </Col>
                         <Col md={6} className="p-2">
-                            <BookChapter chapterId={'yr9_phys_ch6_boards'} chapterTitle={t("sci:books.chapters.extraQuestions")} chapterSubHeading={t("common:books.yr9.chapter6Subheading")}  chapterIcon={'6'} chapterSubject={SUBJECTS.PHYSICS}/>
+                            <BookChapter chapterId={'yr9_phys_ch6_boards'} chapterTitle={t("sci:books.chapters.extraQuestions")} chapterSubHeading={t("pages:books.yr9.chapter6Subheading")}  chapterIcon={'6'} chapterSubject={SUBJECTS.PHYSICS}/>
                         </Col>
                     </Row>
                 </Col>

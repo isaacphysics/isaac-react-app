@@ -43,7 +43,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                 {isDefined(assignmentStartDate) && 
                     <p className="mb-0" data-testid={"gameboard-assigned"}>
                         <Trans
-                            i18nKey="common:assignments.card.assigned"
+                            i18nKey="teaching:assignments.card.assigned"
                             components={{
                                 strong: <strong />,
                             }}
@@ -52,7 +52,7 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
                     </p>
                 }
                 {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && isOverdue(assignment) && assignment.gameboard.percentageAttempted !== 100
-                    ? <p className="mb-0"><strong className="overdue">{t("common:status.overdue")}</strong> <span className="small text-muted">{t("common:assignments.card.dueDate", { dueDate: formatDate(assignment.dueDate) })}</span></p>
+                    ? <p className="mb-0"><strong className="overdue">{t("common:status.overdue")}</strong> <span className="small text-muted">{t("teaching:assignments.card.dueDate", { dueDate: formatDate(assignment.dueDate) })}</span></p>
                     : <>{assignment.dueDate && <p className="mb-0"><Trans
                         i18nKey="common:label.dueDate"
                         components={{
@@ -64,10 +64,10 @@ const PhyAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
             </Col>
             <Col>
                 {isDefined(assignment.groupName) &&
-                    <p className="mb-0"><strong>{t("common:assignments.card.groupLabel")}</strong> {assignment.groupName}</p>
+                    <p className="mb-0"><strong>{t("teaching:assignments.card.groupLabel")}</strong> {assignment.groupName}</p>
                 }
                 {isDefined(assignment.assignerSummary) &&
-                    <p className="mb-0"><strong>{t("common:assignments.card.assignerLabel")}</strong> {extractTeacherName(assignment.assignerSummary)}</p>
+                    <p className="mb-0"><strong>{t("teaching:assignments.card.assignerLabel")}</strong> {extractTeacherName(assignment.assignerSummary)}</p>
                 }
             </Col>
         </Row>
@@ -84,13 +84,13 @@ const CSAssignmentCard = ({assignment}: {assignment: AssignmentDTO}) => {
             <div className="h4"><Link to={`${PATHS.GAMEBOARD}#${assignment.gameboardId}`}>
                 {isDefined(assignment.gameboard) && assignment.gameboard.title}
             </Link></div>
-            {isDefined(assignmentStartDate) && <p className="mb-0" data-testid={"gameboard-assigned"}><strong>{t("common:assignments.card.assignedLabel")}</strong> {formatDate(assignmentStartDate)}</p>}
+            {isDefined(assignmentStartDate) && <p className="mb-0" data-testid={"gameboard-assigned"}><strong>{t("teaching:assignments.card.assignedLabel")}</strong> {formatDate(assignmentStartDate)}</p>}
             {isDefined(assignment.dueDate) && isDefined(assignment.gameboard) && isOverdue(assignment) && assignment.gameboard.percentageAttempted !== 100
-                ? <p className="mb-0"><strong className="overdue">{t("common:assignments.card.overdueLabel")}</strong> {formatDate(assignment.dueDate)}</p>
+                ? <p className="mb-0"><strong className="overdue">{t("teaching:assignments.card.overdueLabel")}</strong> {formatDate(assignment.dueDate)}</p>
                 : <>{assignment.dueDate && <p className="mb-0"><strong>{t("common:label.due")}</strong> {formatDate(assignment.dueDate)}</p>}</>
             }
-            {isDefined(assignment.groupName) && <p className="mb-0"><strong>{t("common:assignments.card.groupLabel")}</strong> {assignment.groupName}</p>}
-            {isDefined(assignment.assignerSummary) && <p><strong>{t("common:assignments.card.assignerLabel")}</strong> {extractTeacherName(assignment.assignerSummary)}</p>}
+            {isDefined(assignment.groupName) && <p className="mb-0"><strong>{t("teaching:assignments.card.groupLabel")}</strong> {assignment.groupName}</p>}
+            {isDefined(assignment.assignerSummary) && <p><strong>{t("teaching:assignments.card.assignerLabel")}</strong> {extractTeacherName(assignment.assignerSummary)}</p>}
             {isDefined(assignment.notes) && <p><strong>{t("common:label.notes")}</strong> {assignment.notes}</p>}
         </Col>
         <Col xs={4} sm={3} md={5} lg={4} >

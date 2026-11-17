@@ -46,7 +46,7 @@ export const IsaacHints = ({hints, questionPartId, style, includePreamble}: Hint
             let currHintIndex = 1;
             let index = 0;
             for (const hint of hints) {
-                newTitles[index] = hint.title || i18next.t("common:questions.hints.defaultTitle", { index: currHintIndex });
+                newTitles[index] = hint.title || i18next.t("questions:questions.hints.defaultTitle", { index: currHintIndex });
                 currHintIndex += hint.title ? 0 : 1;
                 index += 1;
             }
@@ -55,9 +55,9 @@ export const IsaacHints = ({hints, questionPartId, style, includePreamble}: Hint
     }, [hints]);
 
     return hints && !!hints.length && <>
-        {includePreamble && <small className="no-print mb-0">{t("common:questions.hints.preamble")}</small>}
+        {includePreamble && <small className="no-print mb-0">{t("questions:questions.hints.preamble")}</small>}
         {style === "tabbed" && <div className="tabbed-hints no-print">
-            <div className="text-theme mb-2 h5">{t("common:questions.hints.heading")}</div>
+            <div className="text-theme mb-2 h5">{t("questions:questions.hints.heading")}</div>
             <Tabs onActiveTabChange={logHintView} className="no-print" style="dropdowns" tabTitleClass="hint-tab-title" tabContentClass="mt-1" deselectable activeTabOverride={-1}>
                 {Object.assign({}, ...hints.map((hint, index) => ({
                     [titles[index]]: <div className="mt-3 mt-lg-4 pt-2">

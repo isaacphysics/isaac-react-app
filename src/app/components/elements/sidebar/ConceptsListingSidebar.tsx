@@ -39,7 +39,7 @@ export const SubjectSpecificConceptsListingSidebar = (props: SubjectSpecificConc
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
         <search>
-            <h3 className="h5">{t("common:concepts.sidebar.searchTitle")}</h3>
+            <h3 className="h5">{t("questions:concepts.sidebar.searchTitle")}</h3>
             <SearchInputWithIcon
                 outerClassName='my-4'
                 type="search" value={searchText || ""}
@@ -106,7 +106,7 @@ export const GenericConceptsListingSidebar = (props: GenericConceptsListingSideb
     return <ContentSidebar {...rest}>
         <div className="section-divider"/>
         <search>
-            <h3 className="h5">{t("common:concepts.sidebar.searchTitle")}</h3>
+            <h3 className="h5">{t("questions:concepts.sidebar.searchTitle")}</h3>
             <SearchInputWithIcon
                 outerClassName='my-4'
                 type="search" value={searchText || ""}

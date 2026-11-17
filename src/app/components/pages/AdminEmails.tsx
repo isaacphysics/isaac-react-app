@@ -77,12 +77,12 @@ export const AdminEmails = () => {
         </Card>
 
         <Card className="p-3 my-3">
-            <CardTitle tag="h2">{t("common:admin.emails.contentObject.title")}</CardTitle>
+            <CardTitle tag="h2">{t("admin:admin.emails.contentObject.title")}</CardTitle>
             <CardBody>
                 <Row>
                     <Col>
                         <Input
-                            id="content-object-id-input" type="text" placeholder={t("common:admin.emails.contentObject.placeholder")}
+                            id="content-object-id-input" type="text" placeholder={t("admin:admin.emails.contentObject.placeholder")}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                 setContentObjectID(e.target.value);
                             }}
@@ -92,7 +92,7 @@ export const AdminEmails = () => {
                     <Col>
                         <Button type="submit" color="secondary" disabled={contentObjectID.length == 0}
                             onClick={() => getEmailTemplate(contentObjectID)} className={siteSpecific("w-100", "form-control border-0")}>
-                            {t("common:admin.emails.contentObject.loadButton")}
+                            {t("admin:admin.emails.contentObject.loadButton")}
                         </Button>
                     </Col>
                 </Row>
@@ -104,10 +104,10 @@ export const AdminEmails = () => {
                 <CardTitle tag="h2">{t("common:button.details")}</CardTitle>
                 <CardBody>
                     <ul>
-                        <li><b>{t("common:admin.emails.details.subjectLabel")}</b> {emailTemplate.subject || t("common:admin.emails.details.noSubject")}</li>
-                        {emailTemplate.from && <li><b>{t("common:admin.emails.details.fromLabel")}</b> {emailTemplate.fromName || ""} &lt;{emailTemplate.from}&gt;</li>}
-                        {emailTemplate.replyTo && <li><b>{t("common:admin.emails.details.replyToLabel")}</b> {emailTemplate.replyToName || ""} &lt;{emailTemplate.replyTo}&gt;</li>}
-                        <li><b>{t("common:admin.emails.details.sentViaLabel")}</b>&nbsp;
+                        <li><b>{t("admin:admin.emails.details.subjectLabel")}</b> {emailTemplate.subject || t("admin:admin.emails.details.noSubject")}</li>
+                        {emailTemplate.from && <li><b>{t("admin:admin.emails.details.fromLabel")}</b> {emailTemplate.fromName || ""} &lt;{emailTemplate.from}&gt;</li>}
+                        {emailTemplate.replyTo && <li><b>{t("admin:admin.emails.details.replyToLabel")}</b> {emailTemplate.replyToName || ""} &lt;{emailTemplate.replyTo}&gt;</li>}
+                        <li><b>{t("admin:admin.emails.details.sentViaLabel")}</b>&nbsp;
                             {emailTemplate.sender?.includes("@mail.isaac") ? "MailGun" : t("common:label.university")}
                         </li>
                     </ul>
@@ -115,17 +115,17 @@ export const AdminEmails = () => {
             </Card>
 
             <Card className="p-3 my-3">
-                <CardTitle tag="h2">{t("common:admin.emails.htmlPreview.title")}</CardTitle>
+                <CardTitle tag="h2">{t("admin:admin.emails.htmlPreview.title")}</CardTitle>
                 <Label>{t("common:label.emailPreviewNote")}</Label>
                 <CardBody>
                     {emailTemplate.html &&
-                        <iframe title={t("common:admin.emails.htmlPreview.frameTitle")} className="email-preview-frame" srcDoc={emailTemplate.html}/>
+                        <iframe title={t("admin:admin.emails.htmlPreview.frameTitle")} className="email-preview-frame" srcDoc={emailTemplate.html}/>
                     }
                 </CardBody>
             </Card>
 
             <Card className="p-3 my-3">
-                <CardTitle tag="h2">{t("common:admin.emails.plainTextPreview.title")}</CardTitle>
+                <CardTitle tag="h2">{t("admin:admin.emails.plainTextPreview.title")}</CardTitle>
                 <Label>{t("common:label.emailPreviewNote")}</Label>
                 <CardBody>
                     <pre>{emailTemplate.plainText}</pre>
@@ -139,11 +139,11 @@ export const AdminEmails = () => {
                     {!emailSent ?
                         <React.Fragment>
                             {numberOfUsers >= RECIPIENT_NUMBER_WARNING_VALUE && <div className="alert alert-warning">
-                                <Trans i18nKey="common:admin.emails.send.recipientsWarning" components={{ warning: <strong />, count: <strong /> }} values={{ recipientCount: numberOfUsers }} />
+                                <Trans i18nKey="admin:admin.emails.send.recipientsWarning" components={{ warning: <strong />, count: <strong /> }} values={{ recipientCount: numberOfUsers }} />
                             </div>}
                             <Button type='button' color="secondary" disabled={!canSubmit} className={siteSpecific("btn-xl", "form-control border-0")}
                                 onClick={() => {
-                                    if (window.confirm(t("common:admin.emails.send.confirm", { emailType, contentObjectId: contentObjectID, count: numberOfUsers }))) {
+                                    if (window.confirm(t("admin:admin.emails.send.confirm", { emailType, contentObjectId: contentObjectID, count: numberOfUsers }))) {
                                         setEmailSent(true);
                                         sendAdminEmailWithIds({contentId: contentObjectID, emailType, ids: csvIDs});
                                     }

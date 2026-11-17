@@ -164,7 +164,7 @@ export const FilterSummary = ({filterTags, clearFilters, removeFilterTag}: Filte
             <button className="icon icon-close" onClick={() => removeFilterTag(t.value)} aria-label={i18next.t("common:button.close")}/>
         </div>)}
         {filterTags.length > 0 && <button className="text-black py-0 mt-1 btn-link bg-transparent" onClick={(e) => { e.stopPropagation(); clearFilters(); }}>
-            {i18next.t("common:questionFinder.filter.clearAll")}
+            {i18next.t("questions:questionFinder.filter.clearAll")}
         </button>}
     </div>;
 };
@@ -463,7 +463,7 @@ export const QuestionFinder = () => {
         searchDifficulties.map(d => {return {value: d, label: simpleDifficultyLabelMap[d]};}),
         searchStages.map(s => {return {value: s, label: stageLabelMap[s]};}),
         statusList.map(s => {return {value: s, label: statusLabelMap[s]};}),
-        excludeBooks ? [{value: "excludeBooks", label: i18next.t("common:questionFinder.filter.excludeBooks")}] : booksList.map(book => {return {value: book.tag, label: book.shortTitle};}),
+        excludeBooks ? [{value: "excludeBooks", label: i18next.t("questions:questionFinder.filter.excludeBooks")}] : booksList.map(book => {return {value: book.tag, label: book.shortTitle};}),
         selectionList,
     ].flat(), [searchDifficulties, searchStages, statusList, excludeBooks, booksList, selectionList]);
 
@@ -561,7 +561,7 @@ export const QuestionFinder = () => {
                 <ShowLoadingQuery 
                     query={searchQuestionsQuery} 
                     placeholder={loadingPlaceholder}
-                    defaultErrorTitle={i18next.t("common:questionFinder.errorTitle")}
+                    defaultErrorTitle={i18next.t("questions:questionFinder.errorTitle")}
                     uninitializedPlaceholder={
                         <ResultsListContainer>
                             <ResultsListHeader className="d-flex">
@@ -580,11 +580,11 @@ export const QuestionFinder = () => {
                                     <div className="flex-grow-1" data-testid="question-finder-results-header" ref={resultsHeaderRef} tabIndex={-1}>
                                         {questions && questions.length > 0 
                                             ? <>
-                                                <Trans i18nKey="common:questionFinder.resultsCount" components={{ b: <b /> }} values={{ count: questions.length }} />
-                                                {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> <Trans i18nKey="common:questionFinder.totalCount" components={{ b: <b /> }} values={{ total: totalQuestions }} /></>}
+                                                <Trans i18nKey="questions:questionFinder.resultsCount" components={{ b: <b /> }} values={{ count: questions.length }} />
+                                                {(totalQuestions ?? 0) > 0 && !filteringByStatus && <> <Trans i18nKey="questions:questionFinder.totalCount" components={{ b: <b /> }} values={{ total: totalQuestions }} /></>}
                                                 .
                                             </>
-                                            : <span className={classNames({"visually-hidden": isAda})}>{i18next.t("common:questionFinder.noResults")}</span>
+                                            : <span className={classNames({"visually-hidden": isAda})}>{i18next.t("questions:questionFinder.noResults")}</span>
                                         }
                                     </div>
                                     <button 
@@ -595,7 +595,7 @@ export const QuestionFinder = () => {
                                         onClick={() => setRandomSeed(nextSeed())}
                                         disabled={questions?.length === 0}
                                     >
-                                        <span><Trans i18nKey="common:questionFinder.shuffleButton" components={{ responsiveWord: <span className="d-none d-sm-inline" /> }} /></span>
+                                        <span><Trans i18nKey="questions:questionFinder.shuffleButton" components={{ responsiveWord: <span className="d-none d-sm-inline" /> }} /></span>
                                         {isPhy && <i className={classNames("icon icon-refresh", questions?.length === 0 ? "icon-color-grey" : "icon-color-black")}></i>}
                                     </button>
                                 </ResultsListHeader>

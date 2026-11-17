@@ -9,14 +9,14 @@ export const PolicyPageSidebar = (props: ContentSidebarProps) => {
     const navigate = useNavigate();
     const path = useLocation().pathname;
 
-    return <ContentSidebar buttonTitle={t("common:policy.sidebar.selectPage")} optionBar={props.optionBar}>
+    return <ContentSidebar buttonTitle={t("pages:policy.sidebar.selectPage")} optionBar={props.optionBar}>
         <div className="section-divider"/>
-        <h3 className="h5">{t("common:policy.sidebar.selectPage")}</h3>
+        <h3 className="h5">{t("pages:policy.sidebar.selectPage")}</h3>
         <ul>
-            <li><StyledTabPicker checkboxTitle={t("common:policy.sidebar.accessibilityStatement")} checked={path === "/accessibility" || path === "/pages/accessibility_statement"} onChange={() => navigate("/accessibility")}/></li>
-            <li><StyledTabPicker checkboxTitle={t("common:policy.sidebar.privacyPolicy")} checked={path === "/privacy"  || path === "/pages/privacy_policy"} onChange={() => navigate("/privacy")}/></li>
-            <li><StyledTabPicker checkboxTitle={t("common:policy.sidebar.cookiePolicy")} checked={path === "/cookies" || path === "/pages/cookie_policy"} onChange={() => navigate("/cookies")}/></li>
-            <li><StyledTabPicker checkboxTitle={t("common:policy.sidebar.termsOfUse")} checked={path === "/terms" || path === "/pages/terms_of_use"} onChange={() => navigate("/terms")}/></li>
+            <li><StyledTabPicker checkboxTitle={t("pages:policy.sidebar.accessibilityStatement")} checked={path === "/accessibility" || path === "/pages/accessibility_statement"} onChange={() => navigate("/accessibility")}/></li>
+            <li><StyledTabPicker checkboxTitle={t("pages:policy.sidebar.privacyPolicy")} checked={path === "/privacy"  || path === "/pages/privacy_policy"} onChange={() => navigate("/privacy")}/></li>
+            <li><StyledTabPicker checkboxTitle={t("pages:policy.sidebar.cookiePolicy")} checked={path === "/cookies" || path === "/pages/cookie_policy"} onChange={() => navigate("/cookies")}/></li>
+            <li><StyledTabPicker checkboxTitle={t("pages:policy.sidebar.termsOfUse")} checked={path === "/terms" || path === "/pages/terms_of_use"} onChange={() => navigate("/terms")}/></li>
         </ul>
     </ContentSidebar>;
 };

@@ -38,7 +38,7 @@ const CardUsageInfo = ({ quizAssignment, usageDisplay, className, ...rest }: Car
                 ? <div className="d-flex align-items-center">
                     <span>
                         <Trans
-                            i18nKey="common:tests.card.usage.begins"
+                            i18nKey="teaching:tests.card.usage.begins"
                             components={{
                                 strong: <b />,
                             }}
@@ -47,7 +47,7 @@ const CardUsageInfo = ({ quizAssignment, usageDisplay, className, ...rest }: Car
                     </span>
                 </div>
                 : <Link to={`${PATHS.TEST}/${quizAssignment.id}/feedback`} target="_blank" className="d-flex align-items-center gap-2">
-                    <b>{t("common:tests.card.usage.viewResults")}</b>
+                    <b>{t("teaching:tests.card.usage.viewResults")}</b>
                     <span className={"visually-hidden"}>{t("common:cards.opensNewTab")}</span>
                     <i className="icon icon-arrow-right" aria-hidden="true" />
                 </Link>
@@ -100,7 +100,7 @@ export const TestCard = (props: TestCardProps) => {
                                         {quizAssignment.quizSummary?.title}
                                         <i className="icon icon-new-tab ms-2 icon-color-black" />
                                     </Link>
-                                    : quizAssignment.quizSummary?.title || i18next.t("common:tests.card.untitledTitle")
+                                    : quizAssignment.quizSummary?.title || i18next.t("teaching:tests.card.untitledTitle")
                             )}
                         </div>
                         {above['sm'](deviceSize) && subjects.length > 0 && <div className="d-flex align-items-center mb-2">
@@ -124,7 +124,7 @@ export const TestCard = (props: TestCardProps) => {
                 {isPhy && testUrl && above['sm'](deviceSize) && <div className="card-share-link">
                     <ShareLink 
                         linkUrl={testUrl} reducedWidthLink clickAwayClose size="sm" buttonProps={{color: "keyline", disabled: !!(quizAssignment && isOverdue(quizAssignment))}}
-                        inputInfo={i18next.t("common:tests.card.shareLink.tooltip")}
+                        inputInfo={i18next.t("teaching:tests.card.shareLink.tooltip")}
                     />
                 </div>}
                 {allowManaging
@@ -135,7 +135,7 @@ export const TestCard = (props: TestCardProps) => {
                             </DropdownToggle>
                             <DropdownMenu container={"root"}>
                                 <DropdownItem onClick={cancel}>{i18next.t("common:button.unassign")}</DropdownItem>
-                                <DropdownItem onClick={openSetFeedbackModeModal}>{i18next.t("common:tests.card.manage.changeFeedbackType")}</DropdownItem>
+                                <DropdownItem onClick={openSetFeedbackModeModal}>{i18next.t("teaching:tests.card.manage.changeFeedbackType")}</DropdownItem>
                                 <DropdownItem onClick={extendDueDate}>{i18next.t("common:button.extendDueDate")}</DropdownItem>
                             </DropdownMenu>
                         </UncontrolledButtonDropdown>

@@ -23,7 +23,7 @@ const QuestionInputValidation = <T,>({userInput, validator}: QuestionInputValida
     }, [userInput, validator]);
 
     return errors.length > 0 && <div className="question-feedback-input-errors mt-2">
-        <strong>{t("common:questions.inputValidation.warningLabel")}</strong>
+        <strong>{t("questions:questions.inputValidation.warningLabel")}</strong>
         <ul className="mb-1">{errors.map(e => (<li key={e}>{e}</li>))}</ul>
     </div>;
 };

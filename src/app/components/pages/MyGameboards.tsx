@@ -94,7 +94,7 @@ export const GameboardsFilters = ({boardCreator, setBoardCreator, boardCompletio
         <Row className={classNames("my-gameboards-filters", {"shown": showFilters})}>
             <Col xs={12} lg={7}>
                 <Label className="w-100">
-                    <span className={"text-nowrap"}>{t("common:gameboards.filters.name")}</span>
+                    <span className={"text-nowrap"}>{t("teaching:gameboards.filters.name")}</span>
                     <Input type="text" data-testid="title-filter" onChange={(e) => setBoardTitleFilter(e.target.value)} />
                 </Label>
             </Col>
@@ -108,7 +108,7 @@ export const GameboardsFilters = ({boardCreator, setBoardCreator, boardCompletio
             </Col>
             <Col xs={6} lg={3}>
                 <Label className="w-100">
-                    <span className={"text-nowrap"}>{t("common:gameboards.filters.status")}</span>
+                    <span className={"text-nowrap"}>{t("teaching:gameboards.filters.status")}</span>
                     <Input type="select" value={boardCompletion} onChange={e => setBoardCompletion(e.target.value as BoardCompletions)}>
                         {Object.values(BoardCompletions).map(completion => <option key={completion} value={completion}>{completion}</option>)}
                     </Input>

@@ -28,11 +28,11 @@ export const RegistrationRoleSelect = () => {
     };
 
     return <Container>
-        <TitleAndBreadcrumb currentPageTitle={t("common:auth.registration.pageTitle", { siteTitle: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}}/>
+        <TitleAndBreadcrumb currentPageTitle={t("account:auth.registration.pageTitle", { siteTitle: SITE_TITLE })} className="mb-4" icon={{type: "icon", icon: "icon-account"}}/>
         <Card className="my-7">
             <CardBody>
-                <h2>{t("common:auth.roleSelect.heading")}</h2>
-                <p>{t("common:auth.roleSelect.description")}</p>
+                <h2>{t("account:auth.roleSelect.heading")}</h2>
+                <p>{t("account:auth.roleSelect.description")}</p>
                 <Row>
                     <Col xs={12} lg={6}>
                         <Card className="h-100 border-1">
@@ -41,14 +41,14 @@ export const RegistrationRoleSelect = () => {
                                     <h3>{t("common:role.student")}</h3>
                                 </CardTitle>
                                 <CardText>
-                                    <p>{t("common:auth.roleSelect.student.intro")}</p>
+                                    <p>{t("account:auth.roleSelect.student.intro")}</p>
                                     <ul>
-                                        <li>{t("common:auth.roleSelect.student.featurePreferences")}</li>
-                                        <li>{t("common:auth.roleSelect.student.featureProgress")}</li>
+                                        <li>{t("account:auth.roleSelect.student.featurePreferences")}</li>
+                                        <li>{t("account:auth.roleSelect.student.featureProgress")}</li>
                                         <li>See all assignments set by your teacher(s)</li>
                                     </ul>
                                 </CardText>
-                                <Button block className="align-self-end mt-auto" onClick={studentSignup}>{t("common:auth.roleSelect.student.button")}</Button>
+                                <Button block className="align-self-end mt-auto" onClick={studentSignup}>{t("account:auth.roleSelect.student.button")}</Button>
                             </CardBody>
                         </Card>
                     </Col>
@@ -59,15 +59,15 @@ export const RegistrationRoleSelect = () => {
                                     <h3>{t("common:role.teacher")}</h3>
                                 </CardTitle>
                                 <CardText>
-                                    <p>{t("common:auth.roleSelect.teacher.intro")}</p>
+                                    <p>{t("account:auth.roleSelect.teacher.intro")}</p>
                                     <ul>
-                                        <li>{t("common:auth.roleSelect.teacher.featureGroups")}</li>
-                                        <li>{t("common:auth.roleSelect.teacher.featureQuizzes")}</li>
-                                        <li>{t("common:auth.roleSelect.teacher.featureProgress")}</li>
+                                        <li>{t("account:auth.roleSelect.teacher.featureGroups")}</li>
+                                        <li>{t("account:auth.roleSelect.teacher.featureQuizzes")}</li>
+                                        <li>{t("account:auth.roleSelect.teacher.featureProgress")}</li>
                                     </ul>
                                     <p>
                                         <Trans
-                                            i18nKey="common:auth.roleSelect.teacher.noAccessNote"
+                                            i18nKey="account:auth.roleSelect.teacher.noAccessNote"
                                             components={{
                                                 learnMoreLink: <TransAnchor href="/support/teacher/general" />,
                                             }}

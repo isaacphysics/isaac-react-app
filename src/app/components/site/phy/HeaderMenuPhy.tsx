@@ -57,7 +57,7 @@ export const HeaderMenuPhy = (props: NavProps & {toggleMenu: () => void}) => {
             className={classNames({"align-content-center" : !isOffcanvas})}
         >
             {isStaff(user) && <LinkItem to="/admin">{t("sci:navigation.admin.tools")}</LinkItem>}
-            {isAdmin(user) && <LinkItem to="/admin/usermanager">{t("common:admin.usefulLinks.userManager")}</LinkItem>}
+            {isAdmin(user) && <LinkItem to="/admin/usermanager">{t("admin:admin.usefulLinks.userManager")}</LinkItem>}
             {(isEventLeader(user) || isAdminOrEventManager(user)) && <LinkItem to="/admin/events">{t("sci:navigation.admin.eventAdmin")}</LinkItem>}
             {isStaff(user) && <LinkItem to="/admin/stats">{t("sci:navigation.admin.statistics")}</LinkItem>}
             {(isStaff(user) || isNonProd) && <LinkItem to="/admin/content_errors">{t("sci:navigation.admin.contentErrors")}</LinkItem>}

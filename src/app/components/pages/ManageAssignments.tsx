@@ -58,7 +58,7 @@ const FindDeckButtons = () => {
     return <>
         <PageFragment fragmentId={"manage_assignments_set_new_modal_text"} ifNotFound={RenderNothing} />
         <h2 className="mb-3 h4">
-            {t("common:assignments.manage.findDeckFrom")}
+            {t("teaching:assignments.manage.findDeckFrom")}
         </h2>
         <Row className="d-flex row-cols-1 row-cols-md-2 row-gap-3 mb-5">
             <Col>
@@ -71,17 +71,17 @@ const FindDeckButtons = () => {
             </Col>
             <Col>
                 <Button tag={Link} onClick={() => dispatch(closeActiveModal())} to={"/physics/a_level/question_decks"} block color="keyline" className="px-3">
-                    {t("common:assignments.manage.findTopicDecks")}
+                    {t("teaching:assignments.manage.findTopicDecks")}
                 </Button>
             </Col>
             <Col>
                 <Button tag={Link} onClick={() => dispatch(closeActiveModal())} to={"/my_question_decks"} block color="keyline" className="px-3">
-                    {t("common:assignments.manage.findSavedDecks")}
+                    {t("teaching:assignments.manage.findSavedDecks")}
                 </Button>
             </Col>
             <Col>
                 <Button tag={Link} onClick={() => dispatch(closeActiveModal())} to={PATHS.GAMEBOARD_BUILDER} block color="keyline" className="px-3">
-                    {t("common:assignments.manage.findNewDeck")}
+                    {t("teaching:assignments.manage.findNewDeck")}
                 </Button>
             </Col>
         </Row>
@@ -96,7 +96,7 @@ const GroupWorkList = ({groupId, work, initialOpen, parentOpen}: {groupId: numbe
     const { t } = useTranslation();
     const [open, setOpen] = useState<boolean>(!!initialOpen);
     const {collapsed, setCollapsed, groupsById} = useContext(ManageAssignmentsContext);
-    const groupName = groupsById[groupId]?.groupName ?? t("common:assignments.manage.timeline.unknownGroup");
+    const groupName = groupsById[groupId]?.groupName ?? t("teaching:assignments.manage.timeline.unknownGroup");
 
     useEffect(() => {
         if (collapsed) setOpen(!!initialOpen);
@@ -110,7 +110,7 @@ const GroupWorkList = ({groupId, work, initialOpen, parentOpen}: {groupId: numbe
         <div 
             tabIndex={0} 
             role={"button"} 
-            aria-label={(open ? t("common:assignments.timeline.collapse") : t("common:button.expand")) + t("common:assignments.manage.timeline.listForGroup", { groupName })} 
+            aria-label={(open ? t("teaching:assignments.timeline.collapse") : t("common:button.expand")) + t("teaching:assignments.manage.timeline.listForGroup", { groupName })} 
             onKeyDown={(e) => {
                 if (e.key === "Enter") {
                     setOpen(o => !o);
@@ -175,7 +175,7 @@ const DateWorkList = ({date, work}: {date: number; work: ValidWorkWithListingDat
 
     return <>
         <div 
-            tabIndex={0} role={"button"} aria-label={(open ? t("common:assignments.timeline.collapse") : t("common:button.expand")) + t("common:assignments.timeline.listForDay", { date })} 
+            tabIndex={0} role={"button"} aria-label={(open ? t("teaching:assignments.timeline.collapse") : t("common:button.expand")) + t("teaching:assignments.timeline.listForDay", { date })} 
             onKeyDown={(e) => {
                 if (e.key === "Enter") {
                     setOpen(o => !o);
@@ -202,9 +202,9 @@ const DateWorkList = ({date, work}: {date: number; work: ValidWorkWithListingDat
                     {" "}⋅{" "}
                     {numGroups} group{numGroups > 1 ? "s" : ""}
                     {" "}⋅{" "}
-                    {assignmentCount > 0 && <>{t("common:assignments.counts.assignments", { count: assignmentCount })}</>}
+                    {assignmentCount > 0 && <>{t("teaching:assignments.counts.assignments", { count: assignmentCount })}</>}
                     {assignmentCount > 0 && testCount > 0 && " and "}
-                    {testCount > 0 && <>{t("common:assignments.counts.tests", { count: testCount })}</>}
+                    {testCount > 0 && <>{t("teaching:assignments.counts.tests", { count: testCount })}</>}
                     {viewBy === "startDate" ? " set" : " due"}
                 </span>
                 <i className={classNames("icon icon-chevron-right icon-dropdown-90", {"active": open})} />
@@ -236,7 +236,7 @@ const MonthWorkList = ({year, month, datesAndWork}: {year: number, month: number
         if (collapsed) setOpen(false);
     }, [collapsed]);
     return <>
-        <div tabIndex={0} role={"button"} aria-label={(open ? t("common:assignments.timeline.collapse") : t("common:button.expand")) + t("common:assignments.timeline.listForMonth", { monthName: MONTH_NAMES[month] })}
+        <div tabIndex={0} role={"button"} aria-label={(open ? t("teaching:assignments.timeline.collapse") : t("common:button.expand")) + t("teaching:assignments.timeline.listForMonth", { monthName: MONTH_NAMES[month] })}
             className={"month-label w-100 text-end d-flex"} data-testid="month-label" onKeyPress={(e) => {
                 if (e.key === "Enter") {
                     setOpen(o => !o);
@@ -260,9 +260,9 @@ const MonthWorkList = ({year, month, datesAndWork}: {year: number, month: number
             <div className="h4">{`${MONTH_NAMES[month]}`}</div>
             <div className={"mx-3 flex-grow-1 border-bottom"} style={{height: "1.1rem"}}/>
             <span className={"pt-1 month-assignment-count"}>
-                {assignmentCount > 0 && <>{t("common:assignments.counts.assignments", { count: assignmentCount })}</>}
+                {assignmentCount > 0 && <>{t("teaching:assignments.counts.assignments", { count: assignmentCount })}</>}
                 {assignmentCount > 0 && testCount > 0 && " and "}
-                {testCount > 0 && <>{t("common:assignments.counts.tests", { count: testCount })}</>}
+                {testCount > 0 && <>{t("teaching:assignments.counts.tests", { count: testCount })}</>}
                 {viewBy === "startDate" ? " set" : " due"}
             </span>
         </div>
@@ -428,7 +428,7 @@ export const ManageAssignments = ({user}: { user: LoggedInUser }) => {
     const [collapsed, setCollapsed] = useState<boolean>(false);
 
     const pageHelp = <span>
-        {i18next.t("common:assignments.manage.pageHelp")}
+        {i18next.t("teaching:assignments.manage.pageHelp")}
     </span>;
 
     const dispatch = useAppDispatch();
@@ -480,7 +480,7 @@ export const ManageAssignments = ({user}: { user: LoggedInUser }) => {
                                     <Button block color="keyline" className="mt-2" onClick={() => dispatch(openActiveModal(setNewAssignmentModal()))}><div className="mb-0 h5">{i18next.t("sci:button.setNewAssignment")}</div></Button>
                                 </Col>
                                 {isTeacherOrAbove(user) && <Col>
-                                    <Button block tag={Link} to="/view_tests" color="keyline" className="mt-2"><div className="mb-0 h5">{i18next.t("common:assignments.manage.setNewTestButton")}</div></Button>
+                                    <Button block tag={Link} to="/view_tests" color="keyline" className="mt-2"><div className="mb-0 h5">{i18next.t("teaching:assignments.manage.setNewTestButton")}</div></Button>
                                 </Col>}
                             </Row>
                             <div className="section-divider-bold" />
@@ -490,14 +490,14 @@ export const ManageAssignments = ({user}: { user: LoggedInUser }) => {
                                 <Trans i18nKey="sci:error.noGroupsToAssign" components={{ createGroupLink: <Link to="/groups" /> }} />
                             </div>}
                             {groups && groups.length > 0 && someActiveFilter && workGroupedByDate.length === 0 && <div className="mt-1">
-                                {i18next.t("common:assignments.manage.noMatchingWork")}
+                                {i18next.t("teaching:assignments.manage.noMatchingWork")}
                             </div>}
                             {groups && groups.length > 0 && !someActiveFilter && workGroupedByDate.length === 0 && <div className="mt-1">
-                                {isTeacherOrAbove(user) ? i18next.t("common:assignments.manage.noWorkSet") : i18next.t("common:assignments.manage.noWorkSetTutor")}
+                                {isTeacherOrAbove(user) ? i18next.t("teaching:assignments.manage.noWorkSet") : i18next.t("teaching:assignments.manage.noWorkSetTutor")}
                             </div>}
                             {notAllPastWorkIsListed && <div className="mt-1">
                                 <Button size="sm" onClick={() => extendBackSixMonths()}>
-                                    {i18next.t("common:assignments.manage.showEarlierWork", { date: formatDate(earliestShowDate) })}
+                                    {i18next.t("teaching:assignments.manage.showEarlierWork", { date: formatDate(earliestShowDate) })}
                                 </Button>
                             </div>}
                             {workGroupedByDate.length > 0 && <div className={classNames("timeline w-100", {"pt-2": !notAllPastWorkIsListed})} data-testid="timeline">

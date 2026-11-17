@@ -60,7 +60,7 @@ export const UserProfile = (props: UserProfileProps) => {
     return <MyAccountTab
         leftColumn={<>
             <h2 className="h3">{t("common:title.accountDetails")}</h2>
-            <p>{t("common:account.profile.description", { siteTitle: SITE_TITLE })}</p>
+            <p>{t("account:account.profile.description", { siteTitle: SITE_TITLE })}</p>
             <p>
                 <AccountTypeMessage role={userToUpdate?.role} hideUpgradeMessage={userToUpdate.emailVerificationStatus === "AGE_RESTRICTED"} />
             </p>
@@ -124,24 +124,24 @@ export const UserProfile = (props: UserProfileProps) => {
             {(userToUpdate.emailVerificationStatus === "NOT_VERIFIED" || userToUpdate.emailVerificationStatus === "DELIVERY_FAILED") && <Alert color="warning" className="d-flex mt-2">
                 <i className="icon icon-warning icon-color-alert icon-sm me-3 mt-1" />
                 <div>
-                    {t("common:account.profile.emailUnverified")}
+                    {t("account:account.profile.emailUnverified")}
                     <br/><br/>
                     <Button color="link primary-font-link" onClick={() => userToUpdate.email && sendVerificationEmail({email: userToUpdate.email})} disabled={isVerificationEmailSent}>
-                        {isVerificationEmailSent ? t("common:account.profile.emailSent") : t("common:account.profile.requestVerification")}
+                        {isVerificationEmailSent ? t("account:account.profile.emailSent") : t("account:account.profile.requestVerification")}
                     </Button>
                     {userToUpdate.emailVerificationStatus === "DELIVERY_FAILED" && <>
                         <br/><br/>
                         <details>
-                            <summary>{t("common:account.profile.otherOptions")}</summary>
+                            <summary>{t("account:account.profile.otherOptions")}</summary>
                             <div className="ms-4 mt-3">
                                 <p>
-                                    <Trans i18nKey="common:account.profile.emailBlockedInfo" components={{ emailHelpLink: <Link to="/pages/emails" /> }} values={{ siteTitle: SITE_TITLE }} />
+                                    <Trans i18nKey="account:account.profile.emailBlockedInfo" components={{ emailHelpLink: <Link to="/pages/emails" /> }} values={{ siteTitle: SITE_TITLE }} />
                                 </p>
                                 <p>
-                                    {t("common:account.profile.disableWarningsWarning", { siteTitle: SITE_TITLE })}
+                                    {t("account:account.profile.disableWarningsWarning", { siteTitle: SITE_TITLE })}
                                 </p>
                                 <p>
-                                    {t("common:account.profile.optionReversible")}
+                                    {t("account:account.profile.optionReversible")}
                                 </p>
                                 <Button disabled={hasModifiedEmailVerificationState} onClick={() => {
                                     if (emailVerificationWarningsDisabled) {
@@ -150,13 +150,13 @@ export const UserProfile = (props: UserProfileProps) => {
                                         dispatch(cookieConsentSlice.actions.acceptCookie(DISABLE_EMAIL_VERIFICATION_WARNING_COOKIE));
                                     }
                                     dispatch(emailVerificationWarningsDisabled 
-                                        ? showSuccessToast(t("common:account.profile.warningsRestoredTitle"), t("common:account.profile.warningsRestoredMessage"))
-                                        : showSuccessToast(t("common:account.profile.warningsDisabledTitle"), t("common:account.profile.warningsDisabledMessage")));
+                                        ? showSuccessToast(t("account:account.profile.warningsRestoredTitle"), t("account:account.profile.warningsRestoredMessage"))
+                                        : showSuccessToast(t("account:account.profile.warningsDisabledTitle"), t("account:account.profile.warningsDisabledMessage")));
                                     setHasModifiedEmailVerificationState(true);
                                 }}>
                                     {hasModifiedEmailVerificationState
-                                        ? t("common:account.profile.success")
-                                        : emailVerificationWarningsDisabled ? t("common:account.profile.restoreWarnings") : t("common:account.profile.disableWarnings")
+                                        ? t("account:account.profile.success")
+                                        : emailVerificationWarningsDisabled ? t("account:account.profile.restoreWarnings") : t("account:account.profile.disableWarnings")
                                     }
                                 </Button>
                             </div>

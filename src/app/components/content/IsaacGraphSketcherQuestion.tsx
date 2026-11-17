@@ -96,7 +96,7 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             question={doc}
         />}
         <div className="question-content d-flex justify-content-center d-print-none">
-            <div><i>{isDefined(currentAttempt?.value) ? t("common:graphSketcher.editInstruction") : t("common:graphSketcher.startInstruction")}</i></div>
+            <div><i>{isDefined(currentAttempt?.value) ? t("questions:graphSketcher.editInstruction") : t("questions:graphSketcher.startInstruction")}</i></div>
         </div>
     </div>;
 };

@@ -60,12 +60,12 @@ const FreeTextEntryValidation = ({validValue, wordLimit, charLimit, piiDetected}
     const { t } = useTranslation();
     return validValue ? null
         : <div className="no-print text-failed">
-            {charLimit.exceeded && <div><span className="icon-error" /> {t("common:questions.validation.charLimitExceeded", { currentCount: charLimit.current, limit: charLimit.limit })}</div>}
-            {wordLimit.exceeded && <div><span className="icon-error" /> {t("common:questions.validation.wordLimitExceeded", { currentCount: wordLimit.current, limit: wordLimit.limit })}</div>}
+            {charLimit.exceeded && <div><span className="icon-error" /> {t("questions:questions.validation.charLimitExceeded", { currentCount: charLimit.current, limit: charLimit.limit })}</div>}
+            {wordLimit.exceeded && <div><span className="icon-error" /> {t("questions:questions.validation.wordLimitExceeded", { currentCount: wordLimit.current, limit: wordLimit.limit })}</div>}
             {piiDetected && <div className="d-flex">
                 <span className="icon-error" />
                 <span className="ms-1">
-                    <Trans i18nKey="common:questions.validation.piiDetected" components={{ strong: <strong />, br: <br /> }} />
+                    <Trans i18nKey="questions:questions.validation.piiDetected" components={{ strong: <strong />, br: <br /> }} />
                 </span>
             </div>}
         </div>;
@@ -86,13 +86,13 @@ const IsaacLLMFreeTextQuestion = ({doc, questionId, readonly}: IsaacQuestionProp
                 <IsaacContentValueOrChildren value={doc.value} encoding={doc.encoding}>
                     {doc.children}
                 </IsaacContentValueOrChildren>
-                {doc.maxMarks && <p><strong>{t("common:questions.maxMarks", { count: doc.maxMarks })}</strong></p>}
+                {doc.maxMarks && <p><strong>{t("questions:questions.maxMarks", { count: doc.maxMarks })}</strong></p>}
             </div>
             <FormGroup className="form-group">
                 <Input type="textarea"
                     disabled={canAttemptQuestionType.isError || readonly}
                     spellCheck={true}
-                    aria-label={t("common:questions.freeText.answerLabel")}
+                    aria-label={t("questions:questions.freeText.answerLabel")}
                     rows={3}
                     value={currentAttemptValue}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) =>

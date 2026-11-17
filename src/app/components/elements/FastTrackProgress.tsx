@@ -274,7 +274,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                 sourceIndex: mostRecentTopTenIndex,
                 targetIndices: [upperIndex],
                 isMostRecent: true,
-                message: t("common:gameboard.fastTrack.connectionTopTenToUpperMessage")
+                message: t("teaching:gameboard.fastTrack.connectionTopTenToUpperMessage")
             });
 
             // Upper to Lower connections
@@ -284,7 +284,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                     sourceIndex: upperIndex,
                     targetIndices: [lowerIndex],
                     isMostRecent: true,
-                    message: t("common:gameboard.fastTrack.connectionUpperToLowerMessage")
+                    message: t("teaching:gameboard.fastTrack.connectionUpperToLowerMessage")
                 });
             }
         }
@@ -377,7 +377,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                     <br className="d-none d-lg-block"/>
                     {currentlyWorkingOn.isConcept && <div className="mt-lg-1 mt-xl-3 h4">
                         <Markup encoding={"latex"}>
-                            {t("common:gameboard.fastTrack.conceptTitleSuffix", { conceptTitle: currentlyWorkingOn.title.replace(/\s*\d+i{1,2}$/i, "") })}
+                            {t("teaching:gameboard.fastTrack.conceptTitleSuffix", { conceptTitle: currentlyWorkingOn.title.replace(/\s*\d+i{1,2}$/i, "") })}
                         </Markup>
                     </div>}
                 </div>
@@ -405,7 +405,7 @@ export function FastTrackProgress({doc, search}: {doc: IsaacFastTrackQuestionPag
                 <div>
                     {currentlyWorkingOn.isConcept && <div className="mt-2 h4">
                         <Markup encoding={"latex"}>
-                            {t("common:gameboard.fastTrack.conceptTitleSuffix", { conceptTitle: currentlyWorkingOn.title.replace(/\s*\d+i{1,2}$/i, "") })}
+                            {t("teaching:gameboard.fastTrack.conceptTitleSuffix", { conceptTitle: currentlyWorkingOn.title.replace(/\s*\d+i{1,2}$/i, "") })}
                         </Markup>
                     </div>}
                 </div>

@@ -102,7 +102,7 @@ export const GroupAssignmentTab = ({assignment, progress, settingsVisible, setSe
                         <h2 className="h4">{t("sci:assignments.progress.groupTab.overview", { boardTitle: assignment.gameboard.title })} <BoardLink id={assignment.gameboard?.id} /></h2>,
                         <h2 className="h3">{t("ada:assignments.progress.groupTab.overview")} <BoardLink id={assignment.gameboard?.id} /></h2>
                     )}
-                    <span>{t("common:assignments.progress.groupTab.description")}</span>
+                    <span>{t("teaching:assignments.progress.groupTab.description")}</span>
                 </div>}
             />
 
@@ -114,7 +114,7 @@ export const GroupAssignmentTab = ({assignment, progress, settingsVisible, setSe
     </Card>;
 };
 
-const QuestionLink = ({questionId, boardId}: {questionId?: string, boardId?: string}) => <a className="new-tab-link" href={`/questions/${questionId}` + (boardId ? `?board=${boardId}` : "")} target="_blank" onClick={(e) => e.stopPropagation()} aria-label={i18next.t("common:assignments.progress.questionLink.ariaLabel")}>
+const QuestionLink = ({questionId, boardId}: {questionId?: string, boardId?: string}) => <a className="new-tab-link" href={`/questions/${questionId}` + (boardId ? `?board=${boardId}` : "")} target="_blank" onClick={(e) => e.stopPropagation()} aria-label={i18next.t("teaching:assignments.progress.questionLink.ariaLabel")}>
     <i className="icon icon-new-tab" />
 </a>;
 
@@ -167,7 +167,7 @@ const DetailedMarksCard = ({progress, questions, questionIndex, gameboardId, ...
             </div>
             <Spacer/>
             <Badge className="d-flex align-items-center me-2 text-black fw-bold" color={siteSpecific("neutral-light", "cultured-grey")}>
-                {t("common:assignments.progress.questionCard.attemptedBadge", { attemptedCount: numAttemptedThisQuestion, totalCount: progress.length })}
+                {t("teaching:assignments.progress.questionCard.attemptedBadge", { attemptedCount: numAttemptedThisQuestion, totalCount: progress.length })}
             </Badge>
             <i className={classNames("icon icon-chevron-down icon-color-black icon-dropdown-180", {"active": isOpen})}/>
         </button>
@@ -200,7 +200,7 @@ export const DetailedMarksTab = ({assignment, progress, settingsVisible, setSett
         <CardBody>
             <ResultsTableHeader settingsVisible={settingsVisible} setSettingsVisible={setSettingsVisible} isAssignment 
                 headerText={<div>
-                    <h2 className={siteSpecific("h4", "h3")}>{t("common:assignments.progress.detailedTab.title")}</h2>
+                    <h2 className={siteSpecific("h4", "h3")}>{t("teaching:assignments.progress.detailedTab.title")}</h2>
                     <span>See the questions your students answered{isPhy && " and which parts they struggled with"}.</span>
                 </div>}
             />

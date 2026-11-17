@@ -132,7 +132,7 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
     }, [doc.condensedMaxWidth]);
 
     const fullscreenButton = useCallback((figureString: string) => {
-        return <button className="figure-fullscreen" aria-label={i18next.t("common:figure.expandButton")} type="button" onClick={() => {
+        return <button className="figure-fullscreen" aria-label={i18next.t("questions:figure.expandButton")} type="button" onClick={() => {
             dispatch(openActiveModal(FigureModal({
                 path, 
                 altText: doc.altText,
@@ -148,7 +148,7 @@ export const IsaacFigure = ({doc}: IsaacFigureProps) => {
         <FigureNumberingContext.Consumer>
             {figureNumbers => {
                 const figureString = figId && Object.keys(figureNumbers).includes(figId) ?
-                    t("common:figure.label", { figureNumber: figureNumbers[figId] }) : "Figure";
+                    t("questions:figure.label", { figureNumber: figureNumbers[figId] }) : "Figure";
                 return <figure>
                     <div className="w-100 d-flex flex-column align-items-center justify-content-center position-relative p-3 pb-5" ref={clozeDropRootElement}>
                         {(doc.figureRegions && contextType && path)

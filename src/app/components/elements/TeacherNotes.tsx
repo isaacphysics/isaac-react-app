@@ -17,11 +17,11 @@ export const TeacherNotes = ({ notes }: TeacherNotesProps) => {
     // there is an argument for using CSS details[open] to toggle the icon over state, but as is this prevents complicating icon animation logic
     return notes && <details className="teacher-notes" onToggle={() => setActive(a => !a)}>
         <summary>
-            {t("common:teacherNotes.label")}
+            {t("teaching:teacherNotes.label")}
             <i className={classNames("icon icon-chevron-right icon-color-black ms-2 icon-dropdown-90", {"active": active})} />
         </summary>
         <div>
-            <div className="h4">{t("common:teacherNotes.label")}</div>            
+            <div className="h4">{t("teaching:teacherNotes.label")}</div>            
             <Markup trusted-markup-encoding="markdown">{notes}</Markup>
         </div>
     </details>;

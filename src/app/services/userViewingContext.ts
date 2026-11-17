@@ -453,9 +453,9 @@ export function notRelevantMessage(userContext: UseUserContextReturnType): strin
         }
     }
     else {
-        message.push(i18next.t("common:progress.marking.accountSettings"));
+        message.push(i18next.t("teaching:progress.marking.accountSettings"));
     }
-    return i18next.t("common:progress.marking.notMarkedFor", { context: message.join(" ") });
+    return i18next.t("teaching:progress.marking.notMarkedFor", { context: message.join(" ") });
 }
 
 export function audienceStyle(audienceString: string): string {

@@ -22,13 +22,13 @@ export function IntendedAudienceWarningAlert({doc}: {doc: ContentBaseDTO}) {
 
     return <Alert color="warning" className={"no-print"}>
         {userContext.contexts.length === 1 && userContext.contexts[0].examBoard && userContext.contexts[0].stage ?
-            t("common:intendedAudience.warning.noContentFor", { examBoard: examBoardLabelMap[userContext.contexts[0].examBoard], stage: stageLabelMap[userContext.contexts[0].stage] }) :
+            t("pages:intendedAudience.warning.noContentFor", { examBoard: examBoardLabelMap[userContext.contexts[0].examBoard], stage: stageLabelMap[userContext.contexts[0].stage] }) :
             `There is no content on this page for your stage ${isAda && "and exam board"} preferences. `
         }
         { isLoggedIn(user) &&
             <>
                 <Trans
-                    i18nKey="common:intendedAudience.warning.changePreferences"
+                    i18nKey="pages:intendedAudience.warning.changePreferences"
                     components={{
                         strong: <strong />,
                         accountLink: <Link to="/account" />,
@@ -38,7 +38,7 @@ export function IntendedAudienceWarningAlert({doc}: {doc: ContentBaseDTO}) {
         }
         <br/><br/>
         <Trans
-            i18nKey="common:intendedAudience.warning.reportTaggingIssue"
+            i18nKey="pages:intendedAudience.warning.reportTaggingIssue"
             components={{
                 strong: <strong />,
                 contactLink: <Link to={`/contact?preset=contentProblem&page=${doc.id}`} />,

@@ -36,7 +36,7 @@ export const GameboardContentSidebar = (props: GameboardContentSidebarProps) => 
                 <span className="hover-underline link-title"><Markup encoding="latex">{wildCard?.title}</Markup></span>
                 <span className="text-muted small text-overflow-ellipsis">
                     {isExternal
-                        ? <><Trans i18nKey="common:gameboard.sidebar.externalLink" components={{ em: <em /> }} values={{ externalUrl }} /></>
+                        ? <><Trans i18nKey="teaching:gameboard.sidebar.externalLink" components={{ em: <em /> }} values={{ externalUrl }} /></>
                         : wildCard.description ?? wildCard.subtitle
                     }
                 </span>

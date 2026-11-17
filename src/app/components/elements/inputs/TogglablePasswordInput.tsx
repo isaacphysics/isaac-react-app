@@ -18,10 +18,10 @@ export const TogglablePasswordInput = (props: TogglablePasswordInputProps) => {
             type={showPassword ? "text" : "password"}
         />
         <button type="button" tabIndex={-1} className="inline-form-input-btn" onClick={() => {setShowPassword(!showPassword);}}>
-            {showPassword ? t("common:auth.passwordInput.hideButton") : t("common:button.show")}
+            {showPassword ? t("account:auth.passwordInput.hideButton") : t("common:button.show")}
         </button>
         <FormFeedback>
-            {feedbackText ?? t("common:auth.passwordInput.invalidFeedback")}
+            {feedbackText ?? t("account:auth.passwordInput.invalidFeedback")}
         </FormFeedback>
     </InputGroup>;
 };
