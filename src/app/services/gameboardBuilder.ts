@@ -1,7 +1,7 @@
 import {determineAudienceViews, difficultiesOrdered, sortByStringValue, SortOrder, sortStringsNumerically, tags} from "./";
 import orderBy from "lodash/orderBy";
-import {AudienceContext, ContentSummaryDTO, Difficulty, GameboardDTO, GameboardItem} from "../../IsaacApiTypes";
-import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps, Tag} from "../../IsaacAppTypes";
+import {ContentSummaryDTO, Difficulty, GameboardDTO, GameboardItem} from "../../IsaacApiTypes";
+import {GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps, Tag} from "../../IsaacAppTypes";
 import { DraggableStateSnapshot } from "@hello-pangea/dnd";
 
 export const sortQuestions = (sortState: {[s: string]: string}) => (questions: ContentSummaryDTO[]) => {
@@ -35,8 +35,8 @@ export const sortQuestions = (sortState: {[s: string]: string}) => (questions: C
     return orderBy(questions, keys, order);
 };
 
-type ContentSummaryFieldsNotInGameboardItem = Exclude<keyof ContentSummary, keyof GameboardItem>;
-export const convertContentSummaryToGameboardItem = (question: ContentSummary): GameboardItem => {
+type ContentSummaryFieldsNotInGameboardItem = Exclude<keyof ContentSummaryDTO, keyof GameboardItem>;
+export const convertContentSummaryToGameboardItem = (question: ContentSummaryDTO): GameboardItem => {
     // We use the type system to ensure we remove fields that are not in a GameboardItem as it would otherwise cause serialization errors in the backend.
     const fieldsThatMustBeRemoved: {[field in ContentSummaryFieldsNotInGameboardItem]: undefined} = {
         type: undefined,
@@ -92,7 +92,7 @@ export const loadGameboardSelectedQuestions = (gameboard: GameboardDTO) => {
             map.set(question.id, question);
         }
         return map;
-    }, new Map<string, ContentSummary>());
+    }, new Map<string, ContentSummaryDTO>());
 };
 
 export const logEvent = (eventsLog: any[], event: string, params: any) => {
@@ -106,7 +106,7 @@ export const logEvent = (eventsLog: any[], event: string, params: any) => {
 export interface GameboardBuilderRowInterface {
     isDnd?: boolean;
     snapshot?: DraggableStateSnapshot;
-    question: ContentSummary;
+    question: ContentSummaryDTO;
     currentQuestions: GameboardBuilderQuestions;
     undoStack: GameboardBuilderQuestionsStackProps;
     redoStack: GameboardBuilderQuestionsStackProps;

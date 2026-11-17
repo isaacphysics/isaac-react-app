@@ -39,7 +39,7 @@ import {
     reactSelectDarkModeStyles,
     examBoardLabelMap
 } from "../../../services";
-import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps, QuestionSearchQuery} from "../../../../IsaacAppTypes";
+import {GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps, QuestionSearchQuery} from "../../../../IsaacAppTypes";
 import {ContentSummaryDTO, Difficulty, ExamBoard} from "../../../../IsaacApiTypes";
 import {Loading} from "../../handlers/IsaacSpinner";
 import {StyledSelect} from "../inputs/StyledSelect";
@@ -102,7 +102,7 @@ export const QuestionSearchModal = (
     const [searchBookmarks, setSearchBookmarks] = useState<boolean>(false);
 
     const [questionsSort, setQuestionsSort] = useState<Record<string, SortOrder>>({});
-    const [selectedQuestions, setSelectedQuestions] = useState<Map<string, ContentSummary>>(new Map(currentQuestions.selectedQuestions));
+    const [selectedQuestions, setSelectedQuestions] = useState<Map<string, ContentSummaryDTO>>(new Map(currentQuestions.selectedQuestions));
     const [questionOrder, setQuestionOrder] = useState([...currentQuestions.questionOrder]);
 
     const modalQuestions : GameboardBuilderQuestions = {selectedQuestions, questionOrder, setSelectedQuestions, setQuestionOrder};

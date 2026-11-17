@@ -24,7 +24,7 @@ import {
     Spinner,
 } from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {GameboardDTO, GameboardItem, RegisteredUserDTO} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, GameboardDTO, GameboardItem, RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {QuestionSearchModal} from "../elements/modals/QuestionSearchModal";
 import {DropResult} from "@hello-pangea/dnd";
 import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
@@ -50,7 +50,7 @@ import {useBlocker, useLocation} from "react-router-dom";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
 import intersection from "lodash/intersection";
-import {ContentSummary, GameboardBuilderQuestionsStackProps} from "../../../IsaacAppTypes";
+import {GameboardBuilderQuestionsStackProps} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {skipToken} from "@reduxjs/toolkit/query";
 import classNames from "classnames";
@@ -65,15 +65,15 @@ const DraggableListViewContainer = lazy(() => import('../elements/DraggableListV
 class GameboardBuilderQuestionsStack {
     questionOrderStack: string[][];
     setQuestionOrderStack: React.Dispatch<React.SetStateAction<string[][]>>;
-    setSelectedQuestionsStack: React.Dispatch<React.SetStateAction<Map<string, ContentSummary>[]>>;
-    selectedQuestionsStack: Map<string, ContentSummary>[];
+    setSelectedQuestionsStack: React.Dispatch<React.SetStateAction<Map<string, ContentSummaryDTO>[]>>;
+    selectedQuestionsStack: Map<string, ContentSummaryDTO>[];
 
     constructor(
         props: {
             questionOrderStack: string[][];
             setQuestionOrderStack: React.Dispatch<React.SetStateAction<string[][]>>;
-            selectedQuestionsStack: Map<string, ContentSummary>[];
-            setSelectedQuestionsStack: React.Dispatch<React.SetStateAction<Map<string, ContentSummary>[]>>;
+            selectedQuestionsStack: Map<string, ContentSummaryDTO>[];
+            setSelectedQuestionsStack: React.Dispatch<React.SetStateAction<Map<string, ContentSummaryDTO>[]>>;
         })
     {
         this.questionOrderStack = props.questionOrderStack;
@@ -82,7 +82,7 @@ class GameboardBuilderQuestionsStack {
         this.setSelectedQuestionsStack = props.setSelectedQuestionsStack;
     }
 
-    public push({questionOrder, selectedQuestions} : {questionOrder: string[], selectedQuestions: Map<string, ContentSummary>}) {
+    public push({questionOrder, selectedQuestions} : {questionOrder: string[], selectedQuestions: Map<string, ContentSummaryDTO>}) {
         if (this.questionOrderStack.length >= GAMEBOARD_UNDO_STACK_SIZE_LIMIT) {
             this.setSelectedQuestionsStack(p => p.slice(1));
             this.setQuestionOrderStack(p => p.slice(1));
