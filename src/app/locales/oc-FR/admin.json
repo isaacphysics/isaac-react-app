@@ -1,0 +1,270 @@
+{
+  "admin": {
+    "anonymisation": {
+      "groupsLabel": "Desguisar los detalhs de l'utilizaire e del grop dins las aisinas del professor",
+      "usersOnlyLabel": "Desguisar sonque los noms d'utilizaire e los corrièls electronics dins las aisinas dels ensenhaires"
+    },
+    "console": {
+      "apiVersionLabel": "Version API:",
+      "title": "Consola d'administracion"
+    },
+    "content": {
+      "errorLoading": "Error al moment de cargar la version de contengut",
+      "errorMessage": "Error : la version del contengut a pas pogut èsser modificada.",
+      "inputAriaLabel": "Engatjament de contengut en dirècte SHA",
+      "inputPlaceholder": "Picatz lo commit SHA",
+      "liveVersionLabel": "Version de contengut en dirècte",
+      "previewButton": "Apercebut los cambiaments",
+      "setVersionButton": "Definir la version",
+      "successMessage": "La version del contengut modificada amb succès.",
+      "title": "Gerir lo contengut del sit",
+      "updatingMessage": "Remplaçant la version {{currentVersion}} per {{newVersion}}",
+      "updatingTitle": "Mesa a jorn..."
+    },
+    "contentEmails": {
+      "recipientWarning": "<warningLabel>Atencion:</warningLabel> I a actualament <countEmphasis>{{recipientCount}}</countEmphasis> destinataris seleccionats.",
+      "sendConfirm_one": "Sètz segur que volètz mandar un corrièl {{emailType}} a {{count}} utilizaire ?",
+      "sendConfirm_other": "Sètz segur que volètz mandar un corrièl {{emailType}} als utilizaires {{count}} ?",
+      "sendVia": {
+        "isaac": "Isaac",
+        "label": "Lo metòde d'enviament del corrièl",
+        "mailgun": "Mailgun",
+        "title": "Enviar via"
+      },
+      "template": {
+        "htmlLabel": "HTML de corrièl",
+        "iframeTitle": "previsualizacion html",
+        "plaintextLabel": "Tèxte simple de corrièl",
+        "previewLabel": "Apercebut HTML (sens formatat)",
+        "title": "Modèl de corrièl"
+      },
+      "title": "Enviament de corrièl de contengut"
+    },
+    "contentErrors": {
+      "errorTitle": "Error de cargament de contengut fracassat",
+      "filters": {
+        "errorMessageLabel": "Filtrar per messatge d'error",
+        "errorMessagePlaceholder": "Filtrar las errors per messatge d'error",
+        "filePathLabel": "Filtre per camin de fichièr",
+        "filePathPlaceholder": "Filtrar las errors per camin de fichièr",
+        "publishedStatusLabel": "Filtrar per estatut publicat",
+        "severityLabel": "Filtrar per severitat"
+      },
+      "loadingError": "Error al moment de cargament d'errors de contengut",
+      "row": {
+        "tooltipContentId": "ID de contengut : {{contentId}}"
+      },
+      "stats": {
+        "contentVersionLabel": "Version de contengut:",
+        "criticalErrorsLabel": "D'errors criticas :",
+        "filesWithErrorsLabel": "Fichièrs amb d'errors :",
+        "totalErrorsLabel": "Total d'errors:"
+      },
+      "table": {
+        "criticalErrorHeader": "Error critica",
+        "errorMessagesHeader": "Lista dels messatges d'error",
+        "fileHeader": "Fichièr",
+        "publishedHeader": "Publicat",
+        "publishedTooltip": "Aqueste fichièr es publicat ?"
+      }
+    },
+    "demonstration": {
+      "title": "Mòde de demostracion"
+    },
+    "email": {
+      "sendErrorTitle": "Lo mandadís de corrièl a fracassat",
+      "sendSuccessMessage": "Corrièl mandat als utilizaires amb succès",
+      "sendSuccessTitle": "Corrièl mandat",
+      "sendWithIdsErrorTitle": "Lo mandadís de corrièl amb d'ids a fracassat",
+      "templateErrorTitle": "Fracàs a obténer lo modèl de corrièl"
+    },
+    "emails": {
+      "contentObject": {
+        "loadButton": "Cargar lo modèl",
+        "placeholder": "Picatz l'identificant de l'objècte de contengut de corrièl",
+        "title": "Objècte de contengut"
+      },
+      "details": {
+        "fromLabel": "De:",
+        "noSubject": "pas de subjècte",
+        "replyToLabel": "Respondre a:",
+        "sentViaLabel": "Mandat via:",
+        "subjectLabel": "Subjècte:"
+      },
+      "htmlPreview": {
+        "frameTitle": "Apercebut del contengut del corrièl",
+        "title": "Apercebut HTML"
+      },
+      "plainTextPreview": {
+        "title": "Apercebut de tèxte simple"
+      },
+      "send": {
+        "confirm_one": "Sètz segur que volètz mandar un corrièl {{emailType}} ({{contentObjectId}}) a {{count}} utilizaire ?",
+        "confirm_other": "Sètz segur que volètz mandar un corrièl {{emailType}} ({{contentObjectId}}) a {{count}} utilizaires ?",
+        "recipientsWarning": "<warning>Atencion:</warning> I a actualament <count>{{recipientCount}}</count> destinataris seleccionats."
+      }
+    },
+    "greeting": "Adieu, {{givenName}}!",
+    "groups": {
+      "resetPassword": {
+        "failureMessage": "Fracàs al mandar de reïnicializacion del senhal"
+      }
+    },
+    "misuse": {
+      "emptyState": "Pas d'estatisticas d'utilizacion indeguda per aqueste tipe d'eveniment! 🎉",
+      "selectEventLabel": "Seleccionatz un tipe d'eveniment d'utilizacion indeguda :",
+      "statusAlmost": "Gaireben",
+      "tableHeader": {
+        "agentIdentifier": "Identificant d'agent",
+        "currentCounter": "Comptador d'eveniments actuals",
+        "lastEvent": "Darrièr eveniment enregistrat",
+        "status": "Mal utilizat?"
+      },
+      "title": "Estatisticas d'utilizacion indeguda"
+    },
+    "misuseMonitor": {
+      "resetErrorTitle": "Fracàs al moment de reïnicializar lo monitor d'utilizacion indeguda per l'utilizaire",
+      "resetSuccessMessage": "{{eventLabel}} mal usatge del compte d'eveniments de reïnicializacion per l'utilizaire",
+      "resetSuccessTitle": "Reïnicializar amb succès"
+    },
+    "misuseStatistics": {
+      "errorTitle": "Fracàs d'obténer d'estatisticas d'utilizacion indeguda per l'utilizaire"
+    },
+    "siteStatistics": {
+      "errorTitle": "Lo cargament de las estatisticas del sit a fracassat"
+    },
+    "stats": {
+      "answering": {
+        "heading": "Respondre a las questions"
+      },
+      "breadcrumb": "Estatisticas d'administracion",
+      "content": {
+        "conceptPageViews": "Afichatges de la pagina de concèpte: {{count}}",
+        "heading": "Estatisticas de contengut",
+        "questionAttempts": "Total d'ensags de questions: {{count}}",
+        "questionPageViews": "Vistas de la pagina de questions: {{count}}"
+      },
+      "counts": {
+        "all": "Totes: {{count}}",
+        "students": "Escolans: {{count}}",
+        "teachers": "Professors: {{count}}"
+      },
+      "lastSeen": {
+        "heading": "Darrièr vist"
+      },
+      "overview": "Una vista generala de naut nivèl dels utilizaires e de l'activitat sus la plataforma :",
+      "period": {
+        "ninetyDays": "90 jorns precedents:",
+        "sevenDays": "7 jorns precedents:",
+        "thirtyDays": "30 jorns precedents:"
+      },
+      "title": "{{siteTitle}} estatisticas",
+      "users": {
+        "gender": {
+          "female": "Femna: {{count}} ({{percentage}}%)",
+          "male": "Mascle: {{count}} ({{percentage}}%)",
+          "missing": "Donadas mancantas: {{count}} ({{percentage}}%)",
+          "other": "Autres : {{count}} ({{percentage}}%)",
+          "preferNotToSay": "Preferissi pas dire: {{count}} ({{percentage}}%)"
+        },
+        "heading": "Utilizaires:",
+        "profileCompletion": {
+          "noSchool": "Pas d'escòla provesida : {{count}}",
+          "otherSchool": "Autra escòla provesida : {{count}}",
+          "ukIeSchool": "Escòla UK/IE provesida: {{count}}"
+        },
+        "profileCompletionTitle": "Finalizacion del perfil",
+        "role": {
+          "admin": "Admin: {{count}}",
+          "contentEditor": "Editor de contengut: {{count}}",
+          "eventLeader": "Cap d'eveniment: {{count}}",
+          "eventManager": "Gestionari d'eveniments: {{count}}",
+          "student": "Estudiant: {{count}}",
+          "teacher": "Professor: {{count}}",
+          "tutor": "Tutor: {{count}}"
+        },
+        "sixMonths": "Los 6 darrièrs meses :<strong>{{activeUsersSixMonths}}</strong>",
+        "total": "Total (excl. archivat): <strong>{{totalUsers}}</strong>",
+        "twoYears": "Los 2 darrièrs ans:<strong>{{activeUsersTwoYears}}</strong>"
+      }
+    },
+    "title": "{{siteTitle}} administracion",
+    "tools": {
+      "title": "Aisinas administrativas"
+    },
+    "usefulLinks": {
+      "equationBuilder": "Constructor d'equacions",
+      "freeTextBuilder": "Constructor de tèxte liure",
+      "title": "Ligams utils",
+      "userManager": "Gestionari d'utilizaires"
+    },
+    "userManager": {
+      "actions": {
+        "email": "Corrièl",
+        "emailStatus": "Estat del corrièl",
+        "emailStatusHeader": "Cambiar l'estat de verificacion del corrièl pels utilizaires a :",
+        "modifyRole": "Modificar lo ròtle",
+        "promoteDemoteHeader": "Promòure o degradar los utilizaires seleccionats per :"
+      },
+      "delete": {
+        "confirm": "Sètz segur que volètz suprimir aqueste utilizaire ?"
+      },
+      "merge": {
+        "button": "Fusionar",
+        "confirm": "Sètz segur que volètz fusionar l'utilizaire {{sourceId}} dins l'utilizaire {{targetId}} ? Aquò suprimirà l'utilizaire {{deletedId}}.",
+        "deletePlaceholder": "ID d'utilizaire a suprimir",
+        "keepPlaceholder": "ID d'utilizaire de gardar",
+        "title": "Fusionar los comptes d'utilizaire"
+      },
+      "results": {
+        "table": {
+          "edit": "Modificar",
+          "select": "Causir",
+          "verificationStatus": "Estat de verificacion",
+          "view": "Vista"
+        },
+        "title": "Gerir los utilizaires ({{resultCount}})<br/>Seleccionat ({{selectedCount}})"
+      },
+      "search": {
+        "button": "Cercar",
+        "emailPlaceholder": "p. ex. professor@escòla.org",
+        "familyNamePlaceholder": "p. ex. Wilkes",
+        "roleAny": "Tot ròtle",
+        "roleEventLeader": "Cap d'eveniment",
+        "roleEventManager": "Gestionari d'eveniments",
+        "schoolOtherLabel": "Trobar per l'escòla introducha manualament :",
+        "schoolUrnLabel": "Trobar un utilizaire amb l'URN de l'escòla :",
+        "validation": "Al mens un filtre de recèrca deu èsser definit.",
+        "verificationStatusAny": "Tot estatut de verificacion",
+        "verificationStatusDeliveryFailed": "La liurason a fracassat",
+        "verificationStatusLabel": "Trobar per corrièl l'estat de verificacion :",
+        "verificationStatusNotVerified": "Pas verificat",
+        "verificationStatusVerified": "Verificat"
+      }
+    },
+    "users": {
+      "deleteErrorTitle": "La supression de l'utilizaire a fracassat",
+      "deleteSuccessMessage": "L'utilizaire seleccionat es estat suprimit amb succès",
+      "deleteSuccessTitle": "Utilizaire suprimit",
+      "getSchoolLookupErrorTitle": "Fracàs al cargament dels detalhs de recèrca de l'escòla de l'utilizaire",
+      "getUserErrorTitle": "Fracàs a obténer l'utilizaire",
+      "mergeErrorTitle": "La fusion dels utilizaires a fracassat",
+      "mergeSuccessMessage": "Utilizaire amb id: {{sourceId}} foguèt fusionat dins l'utilizaire amb id: {{targetId}}",
+      "mergeSuccessTitle": "Utilizaires fusionats",
+      "modifyEmailVerificationErrorTitle": "La modificacion de l'estat de verificacion del corrièl a fracassat",
+      "modifyRoleErrorTitle": "La modificacion del ròtle d'utilizaire a fracassat",
+      "searchErrorTitle": "La recèrca d'utilizaire a fracassat"
+    }
+  },
+  "featureFlags": {
+    "modal": {
+      "applyButton": "Aplicar e recargar",
+      "description": "Los senhals de foncionalitats son de commutadors d'execucion sonque pels personals qu'activan o desactivan las foncionalitats en cors de desvolopament. Apareisseràn pas que sus la mesa en scèna e lo desvolopament (pas lo tèst).",
+      "emptyState": "Cap de senhal de foncionalitat pas trobat.",
+      "howItWorks": "Los senhals pertinents seràn tipicament activats per defaut sus una branca donada. Pasmens, se volètz veire cossí divèrses paramètres interagisson, podètz substituir quines indicadors son activats çai-jos.",
+      "overrideNote": "Notatz que las substitucions seràn mantengudas entre las visitas del sit e deurián probablament èsser daissadas coma automaticas quand son pas utilizadas.",
+      "overridesLabel": "Substitucions manualas :",
+      "toggleAuto": "Automatic"
+    }
+  }
+}
