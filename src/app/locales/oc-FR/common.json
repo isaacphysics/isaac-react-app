@@ -1,0 +1,499 @@
+{
+  "accessibility": {
+    "dragAndDropLabel": "Arrossegar e daissar tombar",
+    "dropdownLabel": "Menú desenrotlant",
+    "inputModeTitle": "Mòde d'entrada de la question"
+  },
+  "accordion": {
+    "additionalStagesDescription": "Podètz tanben èsser interessat a explorar de material suplementari pertinent per d'autras estapas d'aprendissatge:",
+    "additionalStagesTitle": "Etapas d'aprendissatge suplementàrias",
+    "completion": {
+      "allCorrect": "Totas las questions d'aquesta partida son corrèctament respondudas.",
+      "allIncorrect": "Totas las questions d'aquesta partida son respondudas incorrèctament.",
+      "notAttempted": "Cap de question dins aquesta partida es pas estada responduda.",
+      "someIncorrect": "Qualques questions dins aquesta partida son respondudas incorrèctament."
+    },
+    "partLabel": "Partida {{partLetter}}"
+  },
+  "banners": {
+    "downtime": {
+      "dismissButton": "Descartar<screenReaderText> notificacion d'arrèst</screenReaderText>",
+      "message": "{{siteTitle}} will be unavailable on Saturday 24 October from 8pm BST for a few hours for essential server maintenance."
+    },
+    "emailVerification": {
+      "dismissButton": "Snooze",
+      "heading": "Verificacion de corrièl"
+    },
+    "research": {
+      "dismissButton": "Ai comprés"
+    }
+  },
+  "button": {
+    "addBookmark": "Apondre un marcapagina",
+    "addMatchingRule": "Apondre una règla de correspondéncia",
+    "assign": "Assignar",
+    "back": "Arrièr",
+    "bookPlace": "Reservatz una plaça",
+    "cancel": "Anullar",
+    "changePassword": "Cambiar lo senhal",
+    "close": "Barrar",
+    "closeModal": "Barrar lo modal",
+    "confirm": "Confirmar",
+    "connect": "Connectar",
+    "continue": "Contunhar",
+    "createAccount": "Crear un compte",
+    "createGroup": "Crear un grop",
+    "createNewGroup": "Crear un grop novèl",
+    "delete": "Escafar",
+    "deleteAllCurves": "Suprimir totas las corbas",
+    "deleteGroup": "Suprimir lo grop",
+    "deleteMatchingRule": "Suprimir la règla de correspondéncia",
+    "deleteSelectedCurve": "Suprimir la corba seleccionada",
+    "details": "Detalhs",
+    "downloadAssignmentsCsv": "Telecargar las missions CSV",
+    "downloadCsv": "Telecargar CSV",
+    "downloadTestsCsv": "Telecargar los tèsts CSV",
+    "duplicateAndEdit": "Duplicar e modificar",
+    "emailUsers": "Utilizaires de corrièl",
+    "expand": "S'espandir",
+    "extendDueDate": "Prolongar la data de venciment",
+    "findOutMore": "Ne saber mai",
+    "getTeacherAccount": "Obténer un compte de professor",
+    "help": "Ajudar",
+    "home": "Ostal",
+    "iAmATeacher": "Soi un professor",
+    "inviteUsers": "Convidar los utilizaires",
+    "joinGroup": "Inscrivètz-vos a un grop",
+    "learnMore": "Ne saber mai",
+    "leaveGroup": "Quitar lo grop",
+    "loadMore": "Cargar mai",
+    "logIn": "Connectatz-vos",
+    "logOut": "Desconnectar",
+    "manage": "Reüssir",
+    "manageGroups": "Gerir los grops",
+    "menu": "Menú",
+    "next": "Venent",
+    "ok": "ÒC BEN",
+    "ourBooks": "nòstres libres",
+    "preview": "Apercebut",
+    "previous": "Precedent",
+    "printPage": "Imprimir la pagina",
+    "readMore": "Legir mai",
+    "remove": "Levar",
+    "removeBookmark": "Suprimir lo marcapagina",
+    "resendVerificationEmail": "Tornatz mandar un corrièl de verificacion",
+    "reset": "Reïnicializar",
+    "resetPassword": "Reïnicializar lo senhal",
+    "searchAndFilter": "Cercar e filtrar",
+    "seeMore": "Veire mai",
+    "seeMoreEvents": "Mai d'eveniments",
+    "selectTopic": "Seleccionar un tèma",
+    "sendEmails": "Mandar de corrièls",
+    "setAgain": "Tornatz fixar",
+    "setAsAssignment": "Definir coma assignacion",
+    "setTest": "Ensemble de tèst",
+    "show": "Mostrar",
+    "signUp": "Inscrivètz-vos",
+    "submit": "Sometre",
+    "unassign": "Desassignar",
+    "unsave": "Desenregistrar",
+    "update": "Metre al jorn",
+    "viewGroupProgress": "Veire lo progrès del grop",
+    "viewMore": "Veire mai",
+    "viewTests": "Veire los tèsts"
+  },
+  "cards": {
+    "imageAlt": "Illustracion per {{title}}",
+    "opensNewTab": "(se dobrís dins un novèl onglet)",
+    "readMoreAria": "{{title}} legir mai"
+  },
+  "clientError": {
+    "concepts": {
+      "loadError": "Impossible de cargar de concèptes"
+    },
+    "contentNotFound": "Contengut pas trobat",
+    "defaultTitle": "Error al moment de la recuperacion de donadas del servidor",
+    "fragmentNotFound": "O planhèm, fragment de pagina pas trobat :<code>{{fragmentId}}</code>",
+    "heading": "O planhèm, mas una error s'es producha dins l'aplicacion {{siteName}}!",
+    "notFound": {
+      "message": "O planhèm, pagina pas trobada : <code>{{pathname}}</code>",
+      "offlineMessage": "Sembla que sètz fòra linha. Benlèu volètz verificar vòstra connexion a internet, puèi actualizar aquesta pagina per ensajar tornarmai.<br/>Se avètz encara de problèmas, mercés de <webmasterEmail>nos dire</webmasterEmail>.",
+      "offlineTitle": "Pas d'internet",
+      "reportPrompt": "Espèras de trobar quicòm aicí?<contactAction>Fasètz-nos saber<srOnly> a prepaus d'aquesta pagina mancanta</srOnly></contactAction>.",
+      "title": "Pagina pas trobada"
+    },
+    "offlineMessage": "Sembla que sètz fòra linha. Benlèu volètz verificar vòstra connexion a internet, puèi actualizar aquesta pagina per ensajar tornarmai.<br/>Se avètz encara de problèmas, mercés de <contactLink>nos dire</contactLink>.",
+    "offlineWarning": "Semblatz èsser fòra linha.",
+    "recoveryOptions": "You may want to <refreshLink>refresh this page and try again</refreshLink>, <homeLink>return to our homepage</homeLink>, or <contactLink>contact</contactLink> or <emailLink>email</emailLink> us if this keeps happening.",
+    "sessionExpired": {
+      "breadcrumbTitle": "Error de sesilha expirada",
+      "contactSupport": "Mercés de mandar un corrièl a <mailtoLink>{{webmasterEmail}}</mailtoLink> se aquò contunha de se produire.",
+      "heading": "O planhèm, mas vòstra sesilha es expirada !",
+      "retryInstructions": "You should <refresh>refresh this page and try again</refresh>, or try refreshing whilst <bypassCache>bypassing your browser's cache</bypassCache>, which may have saved an outdated version of Isaac."
+    },
+    "skills": {
+      "loadError": "Impossible de cargar de questions de competéncias",
+      "saveError": "Poguèt pas salvar la responsa."
+    },
+    "statusCode": "Còde d'estat : {{statusCode}}",
+    "userInfo": {
+      "errorDetails": "Detalhs de l'error",
+      "sectionTitle": "Informacions utilas d'inclure dins vòstre corrièl"
+    }
+  },
+  "clipboard": {
+    "copiedTooltip": "Copiat dins lo quichapapièrs!",
+    "copyAriaLabel": "Còpiar dins lo portapapèls",
+    "copyButton": "Còpia"
+  },
+  "cookieConsent": {
+    "accept": "Acceptar",
+    "anvil": {
+      "title": "Autorizar lo contengut d'Anvil ?"
+    },
+    "desmos": {
+      "title": "Autorizar lo contengut de Desmos?"
+    },
+    "geogebra": {
+      "title": "Autorizar lo contengut de GeoGebra ?"
+    },
+    "youtube": {
+      "title": "Autorizar lo contengut YouTube?"
+    }
+  },
+  "dateInput": {
+    "clearButtonLabel": "Data de netejament",
+    "clearButtonLabel_birth": "Data de naissença clara",
+    "dayLabel": "Jorn",
+    "dayLabel_birth": "Jorn de naissença",
+    "monthLabel": "Mes",
+    "monthLabel_birth": "Mes de naissença",
+    "yearLabel": "Annada",
+    "yearLabel_birth": "Annada de naissença"
+  },
+  "dateString": {
+    "daysAgo": "{{days}} fa jorns",
+    "inDays": "en {{days}} jorns"
+  },
+  "error": {
+    "emailRequestFailed": "La demanda de verificacion per corrièl a fracassat.",
+    "eventBookingFailed": "La reservacion de l'eveniment a fracassat",
+    "fetchGroups": "Error al moment de la recuperacion dels grops",
+    "invalidCharacters": "Qualques caractèrs qu'utilizatz son pas autorizats : {{badCharacters}}",
+    "invalidEmailAddress": "Picatz una adreça de corrièl valida",
+    "loadConcept": "Impossible de cargar lo concèpte",
+    "loadPage": "Impossible de cargar la pagina",
+    "loadQuestion": "Impossible de cargar la question",
+    "loadTopic": "Impossible de cargar lo tèma",
+    "noEmailToVerify": "Sètz pas connectat o avètz pas d'adreça electronica a verificar.",
+    "selectGroup": "Seleccionatz un grop",
+    "tooManyAttempts": "Tròp d'ensags",
+    "updateAccount": "Impossible de metre a jorn vòstre compte",
+    "validName": "Picatz un nom valid."
+  },
+  "form": {
+    "elements": {
+      "requiredError": "exigit",
+      "trueFalseAccessibilityLabel": "per {{fieldName}}"
+    },
+    "requiredField": "Camp obligatòri"
+  },
+  "help": {
+    "buttonLabel": "Dobrir la vidèo d'ajuda"
+  },
+  "label": {
+    "aLevel": "Nivèl A",
+    "accessibilityRequirements": "Requisits d'accessibilitat",
+    "accountVerificationNote": "Serem en contacte dins pauc de temps. Notatz que la verificacion del compte es un procès manual e pòt prene qualques jorns.",
+    "all": "Tot",
+    "any": "Quin que siá",
+    "assignments": "Devers",
+    "bookingDeadline": "Data limita de reservacion",
+    "bookingDeadlineLabel": "Data limita de reservacion:",
+    "cambridgeUniversity": "Site web de l'Universitat de Cambridge",
+    "contactName": "Nom de contacte",
+    "created": "Creat",
+    "difficultiesTooltip": "Practica: {{practiceLevels}}<br/>Desfís: {{challengeLevels}}",
+    "difficulty": "Dificultat",
+    "displayIn": "Afichar dins",
+    "dragToReorder": "Arrossegatz per reordenar",
+    "due": "Degut:",
+    "dueDate": "Degut <strong>{{dueDate}}</strong>",
+    "dueDateLabel": "Data de venciment:",
+    "emailAddress": "Adreça de corrièl",
+    "emailOptOutNote": "Los utilizaires qu'an desactivat aqueste tipe de corrièl recebràn pas res. Los corrièls administratius pòdon pas èsser desactivats e deurián èsser evitats.",
+    "emailPreferencesDescription": "Obtenètz d'informacions importantas sul programa {{siteTitle}} remesa dins vòstra bóstia d'entrada. Aquestes paramètres pòdon èsser modificats a tot moment.",
+    "emailPreviewNote": "L'apercebut çai-jos utiliza de camps preses de vòstre compte (per exemple givenName e familyName).",
+    "emailSubject": "Subjècte del corrièl",
+    "emailType": "Tipe de corrièl",
+    "emailTypeAdminUrgent": "Corrièl administratiu urgent",
+    "emailTypeDescription": "Lo tipe de corrièl qu'enviatz.",
+    "emailTypeNewsUpdates": "Actualitats e mesas a jorn",
+    "eventLeaderRestriction": "Coma cap d'eveniment, podètz pas que veire las reservacions dels utilizaires que vos an concedit l'accès a lors donadas.",
+    "eventLocation": "Endrech:",
+    "feedbackMode": "Mòde de retroaccion dels escolans:",
+    "filterBy": "Filtrar per",
+    "filterByAssigner": "Filtre per assignaire",
+    "filterByCreator": "Filtre per Creator",
+    "filterByGroup": "Filtre per grop",
+    "filterByStage": "Filtre per estapa",
+    "filterByStatus": "Filtrar per estatut",
+    "filterBySubjectAndTopic": "Filtrar per subjècte e subjècte",
+    "filterByTitle": "Filtrar per títol",
+    "filterByTopic": "Filtrar per tèma",
+    "filters": "Filtres",
+    "findByUserRole": "Trobar per ròtle d'utilizaire :",
+    "findUserByEmail": "Trobar un utilizaire per corrièl :",
+    "findUserByFamilyName": "Trobar un utilizaire per nom de familha :",
+    "firstName": "Prenom",
+    "followUs": "Seguissètz-nos",
+    "gender": "Sexe",
+    "groupName": "Nom del grop",
+    "groups": "Grops:",
+    "key": "Clau",
+    "lastName": "Nom d'ostal",
+    "level1": "Nivèl 1",
+    "location": "Endrech",
+    "makeSelection": "--- Fasètz una seleccion ---",
+    "maths": "Matematicas",
+    "mentalMaths": "Matematicas mentalas globalas",
+    "newPassword": "Novèl senhal",
+    "none": "Cap",
+    "notes": "Nòtas:",
+    "password": "Senhal",
+    "passwordMinLength": "Los senhals devon aver al mens {{minLength}} caractèrs de long.",
+    "passwordStrength": "Fòrça del senhal :",
+    "questionNumber": "Question {{questionNumber}}",
+    "questions": "questions",
+    "raspberryPi": "Raspberry Pi",
+    "rememberMe": "Remembratz-vos de ieu",
+    "role": "Ròtle",
+    "school": "Escòla",
+    "searchByTitle": "Cercar per títol",
+    "selectOrCreateGroup": "Seleccionatz o creatz un grop",
+    "selectStage": "Seleccionar l'estadi",
+    "setBy": "Fixat per",
+    "sidebar": "Barra lateral",
+    "skipToContent": "Sautar al contengut principal",
+    "someoneElse": "Qualqu'un d'autre",
+    "sortBy": "Ordenar per",
+    "stage": "Scèna",
+    "startDate": "Data de començament",
+    "startDateLabel": "Data de començament:",
+    "status": "Estatut",
+    "subjects": "Subjèctes",
+    "teacherAccountRequestSubject": "Demanda de compte de professor",
+    "teacherConnectionCode": "Còde de connexion del professor",
+    "topic": "Subjècte",
+    "unit": "Unitat",
+    "university": "Universitat",
+    "userAgent": "Agent d'utilizaire",
+    "userId": "ID d'utilizaire",
+    "userSelectionDescription": "Lista separada per virgula dels identificants d'utilizaire per corrièl.",
+    "value": "Valor",
+    "verificationCode": "Còde de verificacion"
+  },
+  "listViews": {
+    "action": {
+      "takeTest": "Fasètz l'espròva",
+      "viewTest": "Afichar lo tèst"
+    },
+    "hiddenFromTeachers": "Amagat als ensenhaires",
+    "moveDown": "Desplaçar la question cap aval",
+    "moveUp": "Desplaçatz la question cap amont",
+    "noTitle": "pas de títol",
+    "question": {
+      "label": "Question"
+    },
+    "visibleToStudents": "Visible pels escolans"
+  },
+  "modal": {
+    "help": {
+      "title": "Ajuda rapida"
+    },
+    "nextPageAriaLabel": "Anar a la pagina seguenta sus modal",
+    "pageIndicatorAriaLabel": "Indicador de pagina modala",
+    "questionReminder": {
+      "hideButton": "Amagar la question",
+      "showButton": "Mostrar la question"
+    }
+  },
+  "navigation": {
+    "scrollToTop": "Desplaçatz-vos cap a la cima de la pagina",
+    "search": {
+      "closeLabel": "Barrar lo menú de recèrca",
+      "openLabel": "Dobrir lo menú de recèrca"
+    },
+    "sidebar": {
+      "homepageLink": "Anar a la pagina d'acuèlh"
+    },
+    "supersededDeprecated": {
+      "bookBoardTip": "Se volètz tornar configurar aqueste foncionament, deuriatz utilizar la version mai a jorn de nòstra pagina de libre.",
+      "deprecatedTitle": "Contengut obsolet",
+      "deprecatedUnsupported": "Coma aqueste {{contentType}} es pas pres en carga, vos recomandam pas de l'utilizar amb vòstres escolans.",
+      "deprecatedWarning": "Aqueste {{contentType}} es pas mai pres en carga, e pòt conténer d'errors.",
+      "supersededEditPrompt": "Vos recomandam de <editLink>duplicar e modificar</editLink> aqueste assignacion per las remplaçar per lor version mai recenta.",
+      "supersededTitle": "Contengut remplaçat",
+      "teacherNote": "Nòta del professor:"
+    }
+  },
+  "notifications": {
+    "assignmentTitle": "Tasca a far : {{gameboardTitle}}",
+    "dueDateMessage": "Venciment lo {{dueDate}}",
+    "goToAssignmentButton": "Anar a l'assignacion",
+    "goToTestButton": "Anar a la pròva",
+    "survey": {
+      "acceptButton": "Òc, veire lo questionari",
+      "declineButton": "Non mercés",
+      "postponeButton": "Me demandatz mai tard",
+      "prompt": "Volètz completar una enquèsta?"
+    },
+    "testTitle": "Pròva de far : {{quizTitle}}",
+    "toggle": {
+      "collapseButton": "Afichar mens de notificacions",
+      "expandButton": "Afichar totas las notificacions {{count}}"
+    }
+  },
+  "pageMetadata": {
+    "visuallyHiddenTitle": "Pagina principala"
+  },
+  "printButton": {
+    "withHints": {
+      "label": "<visuallyHidden>Imprimir </visuallyHidden>Amb d'entresenhas",
+      "title": "Imprimir amb d'entresenhas"
+    },
+    "withoutHints": {
+      "label": "<visuallyHidden>Imprimir </visuallyHidden>Sens indicis",
+      "title": "Imprimir sens indicis"
+    }
+  },
+  "reportButton": {
+    "label": "Senhalar un problèma (se dobrís dins un onglet novèl)"
+  },
+  "role": {
+    "admin": "Admin",
+    "contentEditor": "Editor de contengut",
+    "student": "Estudiant",
+    "teacher": "Professor",
+    "tutor": "Tutor"
+  },
+  "search": {
+    "error": {
+      "failed": "Fracàs al moment de la recèrca. Ensajatz tornar mai tard."
+    },
+    "errorTitle": "Impossible d'efectuar la recèrca",
+    "filter": {
+      "placeholder": "Seleccionatz lo filtre de tipe de pagina..."
+    },
+    "results": {
+      "heading": "Resultats de recèrca"
+    },
+    "shortcuts": {
+      "teacherConnect": {
+        "summary": "Clicatz aicí per vos connectar a un professor en utilizant lo còde qu'avètz picat.",
+        "title": "Connexions pels ensenhaires"
+      }
+    }
+  },
+  "serverError": {
+    "heading": "O planhèm, mas una error s'es producha sul servidor {{siteTitle}} !",
+    "suggestions": "xxxxxxxYou may want to <refresh>refresh this page and try again</refresh>, <homepage>return to our homepage</homepage>, or <contact>contact</contact> or <email>email</email> us if this keeps happening."
+  },
+  "shareLink": {
+    "buttonTitle": "Partejar la pagina",
+    "hideButtonLabel": "Amagar lo ligam de partatge",
+    "inputAriaLabel": "URL de partatge",
+    "showButtonLabel": "Obténer lo ligam de partatge"
+  },
+  "status": {
+    "accountUpdated": "Los paramètres de vòstre compte son estats meses a jorn amb succès.",
+    "allAttemptedWithErrors": "Tot ensag (qualques errors)",
+    "attempted": "Ensajat",
+    "checkInbox": "Mercés de verificar vòstra bóstia d'entrada.",
+    "comingSoon": "A venir lèu",
+    "completed": "Completat",
+    "correct": "Corrècte",
+    "emailRequestMade": "Demanda facha, per mandar un autre refresc.",
+    "inProgress": "En cors",
+    "incorrect": "Incorrècte",
+    "loading": "En cargament...",
+    "no": "Non",
+    "noData": "Pas de donadas",
+    "noFeedback": "Cap de retroaccion disponibla",
+    "noGroupsAssigned": "Cap de grop es pas estat assignat.",
+    "noResults": "Cap de resultat trobat",
+    "notAttempted": "Pas ensajat",
+    "notLoggedIn": "Pas actualament connectat",
+    "notStarted": "Pas començat",
+    "off": "Desactivat",
+    "on": "Sus",
+    "online": "En linha",
+    "overdue": "En retard",
+    "requestedPlace": "Avètz demandat una plaça sus aqueste eveniment.",
+    "sortDisabled": "Lo triatge es desactivat fins que totes los jòcs de questions sián estats cargats. Aumentar lo limit d'afichatge per cargar totes los jòcs de questions.",
+    "testSubmitted": "Pròva somesa amb succès",
+    "yes": "Òc"
+  },
+  "table": {
+    "actions": "Accions",
+    "bookingStatus": "Estat de reservacion",
+    "creator": "Creator",
+    "dueDate": "Data de venciment",
+    "email": "Corrièl",
+    "groups": "Grops",
+    "lastSeen": "Darrièr còp vist",
+    "memberSince": "Membre dempuèi",
+    "name": "Nom",
+    "role": "Ròtle d'utilizaire",
+    "share": "Partejar",
+    "stagesAndDifficulties": "Etapas e dificultats",
+    "title": "Títol"
+  },
+  "tabs": {
+    "fallbackTitle": "Onglet {{tabNumber}}"
+  },
+  "title": {
+    "accountDetails": "Detalhs del compte",
+    "accountSettings": "Paramètres del compte",
+    "adaComputerScience": "Ada Informatica",
+    "admin": "Admin",
+    "adminEmails": "Corrièls d'administrator",
+    "adminTools": "Aisinas d'administracion",
+    "authenticationError": "Error d'autentificacion",
+    "concepts": "Concèptes",
+    "contactUs": "Contactatz-nos",
+    "contentErrors": "D'errors de contengut",
+    "coreSkillsPractice": "Practica de las competéncias de basa",
+    "emailPreferences": "Definissètz vòstras preferéncias de notificacion per corrièl",
+    "error": "Error",
+    "eventDetails": "Detalhs de l'eveniment",
+    "events": "Eveniments",
+    "featureFlags": "Bannièras de caracteristicas",
+    "glossary": "Glossari",
+    "markdownBuilder": "Constructor de Markdown",
+    "myAda": "Mon Ada",
+    "myProgress": "Mon progrès",
+    "myTests": "Mos tèsts",
+    "news": "Nòvas",
+    "overview": "Apercebut",
+    "preferences": "Definissètz vòstras preferéncias",
+    "questionFinder": "Cercaire de questions",
+    "questions": "Questions",
+    "relatedQuestions": "Questions ligadas",
+    "research": "Recerca",
+    "resources": "Ressorgas",
+    "revision": "Revision",
+    "search": "Cercar",
+    "searchGlossary": "Glossari de recèrca",
+    "searchQuestions": "De questions de recèrca",
+    "searchTests": "Recèrca de tèsts",
+    "sessionExpired": "Sesilha expirada",
+    "skillsPractice": "Practica de competéncias",
+    "staging": "Mesa en scèna",
+    "teacherSupport": "Supòrt dels ensenhaires",
+    "test": "Espròva",
+    "tests": "Pròvas",
+    "userManager": "Gestionari d'utilizaires",
+    "userSelection": "Seleccion d'utilizaire"
+  }
+}
