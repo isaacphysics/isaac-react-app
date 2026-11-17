@@ -1,0 +1,512 @@
+{
+  "account": {
+    "accessibility": {
+      "description": "Aquí podètz gerir divèrsas foncionalitats d'accessibilitat dins lo sit.",
+      "inaccessibleWarning": {
+        "helpText": "L'activacion d'aquò aficharà d'avertiments sus certans contenguts que pòdon èsser inaccessibles per las tecnologias d'assisténcia.",
+        "label": "Avertir a prepaus de contengut inaccessible"
+      },
+      "mathml": {
+        "helpText": "Amb aqueste paramètre podètz bascular entre utilizar de tèxte alternatiu o MathML per d'equacions matematicas.",
+        "label": "Utilizar MathML per las matematicas accessiblas"
+      },
+      "nonDraggingInputs": {
+        "helpText": "L'activacion vos permetrà d'utilizar de metòdes d'entrada alternatius que necessitan pas d'arrossegar per certans tipes de questions (per exemple, arrossegar e daissar tombar).",
+        "label": "Activar las entradas alternativas sens arrossegament"
+      },
+      "reducedMotion": {
+        "helpText": "Activar aquò reduirà los efièches de movement sus la plataforma. La preferéncia del navigador aurà la prioritat sus aqueste paramètre.",
+        "label": "Preferissètz lo movement redusit"
+      },
+      "title": "Paramètres d'accessibilitat"
+    },
+    "betaFeatures": {
+      "chemEntryHelp": "Aquesta foncionalitat vos permet d'introduire de responsas basadas sus de tèxte per de questions de quimia, coma alternativa a l'editor grafic. Vejatz nòstra <guidanceLink>orientacion sus l'utilizacion d'aquesta foncionalitat</guidanceLink>.",
+      "chemEntryLabel": "Activar l'entrada de tèxte per las questions de quimia",
+      "description": "Aquí podètz vos inscriure a las foncionalitats beta de la plataforma {{siteTitle}}.",
+      "hideAttemptsLabel": "Amagar los ensags de question precedents",
+      "openAiConsentLabel": "Consentiment a l'enviament de responsas en tèxte liure a OpenAI per marcar",
+      "openAiHelp": "Utilizam un grand modèl de lenga (LLM) per marcar de questions de tèxte liure sul sit. Mandam pas que vòstra responsa a OpenAI, mandam pas cap de donadas personalas.",
+      "title": "Foncionalitats beta"
+    },
+    "changeSchools": {
+      "checkConnections": "xxxxxxxCheck your <strong><connectionsLink>connections</connectionsLink></strong>. Suprimir totas las connexions amb los ancians collègas e escolans.",
+      "checkGroups": "Verificatz vòstres <strong><groupsLink>grops</groupsLink></strong>. Suprimir tot grop qu'ensenharetz pas pus.",
+      "faqReference": "Aquesta informacion se pòt trobar dins la <faqLink>FAQ dels ensenhaires</faqLink> per una referéncia futura.",
+      "intro": "Se cambiatz d'escòla, vos recomandam de prene las etapas seguentas:",
+      "title": "Cambiar d'escòlas?"
+    },
+    "context": {
+      "addContentButton": "Apondre mai de contengut",
+      "addStageLabel": "Apondre l'estadi",
+      "removeRow": "netejar la linha d'estadi"
+    },
+    "country": {
+      "label": "País",
+      "validationError": "Seleccionatz vòstre país."
+    },
+    "customise": {
+      "description": "Respondre a aquelas questions nos ajudarà a personalizar la plataforma per vos. Podètz sautar aquò o cambiar vòstras responsas a quin moment que siá.",
+      "title": "Personalizatz lo contengut que vesètz"
+    },
+    "deletion": {
+      "confirmButton": "Confirmatz per corrièl",
+      "confirmWarning": "Compreni que la supression de mon compte es permanenta e pòt pas èsser anullada.",
+      "deleteButton": "Suprimir lo compte",
+      "errorTitle": "La demanda de supression del compte a fracassat.",
+      "failedTitle": "La supression del compte a fracassat.",
+      "noToken": "Vos cal aver un geton valid per suprimir vòstre compte. Visitatz vòstra pagina de compte <accountLink></accountLink> per generar un corrièl novèl amb un geton.",
+      "notLoggedIn": "Vos cal èsser connectat per suprimir vòstre compte.",
+      "reasonAccidental": "Ai fach un compte per error.",
+      "reasonMultiple": "Ai de comptes multiples e ne demanda pas qu'un.",
+      "reasonNewAccount": "Vòli crear un compte novèl amb aquesta adreça de corrièl.",
+      "reasonNoLongerNeed": "Ai pas pus besonh de mon compte.",
+      "reasonOther": "Una autra rason / preferissi pas dire.",
+      "selectReason": "Seleccionatz la rason que volètz suprimir vòstre compte :",
+      "successMessage": "Un corrièl vos es estat mandat amb d'instruccions sus cossí confirmar la supression de vòstre compte.",
+      "successTitle": "Demanda de supression del compte mandada.",
+      "title": "Supression del compte",
+      "tutorRestriction": "Sonque los comptes d'escolans pòdon èsser suprimits automaticament. Mercés de <contactLink>nos contactar</contactLink> per demandar la supression del compte."
+    },
+    "deletionSuccess": {
+      "title": "Compte suprimit!"
+    },
+    "editUser": {
+      "title": "Modificar l'utilizaire"
+    },
+    "emailChange": {
+      "confirmQuestion": "Volètz contunhar?",
+      "explanation": "Avètz cambiat l'adreça electronica de vòstre compte. Aquesta novèla adreça de corrièl serà pas utilizada fins que quichatz pas sul ligam de verificacion que li mandètz. Fins alara, utilizarem l'anciana adreça de corrièl e vos caldrà encara l'utilizar al moment de vos connectar per corrièl e senhal.",
+      "title": "Modificacion de vòstra adreça de corrièl"
+    },
+    "emailPreferences": {
+      "descriptionHeader": "Descripcion",
+      "preferenceHeader": "Preferéncia",
+      "tipsLabel": "Conselhs e mesas a jorn",
+      "newsLabel": "Actualitats e mesas a jorn",
+      "validationError": "Especificatz totas las preferéncias de corrièl"
+    },
+    "gender": {
+      "options": {
+        "female": "Femna",
+        "male": "Mascle",
+        "other": "Autra identitat de genre",
+        "preferNotToSay": "Preferissi pas dire"
+      }
+    },
+    "linkedAccounts": {
+      "link": "Ligam",
+      "otherTitle": "Ligar d'autres comptes",
+      "unlink": "Desligar"
+    },
+    "logOut": {
+      "description": "Aqueste boton vos desconnectarà sus totes los periferics, aqueste tanben. O podètz far se avètz oblidat de vos desconnectar sus un periferic partejat coma un ordenador escolar.",
+      "title": "Desconnectar"
+    },
+    "mfa": {
+      "changeDeviceButton": "Cambiar lo periferic 2FA",
+      "configureTitle": "Configurar l'autentificacion en dos factors (2FA)",
+      "disableForUserButton": "Desactivar 2FA per l'utilizaire",
+      "enableButton": "Activar 2FA",
+      "qrAltText": "Seguissètz aquesta URL per configurar 2FA : {{authenticatorUrl}}",
+      "statusDisabled": "Desactivat",
+      "statusEnabled": "Activat",
+      "statusLabel": "Estatut 2FA:",
+      "stepOne": "<strong>Etapa 1:</strong> Escanejatz lo còde QR çai-jos sus vòstre telefòn",
+      "stepTwo": "<strong>Etapa 2:</strong> Picatz lo còde provesit per vòstra aplicacion",
+      "title": "Autentificacion en dos factors (2FA)"
+    },
+    "preferences": {
+      "booleanNotationLabel": "Notacion logica preferida",
+      "description": "Respondre a aquelas questions nos ajudarà a personalizar la plataforma per vos. Podètz sautar aquò o cambiar vòstras responsas a quin moment que siá jos Mon compte.",
+      "preferredLanguageLabel": "Lenga de programacion preferida",
+      "saveButton": "Enregistrar las preferéncias",
+      "skipButton": "O farai mai tard",
+      "title": "Personalizatz vòstre compte"
+    },
+    "profile": {
+      "description": "Aquí podètz veire e gerir los detalhs de vòstre compte per {{siteTitle}}.",
+      "disableWarnings": "Desactivar los avertiments",
+      "disableWarningsWarning": "Se vòstre departament informatic es pas en mesura d'assistir, podètz desactivar los avertiments de pancartas sul sit per aqueste navigador. Recomandam fòrtament de pas aquò. Las adreças de corrièl non verificadas pòdon menar a de problèmas amb la recuperacion del compte e podètz mancar de notificacions de seguretat importantas dempuèi {{siteTitle}}.",
+      "emailBlockedInfo": "Dins qualques situacions, las escòlas o los departaments blocan lo corrièl de sites extèrnes coma lo nòstre, çò que pòt vos empachar de recebre de corrièls de verificacion. S'es lo cas, contactatz vòstre departament informatic per veire se pòdon autorizar los corrièls de {{siteTitle}}. Avèm una <emailHelpLink>pagina d'ajuda</emailHelpLink> a prepaus de nòstra configuracion de corrièl que pòt èsser d'utilitat.",
+      "emailSent": "Corrièl de verificacion mandat!",
+      "emailUnverified": "Vòstra adreça electronica es pas verificada. Aquò pòt afectar vòstra capacitat de recebre de notificacions importantas, e seretz pas elegible per participar a d'eveniments e de concorses.",
+      "optionReversible": "Podètz cambiar aquesta opcion a tot moment.",
+      "otherOptions": "D'autras opcions",
+      "requestVerification": "Clicatz aicí per demandar un novèl corrièl de verificacion.",
+      "restoreWarnings": "Restablir los avertiments",
+      "success": "Succès!",
+      "warningsDisabledMessage": "Los avertiments de verificacion per corrièr electronic son estats desactivats per aqueste navigador.",
+      "warningsDisabledTitle": "Avertiments desactivats",
+      "warningsRestoredMessage": "Los avertiments de verificacion per corrièr electronic son estats restablits.",
+      "warningsRestoredTitle": "Los avertiments restablits"
+    },
+    "releaseAccess": {
+      "confirmBody": "Sètz segur que volètz metre fin a vòstre accès a las donadas <strong>{{firstName}} {{lastName}}</strong>?<br/>Vos caldrà lor demandar de tornar donar l'accès dins l'avenir se cambiatz d'idèa.",
+      "title": "Suprimir l'accès a las donadas dels escolans"
+    },
+    "releaseAll": {
+      "confirmBody": "Sètz segur que volètz metre fin a vòstre accès a totas las donadas dels escolans ?<br/>Vos caldrà lor demandar de tornar donar l'accès dins l'avenir se cambiatz d'idèa.",
+      "title": "Suprimir l'accès a totas las donadas dels escolans"
+    },
+    "requiredInfo": {
+      "privacyNote": "Fornir qualques informacions suplementàrias nos ajuda a comprene l'utilizacion de {{siteTitle}} dins lo Reialme Unit e mai enlà. Los detalhs complets sus cossí utilizam vòstras informacions personalas se pòdon trobar dins nòstra <privacyPolicyLink>Politica de confidencialitat</privacyPolicyLink>.",
+      "updateButtonDesktop": "Metre a jorn lo compte"
+    },
+    "revokeAccess": {
+      "confirmBody": "L'utilizaire <strong>{{teacherName}}</strong> poirà pas mai accedir a vòstras donadas.<br/>Sètz segur que volètz revocar l'accès per aqueste utilizaire ?",
+      "title": "Revocar l'accès a vòstras donadas"
+    },
+    "roleMessage": "Avètz {{article}} <strong>{{role}}</strong> compte.",
+    "saveButton": "Salvar",
+    "school": {
+      "placeholder": "Picatz lo nom de vòstra escòla",
+      "useAsName": "Utilizatz \"{{schoolName}}\" coma nom de vòstra escòla",
+      "validationError": "Especificatz vòstra associacion escolara."
+    },
+    "security": {
+      "addPasswordButton": "Clicatz aicí per apondre un senhal",
+      "currentPasswordLabel": "Senhal actual",
+      "description": "Aquí podètz cambiar vòstre senhal, ligar o desligar un compte tèrç qu'utilizatz per vos connectar, e vos desconnectar de totes los periferics.",
+      "resetProcessing": "Vòstra demanda de reïnicializacion de senhal es en cors de tractament.",
+      "title": "Seguretat del compte"
+    },
+    "sharingData": {
+      "confirmBody": "Sètz segur que volètz donar l'accès a vòstras donadas als utilizaires {{siteName}} seguents ?",
+      "privacyNote": "For more details about what information is shared, see our <privacyPolicyLink>Privacy Policy</privacyPolicyLink>.",
+      "rememberNote": "<strong>Remembratz-vos</strong>: podètz totjorn revocar l'accès a vòstras donadas dempuèi l'onglet Connexions del professor de Mon compte.",
+      "title": "Partatjament de vòstras donadas"
+    },
+    "theme": {
+      "darkModeWarning": "Notatz que lo mòde escur es una foncionalitat novèla e extensiva e, coma tal, certanas zònas del sit pòdon pas encara èsser entièrament optimizadas per aqueste tèma. Podèm pas tanpauc garantir, per exemple, la conformitat amb l'accessibilitat AA pel mòde escur a l'ora d'ara.<lineBreak1/><lineBreak2/>Se rencontratz de problèmas, particularament a prepaus de la legibilitat, mercés de nos los raportar via lo formulari de contacte <contactLink></contactLink> per una recèrca mai prigonda. Mercés d'inclure un ligam cap a la pagina que conten lo problèma se possible.",
+      "description": "Podètz seleccionar aicí vòstre tèma de site preferit.",
+      "title": "Tèma"
+    },
+    "tutorRequest": {
+      "alreadyTutor": "Avètz ja un compte de tutor o d'ensenhaire",
+      "errorContact": "{{errorMessage}} Nos podètz contactar a <emailLink>{{emailAddress}}</emailLink>",
+      "formInstruction": "Per demandar un compte tutor sus {{siteTitle}}, emplenatz aqueste formulari. ",
+      "formIntro": "{{siteTitle}}Devètz aver verificat l'adreça electronica de vòstre compte. Se qualqu'una de las informacions es incorrècta o manca, la podètz modificar sus vòstra pagina <accountLink>Mon compte</accountLink>.",
+      "reasonLabel": "Mercés de nos dire perqué volètz demandar un compte de tutor",
+      "submittedThanks": "Mercés de mandar una demanda de compte de tutor.",
+      "title": "Demanda de compte de tutor"
+    },
+    "unsavedChanges": {
+      "leaveConfirm": "Se daissatz aquesta pagina sens l'enregistrar, las modificacions de vòstre compte seràn perdudas. Sètz segur que voldriatz partir?",
+      "tabSwitchConfirm": "Avètz de modificacions pas enregistradas sus aquesta pagina. Sètz segur que volètz partir sens salvar?"
+    },
+    "update": {
+      "fillAllFields": "Emplenatz totes los camps obligatòris.",
+      "incompleteFields": "Totes los camps obligatòris son pas estats corrèctament emplenats.",
+      "notUpdatedTitle": "Los paramètres del compte pas meses a jorn",
+      "otherSuccessMessage": "Los paramètres del compte de l'utilizaire son estats meses a jorn amb succès.",
+      "submitButton": "Detalhs de mesa a jorn",
+      "successTitle": "Los paramètres del compte mesas a jorn"
+    },
+    "updateError": {
+      "genericToastMessage": "Quicòm s'es marrit. Asseguratz-vos que totes los camps obligatòris son estats emplenats e ensajatz tornarmai.",
+      "toastMessage": "Mercés de vos assegurar que totes los camps obligatòris dins l'onglet \"Perfil\" son estats emplenats.",
+      "toastTitle": "La mesa a jorn del compte a fracassat"
+    },
+    "upgrade": {
+      "errorTitle": "Fracàs de metre a jorn lo compte",
+      "successMessage": "Avètz mes a jorn cap a un compte professor!",
+      "successTitle": "Compte mes a jorn"
+    }
+  },
+  "auth": {
+    "accountLink": {
+      "ariaLabel": "Ligam de mon compte"
+    },
+    "ageCheckFailed": {
+      "heading": "Impossible de crear un compte",
+      "restrictionMessage": "Malastrosament, sèm pas capables d'ofrir de comptes als escolans de mens de {{minAge}} ans."
+    },
+    "callback": {
+      "signingIn": "Connexion..."
+    },
+    "consent": {
+      "explanation": "Se volètz utilizar vòstre compte Microsoft per vos connectar a {{siteTitle}}, vos cal nos daissar legir vòstre nom e vòstra adreça de corrièl dempuèi vòstre compte Microsoft.",
+      "readMore": "Legir mai sus la connexion amb Microsoft.",
+      "schoolNote": "Se utilizatz un compte escolar e sètz la primièra persona qu'utiliza {{siteName}} de vòstra escòla, vòstre departament informatic deurà benlèu preaprovar {{approvedSiteName}} abans de poder consentir.",
+      "title": "Avèm besonh de vòstre consentiment"
+    },
+    "contact": {
+      "ariaLabel": "Ligam cap al formulari de contacte",
+      "link": "contactatz-nos"
+    },
+    "continueGuest": "Contunhar sens compte",
+    "dob": {
+      "invalidDate": "Picatz una data de naissença valida.",
+      "label": "Data de naissença"
+    },
+    "emailInput": {
+      "validationError": "Picatz una adreça electronica valida."
+    },
+    "emailVerification": {
+      "badParamsMessage": "Aquesta pagina a recebut de marrits paramètres. Mercés de vos assegurar qu'utilizatz lo ligam coma provesit dins lo corrièl.",
+      "loginToResend": "Mercés de vos connectar a vòstre compte <accountLink></accountLink> per tornar mandar lo corrièl de verificacion.",
+      "requestSuccessMessage": "Mercés de seguir lo ligam de verificacion donat dins lo corrièl mandat a vòstra adreça.",
+      "requestSuccessTitle": "La demanda de verificacion per corrièl a capitada.",
+      "sentTo": "Corrièl de verificacion mandat a {{email}}",
+      "successMessage": "L'adreça de corrièl es estada verificada",
+      "successTitle": "Adreça de corrièl verificada",
+      "title": "Verificacion per corrièl",
+      "userMismatch": "Sètz connectat coma un utilizaire diferent de l'utilizaire amb lo corrièl que venètz de verificar.",
+      "verified": "Adreça de corrièl verificada."
+    },
+    "formIntro": "Per <emphasis>contunhar amb un compte</emphasis>, o fasètz çai-jos",
+    "google": {
+      "logoAlt": "Logotip de Google"
+    },
+    "linkAccount": {
+      "failureMessage": "Fracàs al ligam del compte"
+    },
+    "login": {
+      "heading": "Connectatz-vos o inscrivètz-vos :",
+      "passwordLength": "Los senhals devon aver al mens {{minLength}} caractèrs"
+    },
+    "loginFailure": {
+      "toastMessage": "Connexion fracassat"
+    },
+    "loginRedirect": {
+      "failureMessage": "La redireccion de connexion a fracassat"
+    },
+    "logout": {
+      "failureMessage": "La desconnexion a fracassat",
+      "loggingOut": "Se desconnectar..."
+    },
+    "logoutEverywhere": {
+      "failureMessage": "Lo desconnexion pertot a fracassat"
+    },
+    "mfa": {
+      "disableErrorTitle": "Fracàs al desactivar 2FA sul compte.",
+      "disableSuccessMessage": "Avètz desactivat 2FA sus aqueste compte !",
+      "disableSuccessTitle": "2FA desactivat",
+      "errorWithVerificationCode": "Error amb lo còde de verificacion.",
+      "secretErrorTitle": "Fracàs a obténer lo secret 2FA",
+      "setupErrorTitle": "Fracàs al moment de la configuracion de 2FA sul compte.",
+      "setupSuccessMessage": "Avètz activat 2FA sus vòstre compte!",
+      "setupSuccessTitle": "2FA configurat"
+    },
+    "microsoft": {
+      "buttonLabel": "Microsoft",
+      "logoAlt": "Logotip de Microsoft"
+    },
+    "modalBody": "Vos cal èsser connectat a vòstre compte per <saveProgress>enregistrar vòstras responsas e progressar</saveProgress>. Se avètz pas de compte, podètz <signUpFree>vos inscriure uèi gratuitament</signUpFree>.",
+    "modalTitle": "Connectatz-vos o inscrivètz-vos",
+    "notLinked": {
+      "explanation": "Avèm trobat un compte {{siteName}} amb l'adreça electronica d'aqueste compte {{provider}}. Pasmens, lo compte {{siteAccountName}} es pas configurat per permetre l'accès a aqueste compte {{providerAccount}}. Avètz pas activat la connexion amb {{signInProvider}} sus vòstre compte {{siteAccount}} , siá avètz utilizat un compte {{alternateProvider}} diferent per vos connectar.",
+      "readMore": "Legir mai sus la connexion amb {{provider}}.",
+      "switchAccount": "xxxxxxIf you'd like to switch which {{provider}} account you log in with, follow the same instructions, but on the <accountLink>My Account</accountLink> page, click \"Unlink\" on any old {{linkedProvider}} account first.",
+      "title": "Utilizatz pas aqueste compte {{provider}} per vos connectar"
+    },
+    "orSection": "Alternativament, podètz",
+    "page": {
+      "ariaLabel": "Error d'autentificacion",
+      "ssoHeading": "Connectatz-vos amb :"
+    },
+    "pageTitle": "Connexion – {{siteName}}",
+    "parentalConsent": {
+      "checkboxLabel": "Marcatz la caseta per confirmar qu'avètz legit e comprés aqueste messatge.",
+      "permissionIntro": "Abans de vos inscriure a quin programa o sit web en linha que siá, deuriátz demandar la permission a un parent o a un cuidaire per que pòscan verificar qu'es apropriat per vos d'utilizar.",
+      "privacyNote": "Sovent los sites web emmagazinan d'informacions sus vos per vos donar la melhora experiéncia possibla sul sit mas deuriatz totjorn verificar quinas donadas son conservadas per aquò far – podètz legir cossí utilizam vòstras donadas per provesir nòstre servici <privacyLink>aicí</privacyLink>.",
+      "title": "Informacion suplementària"
+    },
+    "password": {
+      "forgotten": "Avètz oblidat vòstre senhal?",
+      "minLengthHint": "Vòstre senhal deu aver al mens {{minLength}} caractèrs de long."
+    },
+    "passwordInput": {
+      "hideButton": "Amagar",
+      "invalidFeedback": "Picatz un senhal valid."
+    },
+    "passwordReset": {
+      "breadcrumbTitle": "Reïnicializar lo senhal",
+      "completedTitle": "Reïnicializacion de senhal capitada",
+      "errorTitle": "Impossible de reïnicializar vòstre senhal",
+      "failedTitle": "Fracàs al reïnicializar lo senhal",
+      "failureMessage": "La reïnicializacion del senhal a fracassat",
+      "noTokenMessage": "Mercés de vos assegurar qu'avètz clicat sul ligam provesit dins vòstre corrièl de reïnicializacion de senhal.",
+      "noTokenTitle": "Cap de geton de reïnicializacion provesit",
+      "successBody": "S'existís un compte amb l'adreça electronica {{email}}, vos avèm mandat un corrièl de reïnicializacion del senhal. Se recebètz pas un corrièl, es possible qu'ajatz pas un compte amb aquesta adreça de corrièl.",
+      "successMessage": "Vòstre senhal es estat mes a jorn amb succès.",
+      "successTitle": "Corrièl de reïnicializacion de senhal mandat",
+      "title": "Reïnicializar vòstre senhal",
+      "verifyingToken": "Verificacion del geton de reïnicializacion..."
+    },
+    "passwordStrength": {
+      "breachedFeedback": "Inutil"
+    },
+    "raspberryPi": {
+      "fullLabelDesktop": "Fondacion Raspberry Pi",
+      "logoAlt": "Logotip de Raspberry Pi"
+    },
+    "register": {
+      "existingAccount": "Avètz ja un compte?",
+      "pageTitle": "Crear un compte {{siteName}}"
+    },
+    "registration": {
+      "ageCheck": {
+        "ageQuestion": "Quin temps as?",
+        "heading": "Impossible d'utilizar lo corrièl",
+        "message": "Coma avètz entre {{minAge}}-{{maxAge}} ans, vos cal <strong>vos inscriure en utilizant un provesidor tèrç</strong>.",
+        "optionBetween": "{{minAge}} - {{maxAgeWithConsent}} ans",
+        "optionOver": "{{minAgeWithConsent}} e mai",
+        "optionUnder": "{{maxAge}} o jos",
+        "selectionRequired": "Fasètz una seleccion.",
+        "terms": "Podèm pas que crear de comptes pels utilizaires {{minAge}} ans o mai.",
+        "tryOtherProvider": "Ensajatz tornarmai, en utilizant siá {{authProviders}}."
+      },
+      "emailSection": {
+        "button": "Inscrivètz-vos amb un corrièl",
+        "title": "O utilizatz un corrièl :"
+      },
+      "errorHeading": "Impossible de crear vòstre compte",
+      "goBackConfirm": "Sètz segur que volètz tornar? Tota informacion qu'avètz picada serà perduda.",
+      "pageTitle": "Crear un compte {{siteTitle}}",
+      "socialSignIn": {
+        "title": "Contunhar amb:"
+      },
+      "ssoVerified": "Vòstra edat es ja estada verificada per vòstre provesidor SSO.",
+      "success": {
+        "continue": "Anem!",
+        "viewAccount": "Verificatz mon compte",
+        "welcome": "Sètz tot preparat. Benvengut!"
+      },
+      "termsAccept": "Accepti las condicions d'utilizacion <termsLink></termsLink>.",
+      "termsRequired": "Vos cal acceptar las condicions per contunhar."
+    },
+    "registrationSuccess": {
+      "title": "Compte creat!"
+    },
+    "roleSelect": {
+      "description": "Saber s'ètz un escolans o un professor significa que podèm nos assegurar qu'avètz accès a las foncionalitats justas.",
+      "heading": "Sètz un escolans o un professor?",
+      "student": {
+        "button": "Soi un estudiant",
+        "featurePreferences": "Definissètz vòstras preferéncias per que vejatz de contengut pertinent per vos",
+        "featureProgress": "Seguissètz vòstre progrès, inclusent quantas questions avètz respondudas per tèma",
+        "intro": "Amb un compte estudiant podètz:"
+      },
+      "teacher": {
+        "featureGroups": "Creatz de grops e convidatz los escolans a los rejónher",
+        "featureProgress": "Veire lo progrès dels escolans dins vòstres grops",
+        "featureQuizzes": "Creatz de quiz a partir de las questions disponiblas, e las assignatz a vòstres grops",
+        "intro": "Amb un compte de professor podètz:",
+        "noAccessNote": "Los comptes dels ensenhaires vos donan pas accès a las responsas. <learnMoreLink>Ne saber mai</learnMoreLink>"
+      }
+    },
+    "sessionError": {
+      "breadcrumbTitle": "Error de coeréncia de l'utilizaire",
+      "message": "Sètz desconnectat dins un autre onglet o fenèstra de navigador, doncas vos avèm desconnectat aicí. Utilizatz lo boton çai-jos per contunhar ont avètz quitat.",
+      "tip": "xxxxxx<strong>Tip:</strong> If you want to be logged in to two accounts at the same time, you can use your browser's <privacyLink>private browsing</privacyLink> feature.",
+      "title": "Vòstra sesilha {{siteTitle}} a cambiat"
+    },
+    "sessionExpired": {
+      "message": "Vòstra sesilha {{siteTitle}} a expirat, doncas vos avèm desconnectat. Utilizatz lo boton çai-jos per contunhar ont avètz quitat.",
+      "title": "Vòstra sesilha es expirada"
+    },
+    "sidebar": {
+      "tabAge": "Verificacion d'edat",
+      "tabMethod": "Metòde d'inscripcion",
+      "tabPreferences": "Preferéncias"
+    },
+    "sso": {
+      "learnMore": "Ne saber mai sus la connexion unica"
+    },
+    "teacherConnect": {
+      "codeError": "Picatz un còde valid.",
+      "connectedTeachers": "Ensenhaires connectats:",
+      "heading": "Connectatz vòstre compte a vòstre professor",
+      "skipButton": "Sautar"
+    },
+    "teacherRequest": {
+      "emailBody": "xxxxxxHello,\n\n{{requestLine}}\n\nMy school is: {{school}}\n{{verificationMessage}}\n\n\nAny other information: {{otherInformation}}\n\nThanks, \n\n{{firstName}} {{lastName}}",
+      "noSchool": "Se avètz pas una escòla associada, emplenatz nòstre formulari <contactFormLink>Contactatz-nos</contactFormLink>. Se sètz un tutor privat o un parent, podètz <tutorAccountLink>demandar un {{siteTitle}} compte Tutor</tutorAccountLink>.",
+      "noSchoolError": "Avètz pas provesit vòstra escòla – mercés d'apondre vòstra escòla sus vòstra pagina <accountLink>Mon compte</accountLink>. Se sètz un tutor privat o un parent, podètz <tutorAccountLink>demandar un {{siteTitle}} compte Tutor</tutorAccountLink>.",
+      "otherInfo": "Tota autra informacion",
+      "submitError": "{{errorMessage}} Nos podètz contactar a <webmasterContact>{{webmasterEmail}}</webmasterContact>",
+      "submitted": "Mercé d'aver sometut una demanda de compte de professor.",
+      "teacherFaq": "Anatz a la pagina <faqLink>FAQ del professor</faqLink> per aprene las foncionalitats de vòstre compte novèl.",
+      "title": "Demanda de compte de professor",
+      "wrongEmailError": "Avètz pas utilizat vòstra adreça de corrièl escolar – mercés de cambiar vòstra adreça de corrièl sus vòstra pagina <accountLink>Mon compte</accountLink>."
+    },
+    "tfa": {
+      "codeInvalid": "Picatz un còde de verificacion valid",
+      "codePlaceholder": "Còdi de verificacion",
+      "description": "L'autentificacion a dos factors es estada activada per aqueste compte.",
+      "title": "Autentificacion en dos factors",
+      "verifyButton": "Verificar"
+    },
+    "unauthorised": {
+      "breadcrumbTitle": "Non autorizat",
+      "message": "Avètz pas l'autorizacion per accedir a la pagina :",
+      "title": "Accès refusat"
+    },
+    "unlinkAccount": {
+      "failureMessage": "Fracàs al desligar del compte",
+      "successTitle": "Compte desligat"
+    },
+    "verifyEmail": {
+      "continueLoginMessage": "Mercés de vos connectar <loginLink></loginLink> per contunhar.",
+      "failedTitle": "Impossible de verificar vòstra adreça de corrièl",
+      "loginFirstMessage": "S'avètz besonh d'un corrièl de verificacion novèl, vos plai <loginLink>connectatz-vos</loginLink> d'en primièr.",
+      "resendPrompt": "Avètz pas recebut lo corrièl?",
+      "sentMessage": "Corrièl de verificacion mandat a {{emailAddress}}",
+      "title": "Verificatz vòstra adreça de corrièl",
+      "unverifiedMessage": "Clicatz sul ligam dins lo corrièl qu'avèm mandat per acabar la configuracion de vòstre compte.",
+      "verifiedMessage": "Avètz verificat vòstra adreça electronica e acabat de crear vòstre compte."
+    }
+  },
+  "connections": {
+    "connect": {
+      "codeInstruction": "Picatz lo còde donat per vòstre professor per crear una connexion professora e rejónher un grop.",
+      "codePlaceholder": "Picatz vòstre còde aicí",
+      "codeTooltip": "Los ensenhaires que sètz connectats pòdon visualizar vòstre progrès de prètzfach {{siteTitle}}.",
+      "invalidCodeMessage": "Lo còde de grop qu'avètz picat es pas valid. Los còdes de grop son de 6-8 caractèrs de long e contenon pas que de letras e de chifras.",
+      "invalidCodeTitle": "Còde de grop invalid",
+      "noCodeMessage": "Cal picar un còde de grop!",
+      "noCodeTitle": "Cap de còde de grop provesit",
+      "title": "Connectatz-vos a vòstre professor"
+    },
+    "groups": {
+      "emptyState": "Sètz pas membre de cap de grop.",
+      "fallbackName": "Grop {{groupId}}",
+      "heading": "Vòstres adesions al grop",
+      "headingTooltip": "Aquestes son los grops que sètz actualament membre. Los grops sus {{siteTitle}} permeton als ensenhaires de fixar de prètzfaches a maites escolans en un còp.",
+      "inactiveLabel": "inactiu",
+      "leaveButton": "Se n'anar",
+      "leaveInfo": "Se volètz daissar definitivament un grop, demandatz a vòstre professor de vos suprimir.",
+      "listTitle": "Adesions al grop",
+      "rejoinButton": "Tornatz rejónher",
+      "searchPlaceholder": "Grops de recèrca"
+    },
+    "students": {
+      "emptyState": "Avètz pas de connexions estudiantas activas.",
+      "heading": "Vòstras connexions estudiantas",
+      "headingTooltip": "Aquestes son los escolans qu'an partejat lors donadas {{siteTitle}} amb vos. Aquestes escolans pòdon tanben visualizar vòstre nom e adreça de corrièl sus lor pagina de connexions pel professor.",
+      "listTitle": "Connexions dels escolans",
+      "removeAllButton": "Suprimir tot",
+      "searchPlaceholder": "Cercar d'escolans",
+      "studentTooltip": "Avètz accès a las donadas d'aqueste utilizaire e pòdon veire vòstre nom e vòstra adreça de corrièl. Per suprimir aqueste accès, clicatz sus « Suprimir »."
+    },
+    "teachers": {
+      "emptyState": "Avètz pas de connexions activas pel professor.",
+      "heading": "Connexions dels ensenhaires",
+      "revokeButton": "Revocar",
+      "searchPlaceholder": "Cercar los ensenhaires",
+      "tooltip": "Aqueste utilizaire ({{teacherEmail}}) a accès a vòstras donadas. Per suprimir aqueste accès, clicatz sus « Revocar »."
+    }
+  },
+  "subjectInterests": {
+    "aLevelHeader": "Nivèl A<br/><small>16-18 ans</small>",
+    "chemistryShort": "Quimia",
+    "engineering": "Engenharia",
+    "engineeringShort": "Ing",
+    "gcseHeader": "GCSE<br/><small>14-16 ans</small>",
+    "physicsShort": "Fisicas",
+    "title": "Interèsses del subjècte",
+    "universityHeader": "Universitat<br/><small>18+ ans</small>"
+  }
+}
