@@ -93,7 +93,7 @@ class GameboardBuilderQuestionsStack {
 
     public pop() {
         const questionOrder = this.questionOrderStack.at(-1) || [];
-        const selectedQuestions = this.selectedQuestionsStack.at(-1) || new Map<string, ContentSummary>();
+        const selectedQuestions = this.selectedQuestionsStack.at(-1) || new Map<string, ContentSummaryDTO>();
         this.setQuestionOrderStack(this.questionOrderStack.slice(0, -1));
         this.setSelectedQuestionsStack(this.selectedQuestionsStack.slice(0, -1));
         return {questionOrder, selectedQuestions};
@@ -126,10 +126,10 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     const [gameboardURL, setGameboardURL] = useState<string>();
     const [questionOrder, setQuestionOrder] = useState<string[]>([]);
     const [previousQuestionOrderStack, setPreviousQuestionOrderStack] = useState<string[][]>([]);
-    const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummary>());
-    const [previousSelectedQuestionsStack, setPreviousSelectedQuestionsStack] = useState(new Array<Map<string, ContentSummary>>());
+    const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummaryDTO>());
+    const [previousSelectedQuestionsStack, setPreviousSelectedQuestionsStack] = useState(new Array<Map<string, ContentSummaryDTO>>());
     const [redoQuestionOrderStack, setRedoQuestionOrderStack] = useState<string[][]>([]);
-    const [redoSelectedQuestionsStack, setRedoSelectedQuestionsStack] = useState(new Array<Map<string, ContentSummary>>());
+    const [redoSelectedQuestionsStack, setRedoSelectedQuestionsStack] = useState(new Array<Map<string, ContentSummaryDTO>>());
     const [wildcardId, setWildcardId] = useState<string | undefined>(undefined);
     const eventLog = useRef<object[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
@@ -137,7 +137,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     const cloneGameboard = useCallback((gameboard: GameboardDTO) => {
         setGameboardTitle(gameboard.title ? `${gameboard.title} (Copy)` : "");
         setQuestionOrder(loadGameboardQuestionOrder(gameboard) || []);
-        setSelectedQuestions(loadGameboardSelectedQuestions(gameboard) || new Map<string, ContentSummary>());
+        setSelectedQuestions(loadGameboardSelectedQuestions(gameboard) || new Map<string, ContentSummaryDTO>());
         setWildcardId(isStaff(user) && gameboard.wildCard && gameboard.wildCard.id || undefined);
         logEvent(eventLog, "CLONE_GAMEBOARD", {gameboardId: gameboard.id});
     }, [setGameboardTitle, setQuestionOrder, setSelectedQuestions, setWildcardId, eventLog, user]);
@@ -148,7 +148,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         setGameboardTags([]);
         setQuestionOrder([]);
         setGameboardURL(undefined);
-        setSelectedQuestions(new Map<string, ContentSummary>());
+        setSelectedQuestions(new Map<string, ContentSummaryDTO>());
         setWildcardId(undefined);
     };
 
