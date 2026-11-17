@@ -176,9 +176,9 @@ export const TeacherDashboard = ({ assignmentsSetByMe, quizzesSetByMe, myAssignm
         <div className="d-flex flex-wrap">
             {nameToDisplay && <h1 className="text-wrap h3">Welcome back, {nameToDisplay}!</h1>}
             <div className="ms-auto d-flex flex-wrap gap-3">
-                {dashboardView !== "student" && <span className="text-center">
+                <span className="text-center">
                     <RevisionModeToggle />
-                </span>}
+                </span>
                 <span className="text-center">
                     <div>Dashboard view</div>
                     <StyledToggle
@@ -190,7 +190,7 @@ export const TeacherDashboard = ({ assignmentsSetByMe, quizzesSetByMe, myAssignm
                 </span>
             </div>
         </div>
-        {dashboardView === "student" ? <StudentDashboard assignments={myAssignments} quizAssignments={myQuizAssignments} streakRecord={streakRecord} groups={groups} /> :
+        {dashboardView === "student" ? <StudentDashboard assignments={myAssignments} quizAssignments={myQuizAssignments} streakRecord={streakRecord} groups={groups} isTeacher /> :
             <>{deviceSize === "lg"
                 ? <>
                     <Row className="row-cols-3">

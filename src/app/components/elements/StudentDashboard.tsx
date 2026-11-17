@@ -261,9 +261,10 @@ interface StudentDashboardProps {
     quizAssignments: QuizAssignmentDTO[] | undefined;
     streakRecord: UserSnapshot | undefined;
     groups: AppGroup[] | undefined;
+    isTeacher?: boolean;
 }
 
-export const StudentDashboard = ({assignments, quizAssignments, streakRecord, groups}: StudentDashboardProps) => {
+export const StudentDashboard = ({assignments, quizAssignments, streakRecord, groups, isTeacher}: StudentDashboardProps) => {
     const deviceSize = useDeviceSize();
     const user = useAppSelector(selectors.user.orNull);
     const nameToDisplay = isLoggedIn(user) && !isTutorOrAbove(user) && user.givenName;
@@ -273,11 +274,12 @@ export const StudentDashboard = ({assignments, quizAssignments, streakRecord, gr
     return <div className={classNames("dashboard w-100", {"dashboard-outer": !isTutorOrAbove(user)})}>
         <div className="d-flex flex-wrap">
             {nameToDisplay && <h1 className="text-wrap h3">Welcome back, {nameToDisplay}!</h1>}
-            <div className="ms-auto d-flex flex-wrap gap-3">
+            {!isTeacher && <div className="ms-auto d-flex flex-wrap gap-3">
                 <span className="text-center">
                     <RevisionModeToggle />
                 </span>
             </div>
+            }
         </div>
         {deviceSize === "lg"
             ? <>
