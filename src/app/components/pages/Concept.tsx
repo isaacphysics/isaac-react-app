@@ -92,7 +92,7 @@ export const Concept = ({conceptIdOverride, preview}: ConceptPageProps) => {
                     sidebar={siteSpecific(
                         isDefined(gameboardId) 
                             ? <GameboardContentSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} wildCard={wildcard} currentContentId={doc.id} linkedBookSection={linkedBookSection} />
-                            : <ConceptSidebar relatedContent={doc.relatedContent} linkedBookSection={linkedBookSection} />,
+                            : <ConceptSidebar pageId={conceptId} relatedContent={doc.relatedContent} linkedBookSection={linkedBookSection} />,
                         undefined
                     )}
                 >

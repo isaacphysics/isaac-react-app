@@ -24,7 +24,7 @@ export const RegistrationSuccess = () => {
                     <Spacer />
                     {siteSpecific(
                         <div className="rounded-4 w-100 mt-3 mb-7 login-flow-bg d-flex justify-content-center align-items-center">
-                            <img className="img-fluid mx-auto w-sm-30 py-5" src="/assets/phy/decor/science-tick.svg" alt="" />,
+                            <img className="img-fluid mx-auto w-sm-30 py-5" src="/assets/phy/decor/science-tick.svg" alt="" />
                         </div>,
                         <img className="img-fluid mx-auto mt-3 mb-7 w-sm-50" src="/assets/cs/decor/verify_done.png" alt="" />
                     )}

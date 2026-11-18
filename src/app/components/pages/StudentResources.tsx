@@ -9,6 +9,7 @@ import { AdaCard } from "../elements/cards/AdaCard";
 import { ImageBlock } from "../elements/layout/ImageBlock";
 import { isLoggedIn, SITE_TITLE } from "../../services";
 import { ExternalLink } from "../elements/ExternalLink";
+import { AdaStoriesSection } from "../elements/AdaStoriesSection";
 
 export const StudentResources = () => {
     useEffect( () => {document.title = "Students – " + SITE_TITLE;}, []);
@@ -169,39 +170,7 @@ export const StudentResources = () => {
         </section>
         <section id="careers">
             <Container className="homepage-padding mw-1600" fluid>
-                <TextBlock>
-                    <h2>Explore a career in computer science</h2>
-                    <p>Read stories from graduates at the early stages of their careers in software development, game design, research, and much more.</p> 
-                </TextBlock>
-                <ColumnSlice className="row-gap-5">
-                    <AdaCard card={{
-                        title: "Max Fordham",
-                        image: {src: "/assets/cs/decor/stories/max-fordham.png"},
-                        bodyText: "Explore how Max’s passion for computer science led him to become a software engineer through a digital technology solutions apprenticeship.",
-                        buttonText: "Read more",
-                        clickUrl: "/pages/20240730_max_fordham"
-                    }}/>
-                    <AdaCard card={{
-                        title: "Meghna Asthana",
-                        image: {src: "/assets/cs/decor/stories/meghna-asthana.png"},
-                        bodyText: "Discover how Meghna turned her passion for coding into a career in computer vision, where she now works on innovative projects addressing environmental challenges.",
-                        buttonText: "Read more",
-                        clickUrl: "/pages/20240313_meghna_asthana"
-                    }}/>
-                    <AdaCard card={{
-                        title: "Lella Halloum",
-                        image: {src: "/assets/cs/decor/stories/lella-halloum.png"},
-                        bodyText: "Meet Lella, a young digital changemaker who uses technology to inspire, engage, and upskill the next generation of talent.",
-                        buttonText: "Read more",
-                        clickUrl: "/pages/20240215_lella_halloum"
-                    }}/>
-                </ColumnSlice>
-                <div className="d-flex justify-content-center mt-6">
-                    <Link to="/pages/computer_science_stories" target="_blank">
-                        <strong className="link-dark-pink">View more stories</strong>
-                    </Link>
-                    <strong className="link-dark-pink">&gt;</strong>
-                </div>
+                <AdaStoriesSection />
             </Container>
         </section>
         <section id="help-and-support" className="bg-white">

@@ -747,13 +747,11 @@ p > .katex, .katex-display {
   .feedback-panel-header {
     background-color: rgba($transparency, 2 * $alph);
     border-radius: 10px 10px 0 0;
-    > button {
+    > button.btn.btn {
       color: inherit;
-      min-width: 176px;
-      flex-basis: 100%;
-      @include media-breakpoint-up(md) {
-        min-width: 0;
-      }
+      min-width: 3rem;
+      flex: 0 1 25%;
+      padding: 0.5rem 0.75rem;
       &:hover {
         color: inherit;
       }

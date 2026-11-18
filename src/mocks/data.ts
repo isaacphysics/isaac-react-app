@@ -7803,9 +7803,109 @@ export const mockNewsPods = {
             },
             url: "/pages/book_launch_2022",
             published: true
+        },
+        {
+            id: "test-cs-story-1",
+            title: "CS Stories: Test Person 1",
+            type: "isaacPod",
+            encoding: "markdown",
+            children: [],
+            value: "Meet Test Person 1, a software engineer who started coding at school and now builds tools used by thousands of people.",
+            tags: [
+                "cs_stories"
+            ],
+            image: {
+                type: "image",
+                children: [],
+                published: false,
+                src: "/assets/phy/events/teacher.jpg",
+                altText: "Image of students problem solving together."
+            },
+            url: "/pages/test_cs_story_1",
+            published: true
+        },
+        {
+            id: "test-cs-story-2",
+            title: "CS Stories: Test Person 2",
+            type: "isaacPod",
+            encoding: "markdown",
+            children: [],
+            value: "Discover how Test Person 2 turned a love of puzzles into a career in cyber security.",
+            tags: [
+                "cs_stories"
+            ],
+            image: {
+                type: "image",
+                children: [],
+                published: false,
+                src: "/assets/phy/events/teacher.jpg",
+                altText: "Image of students problem solving together."
+            },
+            url: "/pages/test_cs_story_2",
+            published: true
+        },
+        {
+            id: "test-cs-story-3",
+            title: "CS Stories: Test Person 3",
+            type: "isaacPod",
+            encoding: "markdown",
+            children: [],
+            value: "Test Person 3 shares how an apprenticeship led to a job in data science.",
+            tags: [
+                "cs_stories"
+            ],
+            image: {
+                type: "image",
+                children: [],
+                published: false,
+                src: "/assets/phy/events/teacher.jpg",
+                altText: "Image of students problem solving together."
+            },
+            url: "/pages/test_cs_story_3",
+            published: true
+        },
+        {
+            id: "test-cs-story-4",
+            title: "CS Stories: Test Person 4",
+            type: "isaacPod",
+            encoding: "markdown",
+            children: [],
+            value: "Explore how Test Person 4 uses computer science to design games for young learners.",
+            tags: [
+                "cs_stories"
+            ],
+            image: {
+                type: "image",
+                children: [],
+                published: false,
+                src: "/assets/phy/events/teacher.jpg",
+                altText: "Image of students problem solving together."
+            },
+            url: "/pages/test_cs_story_4",
+            published: true
+        },
+        {
+            id: "test-cs-story-5",
+            title: "CS Stories: Test Person 5",
+            type: "isaacPod",
+            encoding: "markdown",
+            children: [],
+            value: "Read how Test Person 5 moved from teaching into research on artificial intelligence.",
+            tags: [
+                "cs_stories"
+            ],
+            image: {
+                type: "image",
+                children: [],
+                published: false,
+                src: "/assets/phy/events/teacher.jpg",
+                altText: "Image of students problem solving together."
+            },
+            url: "/pages/test_cs_story_5",
+            published: true
         }
     ],
-    totalResults: 5
+    totalResults: 10
 };
 
 export const mockFragment = (pageId: string) => ({

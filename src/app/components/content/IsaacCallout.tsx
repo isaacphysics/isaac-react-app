@@ -25,6 +25,7 @@ const calloutStyle = siteSpecific({
         sampleRun: "/assets/cs/icons/callout/run-callout.svg",
         scenario: "/assets/cs/icons/callout/scenario-callout.svg",
         definition: "/assets/cs/icons/callout/definition-callout.svg",
+        careers: "/assets/cs/icons/callout/careers-callout.svg",
     },
     style: {
         marginTop: -15,
@@ -36,6 +37,7 @@ const calloutStyle = siteSpecific({
         sampleRun: "hi-pink-25",
         scenario: "hi-yellow-50",
         definition: "hi-cyan-50",
+        careers: "hi-pink-50",
     }
 });
 

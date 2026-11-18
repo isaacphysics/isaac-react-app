@@ -767,19 +767,6 @@
   resolved "https://registry.yarnpkg.com/@frsource/base64/-/base64-1.0.237.tgz#455a1393a49ef93309784ce115e2b7bf39c956a2"
   integrity sha512-X0tSa8rrusTEkYNy7aE+M+sZlsdyjMt8OgxWc6RerYefph3EKIVRTaL0qg8iw53iabvM7mJDK8MNc4W1yTAz2w==
 
-"@frsource/cypress-plugin-visual-regression-diff@^4.2.1":
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/@frsource/cypress-plugin-visual-regression-diff/-/cypress-plugin-visual-regression-diff-4.2.1.tgz#1a05903cd1b5e7f9ba5cc85191c841acb3c80bbb"
-  integrity sha512-zu+Lfet2mydw+kkGMQ96gN6w8uejPsonKgmaybAMrS3HVXx4V28D961Q8f7ohs9hGa+v+njPJeGbTZuKpnLCkQ==
-  dependencies:
-    "@frsource/base64" "1.0.237"
-    glob "13.0.6"
-    meta-png "1.0.6"
-    move-file "4.1.0"
-    pixelmatch "7.2.0"
-    pngjs "7.0.0"
-    sharp "0.35.4"
-
 "@hello-pangea/dnd@^18.0.1":
   version "18.0.1"
   resolved "https://registry.yarnpkg.com/@hello-pangea/dnd/-/dnd-18.0.1.tgz#7d5ef7fe8bddf195307b16e03635b1be582b7b8d"
@@ -1449,6 +1436,20 @@
     "@parcel/watcher-linux-x64-musl" "2.6.0"
     "@parcel/watcher-win32-arm64" "2.6.0"
     "@parcel/watcher-win32-x64" "2.6.0"
+
+"@pixsame/cypress-plugin-visual-regression-diff@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@pixsame/cypress-plugin-visual-regression-diff/-/cypress-plugin-visual-regression-diff-1.0.0.tgz#c31588b6c7a153fe0509f9e92a0c60aaf0f45cb5"
+  integrity sha512-qajypoI7TYxr5L5cqfBGUG1O05rnVOPcVTu3Bbbbs4U8rWCMnPCIw/ND0Yy2B4ZqZclKWt4+6Nlvbvxd5jhJZw==
+  dependencies:
+    "@frsource/base64" "1.0.237"
+    glob "13.0.6"
+    meta-png "1.0.6"
+    move-file "4.1.0"
+    package-manager-detector "^1.8.0"
+    pixelmatch "7.2.0"
+    pngjs "7.0.0"
+    sharp "0.35.4"
 
 "@pkgr/core@^0.3.6":
   version "0.3.6"
@@ -5843,6 +5844,11 @@ p5@^1.11.13:
   version "1.11.13"
   resolved "https://registry.yarnpkg.com/p5/-/p5-1.11.13.tgz#1ee9fb1c79c0d97800f7ec6f7ebdaec8d73b1a17"
   integrity sha512-gfGo4AkyuNMs6Ko7UNFM9K2edqFRGyLrFaYUB+XXF127JVdEPu0BIaC5uDDNJpsRMOD9hJMUpsOH4HkfuNhvhA==
+
+package-manager-detector@^1.8.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/package-manager-detector/-/package-manager-detector-1.9.0.tgz#217ed03645bfeb563e9efce4c5bbbfbb652754ab"
+  integrity sha512-zAMfbta9nPA8AKkA4WdmNAT8R8s6Dk0/xwPsqNnRidMFcLo1YkLuPDTgs2f64XdzS8vbLNnoJ+uUIkgbz7oRHA==
 
 parent-module@^1.0.0:
   version "1.0.1"
