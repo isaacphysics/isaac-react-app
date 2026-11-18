@@ -11,12 +11,11 @@ export const sortQuestions = (sortState: {[s: string]: string}) => (questions: C
     }
     if (sortState.difficulty && sortState.difficulty != SortOrder.NONE) {
         questions.sort(function compareFirstDifficulty(a, b) {
-            const firstDifficultyA = determineAudienceViews(a.audience)[0]?.difficulty;
-            const firstDifficultyB = determineAudienceViews(b.audience)[0]?.difficulty;
-            if (firstDifficultyA === firstDifficultyB) return 0;
-            const aIndex = difficultiesOrdered.indexOf(firstDifficultyA as Difficulty);
-            const bIndex = difficultiesOrdered.indexOf(firstDifficultyB as Difficulty);
-            return (sortState.difficulty === SortOrder.ASC && aIndex > bIndex) ? 1 : -1;
+            const getIndex = (question: ContentSummaryDTO) => {
+                return difficultiesOrdered.indexOf(determineAudienceViews(question.audience)[0]?.difficulty as Difficulty);
+            };
+            const diff = getIndex(a) - getIndex(b);
+            return sortState.difficulty === SortOrder.ASC ? diff : -diff;
         });
         return questions;
     }
