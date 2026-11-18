@@ -11,6 +11,7 @@ import { StageAndDifficultySummaryIcons } from "../StageAndDifficultySummaryIcon
 import { Tag } from "../../../../IsaacAppTypes";
 import { AffixButton } from "../AffixButton";
 import { Spacer } from "../Spacer";
+import { useTranslation } from "react-i18next";
 import { Badge } from "reactstrap";
 
 export const KeyItem = (props: React.HTMLAttributes<HTMLSpanElement> & {icon: string, text: string}) => {
@@ -22,13 +23,14 @@ export const KeyItem = (props: React.HTMLAttributes<HTMLSpanElement> & {icon: st
 };
 
 export const CompletionKey = () => {
+    const { t } = useTranslation();
     return <div className="d-flex flex-column sidebar-key">
-        Question key
+        {t("questions:sidebar.completionKey.title")}
         <ul>
-            <KeyItem icon="not-started" text="Not started"/>
-            <KeyItem icon="in-progress" text="In progress"/>
-            <KeyItem icon="attempted" text="All attempted (some errors)"/>
-            <KeyItem icon="correct" text="All correct"/>
+            <KeyItem icon="not-started" text={t("common:status.notStarted")}/>
+            <KeyItem icon="in-progress" text={t("common:status.inProgress")}/>
+            <KeyItem icon="attempted" text={t("common:status.allAttemptedWithErrors")}/>
+            <KeyItem icon="correct" text={t("questions:sidebar.completionKey.allCorrect")}/>
         </ul>
     </div>;
 };
@@ -88,13 +90,14 @@ export const FilterCheckbox = (props : FilterCheckboxProps) => {
 };
 
 export const AllFiltersCheckbox = (props: Omit<FilterCheckboxProps, "tag"> & {forceEnabled?: boolean}) => {
+    const { t } = useTranslation();
     const { conceptFilters, setConceptFilters, tagCounts, baseTag, forceEnabled, className } = props;
     const [previousFilters, setPreviousFilters] = useState<Tag[]>([]);
     const pageContext = useAppSelector(selectors.pageContext.context);
 
     return <StyledTabPicker
         id="all" checked={forceEnabled || !conceptFilters.length}
-        checkboxTitle="All"
+        checkboxTitle={t("common:label.all")}
         className={className}
         count={tagCounts &&
             (baseTag
@@ -208,6 +211,7 @@ interface BackToBookButtonProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 export const BackToBookButton = (props: BackToBookButtonProps) => {
+    const { t } = useTranslation();
     const { linkedBookSection, ...rest } = props;
     const bookId = linkedBookSection[0];
     const sectionId = linkedBookSection[1];
@@ -222,7 +226,7 @@ export const BackToBookButton = (props: BackToBookButtonProps) => {
             type: "icon",
             affixClassName: "icon-inline me-2"
         }}>
-        Back to book section
+        {t("questions:sidebar.backToBook.button")}
         <Spacer />
     </AffixButton>;
 };

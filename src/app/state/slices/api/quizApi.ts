@@ -20,6 +20,7 @@ import {
 } from "./utils";
 import {Immutable} from "immer";
 import {isDefined} from "../../../services";
+import i18next from "i18next";
 
 export const quizApi = isaacApi.enhanceEndpoints({
     addTagTypes: ["AvailableQuizList", "QuizzesAssignedToMe", "QuizzesSetByMe", "QuizzesAttemptedFreelyByMe", "QuizAssignment"],
@@ -196,9 +197,9 @@ export const quizApi = isaacApi.enhanceEndpoints({
                 ["QuizzesAssignedToMe", "QuizzesSetByMe", {type: "QuizAssignment", id: quizAssignmentId}],
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: ({update}) => {
-                    if (isDefined(update.quizFeedbackMode)) return "Failed to update test feedback mode";
-                    if (isDefined(update.dueDate)) return "Failed to update test due date";
-                    return "Failed to update test assignment";
+                    if (isDefined(update.quizFeedbackMode)) return i18next.t("teaching:tests.api.updateFeedbackModeFailed");
+                    if (isDefined(update.dueDate)) return i18next.t("teaching:tests.api.updateDueDateFailed");
+                    return i18next.t("teaching:tests.api.updateAssignmentFailed");
                 },
             })
         }),

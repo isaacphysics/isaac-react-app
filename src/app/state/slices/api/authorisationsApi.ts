@@ -2,6 +2,7 @@ import {groupsApi} from "./groupsApi";
 import {UserSummaryDTO, UserSummaryWithEmailAddressDTO} from "../../../../IsaacApiTypes";
 import {anonymisationFunctions, anonymiseIfNeededWith, onQueryLifecycleEvents} from "./utils";
 import {showErrorToast} from "../../actions/popups";
+import i18next from "i18next";
 
 export const authorisationsApi = groupsApi.enhanceEndpoints({
     addTagTypes: ["ActiveAuthorisations", "OtherAuthorisations"],
@@ -35,13 +36,13 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
                 onQueryError: (args, error, {dispatch}) => {
                     if (error.status == 429) {
                         dispatch(showErrorToast(
-                            "Too many attempts",
-                            "You have entered too many group codes. Please check your code with your teacher and try again later!"
+                            i18next.t("common:error.tooManyAttempts"),
+                            i18next.t("teaching:groups.authorisations.rateLimitMessage")
                         ));
                     } else {
                         dispatch(showErrorToast(
-                            "Teacher connection failed",
-                            "The code may be invalid or the group may no longer exist. Codes are usually uppercase and 6-8 characters in length."
+                            i18next.t("teaching:groups.authorisations.connectionErrorTitle"),
+                            i18next.t("teaching:groups.authorisations.connectionErrorMessage")
                         ));
                     }
                 }

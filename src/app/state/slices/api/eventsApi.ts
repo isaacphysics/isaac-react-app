@@ -4,6 +4,7 @@ import {onQueryLifecycleEvents} from "./utils";
 import {AdditionalInformation, AugmentedEvent, EventOverview} from "../../../../IsaacAppTypes";
 import {apiHelper, EventStatusFilter, EventTypeFilter, isDefined, STAGE} from "../../../services";
 import {EventOverviewFilter} from "../../../components/elements/panels/EventOverviews";
+import i18next from "i18next";
 
 const augmentEvent = (event: IsaacEventPageDTO): AugmentedEvent => {
     const augmentedEvent: AugmentedEvent = Object.assign({}, event);
@@ -165,11 +166,11 @@ export const eventsApi = isaacApi.enhanceEndpoints({
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Event booking failed",
                 successTitle: ({waitingListOnly}) => waitingListOnly
-                    ? "Booking request received"
-                    : "Waiting list booking confirmed",
+                    ? i18next.t("events:events.selfBooking.waitingList.requestReceivedTitle")
+                    : i18next.t("events:events.selfBooking.waitingList.confirmedTitle"),
                 successMessage: ({waitingListOnly}) => waitingListOnly
-                    ? "You have requested a place on this event."
-                    : "You have been successfully added to the waiting list for this event.",
+                    ? i18next.t("common:status.requestedPlace")
+                    : i18next.t("events:events.selfBooking.waitingList.confirmedMessage"),
             })
         }),
 

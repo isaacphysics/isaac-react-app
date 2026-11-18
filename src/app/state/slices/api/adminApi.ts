@@ -11,6 +11,7 @@ import {
 import {onQueryLifecycleEvents} from "./utils";
 import {showSuccessToast} from "../../actions/popups";
 import {AdminStatsResponse, ContentErrorsResponse, UserSchoolLookup} from "../../../../IsaacAppTypes";
+import i18next from "i18next";
 
 export const adminApi = isaacApi.enhanceEndpoints({
     addTagTypes: ["MisuseStatistics"],
@@ -41,7 +42,7 @@ export const adminApi = isaacApi.enhanceEndpoints({
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Failed to reset misuse monitor for user",
                 onQuerySuccess: ({eventLabel}, _, {dispatch}) => {
-                    dispatch(showSuccessToast("Reset successfully", `${eventLabel.replace("MisuseHandler", "")} misuse event count reset for user`));
+                    dispatch(showSuccessToast(i18next.t("admin:admin.misuseMonitor.resetSuccessTitle"), i18next.t("admin:admin.misuseMonitor.resetSuccessMessage", { eventLabel: eventLabel.replace("MisuseHandler", "") })));
                 },
             })
         }),
@@ -91,7 +92,7 @@ export const adminApi = isaacApi.enhanceEndpoints({
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Merging users failed",
                 onQuerySuccess: ({targetId, sourceId}, _, {dispatch}) => {
-                    dispatch(showSuccessToast("Users merged", `User with id: ${sourceId} was merged into user with id: ${targetId}`));
+                    dispatch(showSuccessToast(i18next.t("admin:admin.users.mergeSuccessTitle"), i18next.t("admin:admin.users.mergeSuccessMessage", { sourceId, targetId })));
                 }
             })
         }),

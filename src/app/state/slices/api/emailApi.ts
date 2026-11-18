@@ -4,6 +4,7 @@ import {requestCurrentUser} from "../../actions";
 import {onQueryLifecycleEvents} from "./utils";
 import {EmailUserRoles, TemplateEmail} from "../../../../IsaacAppTypes";
 import {EmailTemplateDTO} from "../../../../IsaacApiTypes";
+import i18next from "i18next";
 
 export const emailApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
@@ -15,7 +16,7 @@ export const emailApi = isaacApi.injectEndpoints({
             onQueryStarted: onQueryLifecycleEvents({
                 onQuerySuccess: (args, _, {dispatch}) => {
                     dispatch(requestCurrentUser());
-                    dispatch(showSuccessToast("Email address verified", "The email address has been verified"));
+                    dispatch(showSuccessToast(i18next.t("account:auth.emailVerification.successTitle"), i18next.t("account:auth.emailVerification.successMessage")));
                 }
             })
         }),
