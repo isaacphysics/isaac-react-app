@@ -2,8 +2,10 @@ import React, { useCallback, useEffect } from "react";
 import classNames from "classnames";
 import { isAda, siteSpecific } from "../../services";
 import { IconButton } from "../elements/AffixButton";
+import { useTranslation } from "react-i18next";
 
 export const ScrollToTop = ({mainContent}: {mainContent: React.MutableRefObject<HTMLElement | null>}) => {
+    const { t } = useTranslation();
     const [sticky, setSticky] = React.useState(false);
 
     const isSticky = useCallback(() => {
@@ -23,7 +25,7 @@ export const ScrollToTop = ({mainContent}: {mainContent: React.MutableRefObject<
         className={classNames("scroll-btn d-print-none", {"is-sticky": sticky, "bg-white": isAda})}
         onClick={() => mainContent.current?.scrollIntoView({behavior: 'smooth'})}
         tabIndex={sticky ? 0 : -1}
-        aria-label="Scroll to top of page"
+        aria-label={t("common:navigation.scrollToTop")}
         data-bs-theme="neutral"
     />;
 };

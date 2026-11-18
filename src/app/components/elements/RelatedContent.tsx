@@ -10,6 +10,7 @@ import {
 } from "../../services";
 import {logAction, selectors, useAppDispatch, useAppSelector} from "../../state";
 import classNames from "classnames";
+import i18next from "i18next";
 import {getEventDetails} from "./sidebar/SidebarElements";
 
 const RelatedQuestion = ({question, parentPage}: {question: ContentSummaryDTO, parentPage: ContentDTO}) => {
@@ -54,12 +55,12 @@ export function RelatedContent({content, parentPage}: RelatedContentProps) {
             <div className="simple-card flex-fill my-3 p-3 text-wrap">
                 <div className="related-questions">
                     <i className="icon icon-raw icon-not-started icon-lg mb-n2 ms-2 me-3" />
-                    <h3 className="d-inline-block mt-2">Related questions</h3>
+                    <h3 className="d-inline-block mt-2">{i18next.t("common:title.relatedQuestions")}</h3>
                 </div>
                 <hr/>
                 <div className="d-md-flex text-start">
                     {audienceQuestions.length > 0 && <div className={classNames({"w-md-50": remainingQuestions.length > 0})}>
-                        <div className="ps-3 h4">On your specification:</div>
+                        <div className="ps-3 h4">{i18next.t("questions:relatedContent.questions.specificationHeader")}</div>
                         <ListGroup>
                             {audienceQuestions.map((contentSummary, i) => 
                                 <RelatedQuestion key={`audience-question-${i}`} question={contentSummary} parentPage={parentPage} />
@@ -67,7 +68,7 @@ export function RelatedContent({content, parentPage}: RelatedContentProps) {
                         </ListGroup>
                     </div>}
                     {remainingQuestions.length > 0 && <div className={classNames("mt-4 mt-md-0", {"w-md-50": audienceQuestions.length > 0})}>
-                        <div className="ps-3 h4">Outside your specification:</div>
+                        <div className="ps-3 h4">{i18next.t("questions:relatedContent.questions.outsideSpecificationHeader")}</div>
                         <ListGroup>
                             {remainingQuestions.map((contentSummary, i) => 
                                 <RelatedQuestion key={`remaining-question-${i}`} question={contentSummary} parentPage={parentPage} />
