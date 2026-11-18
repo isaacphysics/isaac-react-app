@@ -377,6 +377,8 @@
     },
     "inlineFeedback": {
       "boxCounter": "crwdns2424912:0{{boxIndex}}crwdnd2424912:0{{boxCount}}crwdne2424912:0",
+      "nextPart": "crwdns2440532:0crwdne2440532:0",
+      "previousPart": "crwdns2440534:0crwdne2440534:0",
       "selectBox": "crwdns2424914:0crwdne2424914:0"
     },
     "inlineInput": {
