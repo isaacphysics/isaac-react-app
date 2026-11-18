@@ -82,7 +82,7 @@ export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
             {isDefined(error) && <>
                 <TitleAndBreadcrumb currentPageTitle="Test Feedback" intermediateCrumbs={assignmentProgressCrumbs} icon={{type: "icon", icon: "icon-error"}} />
                 <Alert color="warning" className="mt-4">
-                    <div className="alert-heading h4">No feedback to show</div>
+                    <div className="alert-heading h4">Attempt unavailable</div>
                     <p>{error}</p>
                 </Alert>
             </>}
