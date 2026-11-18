@@ -1,0 +1,510 @@
+{
+  "anvilApps": {
+    "emptyMessage": "Tools are not available for {{context}}.",
+    "emptyTitle": "Tools"
+  },
+  "attempt": {
+    "assignmentError": "Error loading assignment!"
+  },
+  "bookmarks": {
+    "emptyState": {
+      "message": "You have no bookmarks yet."
+    },
+    "loadError": {
+      "message": "Could not load your bookmarks. Please try again later."
+    },
+    "saveConfirmation": "Saved!",
+    "sidebar": {
+      "filterTitle": "Filter bookmarks by...",
+      "searchTitle": "Search bookmarks",
+      "sortTitle": "Sort bookmarks by...",
+      "stageFilter": "Learning stage"
+    }
+  },
+  "clozeQuestion": {
+    "accessibility": {
+      "dragEndDropZone": "Draggable item {{itemText}} was dropped into drop zone number {{dropZoneIndex}}",
+      "dragEndSwapped": "Draggable item {{activeItemText}} was swapped with {{hoveredItemText}}.",
+      "dragOverDropZone": "Draggable item is over drop zone number {{dropZoneIndex}}",
+      "dragOverSwap": "Swap draggable item {{activeItemText}} with item {{hoveredItemText}}."
+    }
+  },
+  "codeEditor": {
+    "feedback": {
+      "correct": "Your code is correct!",
+      "incorrect": "Your code is incorrect!",
+      "ranCorrectly": "Your code ran correctly!"
+    },
+    "iframeTitle": "Code Sandbox",
+    "timeout": {
+      "infoHeading": "Useful information to include in your email:"
+    }
+  },
+  "concepts": {
+    "cardSubtitle": "Review the key concepts for {{subjectContext}}.",
+    "errorFetching": "Error fetching concepts",
+    "filteredIntro": "The concepts shown on this page have been filtered to only show those that are relevant to {{contextDescription}}. You can browse all concepts <allConceptsLink>here</allConceptsLink>.",
+    "genericIntro": "Use our concept finder to explore all concepts on the Isaac platform.",
+    "resultsCount": "Showing <b>{{count}}</b> results",
+    "sidebar": {
+      "searchTitle": "Search concepts"
+    }
+  },
+  "confidence": {
+    "infoModal": {
+      "body": "We regularly review and update the {{siteName}} platform’s content and would like your input in order to prioritise content and assess the impact of updates. Data captured with these buttons will help us identify priority areas.",
+      "title": "Information"
+    },
+    "options": {
+      "high": "High",
+      "low": "Low",
+      "medium": "Medium",
+      "partly": "Partly"
+    },
+    "question": {
+      "followUp": {
+        "question": "Having read the feedback, what is your level of confidence in answering this question correctly now?"
+      },
+      "initial": {
+        "question": "What is your level of confidence that your answer is correct?"
+      },
+      "title": "Click a button to check your answer"
+    },
+    "quickQuestion": {
+      "followUp": {
+        "question": "Is your own answer correct?"
+      },
+      "initial": {
+        "question": "What is your level of confidence that your own answer is correct?"
+      },
+      "title": "Click a button to show the answer"
+    }
+  },
+  "content": {
+    "codeSnippet": {
+      "viewOnGithub": "View on GitHub"
+    },
+    "expandImageLabel": "Expand image",
+    "imagePreviewTitle": "Image preview"
+  },
+  "contentPropertyTags": {
+    "deprecatedLabel": "DEPRECATED",
+    "noFilterLabel": "NO-FILTER",
+    "supersededLabel": "SUPERSEDED"
+  },
+  "desmos": {
+    "embedTitle": "Desmos Calculator"
+  },
+  "dnd": {
+    "clozeFallbackText": "cloze item without a description",
+    "draggableRoleDescription": "draggable item"
+  },
+  "dragAndDrop": {
+    "cancelled": "Dragging was cancelled. Draggable item {{itemText}} was returned to it's previous position.",
+    "dropped": "Draggable item {{itemText}} was dropped.",
+    "droppedIntoItemsSection": "Draggable item was dropped into the items section",
+    "itemSectionLabel": "Items:",
+    "keyboardInstructions": "To pick up an item, press space or enter. Use the up and down arrow keys to navigate between drop zones and items in the question. Press space or enter again to drop the item into a new position, or to swap it with another item being hovered over.",
+    "offTarget": "Draggable item {{itemText}} is no longer over a droppable area.",
+    "overItemsSection": "Draggable item is over the items section",
+    "overPreviousPosition": "Draggable item {{itemText}} is over it's previous position.",
+    "pickup": "Picked up draggable item {{itemText}}.",
+    "returnedPreviousPosition": "Draggable item {{itemText}} was returned to it's previous position.",
+    "unselectedItems": "Non-selected items"
+  },
+  "editorRenderer": {
+    "waitingContent": "Waiting for {{siteTitle}} content..."
+  },
+  "figure": {
+    "expandButton": "Expand figure",
+    "label": "Figure {{figureNumber}}"
+  },
+  "freeTextBuilder": {
+    "attempts": {
+      "remaining": "{{count}} attempts remaining today"
+    },
+    "infoAlert": {
+      "consentButton": "Consent",
+      "consentDescription": "We use a large language model (LLM) to mark free-text questions like this one. The model typically returns a predicted mark in under 10 seconds; however the marks you receive may not be accurate.",
+      "consentPrivacy": "We only send your answer to OpenAI, we do not send any personal data. OpenAI will not train their models using data you submit; you may wish to read OpenAI’s <privacyPolicyLink>privacy policy</privacyPolicyLink> before accepting.",
+      "consentTitle": "Do you consent to sending your answers to OpenAI for marking?",
+      "consentWithdraw": "You can withdraw your consent at any time in your <accountSettingsLink>account settings</accountSettingsLink>.",
+      "generalAccuracy": "In our 2024 study, we found that the LLM marks agreed with the marks computer science teachers gave 66% of the time. This means that the marks you receive will not always be accurate.",
+      "generalDataPrivacy": "Do not include personal data in your answer as we send your answer to OpenAI. We only send your answer, we do not send any personal data with it. You can withdraw your consent at any time in your <accountSettingsLink>account settings</accountSettingsLink>.",
+      "generalTitle": "Free text questions are marked by a large language model (LLM)",
+      "loggedOutDataPrivacy": "The only data we send to the LLM is your answer; we do not send any personal data.",
+      "loggedOutDescription": "We use a large language model (LLM) to mark free-text questions like this one. The model typically returns a predicted mark in under 10 seconds, along with the mark scheme. This gives you a low-stakes way to practise exam-style questions as well as an insight into how LLMs work, and their accuracy.",
+      "loggedOutTitle": "You must be logged in to answer this question",
+      "skipQuestion": "Skip question",
+      "under13Consequence": "You can still read the question, but we will not be able to mark your answer.",
+      "under13Description": "We use a large language model (LLM) to mark free-text questions like this one. This requires your consent to send your answer to OpenAI for marking. Because you are under 13, we cannot collect your consent for this under the GDPR law.",
+      "under13Title": "We cannot collect your consent"
+    },
+    "llmFeedback": {
+      "accuracyNote": "1 in 3 times the predicted mark will be wrong.",
+      "agree": "Agree",
+      "disagree": "Disagree",
+      "feedbackPrompt": "Before submitting another response, please say whether you agree with the predicted mark.",
+      "markScheme": "Mark scheme",
+      "partlyAgree": "Partly agree",
+      "predictedAwarded": "Predicted as awarded",
+      "predictedCorrect": "Predicted correct",
+      "prediction": "Prediction: {{predictedMarks}} out of {{maxMarks}} marks",
+      "submitButton": "Send feedback",
+      "submitted": "Feedback submitted",
+      "title": "Do you agree with the LLM’s predicted marks?"
+    },
+    "matchingRules": {
+      "json": {
+        "description": "JSON for the <strong>choices</strong> part of your isaacFreeTextQuestion"
+      },
+      "table": {
+        "anyOrder": "Any order {{checkmark}}",
+        "extraWords": "Extra words {{checkmark}}",
+        "feedbackLabel": "Feedback:",
+        "ignoreCase": "Ignore case {{checkmark}}",
+        "misspelling": "Misspelling {{checkmark}}",
+        "responseColumn": "Response",
+        "ruleColumn": "Rule"
+      },
+      "title": "Matching rules",
+      "tooltip": {
+        "multiChar": "Match zero or more characters.",
+        "orList": "Separate an OR list of word choices.",
+        "singleChar": "Match only one character.",
+        "wildcardsTitle": "In-word wildcards:"
+      }
+    },
+    "submitButton": "Test question",
+    "testCases": {
+      "csv": {
+        "description": "Enter test cases as CSV with the headers: expected(true/false), value"
+      },
+      "table": {
+        "actualColumn": "Actual",
+        "expectedColumn": "Expected",
+        "feedbackColumn": "Feedback",
+        "matchColumn": "Match"
+      },
+      "title": "Test answers ({{matchCount}}/{{totalCount}})"
+    },
+    "title": "Free-text question builder"
+  },
+  "geogebra": {
+    "openContent": "Click to open GeoGebra content"
+  },
+  "glossary": {
+    "cardSubtitle": "Use the glossary to understand the vocabulary you need for {{subjectContext}}.",
+    "contextualTitle": "{{context}} Glossary",
+    "empty": {
+      "noResults": "We could not find glossary terms to match your search criteria.",
+      "noTerms": "There are no glossary terms in the glossary yet! Please try again later.",
+      "selectSubject": "Please select a subject."
+    },
+    "filters": {
+      "topicPlaceholder": "All topics"
+    },
+    "print": {
+      "searchTerm": "Search: <strong>{{searchText}}</strong>",
+      "topicName": "Topic: <strong>{{topicTitle}}</strong>"
+    },
+    "search": {
+      "label": "Search by term"
+    },
+    "sidebar": {
+      "selectSubjectTitle": "Select subject",
+      "switchStageTitle": "Switch learning stage"
+    }
+  },
+  "graphSketcher": {
+    "controls": {
+      "bezierButton": "Polynomial curve",
+      "bezierTooltip": "Draw polynomial curve",
+      "colorLabel": "Line colour",
+      "linearButton": "Straight line",
+      "linearTooltip": "Draw straight line",
+      "redoButton": "Redo",
+      "redoTooltip": "Redo last change",
+      "undoButton": "Undo",
+      "undoTooltip": "Undo last change"
+    },
+    "editInstruction": "Click on the grid to edit your sketch.",
+    "startInstruction": "Click on the grid to start your sketch."
+  },
+  "inequality": {
+    "centreButton": "Centre",
+    "chemistry": {
+      "placeholder": "Type chemical elements here",
+      "uppercaseWarning": "Careful: chemical element names start with an upper-case letter."
+    },
+    "helpTooltip": {
+      "examples": "Here are some examples of expressions you can type:<br1/><br2/>{{example}}<br3/>As you type, the box below will preview the result."
+    },
+    "input": {
+      "placeholder": "Type your formula here",
+      "placeholderOrType": "or type your formula here",
+      "resetButton": "Reset to initial value",
+      "symbolsHeading": "The following symbols may be useful:"
+    },
+    "orientationWarning": "Our equation editor works best in landscape mode.",
+    "trashButton": "Trash",
+    "validation": {
+      "decimalsToFractions": "Please convert decimal numbers to fractions.",
+      "doubleInequality": "We are not able to accept double inequalities, and answers will never require them.",
+      "functionSpacing": "Make sure to use spaces or * signs before function names like 'sin' or 'sqrt'!",
+      "inverseTrig": "To create the inverse {{trigFunction}} function, use 'arc{{functionName}}'.",
+      "inverseTrigHyperbolic": "To create the inverse {{trigFunction}} function, use 'ar{{functionName}}'.",
+      "latexNotSupported": "LaTeX syntax is not supported.",
+      "missingBrackets": "You are missing some brackets.",
+      "stateSymbolsNotRequired": "This question does not require state symbols.",
+      "syntaxError": "Syntax error: unexpected token \"{{tokenValue}}\""
+    }
+  },
+  "latex": {
+    "dropZone": "clickable drop zone",
+    "figureReference": "Figure&nbsp;{{number}}",
+    "unknownReference": "unknown reference {{refKey}}"
+  },
+  "markdownBuilder": {
+    "guideLinkText": "Markdown guide",
+    "rawInputLabel": "Raw input",
+    "renderedLabel": "Rendered markdown"
+  },
+  "markup": {
+    "inlineDropZone": {
+      "ariaLabel": "drop zone",
+      "clearButton": "Clear"
+    },
+    "tables": {
+      "expandButton": {
+        "ariaLabel": "Expand content"
+      }
+    }
+  },
+  "questionFinder": {
+    "cardSubtitle": "Find {{subjectContext}} questions to try by topic and difficulty level.",
+    "errorTitle": "Error loading questions",
+    "filter": {
+      "bookmarked": "Bookmarked",
+      "clearAll": "Clear all filters",
+      "excludeBooks": "Exclude skills books questions"
+    },
+    "filters": {
+      "excludeSkillsBook": "Exclude skills book questions",
+      "togglePanel": "Toggle filter panel"
+    },
+    "noResults": "No results.",
+    "results": {
+      "loadError": "Failed to load questions.",
+      "titleColumn": "Question title"
+    },
+    "resultsCount": "Showing <b>{{count}}</b>",
+    "selection": {
+      "selectedCount_one": "{{count}} question selected",
+      "selectedCount_other": "{{count}} questions selected"
+    },
+    "shuffleButton": "Shuffle <responsiveWord>questions</responsiveWord>",
+    "sidebar": {
+      "stageHeading": "Decks by stage",
+      "subjectHeading": "Decks by subject",
+      "switchContextButton": "Switch stage/subject"
+    },
+    "totalCount": "of <b>{{total}}</b>"
+  },
+  "questionMetadata": {
+    "accessibilityWarningsTitle": "Accessibility warnings",
+    "printStageDifficultyLabel": "Stage & difficulty:",
+    "printSubjectTopicsLabel": "Subject & topics:",
+    "stageDifficultyTitle": "Stage & difficulty",
+    "subjectTopicsTitle": "Subject & topics"
+  },
+  "questionStats": {
+    "aggregate": {
+      "correctCountOfAttempted": "{{correctCount}} of {{attemptedCount}}",
+      "correctPartsTitle": "Correct question parts",
+      "correctQuestionsTitle": "Correct questions",
+      "sinceAccountCreation": "Since account creation:",
+      "thisAcademicYear": "This academic year:"
+    }
+  },
+  "questions": {
+    "answerPlaceholder": "Type your answer here.",
+    "attemptFailure": {
+      "body": "Your answer could not be checked. Please try again.",
+      "title": "Question attempt failed"
+    },
+    "attempts": {
+      "warningBody": "You have entered several guesses for this question; soon it will be temporarily locked.",
+      "warningTitle": "Approaching attempts limit"
+    },
+    "chemistry": {
+      "editPromptSingleBox": "Click in the box below to edit your answer.",
+      "editPromptTextEntry": "Click in either box below to edit your answer."
+    },
+    "coordinate": {
+      "addButton": "Add coordinate",
+      "invalidCharsError": "Some of the characters you are using are not allowed: {{invalidChars}}",
+      "noCommaError": "Your answer should not contain commas. Enter each part of your answer in a separate box.",
+      "simplifyError": "Simplify each part of your answer into a single decimal number."
+    },
+    "crossTopicIndicator": "Cross-topic question",
+    "dragAndDrop": {
+      "announceDroppedIntoDropZone": "Draggable item {{itemText}} was dropped into drop zone number {{dropZoneNumber}}",
+      "announceOverDropZone": "Draggable item is over drop zone number {{dropZoneNumber}}",
+      "announceSwapWithItem": "Swap draggable item {{activeItemText}} with item {{overItemText}}.",
+      "announceSwappedWithItem": "Draggable item {{activeItemText}} was swapped with {{overItemText}}."
+    },
+    "fastTrack": {
+      "relatedConceptTitle": "Read suggested related concept page"
+    },
+    "feedback": {
+      "correct": "Correct!",
+      "partlyCorrect": "Partly correct...",
+      "tooFewSigFigs": "Right or wrong...",
+      "tooManySigFigs": "Looks right, but..."
+    },
+    "freeText": {
+      "answerLabel": "Answer text field",
+      "validationWarningLabel": "Warning:"
+    },
+    "generateAnswerSpec": {
+      "errorTitle": "There was a problem generating an answer specification"
+    },
+    "hints": {
+      "defaultTitle": "Hint {{index}}",
+      "heading": "Need some help?",
+      "preamble": "Don't forget to use the hints if you need help."
+    },
+    "inlineFeedback": {
+      "boxCounter": "Box {{boxIndex}} of {{boxCount}}",
+      "nextPart": "Next question part",
+      "previousPart": "Previous question part",
+      "selectBox": "View feedback for a specific box by selecting it above or using the arrows below."
+    },
+    "inlineInput": {
+      "ariaLabel": "Input field for part {{partName}}"
+    },
+    "inlineRegion": {
+      "feedback": {
+        "incorrect": "Check your answer.",
+        "missingUnit": "This answer is missing a unit.",
+        "notAnswered": "You did not provide an answer."
+      }
+    },
+    "inputValidation": {
+      "warningLabel": "Careful!"
+    },
+    "itemsArea": {
+      "available": "Available items",
+      "dragHint": "Drag items across to build your answer",
+      "empty": "No answer entered",
+      "yourAnswer": "Your answer"
+    },
+    "llmIndicator": {
+      "label": "LLM marked question"
+    },
+    "maxMarks_one": "[{{count}} mark]",
+    "maxMarks_other": "[{{count}} marks]",
+    "multiChoice": {
+      "clearOption": "(clear)"
+    },
+    "numeric": {
+      "decimalSeparator": "Use points instead of commas as decimal separators.",
+      "exponentSymbol": "Use a correct exponent symbol, e.g. 10^-3 or 10**-3.",
+      "helpPrompt": "What can I type in this box?",
+      "inputHelp": "Here are some examples of numbers you can write:<br1/><br2/>3.7<br3/>-3x10^14<br4/>2.8e-12<br5/><br6/>Do not use commas or spaces.",
+      "inputLabel": "Input field for part {{partTitle}}",
+      "noSpaces": "Do not use spaces when entering your answer.",
+      "noThousandSeparators": "Do not use commas or spaces as thousand separators when entering your answer.",
+      "simplifyToDecimal": "Simplify your answer into a single decimal number."
+    },
+    "parsons": {
+      "moveBackToItems": "Move {{itemName}} back to the items list",
+      "moveDown": "Move {{itemName}} down",
+      "moveToAnswer": "Move {{itemName}} into your answer",
+      "moveUp": "Move {{itemName}} up"
+    },
+    "preview": {
+      "ariaLabel": "Preview question",
+      "title": "Question preview"
+    },
+    "quickQuestion": {
+      "hideAnswerButton": "Hide answer",
+      "showAnswerButton": "Show answer"
+    },
+    "reorder": {
+      "dragInstruction": "Drag these items to put them in the correct order"
+    },
+    "search": {
+      "errorTitle": "Unable to search for questions"
+    },
+    "submit": {
+      "check": "Check my answer",
+      "marking": "Marking your answer…"
+    },
+    "symbolicLogic": {
+      "emptyPreview": "Click to enter your expression"
+    },
+    "validation": {
+      "charLimitExceeded": "Character limit exceeded ({{currentCount}}/{{limit}})",
+      "invalidFormat": "Your answer is not in a format we recognise, please enter your answer as a decimal number.",
+      "notAnswered": "Not answered",
+      "piiDetected": "<strong>Possible PII detected:</strong><br/>It looks like your answer contains personal information, like a name, email or street address. Sending this data to OpenAI is against their Usage policy.",
+      "sigFigs": "Significant Figures",
+      "stdFormSyntax": "When writing standard form, you must include <caretCode>^</caretCode> or <doubleAsteriskCode>**</doubleAsteriskCode> between the 10 and the exponent.",
+      "tooFewSigFigs": "your answer needs <b>more</b> <strong><sigFigsLink> significant figures</sigFigsLink></strong>.",
+      "tooManySigFigs": "your answer needs <b>fewer</b> <strong><sigFigsLink> significant figures</sigFigsLink></strong>.",
+      "wordLimitExceeded": "Word limit exceeded ({{currentCount}}/{{limit}})"
+    }
+  },
+  "relatedContent": {
+    "questions": {
+      "outsideSpecificationHeader": "Outside your specification:",
+      "specificationHeader": "On your specification:"
+    }
+  },
+  "sidebar": {
+    "backToBook": {
+      "button": "Back to book section"
+    },
+    "completionKey": {
+      "allCorrect": "All correct",
+      "title": "Question key"
+    },
+    "display": {
+      "limit": "Limit:",
+      "limitLabel": "Set display limit",
+      "modeLabel": "Set display mode",
+      "title": "Display"
+    },
+    "filter": {
+      "creator": "Filter by creator"
+    },
+    "optionsButton": "Options",
+    "relatedContent": {
+      "conceptsTitle": "Related concepts",
+      "noConcepts": "There are no related concepts for this {{pageType}}.",
+      "noQuestions": "There are no related questions for this {{pageType}}.",
+      "otherStagesTitle": "Related questions for other learning stages",
+      "stageQuestionsTitle": "Related {{stageName}} questions",
+      "viewAllConcepts": "See all concepts for {{contextName}}",
+      "viewAllQuestions": "See all questions for {{contextName}}"
+    },
+    "search": {
+      "decks": "Search question decks"
+    },
+    "toggleButton": {
+      "label": "Search and filter"
+    }
+  },
+  "svgFilter": {
+    "comingSoon": "Coming soon!",
+    "count": "{{count}} filters selected",
+    "title": "Difficulties filter selector"
+  },
+  "video": {
+    "embed": {
+      "accessibilityLabel": "Embedded YouTube video: {{videoDescription}}."
+    }
+  }
+}
