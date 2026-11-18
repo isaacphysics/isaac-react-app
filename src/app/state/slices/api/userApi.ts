@@ -7,6 +7,7 @@ import {showToast} from "../../actions/popups";
 import {isFirstLoginInPersistence, isTeacherOrAbove, KEY, navigateComponentless, persistence} from "../../../services";
 import {questionsApi} from "./questionsApi";
 import {continueToAfterAuthPath, requestCurrentUser} from "../../actions";
+import i18next from "i18next";
 
 export const userApi = isaacApi.injectEndpoints({
     endpoints: (build) => ({
@@ -175,8 +176,8 @@ export const userApi = isaacApi.injectEndpoints({
                             }
                         } else if (!editingOtherUser) {
                             dispatch(showToast({
-                                title: "Account settings updated",
-                                body: "Your account settings were updated successfully.",
+                                title: i18next.t("account:account.update.successTitle"),
+                                body: i18next.t("common:status.accountUpdated"),
                                 color: "success",
                                 timeout: 5000,
                                 closable: false,
@@ -186,8 +187,8 @@ export const userApi = isaacApi.injectEndpoints({
                                 void navigateComponentless('/');
                             }
                             dispatch(showToast({
-                                title: "Account settings updated",
-                                body: "The user's account settings were updated successfully.",
+                                title: i18next.t("account:account.update.successTitle"),
+                                body: i18next.t("account:account.update.otherSuccessMessage"),
                                 color: "success",
                                 timeout: 5000,
                                 closable: false,
@@ -195,7 +196,7 @@ export const userApi = isaacApi.injectEndpoints({
                         }
                     } catch {
                         dispatch(showToast({
-                            title: "Account settings not updated",
+                            title: i18next.t("account:account.update.notUpdatedTitle"),
                             body: `Unable to update ${editingOtherUser ? "the user's" : "your"} account settings.`,
                             color: "danger",
                             timeout: 5000,

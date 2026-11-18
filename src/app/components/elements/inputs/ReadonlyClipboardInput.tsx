@@ -1,7 +1,9 @@
 import {Button, Input, InputGroup, InputProps, Tooltip} from "reactstrap";
 import React, {useRef, useState} from "react";
+import { useTranslation } from "react-i18next";
 
 export const ReadonlyClipboardInput = (props: InputProps) => {
+    const { t } = useTranslation();
     const [copied, setCopied] = useState<boolean>(false);
     const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -22,14 +24,14 @@ export const ReadonlyClipboardInput = (props: InputProps) => {
         />
         <Button
             color={"keyline"}
-            aria-label={"Copy to clipboard"}
+            aria-label={t("common:clipboard.copyAriaLabel")}
             onClick={copyToClipboard}
             className={"w-100 w-md-auto"}
         >
-            Copy
+            {t("common:clipboard.copyButton")}
         </Button>
         <Tooltip placement="top" isOpen={copied} target={inputRef}>
-            Copied to clipboard!
+            {t("common:clipboard.copiedTooltip")}
         </Tooltip>
     </InputGroup>;
 };

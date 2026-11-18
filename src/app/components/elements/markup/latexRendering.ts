@@ -5,6 +5,7 @@ import he from "he";
 import {BOOLEAN_NOTATION, dndDropZoneRegex, dropZoneRegex, isAda, renderA11yString, useUserPreferences} from "../../../services";
 import katex, {KatexOptions} from "katex";
 import 'katex/contrib/mhchem';
+import i18next from "i18next";
 
 type MathJaxMacro = string|[string, number];
 
@@ -332,7 +333,7 @@ export function katexify(
         } else {
             // It's a ref
             const ref = match[0].match(/ref\{([^}]*)\}/);
-            const result = createReference(ref && ref[1], "unknown reference " + match[0]);
+            const result = createReference(ref && ref[1], i18next.t("questions:latex.unknownReference", { refKey: match[0] }));
 
             output += result;
             index = match.index + match[0].length;

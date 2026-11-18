@@ -9,6 +9,7 @@ import {
 import {isDefined, MEMBERSHIP_STATUS} from "../../../services";
 import {showSuccessToast} from "../../actions/popups";
 import {UserSummaryWithGroupMembershipDTO} from "../../../../IsaacApiTypes";
+import i18next from "i18next";
 
 export const groupsApi = assignmentsApi.injectEndpoints({
     endpoints: (build) => ({
@@ -74,7 +75,7 @@ export const groupsApi = assignmentsApi.injectEndpoints({
             onQueryStarted: onQueryLifecycleEvents({
                 onQuerySuccess: ({updatedGroup, message}, _, {dispatch}) => {
                     if (message) {
-                        dispatch(showSuccessToast("Group updated successfully", message));
+                        dispatch(showSuccessToast(i18next.t("teaching:groups.update.successTitle"), message));
                     }
                     [true, false].forEach(archivedGroupsOnly => {
                         dispatch(groupsApi.util.updateQueryData(

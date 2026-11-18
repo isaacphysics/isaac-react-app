@@ -9,6 +9,7 @@ import { AffixButton } from "../AffixButton";
 import { NavigationSidebar } from "../layout/SidebarLayout";
 import { Markup } from "../markup";
 import { QuestionLink, CompletionKey, BackToBookButton, getEventDetails } from "./SidebarElements";
+import { useTranslation } from "react-i18next";
 
 type ConceptLinkProps = React.HTMLAttributes<HTMLLIElement> & {
     concept: ContentSummaryDTO;
@@ -38,6 +39,7 @@ interface RelatedContentSidebarProps {
 }
 
 const RelatedContentSidebar = (props: RelatedContentSidebarProps & {pageType: "concept" | "question" | "page"}) => {
+    const { t } = useTranslation();
     const relatedConcepts = props.relatedContent?.filter(c => c.type === DOCUMENT_TYPE.CONCEPT).sort(sortByStringValue("title"));
     const relatedQuestions = props.relatedContent?.filter(c => c.type === DOCUMENT_TYPE.QUESTION || c.type === DOCUMENT_TYPE.FAST_TRACK_QUESTION).sort(sortByStringValue("title"));
 
@@ -50,20 +52,20 @@ const RelatedContentSidebar = (props: RelatedContentSidebarProps & {pageType: "c
         {props.linkedBookSection && props.linkedBookSection[0] && props.linkedBookSection[1] && <BackToBookButton linkedBookSection={props.linkedBookSection} className="w-100"/>}
 
         <div className="section-divider"/>
-        <h3 className="h5">Related concepts</h3>
+        <h3 className="h5">{t("questions:sidebar.relatedContent.conceptsTitle")}</h3>
         {relatedConcepts && relatedConcepts.length > 0
             ? <ul className="link-list">
                 {relatedConcepts.map((concept, i) => <ConceptLink key={i} concept={concept} parentPageType={props.pageType} parentPageId={props.pageId} />)}
             </ul>
             : <>
-                There are no related concepts for this {props.pageType}.
+                {t("questions:sidebar.relatedContent.noConcepts", { pageType: props.pageType })}
                 {isFullyDefinedContext(pageContext) && <AffixButton color="keyline" className="mt-3 w-100" tag={Link} to={extendUrl(pageContext, "concepts")} affix={{affix: "icon-arrow-right", position: "suffix", type: "icon"}}>
-                    See all concepts for {getHumanContext(pageContext)}
+                    {t("questions:sidebar.relatedContent.viewAllConcepts", { contextName: getHumanContext(pageContext) })}
                 </AffixButton>}
             </>
         }
         <div className="section-divider"/>
-        <h3 className="h5">Related questions</h3>
+        <h3 className="h5">{t("common:title.relatedQuestions")}</h3>
         {relatedQuestions && relatedQuestions.length > 0
             ? <>
                 {!pageContextStage || pageContextStage.length > 1 || relatedQuestionsForContextStage.length === 0 || relatedQuestionsForOtherStages.length === 0
@@ -74,12 +76,12 @@ const RelatedContentSidebar = (props: RelatedContentSidebarProps & {pageType: "c
                     </>
                     : <>
                         <div className="section-divider"/>
-                        <h3 className="h5">Related {HUMAN_STAGES[pageContextStage[0]]} questions</h3>
+                        <h3 className="h5">{t("questions:sidebar.relatedContent.stageQuestionsTitle", { stageName: HUMAN_STAGES[pageContextStage[0]] })}</h3>
                         <ul className="link-list">
                             {relatedQuestionsForContextStage.map((question, i) => <QuestionLink key={i} question={question} linkedBookSection={props.linkedBookSection} parentPageType={props.pageType} parentPageId={props.pageId} />)}
                         </ul>
                         <div className="section-divider"/>
-                        <h3 className="h5">Related questions for other learning stages</h3>
+                        <h3 className="h5">{t("questions:sidebar.relatedContent.otherStagesTitle")}</h3>
                         <ul className="link-list">
                             {relatedQuestionsForOtherStages.map((question, i) => <QuestionLink key={i} question={question} linkedBookSection={props.linkedBookSection} parentPageType={props.pageType} parentPageId={props.pageId} />)}
                         </ul>
@@ -90,9 +92,9 @@ const RelatedContentSidebar = (props: RelatedContentSidebarProps & {pageType: "c
 
             </>
             : <>
-                There are no related questions for this {props.pageType}.
+                {t("questions:sidebar.relatedContent.noQuestions", { pageType: props.pageType })}
                 {isFullyDefinedContext(pageContext) && <AffixButton color="keyline" className="mt-3 w-100" tag={Link} to={extendUrl(pageContext, "questions")} affix={{affix: "icon-arrow-right", position: "suffix", type: "icon"}}>
-                    See all questions for {getHumanContext(pageContext)}
+                    {t("questions:sidebar.relatedContent.viewAllQuestions", { contextName: getHumanContext(pageContext) })}
                 </AffixButton>}
             </>
         }

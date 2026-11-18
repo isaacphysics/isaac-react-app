@@ -34,6 +34,8 @@ import LLMFreeTextQuestionFeedbackView from "../elements/LLMFreeTextQuestionFeed
 import { skipToken } from "@reduxjs/toolkit/query";
 import { Alert, Button, Form} from "reactstrap";
 import { useLocation } from "react-router";
+import { Trans, useTranslation } from "react-i18next";
+import { TransAnchor } from "../elements/TransAnchor";
 
 function useCanAttemptQuestionType(questionType?: string): ReturnType<typeof useCanAttemptQuestionTypeQuery> {
     // We skip the check with the API if the question type is not a restricted question type
@@ -66,6 +68,7 @@ const FastTrackSubmissionButtons = ({fastTrackPrimaryAction, fastTrackSecondaryA
 };
 
 export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const location = useLocation();
     const accordion = useContext(AccordionSectionContext);
@@ -104,19 +107,42 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
     );
 
     const tooManySigFigsFeedback = <p className="fs-5">
-        your answer needs <b>fewer</b>&nbsp;
-        <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> significant figures</a></strong>.
+        <Trans
+            i18nKey="questions:questions.validation.tooManySigFigs"
+            components={{
+                b: <b />,
+                strong: <strong />,
+                sigFigsLink: <TransAnchor target='_blank' href='/solving_problems#acc_solving_problems_sig_figs' />,
+            }}
+        />
     </p>;
 
     const tooFewSigFigsFeedback = <p className="fs-5">
-        your answer needs <b>more</b>&nbsp;
-        <strong><a target='_blank' href='/solving_problems#acc_solving_problems_sig_figs'> significant figures</a></strong>.
+        <Trans
+            i18nKey="questions:questions.validation.tooFewSigFigs"
+            components={{
+                b: <b />,
+                strong: <strong />,
+                sigFigsLink: <TransAnchor target='_blank' href='/solving_problems#acc_solving_problems_sig_figs' />,
+            }}
+        />
     </p>;
 
     const invalidFormatFeeback = <p>
-        Your answer is not in a format we recognise, please enter your answer as a decimal number.<br/>
-        {invalidFormatErrorStdForm && <>When writing standard form, you must include <code>^</code> or <code>**</code> between the 10 and the exponent.<br/></>}
-        {isPhy && <>For help, see our <a target="_blank" href="/solving_problems#units">guide to answering numeric questions</a>.</>}
+        {t("questions:questions.validation.invalidFormat")}<br/>
+        {invalidFormatErrorStdForm && <><Trans
+            i18nKey="questions:questions.validation.stdFormSyntax"
+            components={{
+                caretCode: <code />,
+                doubleAsteriskCode: <code />,
+            }}
+        /><br/></>}
+        {isPhy && <><Trans
+            i18nKey="sci:questions.validation.numericGuide"
+            components={{
+                numericGuideLink: <TransAnchor target="_blank" href="/solving_problems#units" />,
+            }}
+        /></>}
     </p>;
 
     // Register Question Part in Redux
@@ -172,7 +198,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
 
     // Determine Action Buttons
     const isLongRunningQuestionType = isLLMFreeTextQuestion;
-    const submitButtonLabel = isLongRunningQuestionType && questionPart?.loading ? "Marking your answer…" : "Check my answer";
+    const submitButtonLabel = isLongRunningQuestionType && questionPart?.loading ? t("questions:questions.submit.marking") : t("questions:questions.submit.check");
     const fastTrackPrimaryAction = isFastTrack ? determineFastTrackPrimaryAction(fastTrackInfo) : null;
     const fastTrackSecondaryAction = isFastTrack ? determineFastTrackSecondaryAction(fastTrackInfo) : null;
 
@@ -221,27 +247,27 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
                     className={`validation-response-panel p-3 mt-3 ${correct ? "correct" : almost ? "almost" : ""}`}
                 >
                     <div className={classNames("pb-1", siteSpecific("response-heading", "h1"))} tabIndex={-1} ref={feedbackRef}>
-                        {correct ? "Correct!" :
-                            tooManySigFigsError ? "Looks right, but..." :
-                                tooFewSigFigsError ? "Right or wrong..." :
-                                    almost ? "Partly correct..." :
-                                        "Incorrect"
+                        {correct ? t("questions:questions.feedback.correct") :
+                            tooManySigFigsError ? t("questions:questions.feedback.tooManySigFigs") :
+                                tooFewSigFigsError ? t("questions:questions.feedback.tooFewSigFigs") :
+                                    almost ? t("questions:questions.feedback.partlyCorrect") :
+                                        t("common:status.incorrect")
                         }
                     </div>
                     {validationResponse.explanation && <div className="mb-2">
                         {isInlineQuestion && numInlineQuestions && numInlineQuestions > 1 && isDefined(inlineContext?.feedbackIndex) ? <>
-                            <span>View feedback for a specific box by selecting it above or using the arrows below.</span>
+                            <span>{t("questions:questions.inlineFeedback.selectBox")}</span>
                             <div className={`feedback-panel-${almost ? "light" : "dark"}`} role="note">
                                 <div className={`w-100 mt-2 p-2 d-flex gap-2 feedback-panel-header justify-content-around`}>
-                                    <Button color="transparent" aria-label="Previous question part" onClick={() => {
+                                    <Button color="transparent" aria-label={t("questions:questions.inlineFeedback.previousPart")} onClick={() => {
                                         inlineContext.setFeedbackIndex(((inlineContext?.feedbackIndex as number - 1) + numInlineQuestions) % numInlineQuestions);
                                     }}>
                                         ◀
                                     </Button>
                                     <div className="text-nowrap align-self-center" aria-live="polite">
-                                        Box {inlineContext.feedbackIndex as number + 1} of {numInlineQuestions}
+                                        {t("questions:questions.inlineFeedback.boxCounter", { boxIndex: inlineContext.feedbackIndex as number + 1, boxCount: numInlineQuestions })}
                                     </div>
-                                    <Button color="transparent" aria-label="Next question part" onClick={() => {
+                                    <Button color="transparent" aria-label={t("questions:questions.inlineFeedback.nextPart")} onClick={() => {
                                         inlineContext.setFeedbackIndex((inlineContext?.feedbackIndex as number + 1) % numInlineQuestions);
                                     }}>
                                         ▶

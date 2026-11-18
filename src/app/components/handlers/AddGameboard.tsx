@@ -3,10 +3,11 @@ import {PotentialUser} from "../../../IsaacAppTypes";
 import {saveGameboard, useAppDispatch} from "../../state";
 import {useNavigate, useParams} from "react-router-dom";
 import {IsaacSpinner} from "./IsaacSpinner";
-import {siteSpecific} from "../../services";
 import {Container} from "reactstrap";
+import { useTranslation } from "react-i18next";
 
 export const AddGameboard = ({user}: {user: PotentialUser}) => {
+    const { t } = useTranslation();
     const {gameboardId, gameboardTitle} = useParams<{gameboardId: string; gameboardTitle: string}>();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
@@ -25,6 +26,6 @@ export const AddGameboard = ({user}: {user: PotentialUser}) => {
     }, [dispatch, saveGameboard, gameboardId]);
 
     return <Container className={"text-center"}>
-        <IsaacSpinner size={"lg"} displayText={`Adding ${siteSpecific("question deck", "quiz")}...`}/>
+        <IsaacSpinner size={"lg"} displayText={t("site:gameboard.add.loading")}/>
     </Container>;
 };

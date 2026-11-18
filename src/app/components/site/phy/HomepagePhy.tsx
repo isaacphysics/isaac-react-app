@@ -10,6 +10,8 @@ import { StudentDashboard } from "../../elements/StudentDashboard";
 import { CustomListViewItemProps, ListViewCards, transformItemsForCustomListView } from "../../elements/list-groups/ListView";
 import { Spacer } from "../../elements/Spacer";
 import { TeacherDashboard } from "../../elements/TeacherDashboard";
+import { Trans, useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 interface HomepageHeroCardProps extends CardProps {
     title?: string;
@@ -18,17 +20,18 @@ interface HomepageHeroCardProps extends CardProps {
 }
 
 const HomepageHeroCard = ({title, content, isStudent}: HomepageHeroCardProps) => {
+    const { t } = useTranslation();
     return <Card className="homepage-hero-card border-0">
         <CardBody className="p-4 pt-7 d-flex flex-column">
             <div className="homepage-hero-card-tag">
                 {isStudent
                     ? <>
-                        <img src="/assets/phy/icons/redesign/homepage-hero-student-flag.svg" height={"40px"} alt={"student card tag"}/>
-                        <b>STUDENTS</b>
+                        <img src="/assets/phy/icons/redesign/homepage-hero-student-flag.svg" height={"40px"} alt={t("sci:homepage.hero.studentTag")}/>
+                        <b>{t("sci:homepage.hero.studentLabel")}</b>
                     </>
                     : <>
-                        <img src="/assets/phy/icons/redesign/homepage-hero-teacher-flag.svg" height={"40px"} alt={"teacher card tag"}/>
-                        <b>TEACHERS</b>
+                        <img src="/assets/phy/icons/redesign/homepage-hero-teacher-flag.svg" height={"40px"} alt={t("sci:homepage.hero.teacherTag")}/>
+                        <b>{t("sci:homepage.hero.teacherLabel")}</b>
                     </>
                 }
             </div>
@@ -41,6 +44,7 @@ const HomepageHeroCard = ({title, content, isStudent}: HomepageHeroCardProps) =>
 };
 
 const HomepageHero = () => {
+    const { t } = useTranslation();
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
     if (!isLoggedIn(user)) {
@@ -49,22 +53,22 @@ const HomepageHero = () => {
             <Container className="pt-7">
                 <div className="w-100 w-md-50 mb-4 mb-md-7 mb-xl-9 pe-xl-7">
                     <h1 className="physics-strapline mb-3">
-                        <span className="text-green">Master science subjects</span> by solving problems
+                        <Trans i18nKey="sci:homepage.hero.headline" components={{ highlight: <span className="text-green" /> }} />
                     </h1>
-                    From school to university – <b>Isaac</b> is a free platform for teachers and students for use in the classroom, for homework and for revision.
+                    <Trans i18nKey="sci:homepage.hero.description" components={{ b: <b /> }} />
                 </div>
                 {!above['md'](deviceSize) && <div className="homepage-hero-img container-override"/>}
                 <Row className="row-cols-1 row-cols-md-2">
                     <Col className="mb-3">
                         <HomepageHeroCard
-                            title="Build confidence in science through practice"
-                            content="Tackle interactive questions, explore varying difficulty levels, and strengthen problem-solving skills with concept guides, video lessons, and events."
+                            title={t("sci:homepage.hero.studentTitle")}
+                            content={t("sci:homepage.hero.studentContent")}
                             isStudent={true}/>
                     </Col>
                     <Col className="mb-3">
                         <HomepageHeroCard
-                            title="Support students in developing skills and achieving higher results"
-                            content="Assign, track, and manage student progress with ease – ideal for classwork, homework, or revision. Trusted by more than 3,500 teachers."
+                            title={t("sci:homepage.hero.teacherTitle")}
+                            content={t("sci:homepage.hero.teacherContent")}
                             isStudent={false}/>
                     </Col>
                 </Row>
@@ -106,7 +110,7 @@ const getListViewSubjectCard = (sc: subjectCategory) => {
             height: "75px",
         },
         subject: sc.subject as Subject,
-        linkTags: sc.subcategories.map((subcat) => ({tag: subcat.humanStage, url: subcat.href, "aria-label": `Explore ${subcat.humanStage} ${sc.humanSubject}`})),
+        linkTags: sc.subcategories.map((subcat) => ({tag: subcat.humanStage, url: subcat.href, "aria-label": i18next.t("sci:homepage.subjects.ariaLabel", { stage: subcat.humanStage, subject: sc.humanSubject })})),
     };
 
     return listViewSubjectCard;
@@ -130,6 +134,7 @@ const AdaSubjectCard: CustomListViewItemProps['item'] = {
 const cards = [...subjectCategories.map((sc) => getListViewSubjectCard(sc)), AdaSubjectCard];
 
 export const HomepagePhy = () => {
+    const { t } = useTranslation();
 
     useEffect( () => {document.title = SITE_TITLE;}, []);
 
@@ -183,7 +188,7 @@ export const HomepagePhy = () => {
 
     return <>
         <div id="homepage" className="homepage pb-7">
-            <section id="dashboard" aria-label="Dashboard">
+            <section id="dashboard" aria-label={t("sci:homepage.dashboard.ariaLabel")}>
                 {isLoggedIn(user) && (isTutorOrAbove(user)
                     ? <TeacherDashboard assignmentsSetByMe={assignmentsSetByMe} quizzesSetByMe={isTutor(user) ? [] : quizzesSetByMe} groups={groups} myAssignments={myAssignments}
                         myQuizAssignments={myQuizAssignments} streakRecord={streakRecord} dashboardView={dashboardView} setDashboardView={setDashboardView} />
@@ -196,7 +201,7 @@ export const HomepagePhy = () => {
                 <section id="explore-learn">
                     <div className="mt-7">
                         <div className="d-flex">
-                            <h2>Explore and learn!</h2>
+                            <h2>{t("sci:homepage.subjects.title")}</h2>
                             <div className="section-divider flex-grow-1 ms-2"/>
                         </div>
                         <ListViewCards type="item" items={cards.map(transformItemsForCustomListView)} />
@@ -206,40 +211,40 @@ export const HomepagePhy = () => {
                     <Row className="mt-7 row-cols-1 row-cols-lg-2">
                         <div className="d-flex flex-column mt-3">
                             <div className="d-flex">
-                                <h2>Upcoming events</h2>
-                                <Link to="/events" className="news-events-link">More events</Link>
+                                <h2>{t("sci:title.upcomingEvents")}</h2>
+                                <Link to="/events" className="news-events-link">{t("common:button.seeMoreEvents")}</Link>
                                 <div className="section-divider-bold flex-grow-1"/>
                             </div>
                             <ShowLoadingQuery
                                 query={eventsQuery}
-                                ifError={(() => <p>There was an error loading the events list. Please try again later!</p>)}
+                                ifError={(() => <p>{t("sci:homepage.events.error")}</p>)}
                                 thenRender={({events}) => {
                                     return <Row className="h-100 row-cols-1 row-cols-sm-2 gap-3 gap-sm-0">
                                         {events.length
                                             ? events.map(event => <Col key={event.id}>
                                                 <EventCard event={event} />
                                             </Col>)
-                                            : <p>No events available. Check back soon!</p>}
+                                            : <p>{t("sci:homepage.events.empty")}</p>}
 
                                     </Row>;
                                 }}/>
                         </div>
                         <div className="d-flex flex-column mt-3">
                             <div className="d-flex">
-                                <h2>News and features</h2>
-                                <Link to="/news" className="news-events-link">More news</Link>
+                                <h2>{t("sci:homepage.news.title")}</h2>
+                                <Link to="/news" className="news-events-link">{t("sci:homepage.news.moreLink")}</Link>
                                 <div className="section-divider-bold flex-grow-1"/>
                             </div>
                             <ShowLoadingQuery
                                 query={newsQuery}
-                                ifError={(() => <p>There was an error loading the news list. Please try again later!</p>)}
+                                ifError={(() => <p>{t("sci:homepage.news.error")}</p>)}
                                 thenRender={(news) => {
                                     return <Row className="h-100 row-cols-1 row-cols-sm-2 gap-3 gap-sm-0">
                                         {news.length
                                             ? news.slice(0, 2).map(newsItem => <Col key={newsItem.id}>
                                                 <NewsCard newsItem={newsItem} />
                                             </Col>)
-                                            : <p>No news available. Check back soon!</p>
+                                            : <p>{t("sci:homepage.news.empty")}</p>
                                         }
                                     </Row>;
                                 }}

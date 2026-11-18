@@ -4,6 +4,8 @@ import { ACCOUNT_TAB, ACCOUNT_TABS, accountPanelId, accountTabId, ifKeyIsEnter }
 import { StyledTabPicker } from "../inputs/StyledTabPicker";
 import { ContentSidebar, SidebarProps } from "../layout/SidebarLayout";
 import { selectors, useAppSelector } from "../../../state";
+import { useTranslation } from "react-i18next";
+
 interface MyAccountSidebarProps extends SidebarProps {
     editingOtherUser: boolean;
     activeTab: ACCOUNT_TAB;
@@ -11,14 +13,15 @@ interface MyAccountSidebarProps extends SidebarProps {
 }
 
 export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
+    const { t } = useTranslation();
     const { editingOtherUser, activeTab, setActiveTab, ...rest } = props;
     const user = useAppSelector(selectors.user.orNull);
-    return <ContentSidebar buttonTitle="Account settings" data-testid="account-nav" {...rest}>
+    return <ContentSidebar buttonTitle={t("common:title.accountSettings")} data-testid="account-nav" {...rest}>
         <div className="section-divider mt-0"/>
-        <h3 className="h5">Account settings</h3>
+        <h3 className="h5">{t("common:title.accountSettings")}</h3>
         {/* The <li>s carry role="presentation", so the tablist/tab structure is what's exposed to assistive tech while the valid <ul>/<li> markup is preserved */
         /* eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role */}
-        <ul role="tablist" aria-label="Account settings">
+        <ul role="tablist" aria-label={t("common:title.accountSettings")}>
             {ACCOUNT_TABS
                 .filter(tab => !tab.isHidden?.(user, editingOtherUser))
                 .map(({tab, title}) => (
