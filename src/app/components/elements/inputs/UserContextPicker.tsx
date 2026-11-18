@@ -47,7 +47,6 @@ const formatContextExplanation = (stageExplanation: CONTEXT_SOURCE, examBoardExp
 
 export const UserContextPicker = ({className, hideLabels = true}: {className?: string; hideLabels?: boolean}) => {
     const dispatch = useAppDispatch();
-    const qParams = useQueryParams();
     const user = useAppSelector(selectors.user.orNull);
     const userViewingContext = useUserViewingContext();
 
@@ -83,7 +82,7 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                 {/* Stage Selector */}
                 <div className={classNames("form-group w-100 d-flex justify-content-end align-items-center m-0", {"mb-3": isAda}, {"align-items-center": isPhy})}>
                     {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-stage-select">Stage</Label>}
-                    {hasDefaultPreferences(userViewingContext.contexts) && (userViewingContext.explanation.stage == CONTEXT_SOURCE.TRANSIENT || userViewingContext.explanation.examBoard == CONTEXT_SOURCE.TRANSIENT) &&
+                    {!hasDefaultPreferences(userViewingContext.contexts) && (userViewingContext.explanation.stage == CONTEXT_SOURCE.TRANSIENT || userViewingContext.explanation.examBoard == CONTEXT_SOURCE.TRANSIENT) &&
                         <button className="icon-reset mb-1" aria-label={"Reset viewing context"} onClick={() => {
                             dispatch(transientUserContextSlice.actions.setExamBoard(undefined));
                             dispatch(transientUserContextSlice.actions.setStage(undefined));
@@ -96,7 +95,6 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         value={currentStages.length === 1 ? currentStages : stagesString(currentStages)}
                         disabled={userViewingContext.isFixedContext}
                         onChange={e => {
-                            const newParams: { [key: string]: unknown } = {...qParams, stage: e.target.value};
                             const stage = e.target.value as STAGE;
                             if (isAda) {
                                 // Derive exam board selection so that it is a valid option
@@ -113,7 +111,6 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                                 else if (possibleExamBoards.length === 2 && possibleExamBoards.includes(EXAM_BOARD.ALL)) {
                                     examBoard = possibleExamBoards.filter(eb => eb !== EXAM_BOARD.ALL)[0];
                                 }
-                                newParams.examBoard = examBoard;
                                 dispatch(transientUserContextSlice.actions.setExamBoard(examBoard));
                             }
                             dispatch(transientUserContextSlice.actions.setStage(stage));
