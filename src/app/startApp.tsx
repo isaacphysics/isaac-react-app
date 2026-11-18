@@ -11,11 +11,9 @@ import { printAsciiArtLogoToConsoleAda, printAsciiArtLogoToConsolePhy, siteSpeci
 
 const AppHelmet = () => {
     const { t } = useTranslation();
-    {/*
-        Note: react-helmet's Helmet is the cause of the following StrictMode error for the following components: SideEffect(NullComponent)
-        > UNSAFE_componentWillMount in strict mode is not recommended and may indicate bugs in your code. See https://reactjs.org/link/unsafe-component-lifecycles for details.
-        We can wait until the library gets updated to not do this.
-    */}
+    // Note: react-helmet's Helmet is the cause of the following StrictMode error for the following components: SideEffect(NullComponent)
+    // > UNSAFE_componentWillMount in strict mode is not recommended and may indicate bugs in your code. See https://reactjs.org/link/unsafe-component-lifecycles for details.
+    // We can wait until the library gets updated to not do this.
     return <Helmet>
         {/* Any meta tags in the HTML marked as data-react-helmet="true" need to be duplicated here
             or else they will be removed on pages that do not override them. But only specifying the
