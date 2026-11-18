@@ -99,7 +99,7 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
                             subTitle={doc.subtitle}
                             intermediateCrumbs={navigation.breadcrumbHistory}
                             collectionType={navigation.collectionType}
-                            audienceViews={determineAudienceViews(doc.audience)}
+                            audienceViews={audienceViews}
                             preview={preview} icon={{type: "icon", icon: "icon-question"}}
                         />
                     }

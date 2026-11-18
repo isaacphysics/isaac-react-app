@@ -2,7 +2,7 @@ import partition from "lodash/partition";
 import React from "react";
 import { Link } from "react-router-dom";
 import { ContentSummaryDTO } from "../../../../IsaacApiTypes";
-import { sortByStringValue, determineAudienceViews, isFullyDefinedContext, getHumanContext, HUMAN_STAGES, getThemeFromContextAndTags, DOCUMENT_TYPE } from "../../../services";
+import { sortByStringValue, determineAudienceViews, isFullyDefinedContext, getHumanContext, HUMAN_STAGES, getThemeFromContextAndTags, DOCUMENT_TYPE, STAGE_TO_LEARNING_STAGE } from "../../../services";
 import { useAppSelector, selectors, logAction, useAppDispatch } from "../../../state";
 import { extendUrl } from "../../pages/subjectLandingPageComponents";
 import { AffixButton } from "../AffixButton";
@@ -44,7 +44,10 @@ const RelatedContentSidebar = (props: RelatedContentSidebarProps & {pageType: "c
     const pageContext = useAppSelector(selectors.pageContext.context);
     const pageContextStage = useAppSelector(selectors.pageContext.stage);
 
-    const [relatedQuestionsForContextStage, relatedQuestionsForOtherStages] = partition(relatedQuestions, q => q.audience && determineAudienceViews(q.audience).some(v => v.stage === pageContextStage));
+    const [relatedQuestionsForContextStage, relatedQuestionsForOtherStages] = partition(
+        relatedQuestions, 
+        q => q.audience && determineAudienceViews(q.audience).some(v => v.stage && STAGE_TO_LEARNING_STAGE[v.stage] === pageContextStage)
+    );
 
     return <NavigationSidebar>
         {props.linkedBookSection && props.linkedBookSection[0] && props.linkedBookSection[1] && <BackToBookButton linkedBookSection={props.linkedBookSection} className="w-100"/>}

@@ -36,7 +36,12 @@ type QuestionListViewItemProps = ListViewItemBaseProps<"item", "list" | "card"> 
 export const QuestionListViewItem = (props : QuestionListViewItemProps) => {
     const { item, hideIconLabel, linkedBoardId, linkedBookSection, ...rest } = props;
     const breadcrumb = (isPhy || rest.hasCaret) ? getBreadcrumb(item.tags as TAG_ID[]) : undefined;
-    const audienceViews: AudienceView[] = determineAudienceViews(item.audience);
+
+    const user = useAppSelector(selectors.user.orNull);
+    const registeredContext = user && user.loggedIn && user.registeredContexts || undefined;
+    const pageContext = useAppSelector(selectors.pageContext.context);
+    const audienceViews: AudienceView[] = determineAudienceViews(item.audience, registeredContext, !linkedBoardId ? pageContext : undefined);
+
     const pageSubject = useAppSelector(selectors.pageContext.subject);
     const itemSubject = getThemeFromContextAndTags(pageSubject, tags.getSubjectTags((item.tags || []) as TAG_ID[]).map(t => t.id));
     const bookSectionUrlParams = linkedBookSection ? (linkedBoardId ? linkedBookSection.replace("?", "&") : linkedBookSection) : "";

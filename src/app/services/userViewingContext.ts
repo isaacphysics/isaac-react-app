@@ -356,6 +356,13 @@ export const AUDIENCE_DISPLAY_FIELDS: (keyof AudienceView)[] = siteSpecific(
     ["stage"]
 );
 
+// Filter to only the first of each stage/difficulty combination (or just stage on Ada) e.g.
+//   {stage: "a_level", examBoard: "aqa", difficulty: "challenge_1"},
+//   {stage: "a_level", examBoard: "cie", difficulty: "challenge_1"}
+//   {stage: "advanced", examBoard: "ada", difficulty: "challenge_1"}
+// ->
+//   {stage: "a_level", examBoard: "aqa", difficulty: "challenge_1"}
+//   {stage: "advanced", examBoard: "ada", difficulty: "challenge_1"}
 export function filterAudienceViewsByProperties(views: AudienceView[], properties: (keyof AudienceView)[]): AudienceView[] {
     const filteredViews: AudienceView[] = [];
     const viewed = new Set();

@@ -137,7 +137,6 @@ export function determinePageContextFromPreviousPageContext(registeredContexts: 
  *   - If the subject hasn't changed (e.g. Physics => Physics, even if the question is tagged as belonging to other subjects too), it will remain at Physics.
  *     If the subject has changed, the subject with the highest priority will be used. If no subject can be determined, the default of `"neutral"` is used.
  * 
- * @param previousContext - The page context from the previous page, if any.
  * @param registeredContexts - The user's registered contexts, if logged in and any exist.
  * @param doc - The current page DTO. The audience and tags of this object will be used to determine the new context.
  * @returns The page context for this page.
