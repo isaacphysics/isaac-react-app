@@ -5,7 +5,6 @@ import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { GenericPageSidebar } from "../elements/sidebar/GenericPageSidebar";
 import { PageFragment } from "../elements/PageFragment";
-import { PageMetadata } from "../elements/PageMetadata";
 import { AccessibilityTags } from "../elements/ContentPropertyTags";
 import classNames from "classnames";
 
@@ -69,9 +68,10 @@ export const FestiveTree = () => {
         }
 
         const setPassedDaysActive = () => {
-            const today = new Date(); // "2026-11-25");
-            // November for testing purposes. Will update to December later
-            const todaysDay = today.getMonth() < 10 ? 0 : today.getMonth() > 10 ? 25 : today.getDate();
+            const today = new Date();
+            // Keep all days open until March to allow plenty of overflow from students doing questions late
+            // Otherwise keep all days closed until that day in December
+            const todaysDay = today.getMonth() < 3 ? 25 : today.getMonth() < 11 ? 0 : today.getDate();
 
             const questions: TextDoor[] = [];
             container.querySelectorAll<HTMLAnchorElement>("a.day").forEach(door => {
