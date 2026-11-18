@@ -4,6 +4,7 @@ import {ShowLoading} from "../../handlers/ShowLoading";
 import {getThemeFromTags, isDefined, useQuizAttemptFeedback} from "../../../services";
 import {
     FullQuizInfo,
+    myQuizzesCrumbs,
     QuizContentsComponent,
     QuizPagination,
     QuizProps
@@ -80,7 +81,7 @@ export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
                 {attempt.feedbackMode === 'DETAILED_FEEDBACK' && <QuizAttemptFeedbackFooter {...subProps} />}
             </QuizContentsComponent>}
             {isDefined(error) && <>
-                <TitleAndBreadcrumb currentPageTitle="Test Feedback" intermediateCrumbs={assignmentProgressCrumbs} icon={{type: "icon", icon: "icon-error"}} />
+                <TitleAndBreadcrumb currentPageTitle="Test Feedback" intermediateCrumbs={studentUser ? assignmentProgressCrumbs : myQuizzesCrumbs} icon={{type: "icon", icon: "icon-error"}} />
                 <Alert color="warning" className="mt-4">
                     <div className="alert-heading h4">Attempt unavailable</div>
                     <p>{error}</p>
