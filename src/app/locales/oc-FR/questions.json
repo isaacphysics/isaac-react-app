@@ -377,6 +377,8 @@
     },
     "inlineFeedback": {
       "boxCounter": "Bóstia {{boxIndex}} de {{boxCount}}",
+      "nextPart": "Next question part",
+      "previousPart": "Previous question part",
       "selectBox": "Veire lo retorn per una bóstia especifica en la seleccionant çai-sus o en utilizant las sagetas çai-jos."
     },
     "inlineInput": {
