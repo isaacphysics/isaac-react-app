@@ -118,10 +118,7 @@ export const TutorRequest = () => {
                             }}>
                                 <CardBody>
                                     <p>
-                                        {`To request a tutor account on ${SITE_TITLE}, please fill in this form. `}
-                                        {"You must have verified your account email address. If any of the "}
-                                        {"information is incorrect or missing, you can amend it on your "}
-                                        <Link to="/account">My account</Link>{" page."}
+                                        <Trans i18nKey="account:account.tutorRequest.formIntro" components={{ accountLink: <Link to="/account" /> }} values={{ siteTitle: t("account:account.tutorRequest.formInstruction", { siteTitle: SITE_TITLE }) }} />
                                     </p>
                                     <Row>
                                         <Col size={12} md={6}>

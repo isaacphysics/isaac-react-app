@@ -383,8 +383,7 @@ export const SetAssignments = () => {
                 </Alert>}
                 {isBoardsEmptyState ?
                     <Alert color="warning">
-                        You have no {siteSpecific("question decks", "quizzes")} to assign. Use one of the
-                        options above to find one.
+                        {t("site:assignments.emptyBoardsAlert")}
                     </Alert>
                     :
                     <>

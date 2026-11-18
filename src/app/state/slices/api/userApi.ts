@@ -20,9 +20,9 @@ export const userApi = isaacApi.injectEndpoints({
                 body: {sharedSecret, mfaVerificationCode}
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: "2FA Configured",
-                successMessage: "You have enabled 2FA on your account!",
-                errorTitle: "Failed to setup 2FA on account."
+                successTitle: () => i18next.t("account:auth.mfa.setupSuccessTitle"),
+                successMessage: () => i18next.t("account:auth.mfa.setupSuccessMessage"),
+                errorTitle: () => i18next.t("account:auth.mfa.setupErrorTitle")
             })
         }),
 
@@ -32,9 +32,9 @@ export const userApi = isaacApi.injectEndpoints({
                 method: "DELETE"
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: "2FA Disabled",
-                successMessage: "You have disabled 2FA on this account!",
-                errorTitle: "Failed to disable 2FA on account."
+                successTitle: () => i18next.t("account:auth.mfa.disableSuccessTitle"),
+                successMessage: () => i18next.t("account:auth.mfa.disableSuccessMessage"),
+                errorTitle: () => i18next.t("account:auth.mfa.disableErrorTitle")
             })
         }),
 
@@ -44,7 +44,7 @@ export const userApi = isaacApi.injectEndpoints({
                 method: "GET",
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Failed to get 2FA secret"
+                errorTitle: () => i18next.t("account:auth.mfa.secretErrorTitle")
             })
         }),
 
@@ -54,9 +54,9 @@ export const userApi = isaacApi.injectEndpoints({
                 method: "POST"
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: "Account upgraded",
-                successMessage: "You have upgraded to a teacher account!",
-                errorTitle: "Failed to upgrade account",
+                successTitle: () => i18next.t("account:account.upgrade.successTitle"),
+                successMessage: () => i18next.t("account:account.upgrade.successMessage"),
+                errorTitle: () => i18next.t("account:account.upgrade.errorTitle"),
             }),
         }),
 
@@ -74,9 +74,9 @@ export const userApi = isaacApi.injectEndpoints({
                 body: {password: params.password}
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: "Password reset successful",
-                successMessage: "Your password has been updated successfully.",
-                errorTitle: "Failed to reset password"
+                successTitle: () => i18next.t("account:auth.passwordReset.completedTitle"),
+                successMessage: () => i18next.t("account:auth.passwordReset.successMessage"),
+                errorTitle: () => i18next.t("account:auth.passwordReset.failedTitle")
             })
         }),
 

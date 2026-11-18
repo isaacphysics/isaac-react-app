@@ -15,7 +15,7 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
                 : ["ActiveAuthorisations"],
             transformResponse: anonymiseIfNeededWith(anonymisationFunctions.activeAuthorisations),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Loading authorised teachers failed"
+                errorTitle: () => i18next.t("teaching:groups.authorisations.loadTeachersErrorTitle")
             })
         }),
 
@@ -26,7 +26,7 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
                 : ["OtherAuthorisations"],
             transformResponse: anonymiseIfNeededWith(anonymisationFunctions.otherUserAuthorisations),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Loading authorised students failed"
+                errorTitle: () => i18next.t("teaching:groups.authorisations.loadStudentsErrorTitle")
             })
         }),
 
@@ -56,10 +56,10 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
             }),
             invalidatesTags: ["ActiveAuthorisations", "Groups", "GroupMemberships", "MyGroupMemberships", "AllMyAssignments"],
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: "Granted access",
-                successMessage: "You have granted access to your data.",
-                errorTitle: "Teacher connection failed",
-                errorMessage: "The code may be invalid or the group may no longer exist. Codes are usually uppercase and 6-8 characters in length."
+                successTitle: () => i18next.t("teaching:groups.authorisations.grantSuccessTitle"),
+                successMessage: () => i18next.t("teaching:groups.authorisations.grantSuccessMessage"),
+                errorTitle: () => i18next.t("teaching:groups.authorisations.connectionErrorTitle"),
+                errorMessage: () => i18next.t("teaching:groups.authorisations.connectionErrorMessage")
             })
         }),
 
@@ -70,9 +70,9 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
             }),
             invalidatesTags: ["ActiveAuthorisations"],
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: "Access revoked",
-                successMessage: "You have revoked access to your data.",
-                errorTitle: "Revoking access failed",
+                successTitle: () => i18next.t("teaching:groups.authorisations.revokeSuccessTitle"),
+                successMessage: () => i18next.t("teaching:groups.authorisations.revokeSuccessMessage"),
+                errorTitle: () => i18next.t("teaching:groups.authorisations.revokeErrorTitle"),
             })
         }),
 
@@ -83,9 +83,9 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
             }),
             invalidatesTags: ["OtherAuthorisations"],
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: "Access removed",
-                successMessage: "You have ended your access to your student's data.",
-                errorTitle: "Ending access failed",
+                successTitle: () => i18next.t("teaching:groups.authorisations.releaseSuccessTitle"),
+                successMessage: () => i18next.t("teaching:groups.authorisations.releaseSuccessMessage"),
+                errorTitle: () => i18next.t("teaching:groups.authorisations.releaseErrorTitle"),
             })
         }),
 
@@ -96,9 +96,9 @@ export const authorisationsApi = groupsApi.enhanceEndpoints({
             }),
             invalidatesTags: ["OtherAuthorisations"],
             onQueryStarted: onQueryLifecycleEvents({
-                successTitle: "Access removed",
-                successMessage: "You have ended your access to all of your students' data.",
-                errorTitle: "Ending access failed",
+                successTitle: () => i18next.t("teaching:groups.authorisations.releaseSuccessTitle"),
+                successMessage: () => i18next.t("teaching:groups.authorisations.releaseAllSuccessMessage"),
+                errorTitle: () => i18next.t("teaching:groups.authorisations.releaseErrorTitle"),
             })
         })
     })

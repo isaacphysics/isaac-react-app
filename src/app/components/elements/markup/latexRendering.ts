@@ -236,7 +236,7 @@ export function katexify(
         if (ref) {
             const number = figureNumbers[ref];
             if (number) {
-                const figure = `Figure&nbsp;${number}`;
+                const figure = i18next.t("questions:latex.figureReference", { number });
                 return format ? `<strong class="text-theme figure-reference">${figure}</strong>` : figure;
             }
         }
@@ -275,7 +275,7 @@ export function katexify(
                 const katexOptions = {...customKatexOptions, displayMode: search.mode == "display", macros: macrosToUse, output: "html"} as KatexOptions;
                 let katexRenderResult = katex.renderToString(latexMunged, katexOptions);
                 katexRenderResult = katexRenderResult.replace(REF_REGEXP, (_, match) => {
-                    return createReference(match, "unknown reference " + match);
+                    return createReference(match, i18next.t("questions:latex.unknownReference", { refKey: match }));
                 });
 
                 let screenReaderText;
@@ -283,7 +283,7 @@ export function katexify(
                     const pauseChars = katexOptions.displayMode ? ". &nbsp;" : ",";  // trailing comma/full-stop for pause in speaking
                     screenReaderText = `${renderA11yString(latexMunged, katexOptions)}${pauseChars}`;
                     screenReaderText = screenReaderText.replace(SR_REF_REGEXP, (_, match) => {
-                        return createReference(match, "unknown reference " + match, false);
+                        return createReference(match, i18next.t("questions:latex.unknownReference", { refKey: match }), false);
                     });
                 } catch {
                     screenReaderText = undefined;
@@ -300,8 +300,9 @@ export function katexify(
                 } else {
                     const katexMathML = katex.renderToString(
                         latexMunged
-                            .replace(dropZoneRegex, "clickable drop zone")
-                            .replace(dndDropZoneRegex, "clickable drop zone"), 
+                            // a function, so a "$" in a translation isn't read as a replacement pattern
+                            .replace(dropZoneRegex, () => i18next.t("questions:latex.dropZone"))
+                            .replace(dndDropZoneRegex, () => i18next.t("questions:latex.dropZone")), 
                         {...katexOptions, output: "mathml"}
                     ).replace(`class="katex"`, `class="katex-mathml"`);
                     
