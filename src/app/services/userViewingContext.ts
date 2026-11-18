@@ -67,7 +67,6 @@ export function useUserViewingContext(): UserViewingContext {
     const [contextProps, setContextProps] = useState<UserViewingContext>({ contexts: [{stage: STAGE.ALL, examBoard: EXAM_BOARD_DEFAULT_OPTION}], isFixedContext: false, explanation: { stage: CONTEXT_SOURCE.DEFAULT, examBoard: CONTEXT_SOURCE.DEFAULT } });
 
     const user = useAppSelector((state: AppState) => state && state.user);
-    const { DISPLAY_SETTING: displaySettings } = useAppSelector((state: AppState) => state?.userPreferences) || {};
     const {questionId} = useParams<{ questionId: string }>();
     const page = useAppSelector(selectors.doc.get);
 
@@ -90,7 +89,7 @@ export function useUserViewingContext(): UserViewingContext {
         const gameboardAndPathInfo = { boardIdFromDTO: id, contentsFromDTO: contents, boardIdFromQueryParams: queryParams.board, questionIdFromPath: questionId };
         const newContextProps = calculateNewUserContext(transientUserContext || {}, registeredContexts, gameboardAndPathInfo, stageOverride);
         setContextProps(newContextProps);
-    }, [transientUserContext, registeredContexts, displaySettings, id, contents, queryParams.board, questionId, stageOverride]);
+    }, [transientUserContext, registeredContexts, id, contents, queryParams.board, questionId, stageOverride]);
 
     return contextProps;
 }
