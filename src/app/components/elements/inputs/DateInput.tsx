@@ -1,10 +1,12 @@
 import React, {ChangeEvent, MouseEvent, useEffect, useRef, useState} from 'react';
 import {Input, InputGroup, InputProps} from "reactstrap";
 import range from 'lodash/range';
+import { useTranslation } from "react-i18next";
 
 // @ts-ignore This value definition is a bit dodgy but should work.
 export interface DateInputProps extends InputProps {
-    labelSuffix?: string;
+    // whole labels for a specific use, e.g. "birth" → "Day of birth" (keys dayLabel_birth…); default "Day"
+    labelContext?: "birth";
     disableDefaults?: boolean;
     yearRange?: number[];
     value?: string | string[] | number | Date;
@@ -94,6 +96,7 @@ function extractYear(date: Date | undefined) {
 }
 
 export const DateInput = (props: DateInputProps) => {
+    const { t } = useTranslation();
     const hiddenRef = useRef<HTMLInputElement>(null);
 
     const controlProps = {
@@ -240,19 +243,19 @@ export const DateInput = (props: DateInputProps) => {
         <InputGroup id={props.id} {...controlPropsWithValidationStripped} className={inputGroupClasses}>
             {/* these wrappers exist as ::after pseudo-elements don't work with .select */}
             {!props.hideDay && <div className="date-input-wrapper date-input-day position-relative me-1">
-                <Input type="select" {...controlProps} aria-label={`Day${props.labelSuffix ? props.labelSuffix : ""}`} onChange={change("day")} value={values.day.get() || ""}>
+                <Input type="select" {...controlProps} aria-label={t("common:dateInput.dayLabel", { context: props.labelContext })} onChange={change("day")} value={values.day.get() || ""}>
                     {values.day.get() === undefined && <option />}
                     {range(1, Math.max(lastInMonth(), values.day.get() || 0) + 1).map(day => <option key={day}>{day}</option>)}
                 </Input>
             </div>}
             <div className="date-input-wrapper date-input-month position-relative me-1">
-                <Input type="select" {...controlProps} aria-label={`Month${props.labelSuffix ? props.labelSuffix : ""}`} onChange={change("month")} value={values.month.get() || ""}>
+                <Input type="select" {...controlProps} aria-label={t("common:dateInput.monthLabel", { context: props.labelContext })} onChange={change("month")} value={values.month.get() || ""}>
                     {values.month.get() === undefined && <option />}
                     {MONTHS.map((month, index)=> <option value={index + 1} key={index + 1}>{month}</option>)}
                 </Input>
             </div>
             <div className="date-input-wrapper date-input-year position-relative me-1">
-                <Input type="select" {...controlProps} aria-label={`Year${props.labelSuffix ? props.labelSuffix : ""}`} onChange={change("year")} value={values.year.get() || ""}>
+                <Input type="select" {...controlProps} aria-label={t("common:dateInput.yearLabel", { context: props.labelContext })} onChange={change("year")} value={values.year.get() || ""}>
                     {values.year.get() === undefined && <option />}
                     {yearRange.map(year => <option key={year}>{year}</option>)}
                     {/* Add the preselected year as an invisible option */}
@@ -260,7 +263,7 @@ export const DateInput = (props: DateInputProps) => {
                 </Input>
             </div>
             {(props.noClear === undefined || !props.noClear) && <button {...controlPropsWithValidationStripped} className="btn-close mx-1" 
-                aria-label={`Clear date${props.labelSuffix ? props.labelSuffix : ""}`} onClick={(e) => {e.preventDefault(); clear(e);}} />}
+                aria-label={t("common:dateInput.clearButtonLabel", { context: props.labelContext })} onClick={(e) => {e.preventDefault(); clear(e);}} />}
         </InputGroup>
         <Input data-testid='date-input' innerRef={hiddenRef} type="hidden" name={props.name} value={calculateHiddenValue()} {...controlProps} />
     </React.Fragment>;

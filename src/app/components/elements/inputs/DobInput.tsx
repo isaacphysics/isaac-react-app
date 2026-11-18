@@ -36,7 +36,7 @@ export const DobInput = ({userToUpdate, setUserToUpdate, submissionAttempted, ed
             }}
             disableDefaults
             aria-describedby="age-validation-message"
-            labelSuffix=" of birth"
+            labelContext="birth"
             hideDay={isAda}
         />
         <FormFeedback id="age-validation-message">

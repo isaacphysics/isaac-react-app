@@ -493,7 +493,7 @@ export const ManageAssignments = ({user}: { user: LoggedInUser }) => {
                                 {i18next.t("teaching:assignments.manage.noMatchingWork")}
                             </div>}
                             {groups && groups.length > 0 && !someActiveFilter && workGroupedByDate.length === 0 && <div className="mt-1">
-                                You have not set any work yet. Use the button{isTeacherOrAbove(user) && "s"} above to set a new assignment{isTeacherOrAbove(user) && " or test"}.
+                                {isTeacherOrAbove(user) ? i18next.t("teaching:assignments.manage.noWorkSet") : i18next.t("teaching:assignments.manage.noWorkSetTutor")}
                             </div>}
                             {notAllPastWorkIsListed && <div className="mt-1">
                                 <Button size="sm" onClick={() => extendBackSixMonths()}>

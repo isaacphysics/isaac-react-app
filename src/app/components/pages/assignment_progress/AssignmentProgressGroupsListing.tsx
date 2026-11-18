@@ -74,7 +74,7 @@ export const AssignmentProgressGroupsListing = ({user, groups}: {user: Registere
         <PageContainer
             pageTitle={
                 <TitleAndBreadcrumb
-                    currentPageTitle={siteSpecific("Assignment progress", "Markbook")}
+                    currentPageTitle={siteSpecific(t("sci:title.assignmentProgress"), t("ada:markbook.title"))}
                     icon={{type: "icon", icon: "icon-revision"}}
                 />
             }

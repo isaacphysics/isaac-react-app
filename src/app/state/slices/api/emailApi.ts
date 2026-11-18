@@ -28,9 +28,9 @@ export const emailApi = isaacApi.injectEndpoints({
                 body: {email},
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Email verification request failed.",
-                successTitle: "Email verification request succeeded.",
-                successMessage: "Please follow the verification link given in the email sent to your address.",
+                errorTitle: () => i18next.t("common:error.emailRequestFailed"),
+                successTitle: () => i18next.t("account:auth.emailVerification.requestSuccessTitle"),
+                successMessage: () => i18next.t("account:auth.emailVerification.requestSuccessMessage"),
             }),
         }),
 
@@ -41,9 +41,9 @@ export const emailApi = isaacApi.injectEndpoints({
                 body: roles,
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Sending email failed",
-                successTitle: "Email sent",
-                successMessage: "Email sent to users successfully",
+                errorTitle: () => i18next.t("admin:admin.email.sendErrorTitle"),
+                successTitle: () => i18next.t("admin:admin.email.sendSuccessTitle"),
+                successMessage: () => i18next.t("admin:admin.email.sendSuccessMessage"),
             })
         }),
 
@@ -54,9 +54,9 @@ export const emailApi = isaacApi.injectEndpoints({
                 body: ids,
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Sending email with ids failed",
-                successTitle: "Email sent",
-                successMessage: "Email sent to users successfully",
+                errorTitle: () => i18next.t("admin:admin.email.sendWithIdsErrorTitle"),
+                successTitle: () => i18next.t("admin:admin.email.sendSuccessTitle"),
+                successMessage: () => i18next.t("admin:admin.email.sendSuccessMessage"),
             })
         }),
 
@@ -67,16 +67,16 @@ export const emailApi = isaacApi.injectEndpoints({
                 body: {userIds: ids, emailTemplate},
             }),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Sending email with ids failed",
-                successTitle: "Email sent",
-                successMessage: "Email sent to users successfully",
+                errorTitle: () => i18next.t("admin:admin.email.sendWithIdsErrorTitle"),
+                successTitle: () => i18next.t("admin:admin.email.sendSuccessTitle"),
+                successMessage: () => i18next.t("admin:admin.email.sendSuccessMessage"),
             })
         }),
 
         getTemplateEmail: build.query<TemplateEmail, string>({
             query: (contentId) => `/email/viewinbrowser/${encodeURIComponent(contentId)}`,
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: "Failed to get email template",
+                errorTitle: () => i18next.t("admin:admin.email.templateErrorTitle"),
             })
         }),
     })
