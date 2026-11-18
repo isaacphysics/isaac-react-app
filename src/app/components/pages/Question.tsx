@@ -107,7 +107,7 @@ export const Question = ({questionIdOverride, preview}: QuestionPageProps) => {
                     sidebar={siteSpecific(
                         isDefined(gameboardId) 
                             ? <GameboardContentSidebar id={gameboardId} title={gameboard?.title || ""} questions={gameboard?.contents || []} wildCard={wildcard} currentContentId={questionId} linkedBookSection={linkedBookSection}/>
-                            : <QuestionSidebar relatedContent={doc.relatedContent} linkedBookSection={linkedBookSection}/>,
+                            : <QuestionSidebar pageId={questionId} relatedContent={doc.relatedContent} linkedBookSection={linkedBookSection}/>,
                         undefined
                     )}
                 >

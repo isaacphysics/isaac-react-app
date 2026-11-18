@@ -377,6 +377,8 @@
     },
     "inlineFeedback": {
       "boxCounter": "Box {{boxIndex}} of {{boxCount}}",
+      "nextPart": "Next question part",
+      "previousPart": "Previous question part",
       "selectBox": "View feedback for a specific box by selecting it above or using the arrows below."
     },
     "inlineInput": {
