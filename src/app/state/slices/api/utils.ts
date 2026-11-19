@@ -73,7 +73,7 @@ interface QueryLifecycleSpec<T, R> {
     successTitle?: string | ((args: T, response: R) => string);
     successMessage?: string | ((args: T, response: R) => string);
     onQuerySuccess?: (args: T, response: R, api: {dispatch: Dispatch<any>, getState: () => any}) => void;
-    errorTitle?: string | ((args: T, error: FetchBaseQueryError) => string);
+    errorTitle?: string | ((args: T, error: FetchBaseQueryError) => string | undefined);
     errorMessage?: string | ((args: T, error: FetchBaseQueryError) => string);
     onQueryError?: (args: T, error: FetchBaseQueryError, api: {dispatch: Dispatch<any>, getState: () => any}) => void;
 }
@@ -98,8 +98,8 @@ export const onQueryLifecycleEvents = <T, R>({onQueryStart, successTitle, succes
         }
         onQuerySuccess?.(arg, response.data, {dispatch, getState});
     } catch (e: any) {
-        if (errorTitle) {
-            const errorTitleText = typeof errorTitle === "function" ? errorTitle(arg, e.error) : errorTitle;
+        const errorTitleText = typeof errorTitle === "function" ? errorTitle(arg, e.error) : errorTitle;
+        if (errorTitleText) {
             const errorMessageText = typeof errorMessage === "function" ? errorMessage(arg, e.error) : errorMessage;
             dispatch(showRTKQueryErrorToastIfNeeded(errorTitleText, e, errorMessageText));
         }
