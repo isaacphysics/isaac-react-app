@@ -17,6 +17,7 @@ interface TextDoor extends DoorLabel {
     day: number;
     href: string;
     active: boolean;
+    preview: boolean;
 }
 
 export const FestiveTree = () => {
@@ -36,11 +37,11 @@ export const FestiveTree = () => {
             return;
         }
 
-        let previouslySelectedDoor: HTMLAnchorElement | null = null;
+        let previouslySelectedDoor: HTMLElement | null = null;
         const findDoorAndUpdateLabel = (target: EventTarget | null) => {
-            const door = target instanceof Element ? target.closest<HTMLAnchorElement>("a.day") : null;
+            const door = target instanceof Element ? target.closest<HTMLElement>(".day") : null;
 
-            if (door && container.contains(door) && door !== previouslySelectedDoor) {
+            if (door && container.contains(door) && door.classList.contains("active") && door !== previouslySelectedDoor) {
                 previouslySelectedDoor = door;
                 setSelectedDoor({title: door.dataset.title || "", classes: Array.from(door.classList)});
             }
@@ -69,26 +70,42 @@ export const FestiveTree = () => {
 
         const setPassedDaysActive = () => {
             const today = new Date();
-            // Keep all days open until March to allow plenty of overflow from students doing questions late
+            // Keep all days open until March to allow overflow from students doing questions late
             // Otherwise keep all days closed until that day in December
             const todaysDay = today.getMonth() < 3 ? 25 : today.getMonth() < 11 ? 0 : today.getDate();
 
             const questions: TextDoor[] = [];
-            container.querySelectorAll<HTMLAnchorElement>("a.day").forEach(door => {
+            container.querySelectorAll<HTMLElement>(".day").forEach(originalDoor => {
+                let door = originalDoor;
                 const dayClass = Array.from(door.classList).find(name => /^day-([1-9]|1[0-9]|2[0-5])$/.test(name));
                 if (!dayClass) {
                     return;
                 }
 
-                const active = Number(dayClass.slice(4)) <= todaysDay;
+                const day = Number(dayClass.slice(4));
+                const active = day <= todaysDay;
+                const preview = day === todaysDay + 1;
+                const href = active ? door.getAttribute("href") || "" : "";
+                if (!active && door.tagName === "a") {
+                    const replacement = document.createElement("span");
+                    Array.from(door.attributes).forEach(attribute => {
+                        if (attribute.name !== "href") {
+                            replacement.setAttribute(attribute.name, attribute.value);
+                        }
+                    });
+                    replacement.append(...Array.from(door.childNodes));
+                    door.replaceWith(replacement);
+                    door = replacement;
+                }
                 door.classList.toggle("active", active);
                 door.tabIndex = active ? 0 : -1;
                 questions.push({
                     day: Number(dayClass.slice(4)),
-                    title: door.dataset.title || "",
-                    href: door.getAttribute("href") || "",
+                    title: active ? door.dataset.title || "" : preview ? door.dataset.title + " (Coming soon)" : "Coming soon",
+                    href,
                     classes: Array.from(door.classList),
                     active,
+                    preview,
                 });
 
                 if (active) {
@@ -136,7 +153,7 @@ export const FestiveTree = () => {
                 {door.active
                     ? <Link to={door.href}>{door.title}</Link>
                     : <span aria-disabled="true">{door.title}</span>}
-                <AccessibilityTags tags={door.classes} tagClassName="ms-1 mb-n1" />
+                {(door.active || door.preview) && <AccessibilityTags tags={door.classes} tagClassName="ms-1 mb-n1" />}
             </li>)}
         </ol>
         <div className={classNames("festive-tree-controls", {"d-none": textOnly})}>
