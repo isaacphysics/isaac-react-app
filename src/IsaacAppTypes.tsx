@@ -2,7 +2,6 @@ import React, {ReactElement, ReactNode} from "react";
 import * as ApiTypes from "./IsaacApiTypes";
 import {
     AssignmentDTO,
-    AudienceContext,
     AuthenticationProvider,
     ChoiceDTO,
     ContentBase,
@@ -643,11 +642,7 @@ export interface QuestionSearchQuery {
     bookmarks?: boolean;
 }
 
-export interface ContentSummary extends ContentSummaryDTO {
-    creationContext?: AudienceContext;
-}
-
-export interface ViewingContext extends UserContext {
+export interface AudienceView extends UserContext {
     difficulty?: Difficulty;
 }
 
@@ -772,13 +767,13 @@ export interface PageSettings {
 export interface GameboardBuilderQuestions {
     questionOrder: string[];
     setQuestionOrder: React.Dispatch<React.SetStateAction<string[]>>;
-    selectedQuestions: Map<string, ContentSummary>;
-    setSelectedQuestions: React.Dispatch<React.SetStateAction<Map<string, ContentSummary>>>
+    selectedQuestions: Map<string, ContentSummaryDTO>;
+    setSelectedQuestions: React.Dispatch<React.SetStateAction<Map<string, ContentSummaryDTO>>>
 }
 
 export interface GameboardBuilderQuestionsStackProps {
-    push: ({questionOrder, selectedQuestions} : {questionOrder: string[], selectedQuestions: Map<string, ContentSummary>}) => void;
-    pop: () => {questionOrder: string[], selectedQuestions: Map<string, ContentSummary>};
+    push: ({questionOrder, selectedQuestions} : {questionOrder: string[], selectedQuestions: Map<string, ContentSummaryDTO>}) => void;
+    pop: () => {questionOrder: string[], selectedQuestions: Map<string, ContentSummaryDTO>};
     length: number;
     clear: () => void;
 }

@@ -2,6 +2,7 @@ import {PrintingSettings} from "../../../IsaacAppTypes";
 import {ACTION_TYPE, EXAM_BOARD, siteSpecific, STAGE} from "../../services";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {routerPageChange} from "../index";
+import { UserContext } from "../../../IsaacApiTypes";
 
 export type PrintingSettingsState = PrintingSettings | null;
 export const printingSettingsSlice = createSlice({
@@ -49,7 +50,7 @@ export const sidebarSlice = createSlice({
 export type TransientUserContextState = {examBoard?: EXAM_BOARD, stage?: STAGE, isFixedContext?: boolean} | null;
 export const transientUserContextSlice = createSlice({
     name: "transientUserContext",
-    initialState: null as TransientUserContextState,
+    initialState: null as (UserContext | null),
     reducers: {
         setStage: (state, action: PayloadAction<STAGE | undefined>) => ({...state, stage: action.payload}),
         setExamBoard: (state, action: PayloadAction<EXAM_BOARD | undefined>) => ({...state, examBoard: action.payload}),

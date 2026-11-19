@@ -1,22 +1,21 @@
 import {determineAudienceViews, difficultiesOrdered, sortByStringValue, SortOrder, sortStringsNumerically, tags} from "./";
 import orderBy from "lodash/orderBy";
-import {AudienceContext, ContentSummaryDTO, Difficulty, GameboardDTO, GameboardItem} from "../../IsaacApiTypes";
-import {ContentSummary, GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps, Tag} from "../../IsaacAppTypes";
+import {ContentSummaryDTO, Difficulty, GameboardDTO, GameboardItem} from "../../IsaacApiTypes";
+import {GameboardBuilderQuestions, GameboardBuilderQuestionsStackProps, Tag} from "../../IsaacAppTypes";
 import { DraggableStateSnapshot } from "@hello-pangea/dnd";
 
-export const sortQuestions = (sortState: {[s: string]: string}, creationContext?: AudienceContext) => (questions: ContentSummaryDTO[]) => {
+export const sortQuestions = (sortState: {[s: string]: string}) => (questions: ContentSummaryDTO[]) => {
     if (sortState["title"] && sortState["title"] != SortOrder.NONE) {
         const sortedQuestions = questions.sort((a, b) => sortStringsNumerically(a.title || "", b.title || ""));
         return sortState["title"] == SortOrder.ASC ? sortedQuestions : sortedQuestions.reverse();
     }
     if (sortState.difficulty && sortState.difficulty != SortOrder.NONE) {
         questions.sort(function compareFirstDifficulty(a, b) {
-            const firstDifficultyA = determineAudienceViews(a.audience, creationContext)[0]?.difficulty;
-            const firstDifficultyB = determineAudienceViews(b.audience, creationContext)[0]?.difficulty;
-            if (firstDifficultyA === firstDifficultyB) return 0;
-            const aIndex = difficultiesOrdered.indexOf(firstDifficultyA as Difficulty);
-            const bIndex = difficultiesOrdered.indexOf(firstDifficultyB as Difficulty);
-            return (sortState.difficulty === SortOrder.ASC && aIndex > bIndex) ? 1 : -1;
+            const getIndex = (question: ContentSummaryDTO) => {
+                return difficultiesOrdered.indexOf(determineAudienceViews(question.audience)[0]?.difficulty as Difficulty);
+            };
+            const diff = getIndex(a) - getIndex(b);
+            return sortState.difficulty === SortOrder.ASC ? diff : -diff;
         });
         return questions;
     }
@@ -35,8 +34,8 @@ export const sortQuestions = (sortState: {[s: string]: string}, creationContext?
     return orderBy(questions, keys, order);
 };
 
-type ContentSummaryFieldsNotInGameboardItem = Exclude<keyof ContentSummary, keyof GameboardItem>;
-export const convertContentSummaryToGameboardItem = (question: ContentSummary): GameboardItem => {
+type ContentSummaryFieldsNotInGameboardItem = Exclude<keyof ContentSummaryDTO, keyof GameboardItem>;
+export const convertContentSummaryToGameboardItem = (question: ContentSummaryDTO): GameboardItem => {
     // We use the type system to ensure we remove fields that are not in a GameboardItem as it would otherwise cause serialization errors in the backend.
     const fieldsThatMustBeRemoved: {[field in ContentSummaryFieldsNotInGameboardItem]: undefined} = {
         type: undefined,
@@ -92,10 +91,10 @@ export const loadGameboardSelectedQuestions = (gameboard: GameboardDTO) => {
             map.set(question.id, question);
         }
         return map;
-    }, new Map<string, ContentSummary>());
+    }, new Map<string, ContentSummaryDTO>());
 };
 
-export const logEvent = (eventsLog: any[], event: string, params: any) => {
+export const logEvent = (eventsLog: object[], event: string, params: object) => {
     eventsLog.push({
         event,
         timestamp: new Date().getTime(),
@@ -106,14 +105,13 @@ export const logEvent = (eventsLog: any[], event: string, params: any) => {
 export interface GameboardBuilderRowInterface {
     isDnd?: boolean;
     snapshot?: DraggableStateSnapshot;
-    question: ContentSummary;
+    question: ContentSummaryDTO;
     currentQuestions: GameboardBuilderQuestions;
     undoStack: GameboardBuilderQuestionsStackProps;
     redoStack: GameboardBuilderQuestionsStackProps;
-    creationContext?: AudienceContext;
 }
 
-export const handleBuilderRowChange = ({ isDnd, question, currentQuestions, undoStack, redoStack, creationContext }: GameboardBuilderRowInterface) => {
+export const handleBuilderRowChange = ({ isDnd, question, currentQuestions, undoStack, redoStack }: GameboardBuilderRowInterface) => {
     if (question.id) {
         const newSelectedQuestions = new Map(currentQuestions.selectedQuestions);
         const newQuestionOrder = [...currentQuestions.questionOrder];
@@ -121,7 +119,7 @@ export const handleBuilderRowChange = ({ isDnd, question, currentQuestions, undo
             newSelectedQuestions.delete(question.id);
             newQuestionOrder.splice(newQuestionOrder.indexOf(question.id), 1);
         } else {
-            newSelectedQuestions.set(question.id, {...question, creationContext});
+            newSelectedQuestions.set(question.id, question);
             newQuestionOrder.push(question.id);
         }
         currentQuestions.setSelectedQuestions(newSelectedQuestions);

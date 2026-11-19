@@ -10,14 +10,14 @@ import {
     stageLabelMap,
 } from "../../services";
 import { mainContentIdSlice, useAppDispatch } from "../../state";
-import {ViewingContext} from "../../../IsaacAppTypes";
+import {AudienceView} from "../../../IsaacAppTypes";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
 import classNames from "classnames";
 import {Helmet} from "react-helmet";
 import {Markup} from "./markup";
 import { HexIcon, HexIconProps, IconProps } from "./svg/HexIcon";
 
-function AudienceViewer({audienceViews}: {audienceViews: ViewingContext[]}) {
+function AudienceViewer({audienceViews}: {audienceViews: AudienceView[]}) {
     const difficulty = audienceViews.map(v => v.difficulty).filter(d => d !== undefined)[0];
     // Prefer Core over Advanced if both are present
     const adaStage = isAda && (audienceViews.some(v => v.stage === STAGE.CORE) ? STAGE.CORE : 
@@ -89,7 +89,7 @@ export const PageTitle = ({currentPageTitle, displayTitleOverride, subTitle, dis
 };
 
 export interface TitleMetadataProps {
-    audienceViews?: ViewingContext[];
+    audienceViews?: AudienceView[];
     help?: ReactElement;
 }
 

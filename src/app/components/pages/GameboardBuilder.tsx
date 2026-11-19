@@ -24,7 +24,7 @@ import {
     Spinner,
 } from "reactstrap";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
-import {GameboardDTO, GameboardItem, RegisteredUserDTO} from "../../../IsaacApiTypes";
+import {ContentSummaryDTO, GameboardDTO, GameboardItem, RegisteredUserDTO} from "../../../IsaacApiTypes";
 import {QuestionSearchModal} from "../elements/modals/QuestionSearchModal";
 import {DropResult} from "@hello-pangea/dnd";
 import {GameboardCreatedModal} from "../elements/modals/GameboardCreatedModal";
@@ -50,7 +50,7 @@ import {useBlocker, useLocation} from "react-router-dom";
 import queryString from "query-string";
 import {ShowLoading} from "../handlers/ShowLoading";
 import intersection from "lodash/intersection";
-import {ContentSummary, GameboardBuilderQuestionsStackProps} from "../../../IsaacAppTypes";
+import {GameboardBuilderQuestionsStackProps} from "../../../IsaacAppTypes";
 import {IsaacSpinner} from "../handlers/IsaacSpinner";
 import {skipToken} from "@reduxjs/toolkit/query";
 import classNames from "classnames";
@@ -65,15 +65,15 @@ const DraggableListViewContainer = lazy(() => import('../elements/DraggableListV
 class GameboardBuilderQuestionsStack {
     questionOrderStack: string[][];
     setQuestionOrderStack: React.Dispatch<React.SetStateAction<string[][]>>;
-    setSelectedQuestionsStack: React.Dispatch<React.SetStateAction<Map<string, ContentSummary>[]>>;
-    selectedQuestionsStack: Map<string, ContentSummary>[];
+    setSelectedQuestionsStack: React.Dispatch<React.SetStateAction<Map<string, ContentSummaryDTO>[]>>;
+    selectedQuestionsStack: Map<string, ContentSummaryDTO>[];
 
     constructor(
         props: {
             questionOrderStack: string[][];
             setQuestionOrderStack: React.Dispatch<React.SetStateAction<string[][]>>;
-            selectedQuestionsStack: Map<string, ContentSummary>[];
-            setSelectedQuestionsStack: React.Dispatch<React.SetStateAction<Map<string, ContentSummary>[]>>;
+            selectedQuestionsStack: Map<string, ContentSummaryDTO>[];
+            setSelectedQuestionsStack: React.Dispatch<React.SetStateAction<Map<string, ContentSummaryDTO>[]>>;
         })
     {
         this.questionOrderStack = props.questionOrderStack;
@@ -82,7 +82,7 @@ class GameboardBuilderQuestionsStack {
         this.setSelectedQuestionsStack = props.setSelectedQuestionsStack;
     }
 
-    public push({questionOrder, selectedQuestions} : {questionOrder: string[], selectedQuestions: Map<string, ContentSummary>}) {
+    public push({questionOrder, selectedQuestions} : {questionOrder: string[], selectedQuestions: Map<string, ContentSummaryDTO>}) {
         if (this.questionOrderStack.length >= GAMEBOARD_UNDO_STACK_SIZE_LIMIT) {
             this.setSelectedQuestionsStack(p => p.slice(1));
             this.setQuestionOrderStack(p => p.slice(1));
@@ -93,7 +93,7 @@ class GameboardBuilderQuestionsStack {
 
     public pop() {
         const questionOrder = this.questionOrderStack.at(-1) || [];
-        const selectedQuestions = this.selectedQuestionsStack.at(-1) || new Map<string, ContentSummary>();
+        const selectedQuestions = this.selectedQuestionsStack.at(-1) || new Map<string, ContentSummaryDTO>();
         this.setQuestionOrderStack(this.questionOrderStack.slice(0, -1));
         this.setSelectedQuestionsStack(this.selectedQuestionsStack.slice(0, -1));
         return {questionOrder, selectedQuestions};
@@ -126,10 +126,10 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     const [gameboardURL, setGameboardURL] = useState<string>();
     const [questionOrder, setQuestionOrder] = useState<string[]>([]);
     const [previousQuestionOrderStack, setPreviousQuestionOrderStack] = useState<string[][]>([]);
-    const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummary>());
-    const [previousSelectedQuestionsStack, setPreviousSelectedQuestionsStack] = useState(new Array<Map<string, ContentSummary>>());
+    const [selectedQuestions, setSelectedQuestions] = useState(new Map<string, ContentSummaryDTO>());
+    const [previousSelectedQuestionsStack, setPreviousSelectedQuestionsStack] = useState(new Array<Map<string, ContentSummaryDTO>>());
     const [redoQuestionOrderStack, setRedoQuestionOrderStack] = useState<string[][]>([]);
-    const [redoSelectedQuestionsStack, setRedoSelectedQuestionsStack] = useState(new Array<Map<string, ContentSummary>>());
+    const [redoSelectedQuestionsStack, setRedoSelectedQuestionsStack] = useState(new Array<Map<string, ContentSummaryDTO>>());
     const [wildcardId, setWildcardId] = useState<string | undefined>(undefined);
     const eventLog = useRef<object[]>([]).current; // Use ref to persist state across renders but not rerender on mutation
     const [submissionAttempted, setSubmissionAttempted] = useState(false);
@@ -137,7 +137,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
     const cloneGameboard = useCallback((gameboard: GameboardDTO) => {
         setGameboardTitle(gameboard.title ? `${gameboard.title} (Copy)` : "");
         setQuestionOrder(loadGameboardQuestionOrder(gameboard) || []);
-        setSelectedQuestions(loadGameboardSelectedQuestions(gameboard) || new Map<string, ContentSummary>());
+        setSelectedQuestions(loadGameboardSelectedQuestions(gameboard) || new Map<string, ContentSummaryDTO>());
         setWildcardId(isStaff(user) && gameboard.wildCard && gameboard.wildCard.id || undefined);
         logEvent(eventLog, "CLONE_GAMEBOARD", {gameboardId: gameboard.id});
     }, [setGameboardTitle, setQuestionOrder, setSelectedQuestions, setWildcardId, eventLog, user]);
@@ -148,7 +148,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         setGameboardTags([]);
         setQuestionOrder([]);
         setGameboardURL(undefined);
-        setSelectedQuestions(new Map<string, ContentSummary>());
+        setSelectedQuestions(new Map<string, ContentSummaryDTO>());
         setWildcardId(undefined);
     };
 
@@ -447,7 +447,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
                                 onDelete={(id) => {
                                     const question= selectedQuestions.get(id);
                                     if (question) {
-                                        handleBuilderRowChange({ isDnd: true, question, currentQuestions, undoStack, redoStack, creationContext: question.creationContext });
+                                        handleBuilderRowChange({ isDnd: true, question, currentQuestions, undoStack, redoStack });
                                     }
                                 }}
                                 allowBookmarking

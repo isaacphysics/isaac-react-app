@@ -605,7 +605,7 @@ export interface QuantityDTO extends ChoiceDTO {
     units?: string;
 }
 
-// TODO move hiding past bast attempts into the backend for more flexibility
+// TODO move hiding past best attempts into the backend for more flexibility
 // We use `null` to mean "best attempt hidden" so that all checks for whether `bestAttempt` is defined automatically
 // return false if it's hidden, without having to wrap all of these checks in an `isDefinedOrHidden()` predicate.
 // This latter approach would be more principled however. As it is, we make it clear at the type level that BestAttemptHidden
@@ -762,7 +762,6 @@ export interface GameboardItem {
     description?: string;
     tags?: string[];
     audience?: AudienceContext[];
-    creationContext?: AudienceContext;
     questionPartsCorrect?: number;
     questionPartsIncorrect?: number;
     questionPartsNotAttempted?: number;

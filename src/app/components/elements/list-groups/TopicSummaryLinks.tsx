@@ -20,7 +20,7 @@ import { Spacer } from "../Spacer";
 import { ContentPropertyTags } from "../ContentPropertyTags";
 
 export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; search?: string}) {
-    const userContext = useUserViewingContext();
+    const userViewingContext = useUserViewingContext();
     const user = useAppSelector(selectors.user.orNull);
     const deviceSize = useDeviceSize();
 
@@ -28,20 +28,20 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
         {items
             // We want relevant sections to appear first
             .sort((itemA, itemB) => {
-                return makeIntendedAudienceComparator(user, userContext)(itemA, itemB);
+                return makeIntendedAudienceComparator(user, userViewingContext)(itemA, itemB);
             })
 
             // Handle conditional display settings
             .map(item => {
-                const intendedAudience = isIntendedAudience(item.audience, userContext, user);
+                const intendedAudience = isIntendedAudience(item.audience, userViewingContext, user);
                 return {...item, deEmphasised: !intendedAudience};
             })
 
             // Render items
             .map((item) => {
                 const audienceString = stringifyAudience(
-                    item.audience, userContext,
-                    isIntendedAudience(item.audience, userContext, user)
+                    item.audience, userViewingContext,
+                    isIntendedAudience(item.audience, userViewingContext, user)
                 );
 
                 const documentPrefix = documentTypePathPrefix[item.type as DOCUMENT_TYPE];
