@@ -179,6 +179,7 @@ export const QuizListViewItem = ({item, isQuizSetter, useViewQuizLink, ...rest}:
         title={item.title ?? ""}
         subtitle={isTeacherOrAbove(user) ? roleVisibilitySummary(item) : undefined}
         subject={itemSubject}
+        audienceViews={determineAudienceViews(item.audience)}
         previewQuizUrl={useViewQuizLink ? `/test/view/${item.id}` : `/test/preview/${item.id}`}
         quizButton={useViewQuizLink ? undefined : quizButton}
         className={siteSpecific(undefined, "px-4 py-2")}
