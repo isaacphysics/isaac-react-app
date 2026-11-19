@@ -69,6 +69,8 @@ export const FestiveTree = () => {
         }
 
         const setPassedDaysActive = () => {
+            // Ignore mutations caused by our own door injection.
+            observer.disconnect();
             const today = new Date();
             // Keep all days open until March to allow overflow from students doing questions late
             // Otherwise keep all days closed until that day in December
@@ -86,7 +88,7 @@ export const FestiveTree = () => {
                 const active = day <= todaysDay;
                 const preview = day === todaysDay + 1;
                 const href = active ? door.getAttribute("href") || "" : "";
-                if (!active && door.tagName === "a") {
+                if (!active && door.localName === "a") {
                     const replacement = document.createElement("span");
                     Array.from(door.attributes).forEach(attribute => {
                         if (attribute.name !== "href") {
@@ -97,6 +99,22 @@ export const FestiveTree = () => {
                     door.replaceWith(replacement);
                     door = replacement;
                 }
+                const childClasses = door.classList.contains("star")
+                    ? ["glow", "shape", "num"]
+                    : ["inside", "door"];
+                door.replaceChildren(...childClasses.map(className => {
+                    const child = document.createElement("span");
+                    child.className = className;
+                    child.setAttribute("aria-hidden", "true");
+                    if (!["glow", "shape"].includes(className)) {
+                        child.textContent = String(day);
+                    }
+                    return child;
+                }));
+                if (!door.hasAttribute("aria-label")) {
+                    door.setAttribute("aria-label", `Day ${day}: ${door.dataset.title || day}`);
+                }
+
                 door.classList.toggle("active", active);
                 door.tabIndex = active ? 0 : -1;
                 questions.push({
@@ -116,11 +134,11 @@ export const FestiveTree = () => {
             });
             questions.sort((a, b) => a.day - b.day);
             setTextDoors(previous => JSON.stringify(previous) === JSON.stringify(questions) ? previous : questions);
+            observer.observe(container, {childList: true, subtree: true});
         };
 
         // The fragment arrives asynchronously, so also update newly inserted doors.
         const observer = new MutationObserver(setPassedDaysActive);
-        observer.observe(container, {childList: true, subtree: true});
         setPassedDaysActive();
 
         return () => {
