@@ -11,7 +11,8 @@
     "@types/react": "^18.3.31",
     "unicorn-magic": "^0.4.1",
     "js-yaml": "^5.4.3",
-    "glob": "^13.0.6",
+    "glob": "^14.0.6",
+    "minimatch": "11.0.9",
     "brace-expansion": "^5.0.12",
     "sharp": "^0.35.5",
     "argparse": "^2.0.1"
