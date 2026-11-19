@@ -1,0 +1,270 @@
+{
+  "admin": {
+    "anonymisation": {
+      "groupsLabel": "Disguise both user and group details in teacher tools",
+      "usersOnlyLabel": "Disguise only user names and emails in teacher tools"
+    },
+    "console": {
+      "apiVersionLabel": "API Version:",
+      "title": "Admin Console"
+    },
+    "content": {
+      "errorLoading": "Error loading content version",
+      "errorMessage": "Error: Content version could not be changed.",
+      "inputAriaLabel": "Live content commit SHA",
+      "inputPlaceholder": "Enter commit SHA",
+      "liveVersionLabel": "Live Content Version",
+      "previewButton": "Preview Changes",
+      "setVersionButton": "Set Version",
+      "successMessage": "Content version changed successfully.",
+      "title": "Manage site content",
+      "updatingMessage": "Replacing version {{currentVersion}} with {{newVersion}}",
+      "updatingTitle": "Updating..."
+    },
+    "contentEmails": {
+      "recipientWarning": "<warningLabel>Warning:</warningLabel> There are currently <countEmphasis>{{recipientCount}}</countEmphasis> selected recipients.",
+      "sendConfirm_one": "Are you sure you want to send a {{emailType}} email to {{count}} user?",
+      "sendConfirm_other": "Are you sure you want to send a {{emailType}} email to {{count}} users?",
+      "sendVia": {
+        "isaac": "Isaac",
+        "label": "The method of sending the email",
+        "mailgun": "Mailgun",
+        "title": "Send via"
+      },
+      "template": {
+        "htmlLabel": "Email HTML",
+        "iframeTitle": "html preview",
+        "plaintextLabel": "Email Plaintext",
+        "previewLabel": "HTML Preview (unformatted)",
+        "title": "Email Template"
+      },
+      "title": "Content email sending"
+    },
+    "contentErrors": {
+      "errorTitle": "Loading Content Errors Failed",
+      "filters": {
+        "errorMessageLabel": "Filter by error message",
+        "errorMessagePlaceholder": "Filter errors by error message",
+        "filePathLabel": "Filter by file path",
+        "filePathPlaceholder": "Filter errors by file path",
+        "publishedStatusLabel": "Filter by published status",
+        "severityLabel": "Filter by severity"
+      },
+      "loadingError": "Error loading content errors",
+      "row": {
+        "tooltipContentId": "Content ID: {{contentId}}"
+      },
+      "stats": {
+        "contentVersionLabel": "Content Version:",
+        "criticalErrorsLabel": "Critical errors:",
+        "filesWithErrorsLabel": "Files with errors:",
+        "totalErrorsLabel": "Total errors:"
+      },
+      "table": {
+        "criticalErrorHeader": "Critical Error",
+        "errorMessagesHeader": "List of Error Messages",
+        "fileHeader": "File",
+        "publishedHeader": "Published",
+        "publishedTooltip": "Is this file published?"
+      }
+    },
+    "demonstration": {
+      "title": "Demonstration Mode"
+    },
+    "email": {
+      "sendErrorTitle": "Sending email failed",
+      "sendSuccessMessage": "Email sent to users successfully",
+      "sendSuccessTitle": "Email sent",
+      "sendWithIdsErrorTitle": "Sending email with ids failed",
+      "templateErrorTitle": "Failed to get email template"
+    },
+    "emails": {
+      "contentObject": {
+        "loadButton": "Load template",
+        "placeholder": "Enter email content object ID",
+        "title": "Content object"
+      },
+      "details": {
+        "fromLabel": "From:",
+        "noSubject": "no subject",
+        "replyToLabel": "Reply-To:",
+        "sentViaLabel": "Sent via:",
+        "subjectLabel": "Subject:"
+      },
+      "htmlPreview": {
+        "frameTitle": "Email content preview",
+        "title": "HTML preview"
+      },
+      "plainTextPreview": {
+        "title": "Plain text preview"
+      },
+      "send": {
+        "confirm_one": "Are you sure you want to send a {{emailType}} email ({{contentObjectId}}) to {{count}} user?",
+        "confirm_other": "Are you sure you want to send a {{emailType}} email ({{contentObjectId}}) to {{count}} users?",
+        "recipientsWarning": "<warning>Warning:</warning> There are currently <count>{{recipientCount}}</count> selected recipients."
+      }
+    },
+    "greeting": "Hi, {{givenName}}!",
+    "groups": {
+      "resetPassword": {
+        "failureMessage": "Failed to send password reset"
+      }
+    },
+    "misuse": {
+      "emptyState": "No misuse statistics for this event type! 🎉",
+      "selectEventLabel": "Select a misuse event type:",
+      "statusAlmost": "Almost",
+      "tableHeader": {
+        "agentIdentifier": "Agent identifier",
+        "currentCounter": "Current event counter",
+        "lastEvent": "Last recorded event",
+        "status": "Misused?"
+      },
+      "title": "Misuse statistics"
+    },
+    "misuseMonitor": {
+      "resetErrorTitle": "Failed to reset misuse monitor for user",
+      "resetSuccessMessage": "{{eventLabel}} misuse event count reset for user",
+      "resetSuccessTitle": "Reset successfully"
+    },
+    "misuseStatistics": {
+      "errorTitle": "Failed to get misuse statistics for user"
+    },
+    "siteStatistics": {
+      "errorTitle": "Loading Site Statistics Failed"
+    },
+    "stats": {
+      "answering": {
+        "heading": "Answering Questions"
+      },
+      "breadcrumb": "Admin statistics",
+      "content": {
+        "conceptPageViews": "Concept Page Views: {{count}}",
+        "heading": "Content Statistics",
+        "questionAttempts": "Total Question Attempts: {{count}}",
+        "questionPageViews": "Question Page Views: {{count}}"
+      },
+      "counts": {
+        "all": "All: {{count}}",
+        "students": "Students: {{count}}",
+        "teachers": "Teachers: {{count}}"
+      },
+      "lastSeen": {
+        "heading": "Last Seen"
+      },
+      "overview": "A high-level overview of the users and activity on the platform:",
+      "period": {
+        "ninetyDays": "Previous 90 days:",
+        "sevenDays": "Previous 7 days:",
+        "thirtyDays": "Previous 30 days:"
+      },
+      "title": "{{siteTitle}} statistics",
+      "users": {
+        "gender": {
+          "female": "Female: {{count}} ({{percentage}}%)",
+          "male": "Male: {{count}} ({{percentage}}%)",
+          "missing": "Missing data: {{count}} ({{percentage}}%)",
+          "other": "Other: {{count}} ({{percentage}}%)",
+          "preferNotToSay": "Prefer not to say: {{count}} ({{percentage}}%)"
+        },
+        "heading": "Users:",
+        "profileCompletion": {
+          "noSchool": "No school provided: {{count}}",
+          "otherSchool": "Other school provided: {{count}}",
+          "ukIeSchool": "UK/IE school provided: {{count}}"
+        },
+        "profileCompletionTitle": "Profile Completion",
+        "role": {
+          "admin": "Admin: {{count}}",
+          "contentEditor": "Content Editor: {{count}}",
+          "eventLeader": "Event Leader: {{count}}",
+          "eventManager": "Event Manager: {{count}}",
+          "student": "Student: {{count}}",
+          "teacher": "Teacher: {{count}}",
+          "tutor": "Tutor: {{count}}"
+        },
+        "sixMonths": "Last 6 months: <strong>{{activeUsersSixMonths}}</strong>",
+        "total": "Total (excl. archived): <strong>{{totalUsers}}</strong>",
+        "twoYears": "Last 2 years: <strong>{{activeUsersTwoYears}}</strong>"
+      }
+    },
+    "title": "{{siteTitle}} administration",
+    "tools": {
+      "title": "Administrative tools"
+    },
+    "usefulLinks": {
+      "equationBuilder": "Equation builder",
+      "freeTextBuilder": "Free-text builder",
+      "title": "Useful links",
+      "userManager": "User Manager"
+    },
+    "userManager": {
+      "actions": {
+        "email": "Email",
+        "emailStatus": "Email Status",
+        "emailStatusHeader": "Change email verification status for users to:",
+        "modifyRole": "Modify Role",
+        "promoteDemoteHeader": "Promote or demote selected users to:"
+      },
+      "delete": {
+        "confirm": "Are you sure you want to delete this user?"
+      },
+      "merge": {
+        "button": "Merge",
+        "confirm": "Are you sure you want to merge user {{sourceId}} into user {{targetId}}? This will delete user {{deletedId}}.",
+        "deletePlaceholder": "User ID to delete",
+        "keepPlaceholder": "User ID to keep",
+        "title": "Merge user accounts"
+      },
+      "results": {
+        "table": {
+          "edit": "Edit",
+          "select": "Select",
+          "verificationStatus": "Verification status",
+          "view": "View"
+        },
+        "title": "Manage users ({{resultCount}})<br/>Selected ({{selectedCount}})"
+      },
+      "search": {
+        "button": "Search",
+        "emailPlaceholder": "e.g. teacher@school.org",
+        "familyNamePlaceholder": "e.g. Wilkes",
+        "roleAny": "Any role",
+        "roleEventLeader": "Event leader",
+        "roleEventManager": "Event manager",
+        "schoolOtherLabel": "Find by manually entered school:",
+        "schoolUrnLabel": "Find a user with school URN:",
+        "validation": "At least one search filter must be set.",
+        "verificationStatusAny": "Any verification status",
+        "verificationStatusDeliveryFailed": "Delivery failed",
+        "verificationStatusLabel": "Find by email verification status:",
+        "verificationStatusNotVerified": "Not verified",
+        "verificationStatusVerified": "Verified"
+      }
+    },
+    "users": {
+      "deleteErrorTitle": "User deletion failed",
+      "deleteSuccessMessage": "Selected user was deleted successfully",
+      "deleteSuccessTitle": "User deleted",
+      "getSchoolLookupErrorTitle": "Failed to load user school lookup details",
+      "getUserErrorTitle": "Failed to get user",
+      "mergeErrorTitle": "Merging users failed",
+      "mergeSuccessMessage": "User with id: {{sourceId}} was merged into user with id: {{targetId}}",
+      "mergeSuccessTitle": "Users merged",
+      "modifyEmailVerificationErrorTitle": "Email verification status modification failed",
+      "modifyRoleErrorTitle": "User role modification failed",
+      "searchErrorTitle": "User search failed"
+    }
+  },
+  "featureFlags": {
+    "modal": {
+      "applyButton": "Apply and reload",
+      "description": "Feature flags are staff-only runtime switches that enable or disable features that are under development. They will only appear on staging and dev (not test).",
+      "emptyState": "No feature flags found.",
+      "howItWorks": "Relevant flags will typically be enabled by default on a given branch. However, if you wish to see how multiple settings interact, you can override which flags are enabled below.",
+      "overrideNote": "Note that overrides will be maintained between site visits and should probably be left as automatic when not in use.",
+      "overridesLabel": "Manual overrides:",
+      "toggleAuto": "Automatic"
+    }
+  }
+}
