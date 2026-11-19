@@ -1,0 +1,603 @@
+@property --cap {
+    syntax: "<length>";
+    inherits: true;
+    initial-value: 7px;
+}
+
+.festive-page {
+    @keyframes lights-chase {
+        from { background-position: 0px 100%, 14px 100%, 28px 100%, 42px 100%, 56px 100%; }
+        to { background-position: 70px 100%, 84px 100%, 98px 100%, 112px 100%, 126px 100%; }
+    }
+
+    @keyframes star-glow {
+        from { opacity: 0.6; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1.15); }
+    }
+
+    @keyframes snow-drift {
+        0% { transform: translate(0, -10vh) rotate(0deg); opacity: 0; }
+        10% { opacity: var(--o, 0.8); }
+        30% { transform: translate(18px, 25vh) rotate(60deg); }
+        60% { transform: translate(-14px, 60vh) rotate(120deg); }
+        100% { transform: translate(10px, 110vh) rotate(200deg); opacity: var(--o, 0.8); }
+    }
+
+    @keyframes bauble-swing {
+        0%, 100% { transform: rotate(0deg); }
+        25% { transform: rotate(14deg); }
+        60% { transform: rotate(-9deg); }
+        85% { transform: rotate(4deg); }
+    }
+
+    h1 {
+        text-shadow: 0 0 10px #f1c40f;
+        margin-bottom: 30px;
+        color: white;
+    }
+
+    /* Sizes, colours and container */
+    .festive-tree-controls {
+        --w: clamp(34px, 11vw, 54px);
+        --h: calc(var(--w) * 1.3);
+        --door-clearance: 13px;
+        --branch-height: calc(var(--h) + 2 * var(--door-clearance) - var(--g));
+        --trunk-height: calc(var(--h) * 0.4);
+        --g: 6px;
+        --step: calc(var(--w) + var(--g));
+        --pad: calc(var(--step) * 0.6);
+        --arch: 42% 42% 4px 4px / 30% 30% 4px 4px;
+        --door-swing: perspective(calc(var(--w) * 6));
+        --hexagon: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        --pine: #0f3a28;
+        --snow: #eef6f8;
+        --cap: 7px;
+        --gold: #fea100;
+        --wood: #5d4037;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+        padding-bottom: 1rem;
+
+        // Only display the tree once the doors have loaded to fill it
+        &:not(:has(.doors)) {
+            .tree-shapes, .bauble, .snow-toggle, .lights-toggle, .tag {
+                display: none;
+            }
+        }
+    }
+
+    /* Tree layout */
+    .tree {
+        position: relative;
+        flex: 0 0 auto;
+        transition: --cap 4s ease;
+
+        > .not-mobile {
+            position: absolute;
+            left: -40%;
+        }
+    }
+
+    .doors {
+        position: relative;
+        isolation: isolate;
+        display: grid;
+        grid-template-columns: repeat(6, var(--w));
+        grid-template-rows:
+            calc(var(--w) * 1.5)
+            calc(var(--branch-height) + var(--g))
+            repeat(5, var(--branch-height))
+            calc(var(--h) + var(--trunk-height) + 10px - var(--g));
+        gap: var(--g);
+        width: fit-content;
+        margin: 0 auto;
+        padding: 0 0 10px;
+
+    }
+
+    /* Branches, trunk and pot */
+    .tree-shapes {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        grid-template-columns: repeat(6, var(--w));
+        grid-template-rows:
+            calc(var(--w) * 1.5)
+            calc(var(--branch-height) + var(--g))
+            repeat(5, var(--branch-height))
+            calc(var(--h) + var(--trunk-height) + 10px - var(--g));
+        gap: var(--g);
+        pointer-events: none;
+
+        // Widen the decorative layers independently of the door grid.
+        .branch, .lights {
+            margin-inline: calc(-1 * var(--pad));
+        }
+
+        .branch {
+            background:
+                // Match the snow cap to this trapezoid's top edge.
+                radial-gradient(50% 100% at 50% 0, var(--snow) 96%, transparent 100%)
+                    top center / var(--branch-top-width) var(--cap) no-repeat,
+                var(--pine);
+                grid-column: 1 / 7;
+            // Extend upward into the row gap without moving the doors or branch bases.
+            &:not(.branch-1) {
+                margin-top: calc(-1 * var(--g));
+            }
+
+        }
+    }
+
+    .trunk {
+        pointer-events: auto;
+        display: block;
+        position: absolute;
+        width: calc(var(--w) * 1.1);
+        height: calc(var(--trunk-height) + 1px);
+        grid-row: 7;
+        grid-column: 1 / 7;
+        top: calc(42% + 2px);
+        margin: 0;
+        left: 50%;
+        transform: translateX(-50%);
+
+        background:
+            linear-gradient(90deg, rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0) 65%, rgba(0, 0, 0, 0.25)),
+            var(--wood);
+        cursor: pointer;
+        transition: filter 0.2s;
+        z-index: 1;
+
+        &:hover {
+            filter: brightness(1.15);
+        }
+    }
+
+    .pot {
+        position: absolute;
+        bottom: 0;
+        left: 16.66%;
+        width: 66.68%;
+        height: calc(var(--h) + 20px);
+        background:
+            radial-gradient(50% 100% at 50% 0, var(--snow) 96%, transparent 100%)
+                top center / 100% var(--cap) no-repeat,
+            linear-gradient(#795548, #795548) top center / 100% 8px no-repeat,
+            var(--wood);
+        clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
+    }
+
+    // Preserve the 156:512 branch proportions with branch 6 filling the decorative width.
+    @for $branch from 1 through 6 {
+        $bottom-width: (156 + ($branch - 1) * 71.2) * 0.1953125%;
+        $width-step: 71.2 * 0.1953125%;
+        $bottom-inset: (100% - $bottom-width) * 0.5;
+        // Scale the overhang by the same 577 / 512 factor to preserve the trapezoid ratios.
+        $top-inset: calc(#{(100% - $bottom-width + $width-step) * 0.5} + 11.26953125px);
+
+        .branch-#{$branch} {
+            --branch-top-width: calc(#{$bottom-width - $width-step} - 22.5390625px);
+            grid-row: $branch + 1;
+            clip-path: polygon(
+                $top-inset 0,
+                calc(100% - #{$top-inset}) 0,
+                (100% - $bottom-inset) 100%,
+                $bottom-inset 100%
+            );
+        }
+    }
+
+    .lights {
+        grid-column: 1/7;
+    }
+
+    /* Doors and interaction states */
+    .day {
+        --focus-outline-color: #eee;
+        --focus-outline-width: 3px;
+        display: grid;
+        width: var(--w);
+        height: var(--h);
+        padding: 2px;
+        border-radius: var(--arch);
+        background: rgba(0, 0, 0, 0.45);
+        color: inherit;
+        text-decoration: none;
+        -webkit-tap-highlight-color: transparent;
+
+        > span {
+            grid-area: 1 / 1;
+            border-radius: var(--arch);
+        }
+
+        .inside {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            padding-top: 10%;
+            background:
+                radial-gradient(circle at 50% 70%, rgba(254, 161, 0, 0.5), rgba(254, 161, 0, 0) 70%),
+                #1f1407;
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.7);
+            color: var(--gold);
+            font-weight: bold;
+            font-size: calc(var(--w) * 0.28);
+            line-height: 1;
+            &::after {
+                content: '';
+                width: 38%;
+                aspect-ratio: 0.866;
+                background:
+                    linear-gradient(var(--gold), var(--gold)) center / 20% 100% no-repeat,
+                    linear-gradient(var(--gold), var(--gold)) center / 100% 18% no-repeat,
+                    var(--day-color, #2ecc71);
+                clip-path: var(--hexagon);
+            }
+        }
+
+        .door {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            place-items: center;
+            padding-bottom: 6%;
+            background:
+                linear-gradient(100deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0) 45%, rgba(0, 0, 0, 0.14)),
+                var(--day-color, #2ecc71);
+            outline: 1px solid rgba(255, 255, 255, 0.2);
+            outline-offset: -4px;
+            color: white;
+            font-weight: bold;
+            font-size: calc(var(--w) * 0.36);
+            line-height: 1;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+            transform: var(--door-swing) rotateY(0deg);
+            transform-origin: left center;
+            transition: transform 0.55s cubic-bezier(0.3, 0.8, 0.3, 1), filter 0.55s;
+            /* Hexagonal knob */
+            &::before {
+                content: '';
+                position: absolute;
+                top: 66%;
+                right: 12%;
+                width: 6px;
+                height: 7px;
+                background: linear-gradient(160deg, #ffd27a, var(--gold) 55%, #c77d00);
+                clip-path: var(--hexagon);
+            }
+            /* Faint hexagon plaque behind the number */
+            &::after {
+                content: '';
+                position: absolute;
+                inset: 0 0 calc(var(--w) * 0.06) 0;
+                z-index: -1;
+                width: calc(var(--w) * 0.6);
+                height: calc(var(--w) * 0.6 * 1.1547);
+                margin: auto;
+                background: linear-gradient(170deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.06));
+                clip-path: var(--hexagon);
+            }
+        }
+
+        &:hover, &:focus-visible {
+            z-index: 2;
+
+            &.active .door{
+                transform: var(--door-swing) rotateY(-70deg);
+                filter: brightness(0.8);
+            }
+        }
+
+        /* Locked: any door that is neither active nor opened */
+        &:not(.active):not(.opened) {
+            pointer-events: none;
+            .door {
+                filter: grayscale(1) brightness(0.5);
+                ::after {
+                    opacity: 0.5;
+                }
+            }
+        }
+
+        /* Opened days keep their door open */
+        &.opened .door {
+            transform: var(--door-swing) rotateY(-80deg);
+            filter: brightness(0.65);
+        }
+
+        position: relative;
+        z-index: 1;
+        // Row numbers match the grid: star, six branches, then base.
+        @for $row from 1 through 8 {
+            &.row-#{$row} {
+                grid-row: $row;
+            }
+        }
+
+        @for $column from 1 through 6 {
+            &.col-#{$column} {
+                grid-column: $column;
+            }
+        }
+
+        // Keep the light palette for doors in both colour modes.
+        @each $subject, $color in (
+            physics: $color-physics-500,
+            maths: $color-maths-500,
+            chemistry: $color-chemistry-500,
+            biology: $color-biology-500
+        ) {
+            &.door-#{$subject} {
+                --day-color: #{$color};
+            }
+        }
+
+        &:is(.row-2, .row-4, .row-6, .row-8) {
+            translate: calc(var(--step) / 2) 0;
+        }
+        &.row-1 {
+            translate: calc(var(--step) / 2 - 13.5px) 0;
+        }
+    }
+
+    // The lower shapes extend upward by --g, so align doors from the shared bottom edge.
+    .day:is(.row-2, .row-3, .row-4, .row-5, .row-6, .row-7) {
+        align-self: end;
+        margin-bottom: var(--door-clearance);
+    }
+
+    .day.row-8 {
+        align-self: end;
+    }
+
+    /* Christmas Day star */
+    .star {
+        width: calc(var(--w) * 1.5);
+        height: calc(var(--w) * 1.5);
+        padding: 0;
+        border-radius: 50%;
+        background: none;
+        place-items: center;
+
+        > span {
+            border-radius: 0;
+        }
+
+        .shape {
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            background: #bfbfbf;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            transition: transform 0.7s cubic-bezier(0.3, 0.8, 0.3, 1);
+        }
+
+        &.active {
+            .shape {
+                background: var(--gold);
+            }
+            
+            .glow {
+                width: 180%;
+                height: 180%;
+                border-radius: 50%;
+                background: radial-gradient(circle, rgba(254, 161, 0, 0.45), rgba(254, 161, 0, 0) 65%);
+                opacity: 0.8;
+                pointer-events: none;
+                transition: opacity 0.6s;
+            }
+        }
+
+        .num {
+            z-index: 2;
+            margin-top: 12%;
+            color: white;
+            font-weight: bold;
+            font-size: calc(var(--w) * 0.4);
+            line-height: 1;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+        }
+
+        &.active:hover, &.active:focus-visible {
+            .shape {
+                transform: rotate(72deg) scale(1.08);
+            }
+            .glow {
+                opacity: 1;
+            }
+        }
+    }
+
+    /* Door title tag */
+    .tag {
+        // The gold tag keeps a fixed background in both colour modes.
+        .icon-color-black {
+            @supports (mask-position: center) {
+                --icon-foreground: #000 !important;
+                --icon-background: #000 !important;
+            }
+        }
+
+        position: sticky;
+        bottom: 1rem;
+        flex: 0 0 auto;
+        width: max-content;
+        max-width: calc(100% - 2rem);
+        overflow-wrap: anywhere;
+        transform: rotate(-2deg);
+        padding: 0.5rem 1rem 0.5rem 1.9rem;
+
+        background: radial-gradient(circle at 0.95rem 50%, transparent 0.2rem, var(--gold) 0.24rem);
+        clip-path: polygon(0.75rem 0, 100% 0, 100% 100%, 0.75rem 100%, 0 50%);
+        color: #3b2300;
+
+        font-size: 0.9rem;
+        font-weight: 600;
+        line-height: 1.3;
+        text-align: center;
+        text-shadow: none;
+
+        pointer-events: auto;
+        user-select: text;
+        cursor: text;
+        z-index: 2;
+    }
+
+    /* Snow switch and snowfall */
+    .snow-toggle {
+        position: fixed;
+        top: 0;
+        left: 0;
+
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        pointer-events: none;
+
+        &:focus-visible ~ .tree .trunk {
+            box-shadow: 0 0 0 var(--focus-outline-width) var(--focus-outline-color);
+            outline: var(--focus-outline-width) solid transparent;
+        }
+
+        &:checked {
+            ~ .snowfall {
+                display: block;
+            }
+            ~ .tree {
+                --cap: 13px;
+            }
+        }
+    }
+
+    .snowfall {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: none;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .flake {
+        position: absolute;
+        top: -5%;
+        left: var(--x, 50%);
+        width: var(--s, 8px);
+        height: var(--s, 8px);
+        background: radial-gradient(circle, #fff 30%, #cfe8f3 100%);
+        clip-path: var(--hexagon, polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%));
+        animation: snow-drift var(--d, 8s) linear var(--delay, 0s) infinite backwards;
+    }
+
+
+    /* Fairy lights switch, bauble and animations */
+    .lights-toggle {
+        position: fixed;
+        top: 0;
+        left: 0;
+
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        pointer-events: none;
+
+        &:checked ~ .tree {
+            .lights {
+                background:
+                    radial-gradient(circle, #fff4d6 0 2px, rgba(254, 161, 0, 0.6) 3px, rgba(254, 161, 0, 0) 7px) 0px 100% / 70px 14px repeat-x,
+                    radial-gradient(circle, #e0f6ff 0 2px, rgba(64, 190, 240, 0.6) 3px, rgba(64, 190, 240, 0) 7px) 14px 100% / 70px 14px repeat-x,
+                    radial-gradient(circle, #ffe0ef 0 2px, rgba(240, 80, 150, 0.6) 3px, rgba(240, 80, 150, 0) 7px) 28px 100% / 70px 14px repeat-x,
+                    radial-gradient(circle, #e5ffe0 0 2px, rgba(90, 220, 110, 0.6) 3px, rgba(90, 220, 110, 0) 7px) 42px 100% / 70px 14px repeat-x,
+                    radial-gradient(circle, #f3e6ff 0 2px, rgba(185, 120, 240, 0.6) 3px, rgba(185, 120, 240, 0) 7px) 56px 100% / 70px 14px repeat-x;
+                animation: lights-chase 2.5s steps(5) infinite;
+            }
+
+            .star .glow {
+                animation: star-glow 1.6s ease-in-out infinite alternate;
+            }
+        }
+
+        &:focus-visible ~ .tree .bauble {
+            &::before {
+                top: -3px;
+                left: -12px;
+                width: 24px;
+                height: 37px;
+                border-radius: 12px;
+                background: transparent;
+                box-shadow: 0 0 0 var(--focus-outline-width) var(--focus-outline-color);
+                outline: var(--focus-outline-width) solid transparent;
+            }
+            &::after {
+                background: radial-gradient(circle at 35% 30%, #fff, #ffd27a 45%, var(--gold));
+            }
+        }
+    }
+
+    .bauble {
+        position: absolute;
+        width: 0;
+        height: 0;
+        z-index: 3;
+        right: calc(12px - var(--pad));
+        top: calc(var(--w) * 1.5 + 6 * var(--branch-height) + 7 * var(--g) - 12px);
+        cursor: pointer;
+        transform-origin: 0 0;
+
+        &::before, &::after {
+            content: '';
+            position: absolute;
+            left: 0;
+        }
+
+        &::before {
+            top: 0;
+            width: 1px;
+            height: 16px;
+            background: rgba(255, 255, 255, 0.45);
+        }
+
+        &::after {
+            top: 15px;
+            width: 14px;
+            height: 16px;
+            margin-left: -6.5px;
+            background: radial-gradient(circle at 35% 30%, #fff3d1, var(--gold) 45%, #b86f00);
+            clip-path: var(--hexagon);
+        }
+
+        &:hover {
+            animation: bauble-swing 1.2s ease-in-out;
+        }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+        .tree, .door, .star .shape, .star .glow {
+            transition: none;
+        }
+        .flake {
+            animation-duration: calc(var(--d, 8s) * 3);
+        }
+        .lights-toggle:checked ~ .tree .lights,
+        .lights-toggle:checked ~ .tree .star .glow,
+        .bauble:hover {
+            animation: none;
+        }
+    }
+}
+
+.festive-page .festive-text-list {
+    list-style: none;
+    padding: 0;
+
+    li {
+        margin-bottom: 0.75rem;
+    }
+}

@@ -6,6 +6,21 @@ import {v4 as uuid_v4} from "uuid";
 import { UncontrolledTooltip } from "reactstrap";
 import { ACCESSIBILITY_WARNINGS, getAccessibilityTags, useAccessibilitySettings } from "../../services/accessibility";
 
+export const AccessibilityTags = ({tags, tagClassName}: {tags?: string[], tagClassName?: string}) => {
+    const accessibilitySettings = useAccessibilitySettings();
+
+    return accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(tags)?.map(tag => {
+        const id = `access-warn-${uuid_v4()}`; // must be globally unique. making refs in a loop was too painful.
+        return <React.Fragment key={tag}>
+            <i className={`icon icon-md ${ACCESSIBILITY_WARNINGS[tag].icon} icon-access-visual icon-color-black ${tagClassName}`} id={id} />
+            <span className="visually-hidden">{ACCESSIBILITY_WARNINGS[tag].description}</span>
+            <UncontrolledTooltip target={id} placement="top">
+                {ACCESSIBILITY_WARNINGS[tag].description}
+            </UncontrolledTooltip>
+        </React.Fragment>;
+    });
+};
+
 interface ContentPropertyTagsProps extends React.HTMLAttributes<HTMLDivElement> {
     deprecated?: boolean;
     supersededByPath?: string;
@@ -14,19 +29,9 @@ interface ContentPropertyTagsProps extends React.HTMLAttributes<HTMLDivElement> 
 
 export const ContentPropertyTags = ({ deprecated, supersededByPath, tags, ...rest }: ContentPropertyTagsProps) => {
     const user = useAppSelector(selectors.user.orNull);
-    const accessibilitySettings = useAccessibilitySettings();
 
     return <div {...rest} className={classNames("d-flex gap-2 align-items-center", rest.className)}>
-        {accessibilitySettings?.SHOW_INACCESSIBLE_WARNING && getAccessibilityTags(tags)?.map(tag => {
-            const id = `access-warn-${uuid_v4()}`; // must be globally unique. making refs in a loop was too painful.
-            return <React.Fragment key={tag}>
-                <i className={`icon icon-md ${ACCESSIBILITY_WARNINGS[tag].icon} icon-access-visual icon-color-black z-2`} id={id} />
-                <span className="visually-hidden">{ACCESSIBILITY_WARNINGS[tag].description}</span>
-                <UncontrolledTooltip target={id} placement="top">
-                    {ACCESSIBILITY_WARNINGS[tag].description}
-                </UncontrolledTooltip>
-            </React.Fragment>;
-        })}
+        <AccessibilityTags tags={tags} tagClassName="z-2"/>
 
         {supersededByPath && isTeacherOrAbove(user) && <a 
             className="pill-tag-outline mw-max-content z-3" 
