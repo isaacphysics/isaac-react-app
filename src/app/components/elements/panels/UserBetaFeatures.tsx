@@ -39,10 +39,14 @@ export const UserBetaFeatures = ({ displaySettings, setDisplaySettings, consentS
         </>}
         rightColumn={<>
             <div className="pt-2"/>
-            <WithLinkableSetting id={"hide-previous-q-attempts-feature"}>
-                <b><RevisionModeInput {...{displaySettings, setDisplaySettings}}/></b>
-                <p id="revision-helptext">{`This feature lets you answer questions ${siteSpecific("that you have answered before, without seeing your old answer.", "again, even if you've answered them before.")} It's useful if you are reviewing a topic before a test or exam.`}</p>
-            </WithLinkableSetting>
+            {siteSpecific(
+                <div className="mb-5">Looking for <b>Hide previous question attempts</b>? This can now be found on your <Link to="/">dashboard</Link>.</div>,
+                
+                <WithLinkableSetting id={"hide-previous-q-attempts-feature"}>
+                    <b><RevisionModeInput {...{displaySettings, setDisplaySettings}}/></b>
+                    <p id="revision-helptext">{`This feature lets you answer questions again, even if you've answered them before. It's useful if you are reviewing a topic before a test or exam.`}</p>
+                </WithLinkableSetting>
+            )}
 
             {isPhy && <WithLinkableSetting id={"show-chem-text-entry"}>
                 <StyledCheckbox checked={displaySettings.CHEM_TEXT_ENTRY ?? false}

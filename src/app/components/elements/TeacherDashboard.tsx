@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { BookInfo, extractTeacherName, ISAAC_BOOKS, isOverdue, isTutor, sortUpcomingAssignments, Subject, useDeviceSize } from '../../services';
 import { AssignmentDTO, QuizAssignmentDTO, UserSummaryDTO } from '../../../IsaacApiTypes';
 import StyledToggle from './inputs/StyledToggle';
-import { AssignmentCard, StudentDashboard } from './StudentDashboard';
+import { AssignmentCard, RevisionModeToggle, StudentDashboard } from './StudentDashboard';
 import sortBy from 'lodash/sortBy';
 import { Spacer } from './Spacer';
 import { AppGroup, UserSnapshot } from '../../../IsaacAppTypes';
@@ -175,17 +175,22 @@ export const TeacherDashboard = ({ assignmentsSetByMe, quizzesSetByMe, myAssignm
     return <div className="dashboard dashboard-outer w-100">
         <div className="d-flex flex-wrap">
             {nameToDisplay && <h1 className="text-wrap h3">Welcome back, {nameToDisplay}!</h1>}
-            <span className="ms-auto">
-                <div className="text-center">Dashboard view</div>
-                <StyledToggle
-                    checked={dashboardView === "student"}
-                    falseLabel={isTutor(user) ? "Tutor" : "Teacher"}
-                    trueLabel="Student"
-                    onChange={() => setDashboardView(studentView => studentView === "teacher" ? "student" : "teacher")}             
-                />
-            </span>
+            <div className="ms-auto d-flex flex-wrap gap-3">
+                <span className="text-center">
+                    <RevisionModeToggle />
+                </span>
+                <span className="text-center">
+                    <div>Dashboard view</div>
+                    <StyledToggle
+                        checked={dashboardView === "student"}
+                        falseLabel={isTutor(user) ? "Tutor" : "Teacher"}
+                        trueLabel="Student"
+                        onChange={() => setDashboardView(studentView => studentView === "teacher" ? "student" : "teacher")}
+                    />
+                </span>
+            </div>
         </div>
-        {dashboardView === "student" ? <StudentDashboard assignments={myAssignments} quizAssignments={myQuizAssignments} streakRecord={streakRecord} groups={groups} /> :
+        {dashboardView === "student" ? <StudentDashboard assignments={myAssignments} quizAssignments={myQuizAssignments} streakRecord={streakRecord} groups={groups} isTeacher /> :
             <>{deviceSize === "lg"
                 ? <>
                     <Row className="row-cols-3">
