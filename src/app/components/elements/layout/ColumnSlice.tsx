@@ -8,6 +8,7 @@ interface ColumnSliceProps extends RowProps {
 }
 
 export const ColumnSlice = ({breakpoint, reverseUnderBreakpoint, children, ...rest}: ColumnSliceProps) => {
+    // eslint-disable-next-line @eslint-react/no-children-count
     const numChildren = Math.min(React.Children.count(children), 4);
     return <Row {...rest} className={classNames(
         `row-cols-1 row-cols-${breakpoint ?? "lg"}-${numChildren}`, 

@@ -127,7 +127,7 @@ export const Contact = () => {
                     <p>We always want to improve so please report any issues to <a href={`mailto:${WEBMASTER_EMAIL}`}>{WEBMASTER_EMAIL}</a></p>
                     <div className="h3">Follow us</div>
                     <p>Follow us on:</p>
-                    {Object.entries(SOCIAL_LINKS).map(([_, {name, href}], i) => <>{i > 0 && <br/>}<a href={href}>{name}</a></>)}
+                    {Object.entries(SOCIAL_LINKS).map(([platform, {name, href}], i) => <React.Fragment key={platform}>{i > 0 && <br/>}<a href={href}>{name}</a></React.Fragment>)}
                 </Col>
                 <Col size={12} md={{size: 9, order: 2}} xs={{order: 1}}>
                     <Card>

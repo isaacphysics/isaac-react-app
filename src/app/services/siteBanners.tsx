@@ -28,6 +28,7 @@ export interface SiteBanner {
     endDate?: Date;
 }
 
+// eslint-disable-next-line @eslint-react/no-unnecessary-use-prefix
 export const useSiteBanners = () : SiteBanner[] => {
     return [
         {

@@ -76,7 +76,7 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, width, mi
             setModified(false);
         }
     // only want to run this on validation change (i.e. questionDTO?.validationResponse update). questionId is harmless, but anything in inlineContext will cause looping
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [questionDTO?.validationResponse, questionId]);
 
     useEffect(() => {
@@ -93,7 +93,7 @@ const InlineEntryZoneBase = ({inlineSpanId, className: contentClasses, width, mi
             setCorrectness("NOT_ANSWERED");  
         }  
     // this *must* only run when inlineContext?.submitting changes. other deps change on page load, and we do not want to overwrite the correctness in these cases
-    // eslint-disable-next-line react-hooks/exhaustive-deps  
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [inlineContext?.submitting]); 
 
     useEffect(() => {
