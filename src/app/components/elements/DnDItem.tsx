@@ -34,7 +34,7 @@ function DropZoneItem({item, id, type, overrideOver, isCorrect}: {item: Immutabl
             const el = document.getElementById(id);
             el?.focus();
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [dropRegionContext?.shouldGetFocus]);
 
     return <Badge id={id} className={classNames("p-1 cloze-item feedback-zone align-middle", {"m-2": type === "item-section", "feedback-showing": isDefined(isCorrect)})}

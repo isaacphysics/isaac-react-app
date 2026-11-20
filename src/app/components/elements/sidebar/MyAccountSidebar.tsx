@@ -17,7 +17,7 @@ export const MyAccountSidebar = (props: MyAccountSidebarProps) => {
         <div className="section-divider mt-0"/>
         <h3 className="h5">Account settings</h3>
         {/* The <li>s carry role="presentation", so the tablist/tab structure is what's exposed to assistive tech while the valid <ul>/<li> markup is preserved */
-        /* eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role */}
+        /* eslint-disable-next-line jsx-a11y-x/no-noninteractive-element-to-interactive-role */}
         <ul role="tablist" aria-label="Account settings">
             {ACCOUNT_TABS
                 .filter(tab => !tab.isHidden?.(user, editingOtherUser))

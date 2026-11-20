@@ -71,7 +71,7 @@ export const Accordion = ({id, trustedTitle, index, children, startOpen, deEmpha
         if (startOpen !== undefined && !loadedFromHistory) {
             setOpen(startOpen);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [startOpen, setOpen]);
 
     // Hash anchoring
@@ -201,9 +201,9 @@ export const Accordion = ({id, trustedTitle, index, children, startOpen, deEmpha
                         ? audienceString 
                         : audienceString.replaceAll(",", "\n")
                     ).split("\n").map(
-                        (line, i, arr) => <>
+                        (line, i, arr) => <React.Fragment key={i}>
                             {line}{i < arr.length && <br/>}
-                        </>
+                        </React.Fragment>
                     )}
                 </span>}
                 <div className={classNames("d-flex flex-grow-1", siteSpecific(`flex-column ps-3 ${isConceptPage && audienceString ? "pt-1" : "pt-3"}`, "align-items-center ps-1"))}>

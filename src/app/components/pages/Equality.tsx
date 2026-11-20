@@ -70,7 +70,7 @@ const Equality = () => {
         if (!allowTextInput) return; // as the ref won't be defined
         
         initialiseInequality(editorMode, hiddenEditorRef, sketchRef, currentAttemptValue, updateState);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [hiddenEditorRef.current]);
 
     return <Container>
@@ -132,6 +132,7 @@ const Equality = () => {
             {/* Result Summary */}
             <Col md={{size: 8, offset: 2}} className="py-4 inequality-results">
                 <div className="h4">LaTeX</div>
+                {/* eslint-disable-next-line @eslint-react/jsx-no-leaked-dollar*/}
                 <pre>${currentAttemptValue?.result?.tex}$</pre>
                 {["chemistry", "nuclear"].includes(editorMode) && <>
                     <div className="h4">MhChem</div>

@@ -70,14 +70,14 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
             questionAttemptLoaded.current = true;
             setTextInput(pythonExpression ?? "");
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [currentAttempt]);
 
     useLayoutEffect(() => {
         if (readonly) return; // as the ref won't be defined
         
         initialiseInequality("maths", hiddenEditorRef, sketchRef, currentAttemptValue, updateState);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [hiddenEditorRef.current]);
 
     return <div className="symbolic-question">
@@ -91,7 +91,7 @@ const IsaacSymbolicQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<I
             initialSeedText={initialSeed.python} editorSeed={editorSeed} initialEditorSymbols={initialEditorSymbols} symbolList={symbolList}
             dispatchSetCurrentAttempt={dispatchSetCurrentAttempt} sketchRef={sketchRef} emptySubmission={emptySubmission} helpTooltipId={helpTooltipId}
         />}
-        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+        {/* eslint-disable-next-line jsx-a11y-x/no-static-element-interactions */}
         <div
             role={readonly ? undefined : "button"} className={classNames("eqn-editor-preview rounded mt-2", {"empty": !previewText, "text-body-tertiary": previewText && emptySubmission})}
             onClick={openModal} onKeyDown={ifKeyIsEnter(openModal)}

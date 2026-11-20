@@ -80,7 +80,7 @@ const IsaacGraphSketcherQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                 {doc.children}
             </IsaacContentValueOrChildren>
         </div>
-        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+        {/* eslint-disable-next-line jsx-a11y-x/no-static-element-interactions */}
         <div className="sketch-preview d-flex justify-content-center overflow-auto" onClick={openModal} onKeyUp={ifKeyIsEnter(openModal)} role={readonly ? undefined : "button"}
             tabIndex={readonly ? undefined : 0}
         >

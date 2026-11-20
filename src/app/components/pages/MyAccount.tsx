@@ -199,7 +199,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
     useEffect(() => {
         setEmailPreferences(userPreferences?.EMAIL_PREFERENCE);
         setMyUserPreferences(userPreferences);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [userPreferences]);
 
     // Set active tab using hash anchor
@@ -329,7 +329,7 @@ export const MyAccount = ({user}: AccountPageProps) => {
         if (isTeacherOrAbove(user) && !isStaff(user) && newSchool && (!originalSchool || originalSchool !== newSchool)) {
             dispatch(showChangeSchoolModal());
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [userToUpdate, user]);
 
     // Form's submission method
