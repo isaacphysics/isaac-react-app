@@ -82,6 +82,11 @@ details.teacher-notes {
 
 .tab-picker {
   @include tab-picker(left, 2px, var(--subject-color-100));
+
+  .tab-label {
+    min-width: 2rem;
+    text-align: end;
+  }
 }
 
 .theme-preview {
