@@ -247,7 +247,7 @@ export const IsaacApp = () => {
         return () => {
             closeWebSocket();
         };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [dispatch, loggedInUserId]);
 
     const canShowSurveyNotification = isLoggedIn(user) && canShowPopupNotification(user);

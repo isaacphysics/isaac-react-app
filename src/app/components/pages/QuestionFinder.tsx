@@ -349,7 +349,7 @@ export const QuestionFinder = () => {
     // run one initial search on first render, then automatically search for content whenever the searchQuery changes, without changing whether filters have been applied or not
     useEffect(() => {
         searchAndUpdateURL();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [searchQuery, randomSeed]);
 
     // If the stages filter changes, update the exam board filter selections to remove now-incompatible ones
@@ -400,7 +400,7 @@ export const QuestionFinder = () => {
         // TODO this also runs on first load, which for sci runs searchAndUpdateURL twice - not a problem for now, but not great
         // would like to make this run *only on change* -- the 'proper' way is to put this in various onChange handlers, not use a useEffect
         
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [searchDifficulties, searchTopics, searchExamBoards, searchStages, searchBooks, excludeBooks, selections, searchStatuses]);
 
     const clearFilters = useCallback(() => {

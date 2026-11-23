@@ -19,7 +19,7 @@ export function useLocalStorageState<T>(key: KEY, initialValue: T): [T, React.Di
         setState(value);
         persistence.save(key, JSON.stringify(valueToStore));
         // state must not be in deps array, but required to work value out outside of a setState fn; maybe to to look at later
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [key]);
 
     return [state, setStateAndLocalStorage];

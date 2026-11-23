@@ -36,7 +36,7 @@ export const HomepageYoutubeCookieHandler = () => {
                 <div className="youtube-fade" />
                 <div className="youtube-header w-100">
                     <div className="d-flex align-items-center">
-                        {/* eslint-disable-next-line jsx-a11y/anchor-has-content -- content in css */}
+                        {/* eslint-disable-next-line jsx-a11y-x/anchor-has-content -- content in css */}
                         <a className="channel-icon" href={SOCIAL_LINKS.youtube.href}/>
                         <a className="video-name" href="https://www.youtube.com/watch?v=kWA2AISiHXQ">Why use Isaac Physics?</a>
                     </div>
