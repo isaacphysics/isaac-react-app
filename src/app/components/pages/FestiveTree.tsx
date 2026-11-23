@@ -179,10 +179,10 @@ export const FestiveTree = () => {
             <input type="checkbox" id="festive-lights" className="lights-toggle" onFocus={scrollStyledCheckboxIntoView} />
             <div className="tree" ref={treeRef}>
                 <div className="tree-shapes">
-                    {Array.from({length: 6}, (_, i) => <>
+                    {Array.from({length: 6}, (_, i) => <React.Fragment key={i}>
                         <span className={`branch branch-${i+1}`} aria-hidden="true" />
                         <span className={`lights branch-${i+1}`} aria-hidden="true" />
-                    </>)}
+                    </React.Fragment>)}
                     <label htmlFor="festive-snow" className="trunk">
                         <span className="visually-hidden">Toggle snow</span>
                     </label>
