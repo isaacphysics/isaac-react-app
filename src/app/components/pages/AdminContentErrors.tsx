@@ -157,7 +157,7 @@ export const AdminContentErrors = () => {
                                     {value: CRITICAL_FILTER.CRITICAL, label: CRITICAL_FILTER.CRITICAL},
                                     {value: CRITICAL_FILTER.NON_CRITICAL, label: CRITICAL_FILTER.NON_CRITICAL}
                                 ]}
-                                onChange={selectOnChange(setCriticalFilter, true)}
+                                onChange={selectOnChange((values: CRITICAL_FILTER[]) => setCriticalFilter(values.length ? values : Object.values(CRITICAL_FILTER)), true)}
                             />
                         </Col>
                         <Col lg={6} className="mb-2">
@@ -171,7 +171,7 @@ export const AdminContentErrors = () => {
                                     {value: PUBLISHED_FILTER.PUBLISHED, label: PUBLISHED_FILTER.PUBLISHED},
                                     {value: PUBLISHED_FILTER.UNPUBLISHED, label: PUBLISHED_FILTER.UNPUBLISHED}
                                 ]}
-                                onChange={selectOnChange(setPublishedFilter, true)}
+                                onChange={selectOnChange((values: PUBLISHED_FILTER[]) => setPublishedFilter(values.length ? values : Object.values(PUBLISHED_FILTER)), true)}
                             />
                         </Col>
                     </Row>
