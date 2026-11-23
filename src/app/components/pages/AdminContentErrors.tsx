@@ -69,10 +69,10 @@ export const AdminContentErrors = () => {
 
     const getErrorSummary = (message: string) => message.match(/^([A-Z_]+):/)?.[1];
 
-    const filteredErrors = (errors: ContentErrorsResponse) => {
+    const filteredErrors = (errors: ContentErrorsResponse, includeSummary = true) => {
         return errors.errorsList
             .filter((error) => error.listOfErrors.reduce(errorReducer, false))
-            .filter((error) => !summaryFilter || error.listOfErrors.some(message => getErrorSummary(message) === summaryFilter))
+            .filter((error) => !includeSummary || !summaryFilter || error.listOfErrors.some(message => getErrorSummary(message) === summaryFilter))
             .filter(
                 (error) =>
                     (error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.PUBLISHED)) ||
@@ -98,6 +98,11 @@ export const AdminContentErrors = () => {
             defaultErrorTitle={"Error loading content errors"}
             query={errorsQuery}
             thenRender={errors => {
+                const summaries = Array.from(new Set(filteredErrors(errors, false)
+                    .filter(error => ((error.partialContent.canonicalSourceFile || error.partialContent.id) ?? "").includes(pathFilter))
+                    .filter(error => !excludePathFilter || !((error.partialContent.canonicalSourceFile || error.partialContent.id) ?? "").includes(excludePathFilter))
+                    .flatMap(error => error.listOfErrors.map(getErrorSummary))
+                    .filter((summary): summary is string => summary !== undefined))).sort();
                 return <div>
                     <Row>
                         <Col>
@@ -136,8 +141,9 @@ export const AdminContentErrors = () => {
                             </Label>
                             <Input id="error-summary-filter" type="select" value={summaryFilter} onChange={(e) => setSummaryFilter(e.target.value)}>
                                 <option value="">All</option>
-                                {Array.from(new Set(errors.errorsList.flatMap(error => error.listOfErrors.map(getErrorSummary)))).sort()
-                                    .map(summary => <option key={summary} value={summary}>{summary}</option>)}
+                                {summaryFilter && !summaries.includes(summaryFilter) &&
+                                    <option value={summaryFilter} disabled>{summaryFilter} (no matching files for these filters)</option>}
+                                {summaries.map(summary => <option key={summary} value={summary}>{summary}</option>)}
                             </Input>
                         </Col>
                         <Col lg={6} className="mb-2">
