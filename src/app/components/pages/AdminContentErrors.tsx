@@ -61,14 +61,18 @@ export const AdminContentErrors = () => {
     const [pathFilter, setPathFilter] = useState<string>(params.path || "");
     const [excludePathFilter, setExcludePathFilter] = useState<string>(params.exclude || "");
     const [errorFilter, setErrorFilter] = useState<string>("");
+    const [summaryFilter, setSummaryFilter] = useState<string>("");
     const errorReducer = (show: boolean, errorStr: string) => show || matchesAllWordsInAnyOrder(errorStr, errorFilter);
 
     const [publishedFilter, setPublishedFilter] = useState<PUBLISHED_FILTER[]>([PUBLISHED_FILTER.PUBLISHED, PUBLISHED_FILTER.UNPUBLISHED]);
     const [criticalFilter, setCriticalFilter] = useState<CRITICAL_FILTER[]>([CRITICAL_FILTER.CRITICAL, CRITICAL_FILTER.NON_CRITICAL]);
 
+    const getErrorSummary = (message: string) => message.match(/^([A-Z_]+):/)?.[1];
+
     const filteredErrors = (errors: ContentErrorsResponse) => {
         return errors.errorsList
             .filter((error) => error.listOfErrors.reduce(errorReducer, false))
+            .filter((error) => !summaryFilter || error.listOfErrors.some(message => getErrorSummary(message) === summaryFilter))
             .filter(
                 (error) =>
                     (error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.PUBLISHED)) ||
@@ -120,11 +124,21 @@ export const AdminContentErrors = () => {
                             </Label>
                             <Input id="exclude-file-path-filter" type="text" defaultValue={excludePathFilter} onChange={(e) => setExcludePathFilter(e.target.value)} placeholder="Exclude errors by file path"/>
                         </Col>
-                        <Col lg={12} className="mb-2">
+                        <Col lg={6} className="mb-2">
                             <Label htmlFor="error-message-filter" className="w-100">
                                 Filter by error message
                             </Label>
                             <Input id="error-message-filter" type="text" onChange={(e) => setErrorFilter(e.target.value)} placeholder="Filter errors by error message"/>
+                        </Col>
+                        <Col lg={6} className="mb-2">
+                            <Label htmlFor="error-summary-filter" className="w-100">
+                                Filter by error summary
+                            </Label>
+                            <Input id="error-summary-filter" type="select" value={summaryFilter} onChange={(e) => setSummaryFilter(e.target.value)}>
+                                <option value="">All</option>
+                                {Array.from(new Set(errors.errorsList.flatMap(error => error.listOfErrors.map(getErrorSummary)))).sort()
+                                    .map(summary => <option key={summary} value={summary}>{summary}</option>)}
+                            </Input>
                         </Col>
                         <Col lg={6} className="mb-2">
                             <Label htmlFor="critical-filter-select">Filter by severity</Label>
@@ -173,6 +187,7 @@ export const AdminContentErrors = () => {
                                             .filter((error) => ((error.partialContent.canonicalSourceFile || error.partialContent.id) ?? "").includes(pathFilter))
                                             .filter((error) => !excludePathFilter || !((error.partialContent.canonicalSourceFile || error.partialContent.id) ?? "").includes(excludePathFilter))
                                             .filter((error) => error.listOfErrors.reduce(errorReducer, false))
+                                            .filter((error) => !summaryFilter || error.listOfErrors.some(message => getErrorSummary(message) === summaryFilter))
                                             .filter(
                                                 (error) =>
                                                     (error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.PUBLISHED)) ||
