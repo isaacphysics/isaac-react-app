@@ -333,7 +333,7 @@ const siteShortcuts: SearchShortcut[] = siteSpecific([
         id: "advancers",
         title: "Ada Advancers",
         terms: ["ada advancers", "advancers", "advance", "stem smart"],
-        summary: "A free A level computer science programme designed to support Year 12 students through to Year 13 in the UK.",
+        summary: "Ada Advancers is a free weekly A level computer science programme to support Year 12 students through to Year 13. You can still join this programme if you couldn’t join the STEM SMART programme.",
         url: "/ada_advancers",
         type: SEARCH_RESULT_TYPE.SHORTCUT
     }
