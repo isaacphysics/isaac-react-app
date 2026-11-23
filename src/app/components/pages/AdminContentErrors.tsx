@@ -69,10 +69,12 @@ export const AdminContentErrors = () => {
 
     const getErrorSummary = (message: string) => message.match(/^([A-Z_]+):/)?.[1];
 
-    const filteredErrors = (errors: ContentErrorsResponse, includeSummary = true) => {
+    const filteredErrors = (errors: ContentErrorsResponse, summary = summaryFilter) => {
         return errors.errorsList
+            .filter((error) => ((error.partialContent.canonicalSourceFile || error.partialContent.id) ?? "").includes(pathFilter))
+            .filter((error) => !excludePathFilter || !((error.partialContent.canonicalSourceFile || error.partialContent.id) ?? "").includes(excludePathFilter))
             .filter((error) => error.listOfErrors.reduce(errorReducer, false))
-            .filter((error) => !includeSummary || !summaryFilter || error.listOfErrors.some(message => getErrorSummary(message) === summaryFilter))
+            .filter(error => !summary || error.listOfErrors.some(message => getErrorSummary(message) === summary))
             .filter(
                 (error) =>
                     (error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.PUBLISHED)) ||
@@ -82,7 +84,8 @@ export const AdminContentErrors = () => {
                 (error) =>
                     (error.successfulIngest && criticalFilter.includes(CRITICAL_FILTER.NON_CRITICAL)) ||
                     (!error.successfulIngest && criticalFilter.includes(CRITICAL_FILTER.CRITICAL)),
-            );
+            )
+            .sort(sortBySourcePath);
     };
 
     return <Container>
@@ -98,11 +101,8 @@ export const AdminContentErrors = () => {
             defaultErrorTitle={"Error loading content errors"}
             query={errorsQuery}
             thenRender={errors => {
-                const summaries = Array.from(new Set(filteredErrors(errors, false)
-                    .filter(error => ((error.partialContent.canonicalSourceFile || error.partialContent.id) ?? "").includes(pathFilter))
-                    .filter(error => !excludePathFilter || !((error.partialContent.canonicalSourceFile || error.partialContent.id) ?? "").includes(excludePathFilter))
-                    .flatMap(error => error.listOfErrors.map(getErrorSummary))
-                    .filter((summary): summary is string => summary !== undefined))).sort();
+                const summaries = Array.from(new Set(filteredErrors(errors, "")
+                    .flatMap(error => error.listOfErrors.map(getErrorSummary)))).sort();
                 return <div>
                     <Row>
                         <Col>
@@ -189,24 +189,7 @@ export const AdminContentErrors = () => {
                                             <th title="Files with critical errors will not be available on Isaac!">Critical Error</th>
                                             <th>List of Error Messages</th>
                                         </tr>
-                                        {errors.errorsList
-                                            .filter((error) => ((error.partialContent.canonicalSourceFile || error.partialContent.id) ?? "").includes(pathFilter))
-                                            .filter((error) => !excludePathFilter || !((error.partialContent.canonicalSourceFile || error.partialContent.id) ?? "").includes(excludePathFilter))
-                                            .filter((error) => error.listOfErrors.reduce(errorReducer, false))
-                                            .filter((error) => !summaryFilter || error.listOfErrors.some(message => getErrorSummary(message) === summaryFilter))
-                                            .filter(
-                                                (error) =>
-                                                    (error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.PUBLISHED)) ||
-                                                    (!error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.UNPUBLISHED)),
-                                            )
-                                            .filter(
-                                                (error) =>
-                                                    (error.successfulIngest && criticalFilter.includes(CRITICAL_FILTER.NON_CRITICAL)) ||
-                                                    (!error.successfulIngest && criticalFilter.includes(CRITICAL_FILTER.CRITICAL)),
-                                            )
-                                            .sort(sortBySourcePath)
-                                            .map(ContentErrorRow)
-                                        }
+                                        {filteredErrors(errors).map(ContentErrorRow)}
                                     </tbody>
                                 </Table>
                             </HorizontalScroller>
