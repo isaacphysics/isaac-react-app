@@ -115,7 +115,7 @@ const useAutoScroll = ({active, acceleration, interval}: {active: boolean; accel
 
     useEffect(() => {
         return updateScrollAmount(scrollAmount, acceleration, interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [scrollAmount, acceleration, interval]);
 
     useEffect(() => {
@@ -128,7 +128,7 @@ const useAutoScroll = ({active, acceleration, interval}: {active: boolean; accel
                 setScrollAmount(0);
             };
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [active]);
 };
 
@@ -149,7 +149,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
 
     const [inlineDropValues, setInlineDropValues] = useState<(Immutable<ReplaceableItem> | undefined)[]>(() => currentAttempt?.items || []);
     // Whenever the inlineDropValues change or a drop region is added, computes a map from drop region id -> drop region value
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     const inlineDropValueMap = useMemo<{[p: string]: ReplaceableItem}>(() => Array.from(registeredDropRegionIDs.entries()).reduce((dict, [dropId, i]) => Object.assign(dict, {[dropId]: inlineDropValues[i]}), {}), [inlineDropValues]);
 
     // Compute map used to highlight each inline drop-zone with whether it is correct or not
@@ -162,7 +162,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
             // drop-zone.
             setDropZoneValidationMap(Array.from(registeredDropRegionIDs.entries()).reduce((dict, [dropId, i]) => Object.assign(dict, {[dropId]: {correct: itemsCorrect.at(i), itemId: inlineDropValueMap[dropId]?.id}}), {}));
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [itemsCorrect, inlineDropValueMap]);
 
     // Manual management of which draggable item gets focus at the end of the drag. The new focus id is set in onDragEnd,
@@ -212,7 +212,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
             setNonSelectedItems(doc.items ? [...doc.items].map((item) => augmentNonSelectedItemWithReplacementID(item, questionId)) : []);
         }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     [doc]);
 
     const findItemById = (id: string) => nonSelectedItems.find(i => i.replacementId === id) ?? inlineDropValues.find(i => i && i.replacementId === id);
@@ -346,7 +346,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
         // Record the id of the item to be focused after the end of this drag - important for accessibility
         setFocusId(newFocusId);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [inlineDropValues, nonSelectedItems, registeredDropRegionIDs, dispatchSetCurrentAttempt]);
 
     // On mobile screens we have a dropdown rather than a drag and drop
@@ -379,7 +379,7 @@ const IsaacClozeQuestion = ({doc, questionId, readonly, validationResponse}: Isa
         // Update both lists of items after any changes
         setInlineDropValues(idvs);
         setNonSelectedItems(nsis);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [inlineDropValues, nonSelectedItems, registeredDropRegionIDs, dispatchSetCurrentAttempt]);
 
     const sensors = useSensors(

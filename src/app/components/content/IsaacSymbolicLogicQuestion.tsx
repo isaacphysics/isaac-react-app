@@ -67,14 +67,14 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
             questionAttemptLoaded.current = true;
             setTextInput(pythonExpression ?? "");
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [currentAttempt]);
 
     useLayoutEffect(() => {
         if (readonly) return; // as the ref won't be defined
         
         initialiseInequality("logic", hiddenEditorRef, sketchRef, currentAttemptValue, updateState);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [hiddenEditorRef.current]);
 
     useEffect(() => {
@@ -105,7 +105,7 @@ const IsaacSymbolicLogicQuestion = ({doc, questionId, readonly}: IsaacQuestionPr
                 close={closeModalAndReturnToScrollPosition}
             />
         </Suspense>}
-        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+        {/* eslint-disable-next-line jsx-a11y-x/no-static-element-interactions */}
         <div
             role={readonly ? undefined : "button"} className={classNames("eqn-editor-preview rounded mt-2", {"empty": !previewText, "text-body-tertiary": previewText && emptySubmission})} tabIndex={readonly ? undefined : 0}
             onClick={openInequality} onKeyDown={ifKeyIsEnter(openInequality)}

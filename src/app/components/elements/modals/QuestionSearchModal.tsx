@@ -92,7 +92,7 @@ export const QuestionSearchModal = (
     useEffect(function populateExamBoardFromUserContext() {
         const userExamBoard = userContext.contexts[0].examBoard as EXAM_BOARD;
         if (userContext.contexts.length === 1 && !EXAM_BOARD_NULL_OPTIONS.includes(userExamBoard)) setSearchExamBoards([userExamBoard]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [userContext.contexts[0].examBoard]);
 
     const [searchBook, setSearchBook] = useState<string[]>([]);

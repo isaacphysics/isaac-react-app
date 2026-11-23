@@ -2,7 +2,7 @@ import React from "react";
 
 import { persistence, KEY, ACTION_TYPE } from "../../app/services";
 import { ActiveModals } from "../../app/components/elements/modals/ActiveModals";
-import {store} from "../../app/state";
+import {closeActiveModal, store} from "../../app/state";
 
 [500, 900, 1300].forEach(size => 
     it(`LogInOrSignUpModal should have no visual regressions ${size}`, () => {
@@ -18,3 +18,7 @@ import {store} from "../../app/state";
         cy.matchModal();
     })
 );
+
+afterEach(() => {
+    void store.dispatch(closeActiveModal());
+});

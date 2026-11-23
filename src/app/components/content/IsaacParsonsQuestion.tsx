@@ -116,7 +116,7 @@ const IsaacParsonsQuestion = ({doc, questionId, readonly}: IsaacQuestionProps<Is
                 { className: className.replace((matches && matches[0]) || `indent-${localCurrentIndent}`, `indent-${newIndent}`) }
             ));
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [draggedElement, currentIndent, currentMaxIndent, canIndent, currentDestinationIndex]);
 
     const onDragStart = (initial: DragStart) => {
