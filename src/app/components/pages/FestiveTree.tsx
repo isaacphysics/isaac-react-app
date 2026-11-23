@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import StyledToggle from "../elements/inputs/StyledToggle";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {TitleAndBreadcrumb} from "../elements/TitleAndBreadcrumb";
 import { PageContainer } from "../elements/layout/PageContainer";
 import { GenericPageSidebar } from "../elements/sidebar/GenericPageSidebar";
@@ -21,6 +21,7 @@ interface TextDoor extends DoorLabel {
 }
 
 export const FestiveTree = () => {
+    const navigate = useNavigate();
     const [textOnly, setTextOnly] = useState(false);
     const [textDoors, setTextDoors] = useState<TextDoor[]>([]);
     const [snowflakes] = useState<{[key: `--${string}`]: string}[]>(() => Array.from({length: 22}, (_, i) => ({
@@ -62,6 +63,30 @@ export const FestiveTree = () => {
             container.removeEventListener("focusin", onFocus);
         };
     }, []);
+
+    useEffect(function navigateDoorLinks() {
+        const container = treeRef.current;
+        if (!container) {
+            return;
+        }
+
+        const onClick = (event: MouseEvent) => {
+            const link = event.target instanceof Element
+                ? event.target.closest<HTMLAnchorElement>("a.day.active")
+                : null;
+            if (!link || !container.contains(link) || event.button !== 0 ||
+                event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
+                return;
+            }
+
+            event.preventDefault();
+            const url = new URL(link.href);
+            void navigate(url.pathname + url.search + url.hash);
+        };
+
+        container.addEventListener("click", onClick);
+        return () => container.removeEventListener("click", onClick);
+    }, [navigate]);
 
     useEffect(function updateActiveDays() {
         const container = treeRef.current;
