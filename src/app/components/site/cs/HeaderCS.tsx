@@ -77,6 +77,7 @@ export const HeaderCS = () => {
                         <NavigationSection title="Students">
                             <LinkItem to="/students">Ada CS for students</LinkItem>
                             <LinkItem to="/pages/stem_smart_programme">STEM SMART</LinkItem>
+                            <LinkItem to="/ada_advancers">Ada Advancers</LinkItem>
                             <LinkItem to="/pages/student_challenges">Challenges</LinkItem>
                             <LinkItem to="/support/student">Support</LinkItem>
                         </NavigationSection>
