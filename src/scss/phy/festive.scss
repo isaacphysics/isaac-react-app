@@ -490,9 +490,24 @@
         left: var(--x, 50%);
         width: var(--s, 8px);
         height: var(--s, 8px);
-        background: radial-gradient(circle, #fff 30%, #cfe8f3 100%);
+        background: rgba(70, 100, 120, 0.4);
         clip-path: var(--hexagon, polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%));
         animation: snow-drift var(--d, 8s) linear var(--delay, 0s) infinite backwards;
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle, #fff 30%, #cfe8f3 100%);
+            // Offset each edge by 1px perpendicular to the outer hexagon.
+            clip-path: polygon(
+                50% 1.1px,
+                calc(100% - 1px) calc(25% + 0.6px),
+                calc(100% - 1px) calc(75% - 0.6px),
+                50% calc(100% - 1.1px),
+                1px calc(75% - 0.6px),
+                1px calc(25% + 0.6px)
+            );
+        }
     }
 
 
