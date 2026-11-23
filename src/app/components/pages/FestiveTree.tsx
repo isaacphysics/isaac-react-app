@@ -30,6 +30,7 @@ export const FestiveTree = () => {
     })));
     const [selectedDoor, setSelectedDoor] = useState<DoorLabel | null>(null);
     const treeRef = useRef<HTMLDivElement>(null);
+    const doorTitlesRef = useRef(new Map<HTMLElement, string>());
 
     useEffect(function updateDoorLabel() {
         const container = treeRef.current;
@@ -43,7 +44,7 @@ export const FestiveTree = () => {
 
             if (door && container.contains(door) && door.classList.contains("active") && door !== previouslySelectedDoor) {
                 previouslySelectedDoor = door;
-                setSelectedDoor({title: door.dataset.title || "", classes: Array.from(door.classList)});
+                setSelectedDoor({title: door.dataset.title || doorTitlesRef.current.get(door) || "", classes: Array.from(door.classList)});
             }
         };
 
@@ -68,6 +69,9 @@ export const FestiveTree = () => {
             return;
         }
 
+        // Keep titles across effect restarts after inactive door attributes have been removed.
+        const doorTitles = doorTitlesRef.current;
+
         const setPassedDaysActive = () => {
             // Ignore mutations caused by our own door injection.
             observer.disconnect();
@@ -88,6 +92,7 @@ export const FestiveTree = () => {
                 const active = day <= todaysDay;
                 const preview = day === todaysDay + 1;
                 const href = active ? door.getAttribute("href") || "" : "";
+                const title = door.dataset.title || doorTitles.get(door) || "";
                 if (!active && door.localName === "a") {
                     const replacement = document.createElement("span");
                     Array.from(door.attributes).forEach(attribute => {
@@ -99,6 +104,7 @@ export const FestiveTree = () => {
                     door.replaceWith(replacement);
                     door = replacement;
                 }
+                doorTitles.set(door, title);
                 const childClasses = door.classList.contains("star")
                     ? ["glow", "shape", "num"]
                     : ["inside", "door"];
@@ -111,15 +117,18 @@ export const FestiveTree = () => {
                     }
                     return child;
                 }));
-                if (!door.hasAttribute("aria-label")) {
-                    door.setAttribute("aria-label", `Day ${day}: ${door.dataset.title || day}`);
+                if (active && !door.hasAttribute("aria-label")) {
+                    door.setAttribute("aria-label", `Day ${day}: ${title || day}`);
+                } else if (!active) {
+                    door.removeAttribute("data-title");
+                    door.removeAttribute("aria-label");
                 }
 
                 door.classList.toggle("active", active);
                 door.tabIndex = active ? 0 : -1;
                 questions.push({
                     day: Number(dayClass.slice(4)),
-                    title: active ? door.dataset.title || "" : preview ? door.dataset.title + " (Coming soon)" : "Coming soon",
+                    title: active ? title : preview ? title + " (Coming soon)" : "Coming soon",
                     href,
                     classes: Array.from(door.classList),
                     active,
