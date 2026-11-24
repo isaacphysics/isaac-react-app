@@ -65,7 +65,8 @@ export const quizApi = isaacApi.enhanceEndpoints({
             query: ({quizAssignmentId, userId}) => `/quiz/assignment/${quizAssignmentId}/attempt/${userId}`,
             transformResponse: anonymiseIfNeededWith(anonymisationFunctions.quizAttempt),
             onQueryStarted: onQueryLifecycleEvents({
-                errorTitle: (_, error) => error.status === NOT_FOUND ? undefined : "Loading student test feedback failed",
+                errorTitle: "Loading student test feedback failed",
+                skipErrorToastFor: (error) => error.status === NOT_FOUND,
             })
         }),
 
