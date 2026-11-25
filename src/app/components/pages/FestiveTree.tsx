@@ -100,10 +100,9 @@ export const FestiveTree = () => {
         const setPassedDaysActive = () => {
             // Ignore mutations caused by our own door injection.
             observer.disconnect();
-            const today = new Date();
-            // Keep all days open until March to allow overflow from students doing questions late
-            // Otherwise keep all days closed until that day in December
-            const todaysDay = today.getMonth() < 3 ? 25 : today.getMonth() < 11 ? 0 : today.getDate();
+            // const today = new Date();
+            // For this demo branch, keep all days open at all times
+            const todaysDay = 25; // today.getMonth() < 3 ? 25 : today.getMonth() < 11 ? 0 : today.getDate();
 
             const questions: TextDoor[] = [];
             container.querySelectorAll<HTMLElement>(".day").forEach(originalDoor => {
