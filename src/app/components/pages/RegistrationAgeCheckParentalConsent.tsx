@@ -38,7 +38,7 @@ export const RegistrationAgeCheckParentalConsent = () => {
                         color="primary"
                         onChange={(e) => setParentalConsentCheckboxChecked(e?.target.checked)}
                     />
-                    <Label for="consent-checkbox" className="ms-2 mb-0">Please check the box to confirm that you have read and understood this message.</Label>
+                    <Label htmlFor="consent-checkbox" className="ms-2 mb-0">Please check the box to confirm that you have read and understood this message.</Label>
                 </div>
                 {siteSpecific(<br/>, <hr/>)}
                 <Row className="justify-content-end">

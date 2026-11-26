@@ -88,7 +88,7 @@ export const MainSearchInput = withSearch(({inputProps, setSearchText, searchTex
         setSearchText(e.target.value);
     }
     return <>
-        <Label for='header-search' className='visually-hidden'>Search</Label>
+        <Label htmlFor='header-search' className='visually-hidden'>Search</Label>
         <Input
             id="header-search" {...inputProps}
             value={searchText} onChange={setSearchTextAsValue}
@@ -114,7 +114,7 @@ export const AdaHeaderSearch = withSearch(({inputProps, setSearchText, searchTex
         setSearchText(e.target.value);
     }
     return <>
-        <Label for='header-search' className='visually-hidden'>Search</Label>
+        <Label htmlFor='header-search' className='visually-hidden'>Search</Label>
         <InputGroup id={"header-search-group"} className="d-flex flex-nowrap">
             <Input
                 id="header-search" {...inputProps}

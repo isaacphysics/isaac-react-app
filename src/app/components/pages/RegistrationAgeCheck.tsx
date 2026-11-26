@@ -80,7 +80,7 @@ export const RegistrationAgeCheck = () => {
                                 color="primary"
                                 invalid={isInvalid}
                             />
-                            <Label for="registration-age-check-over" className="ms-2 mb-0">{SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT} and over</Label>
+                            <Label htmlFor="registration-age-check-over" className="ms-2 mb-0">{SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT} and over</Label>
                         </FormGroup>
                         <FormGroup check className="d-flex align-items-center my-2">
                             <Input
@@ -92,7 +92,7 @@ export const RegistrationAgeCheck = () => {
                                 color="primary"
                                 invalid={isInvalid}
                             />
-                            <Label for={`registration-age-check-${siteSpecific("additional_info", "sso_only")}`} className="ms-2 mb-0">{SITE_LOWER_AGE_LIMIT} - {SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT - 1} years old</Label>
+                            <Label htmlFor={`registration-age-check-${siteSpecific("additional_info", "sso_only")}`} className="ms-2 mb-0">{SITE_LOWER_AGE_LIMIT} - {SITE_LOWER_AGE_LIMIT_WITHOUT_PARENTAL_CONSENT - 1} years old</Label>
                         </FormGroup>
                         <FormGroup check className="my-2">
                             <Input
@@ -104,7 +104,7 @@ export const RegistrationAgeCheck = () => {
                                 color="primary"
                                 invalid={isInvalid}
                             />
-                            <Label for="registration-age-check-under" className="ms-2 mb-0">{SITE_LOWER_AGE_LIMIT - 1} or under</Label>
+                            <Label htmlFor="registration-age-check-under" className="ms-2 mb-0">{SITE_LOWER_AGE_LIMIT - 1} or under</Label>
                         </FormGroup>
                         <FormFeedback className={classNames({"d-block": isInvalid})}>
                             Please make a selection.

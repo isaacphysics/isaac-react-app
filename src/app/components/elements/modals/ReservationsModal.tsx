@@ -265,7 +265,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                                     checked={checkAllCancelReservationsCheckbox || false}
                                                     onChange={() => toggleAllCancelReservationCheckboxes()}
                                                 />
-                                                <Label for="check_all_reserved" className="ms-2">All</Label>
+                                                <Label htmlFor="check_all_reserved" className="ms-2">All</Label>
                                             </th>
                                             <th className="align-middle student-name">
                                                 Student
@@ -327,7 +327,7 @@ const ReservationsModal = ({event} :{event: AugmentedEvent}) => {
                                                 onChange={() => toggleAllUnbooked()}
                                                 disabled={unbookedUsers.filter(user => user.authorisedFullAccess).length === 0}
                                             />
-                                            <Label for="check_all_unbooked" className="ms-2">All</Label>
+                                            <Label htmlFor="check_all_unbooked" className="ms-2">All</Label>
                                         </th>
                                         <th className="w-100 align-middle student-name">
                                             Student
