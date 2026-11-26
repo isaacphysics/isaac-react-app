@@ -24,7 +24,7 @@ const DeletionReasonForm = ({deletionReason, setDeletionReason, ...props}: Delet
     const DeletionFormCheckbox = ({reason, label, id}: {reason: DELETION_REASON, label: string, id: string}) => {
         return <FormGroup check className="d-flex align-items-center mb-2">
             <Input type="radio" name={reason} id={id} className="me-2" value={reason} checked={deletionReason === reason} onChange={(e) => setDeletionReason(e.target.value as DELETION_REASON)} />
-            <Label check for={id} className="mb-0">{label}</Label>
+            <Label check htmlFor={id} className="mb-0">{label}</Label>
         </FormGroup>;
     };
 

@@ -376,11 +376,11 @@ export const Glossary = () => {
                     <Row className="no-print">
                         {isAda && <>
                             <Col md={{size: 4}}>
-                                <Label for='terms-search' className='visually-hidden'>Search by term</Label>
+                                <Label htmlFor='terms-search' className='visually-hidden'>Search by term</Label>
                                 <GlossarySearch searchText={searchText} setSearchText={debouncedSearchHandler} />
                             </Col>
                             <Col className="mt-3 mt-md-0">
-                                <Label for='topic-select' className='visually-hidden'>Topic</Label>
+                                <Label htmlFor='topic-select' className='visually-hidden'>Topic</Label>
                                 <StyledSelect inputId="topic-select"
                                     options={ topics.map(t => ({ value: t.id, label: t.title}))}
                                     name="topic-select"

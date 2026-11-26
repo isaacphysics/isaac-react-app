@@ -50,7 +50,7 @@ const ExtendDueDateModalBody = ({currDueDate, numericQuizAssignmentId}: ExtendDu
         <p className="px-1">{`Are you sure you want to change the due date? This will extend the due date for all users this test is assigned to.`}</p>
         <hr className="text-center"/>
         <div className="p-2">
-            <Label for="dueDate" className="pe-1">Extend the due date:
+            <Label htmlFor="dueDate" className="pe-1">Extend the due date:
                 <DateInput id="dueDate" value={dueDate} invalid={dueDate && ((dueDate < currDueDate) || dueDate <= TODAY())}
                     yearRange={yearRange} noClear disabled={isUpdatingQuiz} className="text-center"
                     onChange={(e) => e.target.valueAsDate && setDueDate(e.target.valueAsDate)}

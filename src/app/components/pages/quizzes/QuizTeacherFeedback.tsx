@@ -184,7 +184,7 @@ export const QuizTeacherFeedback = ({user}: {user: RegisteredUserDTO}) => {
                     </Link>}
                     {isPhy && <Spacer/>}
                     <div className="d-flex flex-column px-3 py-3 py-md-0 text-md-center justify-content-center">
-                        <Label for="feedbackMode" className="pe-1 mb-0 small">
+                        <Label htmlFor="feedbackMode" className="pe-1 mb-0 small">
                             Student feedback mode:
                         </Label>
                         <UncontrolledButtonDropdown size="sm">

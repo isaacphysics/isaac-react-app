@@ -34,7 +34,7 @@ const SetFeedbackModeModalBody = ({quiz}: SetFeedbackModeModalProps) => {
         <p className="mb-5">
             You can adjust the type of feedback given to students after they complete this test. Changes to this setting are applied immediately and will affect all students, regardless of completion status.
         </p>
-        <Label for="feedbackMode" className="me-2">
+        <Label htmlFor="feedbackMode" className="me-2">
             Student feedback mode:
         </Label>
         <UncontrolledButtonDropdown size="sm">
