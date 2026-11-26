@@ -38,6 +38,7 @@ import { MainContent, SidebarLayout } from "../layout/SidebarLayout";
 import { QuizSidebar, QuizSidebarProps } from "../sidebar/QuizSidebar";
 import { InaccessibleContentWarningAlert } from "../alerts/InaccessibleContentWarningAlert";
 import { getAccessibilityTags, useAccessibilitySettings } from "../../../services/accessibility";
+import { assignmentProgressCrumbs } from "../../pages/assignment_progress/AssignmentProgressGroup";
 
 type QuizContents = {
     questions: QuestionDTO[];
@@ -272,7 +273,7 @@ const QuizTitle = (quizProps: QuizProps) => {
     const location = useLocation();
     const isFromAssignment = location.pathname.includes("/assignment/");
 
-    const crumbs = getCrumbs(preview, isFromAssignment, user);
+    const crumbs = isDefined(studentUser) ? assignmentProgressCrumbs : getCrumbs(preview, isFromAssignment, user);
     if (!isDefined(page) || !isFullQuizProps(quizProps)) {
         const quizTitle = generateQuizTitle(quiz, preview, undefined, studentUser);
         return <TitleAndBreadcrumb currentPageTitle={quizTitle} help={pageHelp}

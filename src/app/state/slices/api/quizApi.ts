@@ -19,7 +19,7 @@ import {
     onQueryLifecycleEvents
 } from "./utils";
 import {Immutable} from "immer";
-import {isDefined} from "../../../services";
+import {isDefined, NOT_FOUND} from "../../../services";
 
 export const quizApi = isaacApi.enhanceEndpoints({
     addTagTypes: ["AvailableQuizList", "QuizzesAssignedToMe", "QuizzesSetByMe", "QuizzesAttemptedFreelyByMe", "QuizAssignment"],
@@ -66,6 +66,7 @@ export const quizApi = isaacApi.enhanceEndpoints({
             transformResponse: anonymiseIfNeededWith(anonymisationFunctions.quizAttempt),
             onQueryStarted: onQueryLifecycleEvents({
                 errorTitle: "Loading student test feedback failed",
+                skipErrorToastFor: (error) => error.status === NOT_FOUND,
             })
         }),
 
