@@ -122,7 +122,7 @@ export function allRequiredInformationIsPresent(user?: Immutable<ValidationUser>
 
 /* Returns the validity of each potentially required user field. True is valid or not applicable, false is invalid.*/
 export function validateRequiredFields(user?: Immutable<ValidationUser> | null, userPreferences?: UserPreferencesDTO | null, registeredContexts?: UserContext[]) {
-    type Field = "givenName" | "familyName" | "email" | "emailPreferences" | "userContexts" | "school" | "countryCode" | "dateOfBirth" | "gender";
+    type Field = "givenName" | "familyName" | "email" | "emailPreferences" | "registeredContexts" | "school" | "countryCode" | "dateOfBirth" | "gender";
     const fields: {[field in Field]: boolean} = {
         givenName: validateName(user?.givenName),
         familyName: validateName(user?.familyName),
@@ -132,7 +132,7 @@ export function validateRequiredFields(user?: Immutable<ValidationUser> | null, 
         emailPreferences: isUnder13(user) || userPreferences?.EMAIL_PREFERENCE === null || !!validateEmailPreferences(userPreferences?.EMAIL_PREFERENCE),
         dateOfBirth: validateDob(user?.dateOfBirth),
         gender: validateUserGender(user),
-        userContexts: validateUserContexts(registeredContexts, isAda)
+        registeredContexts: validateUserContexts(registeredContexts, isAda)
     };
     return fields;
 }

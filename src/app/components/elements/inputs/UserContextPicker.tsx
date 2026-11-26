@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {Input, Label, UncontrolledTooltip} from "reactstrap";
-import { CONTEXT_SOURCE } from "../../../services/userViewingContext";
+import {CONTEXT_SOURCE, hasDefaultPreferences} from "../../../services/userViewingContext";
 import {
     EXAM_BOARD,
     examBoardLabelMap,
@@ -17,7 +17,6 @@ import {
     STAGE,
     stageLabelMap,
     stagesOrdered,
-    useQueryParams,
     useUserViewingContext
 } from "../../../services";
 import {selectors, transientUserContextSlice, useAppDispatch, useAppSelector,} from "../../../state";
@@ -47,11 +46,17 @@ const formatContextExplanation = (stageExplanation: CONTEXT_SOURCE, examBoardExp
 
 export const UserContextPicker = ({className, hideLabels = true}: {className?: string; hideLabels?: boolean}) => {
     const dispatch = useAppDispatch();
-    const qParams = useQueryParams();
     const user = useAppSelector(selectors.user.orNull);
-    const userContext = useUserViewingContext();
 
-    const [currentStages, setCurrentStages] = useState<STAGE[]>(userContext.contexts.map(c => c.stage) as STAGE[] ?? [STAGE.ALL]);
+    const userViewingContext = useUserViewingContext();
+    const {stage: currentStage, examBoard: currentExamBoard} = userViewingContext.contexts[0];
+    const viewingContextStages = isPhy
+        ? sortStages(userViewingContext.contexts.map(c => c.stage).filter(isDefined)) as STAGE[]
+        : [(currentStage ?? STAGE.ALL) as STAGE];
+    const currentStages = isPhy && stagesOrdered.every(stage =>
+        stage === STAGE.FURTHER_A || stage === STAGE.ALL || viewingContextStages.includes(stage as STAGE)
+    ) ? [STAGE.ALL] : viewingContextStages;
+
     const filteredExamBoardOptions = getFilteredExamBoardOptions({byUser: user, byStages: currentStages, includeNullOptions: true});
     const allStages = getFilteredStageOptions({includeNullOptions: true});
 
@@ -63,27 +68,13 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
         return stages.map(s => stageLabelMap[s]).join(", ");
     };
 
-    const contextsDep = JSON.stringify(userContext.contexts); // avoids unnecessary re-renders
-    useEffect(() => {
-        if (isPhy) {
-            const userContextStages = sortStages(userContext.contexts.map(c => c.stage).filter(isDefined)) as STAGE[];
-            setCurrentStages(stagesOrdered.every(s => userContextStages.concat([STAGE.FURTHER_A, STAGE.ALL]).includes(s as STAGE)) ? [STAGE.ALL] : userContextStages);
-        }
-        else {
-            // Only show one stage on Ada to avoid complications with multiple stage/exam board combinations
-            const stage = userContext.contexts[0].stage as STAGE;
-            setCurrentStages(stage ? [stage] : [STAGE.ALL]);
-        }
-    }, [contextsDep]);
-
-
     if (isAda && !isLoggedIn(user) || isStaff(user)) {
         return <div className={classNames(`d-flex flex-column px-0 context-picker-container no-print ${className}`, {"w-100 mt-2": isAda})}>
             <div className={classNames("d-flex m-0 p-0 justify-content-md-end", {"ms-md-2": isAda})}>
                 {/* Stage Selector */}
                 <div className={classNames("form-group w-100 d-flex justify-content-end align-items-center m-0", {"mb-3": isAda}, {"align-items-center": isPhy})}>
                     {!hideLabels && <Label className="d-inline-block pe-2" htmlFor="uc-stage-select">Stage</Label>}
-                    {!userContext.hasDefaultPreferences && (userContext.explanation.stage == CONTEXT_SOURCE.TRANSIENT || userContext.explanation.examBoard == CONTEXT_SOURCE.TRANSIENT) &&
+                    {(userViewingContext.explanation.stage === CONTEXT_SOURCE.TRANSIENT || userViewingContext.explanation.examBoard === CONTEXT_SOURCE.TRANSIENT) &&
                         <button className="icon-reset mb-1" aria-label={"Reset viewing context"} onClick={() => {
                             dispatch(transientUserContextSlice.actions.setExamBoard(undefined));
                             dispatch(transientUserContextSlice.actions.setStage(undefined));
@@ -93,34 +84,33 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                         className={classNames("flex-grow-1 d-inline-block ps-2 pe-0", {"me-1": isAda})}
                         type="select" id="uc-stage-select"
                         aria-label={hideLabels ? "Stage" : undefined}
-                        value={currentStages.length === 1 ? currentStages : stagesString(currentStages)}
-                        disabled={userContext.isFixedContext}
+                        value={currentStages.length === 1 ? currentStages[0] : stagesString(currentStages)}
+                        disabled={userViewingContext.isFixedContext}
                         onChange={e => {
-                            const newParams: { [key: string]: unknown } = {...qParams, stage: e.target.value};
-                            const stage = e.target.value as STAGE;
+                            const newStage = e.target.value as STAGE;
                             if (isAda) {
                                 // Derive exam board selection so that it is a valid option
-                                // Try to use default preferences (Stage All, Ada) otherwise default to All.
-                                let examBoard = stage === STAGE.ALL ? EXAM_BOARD.ADA : EXAM_BOARD.ALL;
-                                const possibleExamBoards =
-                                    getFilteredExamBoardOptions({byUser: user, byStages: [stage], includeNullOptions: true})
-                                        .map(eb => eb.value);
-                                // If we have possible valid exam board options but All is not one of them, use one of those.
-                                if (possibleExamBoards.length > 0 && !possibleExamBoards.includes(EXAM_BOARD.ALL)) {
-                                    examBoard = possibleExamBoards[0];
+                                const examBoards = getFilteredExamBoardOptions({byStages: [newStage], includeNullOptions: true});
+                                let newExamBoard = currentExamBoard;
+                                if (!examBoards.some(board => board.value === newExamBoard)) {
+                                    const possibleExamBoards =
+                                        getFilteredExamBoardOptions({byUser: user, byStages: [newStage], includeNullOptions: true}).map(eb => eb.value);
+                                    // If we only have one possible exam board besides All, use that.
+                                    if (possibleExamBoards.length === 2 && possibleExamBoards.includes(EXAM_BOARD.ALL)) {
+                                        newExamBoard = possibleExamBoards.find(board => board !== EXAM_BOARD.ALL);
+                                    } else {
+                                        // Try to use default preferences (Stage All, Board Ada) otherwise default to All.
+                                        const defaultExamBoard = newStage === STAGE.ALL ? EXAM_BOARD.ADA : EXAM_BOARD.ALL;
+                                        newExamBoard = possibleExamBoards.includes(defaultExamBoard) ? defaultExamBoard : possibleExamBoards[0] ?? defaultExamBoard;
+                                    }
                                 }
-                                // If we only have one possible exam board besides All, use that.
-                                else if (possibleExamBoards.length === 2 && possibleExamBoards.includes(EXAM_BOARD.ALL)) {
-                                    examBoard = possibleExamBoards.filter(eb => eb !== EXAM_BOARD.ALL)[0];
-                                }
-                                newParams.examBoard = examBoard;
-                                dispatch(transientUserContextSlice.actions.setExamBoard(examBoard));
+                                dispatch(transientUserContextSlice.actions.setExamBoard(newExamBoard as EXAM_BOARD));
                             }
-                            dispatch(transientUserContextSlice.actions.setStage(stage));
+                            dispatch(transientUserContextSlice.actions.setStage(newStage));
                         }}
                     >
                         {allStages.map(item => <option key={item.value} value={item.value}>{item.label}</option>)}
-                        {isPhy && isLoggedIn(user) && !userContext.hasDefaultPreferences && currentStages.length > 1 &&
+                        {isPhy && currentStages.length > 1 &&
                             <option>{stagesString(currentStages)}</option>}
                     </Input>
                     {isAda &&
@@ -131,12 +121,14 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
                                 className={`flex-grow-1 d-inline-block ps-2 pe-0 ms-2`}
                                 type="select" id="uc-exam-board-select"
                                 aria-label={hideLabels ? "Exam Board" : undefined}
-                                value={userContext.contexts[0].examBoard}
+                                value={currentExamBoard}
                                 onChange={e => {
-                                    dispatch(transientUserContextSlice.actions.setExamBoard(e.target.value as EXAM_BOARD));
+                                    const newExamBoard = e.target.value as EXAM_BOARD;
+                                    dispatch(transientUserContextSlice.actions.setStage((currentStage ?? STAGE.ALL) as STAGE));
+                                    dispatch(transientUserContextSlice.actions.setExamBoard(newExamBoard));
                                 }}
                             >
-                                {onlyOneBoard
+                                {onlyOneBoard && currentExamBoard === onlyOneBoard.value
                                     ? <option value={onlyOneBoard.value}>{onlyOneBoard.label}</option>
                                     : getFilteredExamBoardOptions({byStages: currentStages, includeNullOptions: true})
                                         .map(item => <option key={item.value} value={item.value}>{item.label}</option>)
@@ -147,10 +139,10 @@ export const UserContextPicker = ({className, hideLabels = true}: {className?: s
 
                     <i id={`viewing-context-explanation`} className={classNames("icon icon-info icon-sm ms-3 me-2", siteSpecific("icon-color-grey", "icon-color-black"))} />
                     <UncontrolledTooltip placement="bottom" target={`viewing-context-explanation`}>
-                        You are seeing {stagesString(currentStages)}{isAda && userContext.contexts[0].examBoard ? ` - ${examBoardLabelMap[userContext.contexts[0].examBoard]}` : ""}
+                        You are seeing {stagesString(currentStages)}{isAda && userViewingContext.contexts[0].examBoard ? ` - ${examBoardLabelMap[userViewingContext.contexts[0].examBoard]}` : ""}
                         &nbsp;content.&nbsp;
-                        {formatContextExplanation(userContext.explanation.stage, userContext.explanation.examBoard, currentStages.length > 1)}&nbsp;
-                        {isAda && !isLoggedIn(user) && !userContext.hasDefaultPreferences ?
+                        {formatContextExplanation(userViewingContext.explanation.stage, userViewingContext.explanation.examBoard, currentStages.length > 1)}&nbsp;
+                        {isAda && !isLoggedIn(user) && hasDefaultPreferences(userViewingContext.contexts) ?
                             "Log in or sign up to save your viewing preferences." : ""
                         }
                     </UncontrolledTooltip>

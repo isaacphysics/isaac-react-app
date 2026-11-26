@@ -124,30 +124,30 @@ describe('Required field validation', () => {
     }
 
     if(isAda) {
-        it.each(['STUDENT', 'TUTOR', 'TEACHER'] as UserRole[])("does not require non-default user context for %s on Ada CS", (role) => {
+        it.each(['STUDENT', 'TUTOR', 'TEACHER'] as UserRole[])("does not require non-default user registered context for %s on Ada CS", (role) => {
             // Arrange
-            const user = {...testUser, user: {...testUser.user, role: role}, contexts: []};
+            const user = {...testUser, user: {...testUser.user, role: role}, registeredContexts: []};
 
             // Act
-            const actual = validateRequiredFields(user.user, user.prefs, user.contexts);
+            const actual = validateRequiredFields(user.user, user.prefs, user.registeredContexts);
 
             // Arrange
             const expected = {
-                "userContexts": true,
+                "registeredContexts": true,
             };
             expect(actual).toMatchObject(expected);
         });
     } else {
-        it.each(['STUDENT', 'TUTOR', 'TEACHER'] as UserRole[])("requires non-default user context for %s on Isaac", (role) => {
+        it.each(['STUDENT', 'TUTOR', 'TEACHER'] as UserRole[])("requires non-default user registered context for %s on Isaac", (role) => {
             // Arrange
-            const user = {...testUser, user: {...testUser.user, role: role}, contexts: []};
+            const user = {...testUser, user: {...testUser.user, role: role}, registeredContexts: []};
 
             // Act
-            const actual = validateRequiredFields(user.user, user.prefs, user.contexts);
+            const actual = validateRequiredFields(user.user, user.prefs, user.registeredContexts);
 
             // Arrange
             const expected = {
-                "userContexts": false
+                "registeredContexts": false
             };
             expect(actual).toMatchObject(expected);
         });

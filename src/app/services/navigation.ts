@@ -2,7 +2,6 @@ import React from "react";
 import queryString from "query-string";
 import {selectors, useAppSelector, useGetGameboardByIdQuery, useGetMyAssignmentsQuery, useGetTopicQuery} from "../state";
 import {
-    determineCurrentCreationContext,
     determineGameboardHistory,
     determineNextGameboardItem,
     determineNextTopicContentLink,
@@ -26,7 +25,7 @@ import {
     Ada11To14TopicsToConcepts,
     isAda,
 } from "./";
-import {AssignmentDTO, AudienceContext, ContentDTO, GameboardDTO, IsaacTopicSummaryPageDTO} from "../../IsaacApiTypes";
+import {AssignmentDTO, ContentDTO, GameboardDTO, IsaacTopicSummaryPageDTO} from "../../IsaacApiTypes";
 import {NOT_FOUND_TYPE, PageContextState} from "../../IsaacAppTypes";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {useLocation} from "react-router-dom";
@@ -40,7 +39,6 @@ export interface PageNavigation {
     nextItem?: LinkInfo;
     previousItem?: LinkInfo;
     search?: string;
-    creationContext?: AudienceContext;
     currentGameboard?: GameboardDTO;
 }
 
@@ -113,7 +111,6 @@ export const determinePageNavigation = (
                 nextItem: determineNextGameboardItem(currentGameboard, currentDocId),
                 previousItem: determinePreviousGameboardItem(currentGameboard, currentDocId),
                 search,
-                creationContext: determineCurrentCreationContext(currentGameboard, currentDocId),
                 currentGameboard
             };
         }

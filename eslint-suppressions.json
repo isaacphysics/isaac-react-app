@@ -157,7 +157,7 @@
       "count": 1
     }
   },
-  "src/app/components/elements/inputs/UserContextAccountInput.tsx": {
+  "src/app/components/elements/inputs/RegisteredContextAccountInput.tsx": {
     "@typescript-eslint/no-unused-vars": {
       "count": 2
     }
@@ -247,7 +247,7 @@
       "count": 1
     }
   },
-  "src/app/components/elements/modals/UserContextReconfirmationModal.tsx": {
+  "src/app/components/elements/modals/RegisteredContextReconfirmationModal.tsx": {
     "@eslint-react/exhaustive-deps": {
       "count": 1
     }

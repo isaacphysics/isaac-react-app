@@ -2,12 +2,12 @@ import React from "react";
 import classNames from "classnames";
 import {isAda, simpleDifficultyLabelMap, siteSpecific, STAGE, stageLabelMap} from "../../services";
 import {DifficultyIcons} from "./svg/DifficultyIcons";
-import {ViewingContext} from "../../../IsaacAppTypes";
+import {AudienceView} from "../../../IsaacAppTypes";
 import { Difficulty } from "../../../IsaacApiTypes";
 import { Spacer } from "./Spacer";
 
 interface StageAndDifficultySummaryIconsProps {
-    audienceViews: ViewingContext[],
+    audienceViews: AudienceView[],
     className?: string,
     iconClassName?: string,
     stack?: boolean,

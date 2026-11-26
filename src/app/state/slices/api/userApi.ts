@@ -89,14 +89,14 @@ export const userApi = isaacApi.injectEndpoints({
         createNew: build.mutation<void, {
             newUser: Immutable<ValidationUser>,
             newUserPreferences: UserPreferencesDTO,
-            newUserContexts: UserContext[] | undefined,
+            newRegisteredContexts: UserContext[] | undefined,
             passwordCurrent: string | null,
         }>(
             {
                 query: ({
                     newUser,
                     newUserPreferences,
-                    newUserContexts,
+                    newRegisteredContexts,
                     passwordCurrent
                 }) => ({
                     url: "/users",
@@ -105,7 +105,7 @@ export const userApi = isaacApi.injectEndpoints({
                         registeredUser: newUser,
                         userPreferences: newUserPreferences,
                         passwordCurrent,
-                        registeredUserContexts: newUserContexts
+                        registeredUserContexts: newRegisteredContexts
                     }
                 }),
                 async onQueryStarted( args , {queryFulfilled, dispatch} ) {

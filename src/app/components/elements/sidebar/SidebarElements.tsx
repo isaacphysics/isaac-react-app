@@ -167,7 +167,13 @@ interface QuestionLinkProps {
 export const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & QuestionLinkProps) => {
     const { question, gameboardId, linkedBookSection, parentPageType, parentPageId, ...rest } = props;
     const subject = useAppSelector(selectors.pageContext.subject);
-    const audienceFields = filterAudienceViewsByProperties(determineAudienceViews(question.audience), AUDIENCE_DISPLAY_FIELDS);
+    const user = useAppSelector(selectors.user.orNull);
+
+    const registeredContext = user && user.loggedIn && user.registeredContexts || undefined;
+    const pageContext = useAppSelector(selectors.pageContext.context);
+    const audienceViews = determineAudienceViews(question.audience, registeredContext, !isDefined(gameboardId) ? pageContext : undefined);
+    const filteredAudienceViews = filterAudienceViewsByProperties(audienceViews, AUDIENCE_DISPLAY_FIELDS);
+
     const boardUrlParams = isDefined(gameboardId) ? `?board=${gameboardId}` : "";
     const hasLinkedBookSection = linkedBookSection && linkedBookSection[0] && linkedBookSection[1];
     const linkedBookUrlParams = hasLinkedBookSection ? `${isDefined(gameboardId) ? "&" : "?"}book=${encodeURIComponent(linkedBookSection[0])}&section=${encodeURIComponent(linkedBookSection[1])}` : "";
@@ -192,7 +198,7 @@ export const QuestionLink = (props: React.HTMLAttributes<HTMLLIElement> & Questi
             }
             <div className="d-flex flex-column w-100">
                 <span className="hover-underline link-title"><Markup encoding="latex">{question.title}</Markup></span>
-                <StageAndDifficultySummaryIcons iconClassName="me-4 pe-2" audienceViews={audienceFields}/>
+                <StageAndDifficultySummaryIcons iconClassName="me-4 pe-2" audienceViews={filteredAudienceViews}/>
             </div>
         </Link>
     </li>;
