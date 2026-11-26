@@ -82,7 +82,7 @@ const RegisteredContextReconfirmationModalBody = () => {
             setUserToUpdate({...user, password: null});
             setRegisteredContexts((user.registeredContexts ?? [{stage: STAGE.ALL, examBoard: EXAM_BOARD.ALL}]) as UserContext[]);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [user]);
 
     const allFieldsAreValid = useMemo(() =>

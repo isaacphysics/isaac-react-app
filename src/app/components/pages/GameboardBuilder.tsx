@@ -224,7 +224,7 @@ const GameboardBuilder = ({user}: {user: RegisteredUserDTO}) => {
         if (baseGameboard) {
             cloneGameboard(baseGameboard);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [baseGameboard]);
 
     const titleIsValid = gameboardTitle != "";

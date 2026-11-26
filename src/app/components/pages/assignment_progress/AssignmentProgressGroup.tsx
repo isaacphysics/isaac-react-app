@@ -36,6 +36,8 @@ import { PageContainer } from '../../elements/layout/PageContainer';
 import { MyAdaSidebar } from '../../elements/sidebar/MyAdaSidebar';
 import { FeatureFlag, useFeatureFlag } from '../../../services/featureFlag';
 
+export const assignmentProgressCrumbs = [{title: siteSpecific("Assignment progress", "Markbook"), to: PATHS.ASSIGNMENT_PROGRESS}];
+
 const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQuizAssignment}) => {
     const dispatch = useAppDispatch();
     const quiz = isQuiz(assignment);
@@ -122,7 +124,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
         pageTitle={
             <TitleAndBreadcrumb
                 currentPageTitle={group?.groupName ?? "Group progress"}
-                intermediateCrumbs={[{title: siteSpecific("Assignment progress", "Markbook"), to: PATHS.ASSIGNMENT_PROGRESS}]}
+                intermediateCrumbs={assignmentProgressCrumbs}
                 icon={{type: "icon", icon: "icon-group"}}
             />
         }

@@ -10,13 +10,8 @@
     }
   },
   "src/app/components/content/IsaacAccordion.tsx": {
-    "react-hooks/exhaustive-deps": {
+    "@eslint-react/exhaustive-deps": {
       "count": 2
-    }
-  },
-  "src/app/components/content/IsaacCardDeck.tsx": {
-    "react/prop-types": {
-      "count": 1
     }
   },
   "src/app/components/content/IsaacCodeTabs.tsx": {
@@ -25,24 +20,21 @@
     }
   },
   "src/app/components/content/IsaacGraphSketcherQuestion.tsx": {
-    "react-hooks/exhaustive-deps": {
+    "@eslint-react/exhaustive-deps": {
       "count": 4
     }
   },
   "src/app/components/content/IsaacInlineRegion.tsx": {
+    "@eslint-react/exhaustive-deps": {
+      "count": 3
+    },
     "@typescript-eslint/no-explicit-any": {
       "count": 2
-    },
-    "react-hooks/exhaustive-deps": {
-      "count": 3
     }
   },
   "src/app/components/content/IsaacInteractiveCodeSnippet.tsx": {
-    "react-hooks/exhaustive-deps": {
+    "@eslint-react/exhaustive-deps": {
       "count": 2
-    },
-    "react/no-unknown-property": {
-      "count": 1
     }
   },
   "src/app/components/content/IsaacTabs.tsx": {
@@ -51,11 +43,11 @@
     }
   },
   "src/app/components/content/IsaacVideo.tsx": {
+    "@eslint-react/exhaustive-deps": {
+      "count": 1
+    },
     "@typescript-eslint/no-explicit-any": {
       "count": 9
-    },
-    "react-hooks/exhaustive-deps": {
-      "count": 1
     }
   },
   "src/app/components/elements/Accordion.tsx": {
@@ -92,22 +84,17 @@
       "count": 1
     }
   },
-  "src/app/components/elements/RelatedContent.tsx": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
   "src/app/components/elements/ReportButton.tsx": {
     "@typescript-eslint/no-floating-promises": {
       "count": 1
     }
   },
   "src/app/components/elements/ScrollShadows.tsx": {
+    "@eslint-react/exhaustive-deps": {
+      "count": 3
+    },
     "@typescript-eslint/no-explicit-any": {
       "count": 2
-    },
-    "react-hooks/exhaustive-deps": {
-      "count": 3
     }
   },
   "src/app/components/elements/StudentDashboard.tsx": {
@@ -129,10 +116,10 @@
     }
   },
   "src/app/components/elements/WithLinkableSetting.tsx": {
-    "jsx-a11y/click-events-have-key-events": {
+    "jsx-a11y-x/click-events-have-key-events": {
       "count": 1
     },
-    "jsx-a11y/no-static-element-interactions": {
+    "jsx-a11y-x/no-static-element-interactions": {
       "count": 1
     }
   },
@@ -142,6 +129,9 @@
     }
   },
   "src/app/components/elements/inputs/ConfidenceQuestions.tsx": {
+    "@eslint-react/exhaustive-deps": {
+      "count": 4
+    },
     "@stylistic/indent": {
       "count": 6
     },
@@ -150,9 +140,6 @@
     },
     "@typescript-eslint/no-floating-promises": {
       "count": 3
-    },
-    "react-hooks/exhaustive-deps": {
-      "count": 4
     }
   },
   "src/app/components/elements/inputs/ProgrammingLanguageInput.tsx": {
@@ -176,16 +163,16 @@
     }
   },
   "src/app/components/elements/inputs/UserContextPicker.tsx": {
-    "react-hooks/exhaustive-deps": {
+    "@eslint-react/exhaustive-deps": {
       "count": 1
     }
   },
   "src/app/components/elements/markup/portals/InlineEntryZone.tsx": {
+    "@eslint-react/exhaustive-deps": {
+      "count": 2
+    },
     "@typescript-eslint/no-explicit-any": {
       "count": 1
-    },
-    "react-hooks/exhaustive-deps": {
-      "count": 2
     }
   },
   "src/app/components/elements/markup/portals/Tables.tsx": {
@@ -199,20 +186,20 @@
     }
   },
   "src/app/components/elements/modals/GraphSketcherModal.tsx": {
+    "@eslint-react/exhaustive-deps": {
+      "count": 4
+    },
     "@typescript-eslint/no-floating-promises": {
       "count": 2
     },
-    "jsx-a11y/anchor-is-valid": {
+    "jsx-a11y-x/anchor-is-valid": {
       "count": 1
     },
-    "jsx-a11y/click-events-have-key-events": {
+    "jsx-a11y-x/click-events-have-key-events": {
       "count": 1
     },
-    "jsx-a11y/no-static-element-interactions": {
+    "jsx-a11y-x/no-static-element-interactions": {
       "count": 1
-    },
-    "react-hooks/exhaustive-deps": {
-      "count": 4
     }
   },
   "src/app/components/elements/modals/GroupsModalCreators.tsx": {
@@ -230,23 +217,23 @@
     }
   },
   "src/app/components/elements/modals/LoginOrSignUpModal.tsx": {
-    "react-hooks/exhaustive-deps": {
+    "@eslint-react/exhaustive-deps": {
       "count": 1
     }
   },
   "src/app/components/elements/modals/RequiredAccountInformationModal.tsx": {
-    "react-hooks/exhaustive-deps": {
+    "@eslint-react/exhaustive-deps": {
       "count": 1
     }
   },
   "src/app/components/elements/modals/ReservationsModal.tsx": {
+    "@eslint-react/exhaustive-deps": {
+      "count": 3
+    },
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     },
     "@typescript-eslint/no-floating-promises": {
-      "count": 3
-    },
-    "react-hooks/exhaustive-deps": {
       "count": 3
     }
   },
@@ -261,16 +248,16 @@
     }
   },
   "src/app/components/elements/modals/RegisteredContextReconfirmationModal.tsx": {
-    "react-hooks/exhaustive-deps": {
+    "@eslint-react/exhaustive-deps": {
       "count": 1
     }
   },
   "src/app/components/elements/modals/inequality/InequalityModal.tsx": {
-    "jsx-a11y/no-noninteractive-element-interactions": {
-      "count": 1
-    },
-    "react-hooks/exhaustive-deps": {
+    "@eslint-react/exhaustive-deps": {
       "count": 11
+    },
+    "jsx-a11y-x/no-noninteractive-element-interactions": {
+      "count": 1
     }
   },
   "src/app/components/elements/modals/inequality/constants.ts": {
@@ -292,14 +279,17 @@
     }
   },
   "src/app/components/elements/panels/EventOverviews.tsx": {
+    "@eslint-react/exhaustive-deps": {
+      "count": 1
+    },
     "@typescript-eslint/no-floating-promises": {
       "count": 2
-    },
-    "react-hooks/exhaustive-deps": {
-      "count": 1
     }
   },
   "src/app/components/elements/panels/TeacherConnections.tsx": {
+    "@eslint-react/exhaustive-deps": {
+      "count": 1
+    },
     "@typescript-eslint/no-explicit-any": {
       "count": 2
     },
@@ -307,9 +297,6 @@
       "count": 2
     },
     "@typescript-eslint/no-unused-vars": {
-      "count": 1
-    },
-    "react-hooks/exhaustive-deps": {
       "count": 1
     }
   },
@@ -327,10 +314,10 @@
     }
   },
   "src/app/components/elements/panels/UserMFA.tsx": {
-    "@typescript-eslint/no-floating-promises": {
+    "@eslint-react/exhaustive-deps": {
       "count": 1
     },
-    "react-hooks/exhaustive-deps": {
+    "@typescript-eslint/no-floating-promises": {
       "count": 1
     }
   },
@@ -356,7 +343,7 @@
     }
   },
   "src/app/components/handlers/AddGameboard.tsx": {
-    "react-hooks/exhaustive-deps": {
+    "@eslint-react/exhaustive-deps": {
       "count": 1
     }
   },
@@ -371,10 +358,10 @@
     }
   },
   "src/app/components/handlers/LogOutHandler.tsx": {
-    "@typescript-eslint/no-floating-promises": {
+    "@eslint-react/exhaustive-deps": {
       "count": 1
     },
-    "react-hooks/exhaustive-deps": {
+    "@typescript-eslint/no-floating-promises": {
       "count": 1
     }
   },
@@ -413,45 +400,45 @@
     }
   },
   "src/app/components/pages/AssignmentSchedule.tsx": {
+    "@eslint-react/exhaustive-deps": {
+      "count": 4
+    },
     "@typescript-eslint/no-floating-promises": {
       "count": 4
     },
     "@typescript-eslint/no-unused-vars": {
       "count": 2
     },
-    "jsx-a11y/anchor-is-valid": {
+    "jsx-a11y-x/anchor-is-valid": {
       "count": 1
-    },
-    "react-hooks/exhaustive-deps": {
-      "count": 4
     }
   },
   "src/app/components/pages/CSProjects.tsx": {
-    "@typescript-eslint/no-floating-promises": {
+    "@eslint-react/exhaustive-deps": {
       "count": 1
     },
-    "react-hooks/exhaustive-deps": {
+    "@typescript-eslint/no-floating-promises": {
       "count": 1
     }
   },
   "src/app/components/pages/ClientError.tsx": {
+    "@eslint-react/exhaustive-deps": {
+      "count": 1
+    },
     "@typescript-eslint/no-floating-promises": {
       "count": 1
     },
     "@typescript-eslint/no-unused-vars": {
       "count": 1
-    },
-    "react-hooks/exhaustive-deps": {
-      "count": 1
     }
   },
   "src/app/components/pages/Concept.tsx": {
-    "react-hooks/exhaustive-deps": {
+    "@eslint-react/exhaustive-deps": {
       "count": 1
     }
   },
   "src/app/components/pages/Concepts.tsx": {
-    "react-hooks/exhaustive-deps": {
+    "@eslint-react/exhaustive-deps": {
       "count": 2
     }
   },
@@ -485,14 +472,14 @@
     }
   },
   "src/app/components/pages/Glossary.tsx": {
+    "@eslint-react/exhaustive-deps": {
+      "count": 5
+    },
     "@typescript-eslint/no-explicit-any": {
       "count": 1
     },
     "@typescript-eslint/no-floating-promises": {
       "count": 1
-    },
-    "react-hooks/exhaustive-deps": {
-      "count": 5
     }
   },
   "src/app/components/pages/LogIn.tsx": {
@@ -514,15 +501,15 @@
     }
   },
   "src/app/components/pages/News.tsx": {
-    "react-hooks/exhaustive-deps": {
+    "@eslint-react/exhaustive-deps": {
       "count": 1
     }
   },
   "src/app/components/pages/OnlineCourses.tsx": {
-    "@typescript-eslint/no-floating-promises": {
+    "@eslint-react/exhaustive-deps": {
       "count": 1
     },
-    "react-hooks/exhaustive-deps": {
+    "@typescript-eslint/no-floating-promises": {
       "count": 1
     }
   },
@@ -532,32 +519,29 @@
     }
   },
   "src/app/components/pages/RegistrationVerifyEmail.tsx": {
-    "react-hooks/exhaustive-deps": {
+    "@eslint-react/exhaustive-deps": {
       "count": 1
     }
   },
   "src/app/components/pages/SetAssignments.tsx": {
-    "react-hooks/exhaustive-deps": {
+    "@eslint-react/exhaustive-deps": {
       "count": 1
     }
   },
   "src/app/components/pages/TeacherOrTutorRequest.tsx": {
     "@stylistic/indent": {
       "count": 8
-    },
-    "react/no-unescaped-entities": {
-      "count": 4
     }
   },
   "src/app/components/pages/TeacherRequest.tsx": {
+    "@eslint-react/exhaustive-deps": {
+      "count": 1
+    },
     "@stylistic/indent": {
       "count": 1
     },
     "@typescript-eslint/no-floating-promises": {
       "count": 2
-    },
-    "react-hooks/exhaustive-deps": {
-      "count": 1
     }
   },
   "src/app/components/pages/TutorRequest.tsx": {
@@ -574,11 +558,11 @@
     }
   },
   "src/app/components/site/phy/HomepagePhy.tsx": {
+    "@eslint-react/exhaustive-deps": {
+      "count": 1
+    },
     "@typescript-eslint/no-floating-promises": {
       "count": 5
-    },
-    "react-hooks/exhaustive-deps": {
-      "count": 1
     }
   },
   "src/app/components/site/phy/NavigationMenuPhy.tsx": {
@@ -597,6 +581,9 @@
     }
   },
   "src/app/services/history.ts": {
+    "@eslint-react/exhaustive-deps": {
+      "count": 1
+    },
     "@typescript-eslint/no-explicit-any": {
       "count": 2
     },
@@ -604,9 +591,6 @@
       "count": 1
     },
     "no-empty": {
-      "count": 1
-    },
-    "react-hooks/exhaustive-deps": {
       "count": 1
     }
   },
@@ -621,23 +605,23 @@
     }
   },
   "src/app/services/miscUtils.ts": {
+    "@eslint-react/exhaustive-deps": {
+      "count": 4
+    },
     "@typescript-eslint/no-explicit-any": {
       "count": 2
-    },
-    "react-hooks/exhaustive-deps": {
-      "count": 4
     }
   },
   "src/app/services/pageContext.ts": {
-    "react-hooks/exhaustive-deps": {
+    "@eslint-react/exhaustive-deps": {
       "count": 1
     }
   },
   "src/app/services/pageLoad.ts": {
-    "@typescript-eslint/no-explicit-any": {
+    "@eslint-react/exhaustive-deps": {
       "count": 1
     },
-    "react-hooks/exhaustive-deps": {
+    "@typescript-eslint/no-explicit-any": {
       "count": 1
     }
   },

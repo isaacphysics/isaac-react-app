@@ -76,7 +76,7 @@ function RegisteredContextRow({
             const examBoard = registeredContext.examBoard ?? EXAM_BOARD.ADA;
             setRegisteredContext({stage, examBoard});
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [setRegisteredContext]);
 
     return <React.Fragment>

@@ -19,6 +19,7 @@ export const TdLink = ({to, children, ...rest}: TdLinkProps) => {
 // just drop <TrLink to={...}> in place of a <tr/>.
 export const TrLink = ({to, children, ...rest}: TrLinkProps) => {
     return <tr {...rest}>
+        {/* eslint-disable-next-line @eslint-react/no-children-map */}
         {React.Children.map(children, child => React.isValidElement(child) && child.type === "td" ? <TdLink to={to} {...child.props}/> : child)}
     </tr>;
 };

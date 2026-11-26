@@ -14,7 +14,7 @@ function teardown(throttledFn: ReturnType<typeof throttle>) {
 export const useCheckCurrentUserOnActivity = (until?: boolean) => {
     const dispatch = useAppDispatch();
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     const throttledCheckLoginStatus = useCallback(
         throttle(async () => {
             await dispatch(requestCurrentUser());
@@ -25,6 +25,8 @@ export const useCheckCurrentUserOnActivity = (until?: boolean) => {
     useEffect(() => {
         // Register callbacks so we can detect when the user is on this tab or window and then check if we're logged in.
         events.forEach(event => {
+            // The event listener is removed in the teardown function
+            // eslint-disable-next-line @eslint-react/web-api-no-leaked-event-listener
             document.addEventListener(event, throttledCheckLoginStatus);
         });
 

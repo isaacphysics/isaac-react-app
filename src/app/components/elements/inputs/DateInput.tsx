@@ -122,7 +122,7 @@ export const DateInput = (props: DateInputProps) => {
         values.day.reset();
         values.month.reset();
         values.year.reset();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [valueAsDate]);
 
     function lastInMonth() {

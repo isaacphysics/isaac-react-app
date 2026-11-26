@@ -13,6 +13,7 @@ import {IsaacQuizDTO, QuizAttemptDTO, RegisteredUserDTO} from "../../../../Isaac
 import {Spacer} from "../../elements/Spacer";
 import {TitleAndBreadcrumb} from "../../elements/TitleAndBreadcrumb";
 import {Alert, Button, Container} from "reactstrap";
+import { assignmentProgressCrumbs } from "../assignment_progress/AssignmentProgressGroup";
 
 function QuizAttemptFeedbackFooter(props: QuizProps & FullQuizInfo) {
     const {page, studentUser, quizContents: {pageLink}} = props;
@@ -47,6 +48,7 @@ export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
     const numericQuizAssignmentId = quizAssignmentId ? parseInt(quizAssignmentId, 10) : undefined;
     const numericQuizAttemptId = quizAttemptId ? parseInt(quizAttemptId, 10) : undefined;
     const {attempt, studentUser, questions, sections, error} = useQuizAttemptFeedback(numericQuizAttemptId, numericQuizAssignmentId, numericStudentId);
+    const viewingStudentAttempt = isDefined(studentId) && isDefined(quizAssignmentId);
 
     const pageNumber = isDefined(page) ? parseInt(page, 10) : undefined;
 
@@ -80,9 +82,9 @@ export const QuizAttemptFeedback = ({user}: {user: RegisteredUserDTO}) => {
                 {attempt.feedbackMode === 'DETAILED_FEEDBACK' && <QuizAttemptFeedbackFooter {...subProps} />}
             </QuizContentsComponent>}
             {isDefined(error) && <>
-                <TitleAndBreadcrumb currentPageTitle="Test Feedback" intermediateCrumbs={myQuizzesCrumbs} icon={{type: "icon", icon: "icon-error"}} />
-                <Alert color="danger">
-                    <div className="alert-heading h4">Error loading your feedback!</div>
+                <TitleAndBreadcrumb currentPageTitle="Test Feedback" intermediateCrumbs={viewingStudentAttempt ? assignmentProgressCrumbs : myQuizzesCrumbs} icon={{type: "icon", icon: "icon-error"}} />
+                <Alert color="warning" className="mt-4">
+                    <div className="alert-heading h4">Attempt unavailable</div>
                     <p>{error}</p>
                 </Alert>
             </>}

@@ -53,7 +53,7 @@ export function TopicSummaryLinks({items, search}: {items: ContentSummaryDTO[]; 
                     >
                         <div className={classNames("stage-label d-flex align-items-center justify-content-center", audienceStyle(audienceString))}>
                             {above["sm"](deviceSize) ? audienceString : audienceString.replaceAll(",", "\n").split("\n").map((line, i, arr) => 
-                                <>{line}{i < arr.length && <br/>}</>)}
+                                <React.Fragment key={i}>{line}{i < arr.length && <br/>}</React.Fragment>)}
                         </div>
                         <div className="title p-3 ps-6 d-block d-sm-flex">
                             <Markup encoding={"latex"}>

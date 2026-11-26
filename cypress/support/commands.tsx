@@ -49,7 +49,7 @@ declare global {
         interface Chainable {
             mountWithStoreAndRouter(component: ReactNode, routes: string[], initialRoute?: To, user?: RegisteredUserDTO, mountOptions?: MountOptions): Chainable<Element>;
 
-            matchModal(): Chainable<JQuery<HTMLElement>>;
+            matchModal(): Chainable<MatchImageReturn>;
             openSidebar(): Chainable<JQuery<HTMLElement>>;
             closeSidebar(): Chainable<JQuery<HTMLElement>>;
             getComponent(component: keyof typeof components): Chainable<JQuery<HTMLElement>>;
@@ -101,15 +101,14 @@ Cypress.Commands.add('mountWithStoreAndRouter', (component, routes, initialRoute
 import "@pixsame/cypress-plugin-visual-regression-diff/dist/support";
 
 // Add a delay to all matchImage calls. Shouldn't be required, but is.
-Cypress.Commands.overwrite('matchImage', (matchImage) => {
-    cy.wait(2000);
-    matchImage();
+Cypress.Commands.overwrite<'matchImage', 'optional'>('matchImage', (matchImage, subject, options) => {
+    return cy.wait(2000).then(() => matchImage(subject, options));
 });
 
 Cypress.Commands.add('matchModal', () => {
     // css hack to ensure entire modal is visible on screenshot, even if the modal would require scrolling
     cy.get('body').invoke('css', 'transform', 'scale(1)');
-    cy.get('[data-testid="active-modal"]').matchImage();
+    return cy.get('[data-testid="active-modal"] .modal-content').should('have.length', 1).and('be.visible').matchImage();
 });
 
 // Skip visual regression tests in interactive mode - the results are not consistent with headless.

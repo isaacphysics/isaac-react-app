@@ -70,7 +70,7 @@ export const SchoolInput = ({userToUpdate, setUserToUpdate, submissionAttempted,
 
     useEffect(() => {
         fetchSchool(userToUpdate.schoolId || "");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [userToUpdate]);
 
     // Set schoolId or schoolOther

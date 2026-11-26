@@ -131,7 +131,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
         }
         dispatch(registerQuestions([doc], accordion.clientId));
         return () => dispatch(deregisterQuestions([doc.id as string]));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [dispatch, doc.id, inlineContext?.initialised]);
 
     // Focus on the feedback banner after submission
@@ -139,7 +139,7 @@ export const IsaacQuestion = ({doc}: {doc: ApiTypes.QuestionDTO}) => {
         if (hasSubmitted && !isInlineQuestion) {
             feedbackRef.current?.focus();
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [validationResponse]);
 
     // Select QuestionComponent from the question part's document type (or default)
