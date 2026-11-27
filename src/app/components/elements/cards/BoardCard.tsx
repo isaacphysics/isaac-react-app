@@ -280,7 +280,7 @@ export const BoardCard = ({user, board, boardView, displayAssignmentInfo, setSel
         siteSpecific(
             // sci
             <GameboardCard 
-                gameboard={board} linkLocation={GameboardLinkLocation.Card} data-testid="gameboard-card"
+                gameboard={board} linkLocation={GameboardLinkLocation.Card}
                 openAssignModal={openAssignModal} usageDisplay={isSetAssignments ? {type: "group", groupCount: assignees?.length} : {type: "correctness"}}
             >
                 <Row>
