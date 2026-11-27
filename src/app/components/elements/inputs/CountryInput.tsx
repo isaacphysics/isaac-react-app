@@ -30,7 +30,7 @@ export const CountryInput = ({className, userToUpdate, setUserToUpdate, countryC
         <StyledDropdown
             id={`${idPrefix}-country-select`}
             value={(userToUpdate && userToUpdate.countryCode) || undefined}
-            defaultValue={""}
+            defaultValue=""
             invalid={submissionAttempted && required && !countryCodeValid}
             feedback="Please select your country."
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
