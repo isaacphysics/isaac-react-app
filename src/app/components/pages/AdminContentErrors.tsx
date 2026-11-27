@@ -61,14 +61,20 @@ export const AdminContentErrors = () => {
     const [pathFilter, setPathFilter] = useState<string>(params.path || "");
     const [excludePathFilter, setExcludePathFilter] = useState<string>(params.exclude || "");
     const [errorFilter, setErrorFilter] = useState<string>("");
+    const [summaryFilter, setSummaryFilter] = useState<string>("");
     const errorReducer = (show: boolean, errorStr: string) => show || matchesAllWordsInAnyOrder(errorStr, errorFilter);
 
     const [publishedFilter, setPublishedFilter] = useState<PUBLISHED_FILTER[]>([PUBLISHED_FILTER.PUBLISHED, PUBLISHED_FILTER.UNPUBLISHED]);
     const [criticalFilter, setCriticalFilter] = useState<CRITICAL_FILTER[]>([CRITICAL_FILTER.CRITICAL, CRITICAL_FILTER.NON_CRITICAL]);
 
-    const filteredErrors = (errors: ContentErrorsResponse) => {
+    const getErrorSummary = (message: string) => message.match(/^([A-Z_]+):/)?.[1];
+
+    const filteredErrors = (errors: ContentErrorsResponse, summary = summaryFilter) => {
         return errors.errorsList
+            .filter((error) => ((error.partialContent.canonicalSourceFile || error.partialContent.id) ?? "").includes(pathFilter))
+            .filter((error) => !excludePathFilter || !((error.partialContent.canonicalSourceFile || error.partialContent.id) ?? "").includes(excludePathFilter))
             .filter((error) => error.listOfErrors.reduce(errorReducer, false))
+            .filter(error => !summary || error.listOfErrors.some(message => getErrorSummary(message) === summary))
             .filter(
                 (error) =>
                     (error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.PUBLISHED)) ||
@@ -78,7 +84,8 @@ export const AdminContentErrors = () => {
                 (error) =>
                     (error.successfulIngest && criticalFilter.includes(CRITICAL_FILTER.NON_CRITICAL)) ||
                     (!error.successfulIngest && criticalFilter.includes(CRITICAL_FILTER.CRITICAL)),
-            );
+            )
+            .sort(sortBySourcePath);
     };
 
     return <Container>
@@ -94,6 +101,8 @@ export const AdminContentErrors = () => {
             defaultErrorTitle={"Error loading content errors"}
             query={errorsQuery}
             thenRender={errors => {
+                const summaries = Array.from(new Set(filteredErrors(errors, "")
+                    .flatMap(error => error.listOfErrors.map(getErrorSummary)))).sort();
                 return <div>
                     <Row>
                         <Col>
@@ -120,11 +129,22 @@ export const AdminContentErrors = () => {
                             </Label>
                             <Input id="exclude-file-path-filter" type="text" defaultValue={excludePathFilter} onChange={(e) => setExcludePathFilter(e.target.value)} placeholder="Exclude errors by file path"/>
                         </Col>
-                        <Col lg={12} className="mb-2">
+                        <Col lg={6} className="mb-2">
                             <Label htmlFor="error-message-filter" className="w-100">
                                 Filter by error message
                             </Label>
                             <Input id="error-message-filter" type="text" onChange={(e) => setErrorFilter(e.target.value)} placeholder="Filter errors by error message"/>
+                        </Col>
+                        <Col lg={6} className="mb-2">
+                            <Label htmlFor="error-summary-filter" className="w-100">
+                                Filter by error summary
+                            </Label>
+                            <Input id="error-summary-filter" type="select" value={summaryFilter} onChange={(e) => setSummaryFilter(e.target.value)}>
+                                <option value="">All</option>
+                                {summaryFilter && !summaries.includes(summaryFilter) &&
+                                    <option value={summaryFilter} disabled>{summaryFilter} (no matching files for these filters)</option>}
+                                {summaries.map(summary => <option key={summary} value={summary}>{summary}</option>)}
+                            </Input>
                         </Col>
                         <Col lg={6} className="mb-2">
                             <Label htmlFor="critical-filter-select">Filter by severity</Label>
@@ -137,7 +157,7 @@ export const AdminContentErrors = () => {
                                     {value: CRITICAL_FILTER.CRITICAL, label: CRITICAL_FILTER.CRITICAL},
                                     {value: CRITICAL_FILTER.NON_CRITICAL, label: CRITICAL_FILTER.NON_CRITICAL}
                                 ]}
-                                onChange={selectOnChange(setCriticalFilter, true)}
+                                onChange={selectOnChange((values: CRITICAL_FILTER[]) => setCriticalFilter(values.length ? values : Object.values(CRITICAL_FILTER)), true)}
                             />
                         </Col>
                         <Col lg={6} className="mb-2">
@@ -151,7 +171,7 @@ export const AdminContentErrors = () => {
                                     {value: PUBLISHED_FILTER.PUBLISHED, label: PUBLISHED_FILTER.PUBLISHED},
                                     {value: PUBLISHED_FILTER.UNPUBLISHED, label: PUBLISHED_FILTER.UNPUBLISHED}
                                 ]}
-                                onChange={selectOnChange(setPublishedFilter, true)}
+                                onChange={selectOnChange((values: PUBLISHED_FILTER[]) => setPublishedFilter(values.length ? values : Object.values(PUBLISHED_FILTER)), true)}
                             />
                         </Col>
                     </Row>
@@ -169,23 +189,7 @@ export const AdminContentErrors = () => {
                                             <th title="Files with critical errors will not be available on Isaac!">Critical Error</th>
                                             <th>List of Error Messages</th>
                                         </tr>
-                                        {errors.errorsList
-                                            .filter((error) => ((error.partialContent.canonicalSourceFile || error.partialContent.id) ?? "").includes(pathFilter))
-                                            .filter((error) => !excludePathFilter || !((error.partialContent.canonicalSourceFile || error.partialContent.id) ?? "").includes(excludePathFilter))
-                                            .filter((error) => error.listOfErrors.reduce(errorReducer, false))
-                                            .filter(
-                                                (error) =>
-                                                    (error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.PUBLISHED)) ||
-                                                    (!error.partialContent.published && publishedFilter.includes(PUBLISHED_FILTER.UNPUBLISHED)),
-                                            )
-                                            .filter(
-                                                (error) =>
-                                                    (error.successfulIngest && criticalFilter.includes(CRITICAL_FILTER.NON_CRITICAL)) ||
-                                                    (!error.successfulIngest && criticalFilter.includes(CRITICAL_FILTER.CRITICAL)),
-                                            )
-                                            .sort(sortBySourcePath)
-                                            .map(ContentErrorRow)
-                                        }
+                                        {filteredErrors(errors).map(ContentErrorRow)}
                                     </tbody>
                                 </Table>
                             </HorizontalScroller>
