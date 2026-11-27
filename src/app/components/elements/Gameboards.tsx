@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardBody, Button, Row, Col, Table, UncontrolledTooltip, Spinner } from "reactstrap";
+import { Card, CardBody, Button, Row, Col, Table, UncontrolledTooltip } from "reactstrap";
 import { AssignmentBoardOrder, Boards } from "../../../IsaacAppTypes";
 import { isPhy, siteSpecific, difficultiesOrdered, difficultyShortLabelMap, isAda, BoardViews, BoardCreators, BoardCompletions, matchesAllWordsInAnyOrder, formatBoardOwner, boardCompletionSelection } from "../../services";
 import { SortItemHeader } from "./SortableItemHeader";
@@ -7,6 +7,7 @@ import { BoardCard } from "./cards/BoardCard";
 import { RegisteredUserDTO, GameboardDTO } from "../../../IsaacApiTypes";
 import classNames from "classnames";
 import { HorizontalScroller } from "./inputs/HorizontalScroller";
+import { IsaacSpinner } from "../handlers/IsaacSpinner";
 
 export interface GameboardsTableProps {
     user: RegisteredUserDTO;
@@ -158,7 +159,7 @@ const Cards = (props: GameboardsCardsProps) => {
             {boards.boards.length < boards.totalResults && <Button 
                 onClick={viewMore} disabled={loading}
             >
-                {loading ? <Spinner /> : boards.boards.length === filteredBoards.length ? "View more" : "Load more"}
+                {loading ? <IsaacSpinner /> : boards.boards.length === filteredBoards.length ? "View more" : "Load more"}
             </Button>}
         </div>
     </>;
