@@ -3545,7 +3545,7 @@ export const mockMyAssignments = [
 export const mockRegressionTestQuestionParts = [
     {
         "id": "_regression_test_acc_quick_q",
-        "type": "content",
+        "type": "isaacQuestionPage",
         "children": [
             {
                 "id": "_regression_test_|acc_quick_q|_regression_test_quick_",
@@ -3585,7 +3585,7 @@ export const mockRegressionTestQuestionParts = [
     },
     {
         "id": "_regression_test_acc_multi_q",
-        "type": "content",
+        "type": "isaacQuestionPage",
         "children": [
             {
                 "id": "_regression_test_|acc_multi_q|_regression_test_multi_",
@@ -3654,7 +3654,7 @@ export const mockRegressionTestQuestionParts = [
     },
     {
         "id": "_regression_test_acc_numeric_q",
-        "type": "content",
+        "type": "isaacQuestionPage",
         "children": [
             {
                 "id": "_regression_test_|acc_numeric_q|_regresssion_test_numeric_",
@@ -3785,7 +3785,7 @@ export const mockRegressionTestQuestionParts = [
     },
     {
         "id": "_regression_test_acc_symbolic_q",
-        "type": "content",
+        "type": "isaacQuestionPage",
         "children": [
             {
                 "id": "_regression_test_|acc_symbolic_q|_regression_test_symbolic_",
@@ -3839,7 +3839,7 @@ export const mockRegressionTestQuestionParts = [
     },
     {
         "id": "_regression_test_acc_chemistry_q",
-        "type": "content",
+        "type": "isaacQuestionPage",
         "children": [
             {
                 "id": "_regression_test_|acc_chemistry_q|_regression_test_chemistry_",
@@ -3879,7 +3879,7 @@ export const mockRegressionTestQuestionParts = [
     },
     {
         "id": "_regression_test_acc_stringmatch_q",
-        "type": "content",
+        "type": "isaacQuestionPage",
         "children": [
             {
                 "id": "_regression_test_|acc_stringmatch_q|_regression_test_stringmatch_",
@@ -3911,7 +3911,7 @@ export const mockRegressionTestQuestionParts = [
     },
     {
         "id": "_regression_test_acc_freetext_q",
-        "type": "content",
+        "type": "isaacQuestionPage",
         "children": [
             {
                 "id": "_regression_test_|acc_freetext_q|_regression_test_freetext_",
@@ -3928,7 +3928,7 @@ export const mockRegressionTestQuestionParts = [
     },
     {
         "id": "_regression_test_acc_logic_question",
-        "type": "content",
+        "type": "isaacQuestionPage",
         "children": [
             {
                 "id": "_regression_test_|acc_logic_question|_regression_test_logic_",
@@ -3964,7 +3964,7 @@ export const mockRegressionTestQuestionParts = [
     },
     {
         "id": "_regression_test_acc_item_q",
-        "type": "content",
+        "type": "isaacQuestionPage",
         "children": [
             {
                 "id": "_regression_test_|acc_item_q|_regression_test_item_",
@@ -4007,7 +4007,7 @@ export const mockRegressionTestQuestionParts = [
     },
     {
         "id": "_regression_test_acc_parsons_q",
-        "type": "content",
+        "type": "isaacQuestionPage",
         "children": [
             {
                 "id": "_regression_test_|acc_parsons_q|_regression_test_parsons_",
@@ -4054,7 +4054,7 @@ export const mockRegressionTestQuestionParts = [
     },
     {
         "id": "_regression_test_acc_cloze_q",
-        "type": "content",
+        "type": "isaacQuestionPage",
         "children": [
             {
                 "id": "_regression_test_|acc_cloze_q|3562dfe3-fb1d-42ef-941d-41bd672aa57b",
@@ -4103,7 +4103,7 @@ export const mockRegressionTestQuestionParts = [
     },
     {
         "id": "_regression_test_acc_inline_q",
-        "type": "content",
+        "type": "isaacQuestionPage",
         "children": [
             {
                 "id": "_regression_test_|acc_inline_q|727260a8-891f-4e5e-98ae-0e0aa96bf287",
@@ -4186,7 +4186,7 @@ export const mockRegressionTestQuestionParts = [
     },
     {
         "id": "_regression_test_acc_figure_numbering",
-        "type": "content",
+        "type": "isaacQuestionPage",
         "children": [
             {
                 "type": "content",
@@ -4323,7 +4323,7 @@ export const mockRegressionTestQuestionParts = [
     },
     {
         "id": "_regression_test_acc_drag_and_drop",
-        "type": "content",
+        "type": "isaacQuestionPage",
         "tags": ["access:motor"],
         "children": [
             {
@@ -4434,7 +4434,7 @@ export const mockRegressionTestQuestionParts = [
     },
     {
         "id": "_regression_test_acc_coordinates",
-        "type": "content",
+        "type": "isaacQuestionPage",
         "children": [
             {
                 "type": "isaacCoordinateQuestion",
@@ -4491,7 +4491,7 @@ export const mockRegressionTestQuestionParts = [
     },
     {
         "id": "_regression_test_acc_reorder",
-        "type": "content",
+        "type": "isaacQuestionPage",
         "children": [
             {
                 "value": "Order the following sections reverse-alphabetically within a single list.\n\n```\nD\nC\nB\nA\n```",

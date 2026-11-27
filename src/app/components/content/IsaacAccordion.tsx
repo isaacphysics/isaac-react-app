@@ -57,7 +57,7 @@ export const IsaacAccordion = ({doc, preview}: {doc: ContentDTO, preview?: boole
     const pageContext = useAppSelector(selectors.pageContext.context);
 
     const isConceptPage = page && page !== 404 && page.type === DOCUMENT_TYPE.CONCEPT;
-    const isQuestionPage = page && page !== 404 && page.type === DOCUMENT_TYPE.QUESTION;
+    const isQuestionPage = page && page !== 404 && [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.FAST_TRACK_QUESTION].includes(page.type as DOCUMENT_TYPE);
 
     // Select different default display depending on page type
     const defaultDisplay = isFound(page) && page.type === DOCUMENT_TYPE.CONCEPT ? defaultConceptDisplay : defaultQuestionDisplay;
