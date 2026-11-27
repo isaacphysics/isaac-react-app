@@ -30,7 +30,7 @@ export const CountryInput = ({className, userToUpdate, setUserToUpdate, countryC
         <StyledDropdown
             id={`${idPrefix}-country-select`}
             value={(userToUpdate && userToUpdate.countryCode) || undefined}
-            defaultValue={"blank"}
+            defaultValue={""}
             invalid={submissionAttempted && required && !countryCodeValid}
             feedback="Please select your country."
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -42,7 +42,7 @@ export const CountryInput = ({className, userToUpdate, setUserToUpdate, countryC
                     return <option key={countryCode} value={countryCode}>{countryDisplayName}</option>;
                 }
             )}
-            <option value={"blank"} /> {/* Empty option for spacing */}
+            <option value="" /> {/* Empty option for spacing */}
             {allCountryOptions && Object.entries(allCountryOptions).map(
                 ([countryCode, countryDisplayName]) => {
                     return <option key={countryCode} value={countryCode}>{countryDisplayName}</option>;
