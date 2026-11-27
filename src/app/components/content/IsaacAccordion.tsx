@@ -61,7 +61,6 @@ export const IsaacAccordion = ({doc, preview}: {doc: ContentDTO, preview?: boole
     // Select different default display depending on page type
     const defaultDisplay = isFound(page) && page.type === DOCUMENT_TYPE.CONCEPT ? defaultConceptDisplay : defaultQuestionDisplay;
     const accordionDisplay = mergeDisplayOptions(defaultDisplay, doc.display);
-    const noIndex = doc.tags?.includes("noIndex");
 
     const location = useLocation();
     const hashAnchor = location.hash !== "" && location.hash[0] === '#' ? location.hash.slice(1) : null;
@@ -183,12 +182,13 @@ export const IsaacAccordion = ({doc, preview}: {doc: ContentDTO, preview?: boole
                 {isPhy && stageInserts?.[index] && <StageInsert stage={stageInserts[index]} />}
                 <Accordion
                     id={section.id}
-                    index={noIndex ? undefined : index}
+                    index={index}
                     startOpen={section.startOpen}
                     deEmphasised={section.deEmphasised}
                     trustedTitle={section?.title || ""}
                     audienceString={audienceString}
                     preview={preview}
+                    noIndex={section.tags?.includes("noIndex")}
                 >
                     <IsaacContent doc={section} />
                 </Accordion>
