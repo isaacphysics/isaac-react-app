@@ -1,0 +1,272 @@
+{
+  "events": {
+    "addUsers": {
+      "bookingExists": "Booking exists",
+      "disabledMessage": "You cannot add users to a cancelled event",
+      "noResults": "No users returned from query",
+      "roleAny": "Any Role",
+      "schoolSetNone": "None Set",
+      "schoolSetOther": "Yes (Other)",
+      "searchButton": "Find user",
+      "searchEmailPlaceholder": "Enter user email",
+      "searchFamilyNamePlaceholder": "Enter user family name",
+      "tableHeaderSchoolSet": "School set",
+      "title": "Add users to booking"
+    },
+    "admin": {
+      "title": "Event booking admin"
+    },
+    "adminBooking": {
+      "bookUser": {
+        "errorTitle": "The action on behalf of the user was unsuccessful",
+        "successMessage": "The action on behalf of the user was successful.",
+        "successTitle": "Action successful"
+      },
+      "cancel": {
+        "errorTitle": "Failed to cancel event booking"
+      },
+      "cancelReservations": {
+        "errorTitle": "Unable to cancel some of the reservations",
+        "successMessage": "You have successfully cancelled students reservations for this event.",
+        "successTitle": "Reservations cancelled"
+      },
+      "delete": {
+        "errorTitle": "Failed to un-book user from event"
+      },
+      "promote": {
+        "errorTitle": "Failed to promote event booking"
+      },
+      "recordAttendance": {
+        "errorTitle": "Failed to record event attendance"
+      },
+      "resendEmail": {
+        "errorTitle": "Failed to resend email for event booking",
+        "successMessage": "Email sent to {{userId}}",
+        "successTitle": "Event email sent"
+      },
+      "reserveUsers": {
+        "errorTitle": "Reservation failed",
+        "successMessage": "You have successfully reserved students onto this event.",
+        "successTitle": "Reservations confirmed"
+      }
+    },
+    "adminOverviews": {
+      "errorTitle": "Failed to load event overviews"
+    },
+    "attendance": {
+      "cancelledEventNotice": "You cannot record attendance for a cancelled event",
+      "markAbsentButton": "Mark as Absent",
+      "markAttendedButton": "Mark as Attended",
+      "table": {
+        "attendanceHeader": "Attendance",
+        "medicalRequirementsHeader": "Medical requirements",
+        "surnameFilterPlaceholder": "Surname filter"
+      },
+      "title": "Record event attendance"
+    },
+    "availability": {
+      "requestAvailable": "Bookings available by request!",
+      "waitingListAvailable": "Waiting list booking is available!"
+    },
+    "book": {
+      "confirmReservation": "Confirm your reservation",
+      "joinWaitingList": "Join waiting list",
+      "requestPlace": "Request a place"
+    },
+    "booking": {
+      "accessibilityHelp": "For example, please let us know if you need wheelchair access, hearing loop or if we can help with any special adjustments.",
+      "accountSection": "Your account information (<accountLink>update</accountLink>)",
+      "cancelConfirmMessage": "Are you sure you want to cancel your booking on this event? You may not be able to re-book, especially if there is a waiting list.",
+      "detailsTitle": "Event booking details",
+      "dietary": "Dietary requirements or relevant medical conditions",
+      "dietaryHelp": "For example, it is important for us to know if you have a severe allergy and/or carry an EpiPen, are prone to fainting, suffer from epilepsy...",
+      "emailSent": "We have sent an email to {{email}}. Please follow the instructions in the email prior to booking.",
+      "emailVerifyOther": "WARNING: This email is not verified. The details about the event might not reach the user.",
+      "emailVerifySelf": "You must verify your email address to book on events. This is so we can send you details about the event.",
+      "emergency": "Emergency contact details",
+      "emergencyPhone": "Contact telephone number",
+      "formTitle": "Event booking form",
+      "jobTitle": "Job title",
+      "loginToApply": "Login to apply",
+      "loginToBook": "Login to book",
+      "manageReservations": "Manage reservations",
+      "naOther": "N/A - Other",
+      "naTeacher": "N/A - Teacher",
+      "teacherReservationWarning": "Places on this event can only be reserved by teachers. Please ask your teacher to reserve a place for you. You will need to be accompanied by a teacher to the event.",
+      "teachingExperience": "Level of teaching experience",
+      "terms": "By requesting to book on this event, you are granting event organisers access to the information provided in the form above. You are also giving them permission to set you pre-event work and view your progress. You can manage access to your progress data in your <teacherConnectionsLink>account settings</teacherConnectionsLink>.<br1/>Your data will be processed in accordance with {{siteTitle}}'s <privacyPolicyLink>privacy policy</privacyPolicyLink>.<br2/>If you have unsubscribed from assignment email notifications you may miss out on pre-work set for the event. You can enable this in your <emailPreferencesLink>account settings</emailPreferencesLink>.",
+      "updateInfo": "If this information is incorrect, please update it from your <accountLink>account page</accountLink>.",
+      "verifyEmailBtn": "Verify your email before booking",
+      "year10": "Year 10",
+      "year11": "Year 11",
+      "year12": "Year 12",
+      "year13": "Year 13",
+      "year9": "Year 9",
+      "yearGroup": "School year group"
+    },
+    "bookingValidation": {
+      "emergencyContactRequiredBody": "You must enter a emergency contact details in order to book on to this event.",
+      "emergencyContactRequiredTitle": "Emergency contact details required",
+      "jobTitleRequiredBody": "You must enter a job title to proceed.",
+      "jobTitleRequiredTitle": "Job title required",
+      "schoolRequiredBody": "You must enter a school in order to book on to this event.",
+      "schoolRequiredTitle": "School information required",
+      "yearGroupRequiredBody": "You must enter a year group to proceed.",
+      "yearGroupRequiredTitle": "Year group required"
+    },
+    "bookings": {
+      "fetch": {
+        "errorTitle": "Failed to load event bookings"
+      }
+    },
+    "bookingsTable": {
+      "accountType": "Account type",
+      "bookingCreated": "Booking created",
+      "bookingUpdated": "Booking updated",
+      "emergencyName": "Emergency name",
+      "emergencyPhone": "Emergency telephone",
+      "jobYearGroup": "Job / year group"
+    },
+    "cancel": {
+      "booking": "Cancel your booking",
+      "request": "Cancel booking request",
+      "reservation": "Cancel your reservation",
+      "waitingList": "Leave waiting list"
+    },
+    "date": {
+      "seriesStarts": "Series starts"
+    },
+    "details": {
+      "bookedConfirmation": "You are booked on this event!",
+      "completeRegistration": "Complete your registration below",
+      "deadlinePassed": "(The booking deadline for this event has passed.)",
+      "full": "FULL",
+      "fullStudentOnly": "for student bookings",
+      "pastNotice": "(This event is in the past.)",
+      "reservedConfirmation": "You have been reserved a place on this event!",
+      "spacesAvailable": "{{spacesAvailable}} spaces",
+      "studentBadge": "Student event",
+      "teacherBadge": "Teacher event"
+    },
+    "emptyState": "No events to display with this filter setting",
+    "fetch": {
+      "errorTitle": "Events request failed"
+    },
+    "label": {
+      "when": "When:"
+    },
+    "leaderRestriction": "As an event leader, you are only able to see the details of events which you manage.",
+    "loadErrorTitle": "Error loading event overviews",
+    "loadMoreButton": "Load more events",
+    "manage": {
+      "addToWaitingList": "Add to waiting list",
+      "bookingRequest": "Make booking request",
+      "confirmReservation": "Confirm reservation"
+    },
+    "manageBookings": {
+      "actions": {
+        "promote": "Promote",
+        "resendEmail": "Resend email"
+      },
+      "confirmCancel": "Are you sure you want to cancel this booking?",
+      "confirmDelete": "Are you sure you want to delete this booking permanently?",
+      "confirmPromote": "Are you sure you want to convert this to a confirmed booking?",
+      "confirmResendEmail": "Are you sure you want to resend the confirmation email for this booking?",
+      "emailDropdown": {
+        "item": "Email {{bookingStatus}} users"
+      },
+      "emptyState": "There aren't currently any bookings for this event.",
+      "exportCsv": "Export as CSV",
+      "table": {
+        "medicalDietary": "Medical / dietary",
+        "reservedById": "Reserved by ID"
+      },
+      "title": "Manage current bookings"
+    },
+    "modal": {
+      "applyPastDeadline": "Apply - deadline past",
+      "bookNow": "Book now"
+    },
+    "notFound": "Event not found",
+    "overview": {
+      "title": "Events overview"
+    },
+    "page": {
+      "errorLoading": "Error loading events list",
+      "help": "Follow the links below to find out more about our FREE events.",
+      "listHeading": "Events list",
+      "noResults": "Sorry, we cannot find any events that match your filter settings.",
+      "showingCount": "Showing {{loadedCount}} of {{total}}"
+    },
+    "reservations": {
+      "additionalInfoDescription": "Add additional information about the group booking, for example contact details of other group supervisors. Please be aware that the students will remain the responsibility of the accompanying teachers. Please make sure that you have enough staff for the number of students you are bringing. We recommend at least 2 members of staff per group.",
+      "additionalInfoTitle": "Additional booking information",
+      "cancelButton": "Cancel reservations",
+      "contactEmail": "Contact email",
+      "createGroupsPrompt": "Create a groups from the <groupsPageLink>Manage groups</groupsPageLink> page to book your students onto an event",
+      "currentReservations": "All current reservations",
+      "emailNotVerified": "E-mail not verified",
+      "limitWarning": "You can only reserve a maximum of {{maxReservations}} group members onto this event.",
+      "loadingMembers": "Loading group members...",
+      "noBookings": "None of the members of this group are booked in for this event.",
+      "noGroupReservations": "This event does not allow group reservations.",
+      "noMembers": "This group has no members. Please select another group.",
+      "otherStudents": "Other students in this group",
+      "reserveButton": "Reserve places",
+      "reservedBy": "Reserved by",
+      "reservedByYou": "You",
+      "selectGroup": "Select group",
+      "selectGroupHint": "Select one of your groups from the dropdown menu to see its members.",
+      "supervisorContactDescription": "Change these if a teacher other than yourself is going to be supervising the students at this event.",
+      "supervisorContactTitle": "Contact details for main group supervisor",
+      "title": "Group reservations"
+    },
+    "selectedDetails": {
+      "eventLabel": "Event:",
+      "placesAvailableLabel": "Number of places available:",
+      "prepWorkDeadlineLabel": "Prepwork deadline:",
+      "startDateLabel": "Event start:",
+      "statusLabel": "Event status:",
+      "title": "Selected event details"
+    },
+    "selfBooking": {
+      "book": {
+        "successMessage": "You have been successfully booked onto this event.",
+        "successTitle": "Event booking confirmed"
+      },
+      "cancel": {
+        "errorTitle": "Event booking cancellation failed",
+        "successMessage": "Your booking has successfully been cancelled.",
+        "successTitle": "Your booking has been cancelled"
+      },
+      "waitingList": {
+        "confirmedMessage": "You have been successfully added to the waiting list for this event.",
+        "confirmedTitle": "Waiting list booking confirmed",
+        "requestReceivedTitle": "Booking request received"
+      }
+    },
+    "showingCount": "(showing {{shownCount}} of {{totalCount}})",
+    "status": {
+      "bookingDeadlineSoon": "Booking deadline soon!",
+      "expired": "EXPIRED",
+      "onWaitingList": "You are on the waiting list for this event."
+    },
+    "studentOnly": {
+      "contact": "This event is aimed at students. If you are not a student but still wish to attend, please <contactLink>contact us</contactLink>."
+    },
+    "tableAttendedHeader": "Number attended",
+    "tableConfirmedHeader": "Number confirmed",
+    "tableDateHeader": "Date",
+    "tableWaitingHeader": "Number waiting",
+    "userBooking": {
+      "authorisationLabel": "Booking/personal data sharing authorised by",
+      "bookingTitle": "Create a booking for {{givenName}} {{familyName}}",
+      "dataWarning": "Warning, by booking a user on this event, it may eventually lead to their personal information being shared with a third party. You must therefore confirm how this booking has been authorised. The data owner is always the {{siteTitle}} user being booked on to the event.",
+      "errorMessage": "You must provide an authorisation reason to complete this request.",
+      "optionEmailOwner": "Verified email - Data Owner",
+      "optionOther": "Other - Please specify",
+      "optionTelephoneOwner": "Telephone - Data Owner",
+      "waitingListTitle": "Add {{givenName}} {{familyName}} to waiting list"
+    }
+  }
+}

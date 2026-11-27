@@ -1,0 +1,532 @@
+{
+  "AssignmentProgressGroupsListing": {
+    "no-groups-match-your-criteria": "No groups match your criteria.",
+    "search-for-a-group": "Search for a group:",
+    "you-have-no-teaching-groups-yet": "You have no teaching groups yet."
+  },
+  "assignments": {
+    "assign": {
+      "errorTitle": "Test assignment to {{groupName}} failed",
+      "savedTitle_one": "Test saved",
+      "savedTitle_other": "Tests saved",
+      "successTitle_one": "Test assigned",
+      "successTitle_other": "Tests assigned"
+    },
+    "cancel": {
+      "confirmMessage": "Are you sure you want to cancel \"{{quizTitle}}\"?\r\n\r\nStudents will no longer be able to take the test or see any feedback, and all student attempts at this test will be lost."
+    },
+    "card": {
+      "assignerLabel": "By:",
+      "groupLabel": "Group:"
+    },
+    "counts": {
+      "assignments_one": "{{count}} assignment",
+      "assignments_other": "{{count}} assignments",
+      "tests_one": "{{count}} test",
+      "tests_other": "{{count}} tests"
+    },
+    "downloadPrivacyTitle": "Privacy Notice",
+    "dueDatePlaceholder": "Select your due date...",
+    "error": {
+      "fetchError": "Error fetching your assignments",
+      "loadAttemptFailed": "Loading assigned quiz attempt failed",
+      "loadQuizFailed": "Loading quiz failed",
+      "saveFailed": "Failed to save"
+    },
+    "extendDueDate": {
+      "confirmationText": "Are you sure you want to change the due date? This will extend the due date for all users this test is assigned to.",
+      "inputLabel": "Extend the due date:",
+      "successToastMessage": "This test is now due by {{dueDate}}.",
+      "successToastTitle": "Due date extended successfully",
+      "validationError": "You cannot set the due date to be earlier than the current due date or today."
+    },
+    "feedbackMode": {
+      "description": "You can adjust the type of feedback given to students after they complete this test. Changes to this setting are applied immediately and will affect all students, regardless of completion status.",
+      "title": "Set feedback mode",
+      "updateSuccess": "Feedback mode updated successfully."
+    },
+    "help": {
+      "overdueExplanation": "Any quizzes you have been set will appear here.<br/>Overdue quizzes which have not been fully attempted will be treated as quizzes <statusTodo>To do</statusTodo> until they are due, after which they are considered <statusOlder>Older</statusOlder> quizzes."
+    },
+    "notesMaxLengthError": "You have exceeded the maximum length.",
+    "pagination": {
+      "showMore": "Show more",
+      "showingCount": "Showing <strongShown>{{shownCount}}</strongShown> of <strongTotal>{{totalCount}}</strongTotal>"
+    },
+    "progress": {
+      "detailedTab": {
+        "title": "Performance on questions"
+      },
+      "dueDate": "Due: {{dueDate}}",
+      "errorFetching": "Error fetching assignment progress",
+      "fullMarks": "{{completedCount}} of {{totalCount}} got full marks",
+      "groupTab": {
+        "description": "See who attempted the assignment and which questions they struggled with."
+      },
+      "loadErrorTitle": "Loading assignment progress failed",
+      "questionCard": {
+        "attemptedBadge": "{{attemptedCount}} of {{totalCount}} attempted"
+      },
+      "questionLink": {
+        "ariaLabel": "Open question in new tab"
+      }
+    },
+    "setModal": {
+      "dueDateAfterStart": "Due date must be on or after start date and in the future.",
+      "dueDateRequired": "Due dates are required for assignments.",
+      "noGroups": "No groups.",
+      "notesCharacterCount": "{{characterCount}}/500 characters",
+      "schedulingInfo": "Scheduled assignments appear to students on the morning of the day chosen, otherwise assignments appear immediately. Assignments are due by the end of the day indicated.",
+      "startDateFuture": "Start date must be in the future.",
+      "title": "Assign \"{{boardTitle}}\"",
+      "unassignGroup": "Unassign group"
+    },
+    "startDatePlaceholder": "Select your scheduled start date...",
+    "table": {
+      "lastViewed": "Last viewed"
+    },
+    "warning": {
+      "assignmentDetail": "<assignmentLink><strong>{{assignmentTitle}}</strong></assignmentLink> (set to <bold>{{groupName}}</bold> by {{teacherName}})",
+      "outsideAssignment": "This question has been set to you as part of an active assignment. Answering it here will <strong>not</strong> count towards the assignment."
+    }
+  },
+  "gameboard": {
+    "assign": {
+      "noGroupsErrorTitle": "Error: Please choose one or more groups."
+    },
+    "assignments": {
+      "assignUnassignButton": "Assign / Unassign"
+    },
+    "builder": {
+      "addQuestionsButton": "Add questions",
+      "createErrorDetail": "Please correct the problems below.",
+      "deselect": "Deselect question",
+      "idError": "The ID may only contain lowercase letters, numbers, dashes and underscores.",
+      "idPlaceholder": "Optional",
+      "leaveConfirm": "You have unsaved changes - are you sure you want to leave this page?",
+      "previewTooltip": "Preview question '{{questionId}}' in new tab",
+      "questionsLimit": "You can add up to {{maxQuestions}} questions.",
+      "redoLabel": "Redo last action",
+      "select": "Select question",
+      "tagLabel": "Tag as",
+      "titleError": "Please provide a title.",
+      "titleHelp": "This will be visible to your students.",
+      "undoLabel": "Undo last action",
+      "wildcardLabel": "Wildcard",
+      "wildcardNone": "No wildcard"
+    },
+    "card": {
+      "groupsAssigned": "Number of groups assigned"
+    },
+    "cards": {
+      "showingAll": "Showing <loadedCountEmphasis>{{loadedCount}}</loadedCountEmphasis> of <totalCountEmphasis>{{totalCount}}</totalCountEmphasis> results.",
+      "showingFiltered": "Showing <matchedCountEmphasis>{{matchedCount}}</matchedCountEmphasis> match from <loadedCountEmphasis>{{loadedCount}}</loadedCountEmphasis> results."
+    },
+    "clone": {
+      "copiedTitle": "{{gameboardTitle}} (Copy)"
+    },
+    "fastTrack": {
+      "conceptTitleSuffix": "{{conceptTitle}} Practice",
+      "connectionTopTenToUpperMessage": "Practise the concept before returning to complete the board",
+      "connectionUpperToLowerMessage": "Practise the concept with easier questions before returning to complete the board"
+    },
+    "save": {
+      "unsaveConfirm": "Are you sure you want to unsave '{{boardTitle}}' from your account?"
+    },
+    "wildcards": {
+      "errorTitle": "Error loading wildcards"
+    }
+  },
+  "groups": {
+    "archive": {
+      "confirmButton": "Archive",
+      "title": "Archive group",
+      "unarchiveHint": "A group can be unarchived at any time by navigating to the group in the \"Archived\" section of this page and clicking \"Unarchive group\"."
+    },
+    "authorisations": {
+      "connectionErrorMessage": "The code may be invalid or the group may no longer exist. Codes are usually uppercase and 6-8 characters in length.",
+      "connectionErrorTitle": "Teacher connection failed",
+      "grantSuccessMessage": "You have granted access to your data.",
+      "grantSuccessTitle": "Granted access",
+      "loadStudentsErrorTitle": "Loading authorised students failed",
+      "loadTeachersErrorTitle": "Loading authorised teachers failed",
+      "rateLimitMessage": "You have entered too many group codes. Please check your code with your teacher and try again later!",
+      "releaseAllSuccessMessage": "You have ended your access to all of your students' data.",
+      "releaseErrorTitle": "Ending access failed",
+      "releaseSuccessMessage": "You have ended your access to your student's data.",
+      "releaseSuccessTitle": "Access removed",
+      "revokeErrorTitle": "Revoking access failed",
+      "revokeSuccessMessage": "You have revoked access to your data.",
+      "revokeSuccessTitle": "Access revoked"
+    },
+    "create": {
+      "errorTitle": "Group creation failed",
+      "nameLabel": "Enter your group name",
+      "submitButton": "Create group"
+    },
+    "delete": {
+      "errorTitle": "Group deletion failed",
+      "nonOwnerConfirm": "You cannot delete this group, because you are not the group owner.  Do you want to remove yourself as a manager of '{{groupName}}'?",
+      "ownerConfirm": "Are you sure you want to permanently delete the group '{{groupName}}' and remove all associated assignments?\n\nThis action cannot be undone!"
+    },
+    "editor": {
+      "emailButton": "Email users",
+      "managersTitle": "Group managers",
+      "memberCount_one": "This group has {{count}} member.",
+      "memberCount_other": "This group has {{count}} members.",
+      "membersTitle": "Group members",
+      "moreInfoButton": "More information",
+      "nameAriaLabel": "Group Name",
+      "nameEmpty": "Group name cannot be empty.",
+      "ownerLabel": "(group owner)",
+      "renameErrorDetail": "The group name must be specified.",
+      "renameErrorTitle": "Cannot rename group",
+      "renameLabel": "Rename group",
+      "selfRemovalLabel": "Allow students to remove themselves from this group",
+      "youLabel": "(you)"
+    },
+    "email": {
+      "infoText": "An admin user can use the user IDs below to email these users:"
+    },
+    "fetch": {
+      "errorTitle": "Loading groups failed"
+    },
+    "invite": {
+      "addManagers": "Add group managers",
+      "codeDescription": "Students can enter this code in their {{siteTitle}} account. They’ll need to go to <accountPage>My account</accountPage>, then <teacherConnections>Teacher Connections</teacherConnections>.",
+      "codeHeading": "Or use this code",
+      "createdTitle": "Group created",
+      "errorTitle": "Error fetching group joining token",
+      "linkDescription": "Share this link with students so they can join your group:",
+      "linkHeading": "Share this link",
+      "membersHeading": "Invite members to join",
+      "nextSteps": "What to do next",
+      "qrButton": "Generate QR Code",
+      "qrDescription": "Students can scan a QR code on their device to join your group:",
+      "qrHeading": "Generate a QR Code",
+      "shareIntro": "Share the link or code to invite people to your group.",
+      "studentInfo": "Students will see the name and email address on your account when they join."
+    },
+    "managers": {
+      "add": {
+        "errorTitle": "Group manager addition failed"
+      },
+      "addButton": "Add group manager",
+      "addInstructions": "Enter the email of another {{siteTitle}} teacher account below to add them as a group manager. Note that this will share their email address with the students.",
+      "addSectionTitle": "Add additional managers",
+      "cautionHeader": "<strong>Caution</strong>: All other group managers are allowed to:",
+      "currentHeading": "Current group managers",
+      "emailPlaceholder": "Enter email address here",
+      "emptyState": "There are no additional group managers for this group.",
+      "enableIntro": "Enabling this option allows additional managers to:",
+      "extraPrivilegesLabel": "Give additional managers extra privileges",
+      "listIntro": "The users below have permission to manage this group.",
+      "makeOwner": "Make owner",
+      "onlySelf": "You are the only additional manager for this group.",
+      "ownerHeading": "Group owner:",
+      "permissions": {
+        "heading": "Sharing permissions",
+        "intro": "When you share this group, other teachers can:",
+        "progress": "View student progress",
+        "students": "Add and remove students"
+      },
+      "privilegeArchiveRename": "Archive and rename the group",
+      "privilegeManageManagers": "Add or remove other managers",
+      "privilegeModifyAssignments": "Modify or delete <b>all assignments</b>, including those set by the owner",
+      "privilegeRemoveMembers": "Remove group members",
+      "promote": {
+        "confirmWithPrivileges": "\nAre you sure you want to promote this manager to group owner?\n\n• They will inherit the ability to add additional managers to, archive and delete this group.\n\n• You will be demoted to an additional group manager.\n\n• You will no longer be able to add or remove other managers, but you will still be able to modify or delete assignments, archive or rename the group or remove group members.\n            ",
+        "confirmWithoutPrivileges": "\nAre you sure you want to promote this manager to group owner?\n\n• They will inherit the ability to add additional managers to, archive and delete this group.\n\n• You will be demoted to an additional group manager, and will not be able to modify or delete assignments, archive or rename the group or remove group members.\n\n• If you wish to retain these privileges, but transfer ownership, click 'cancel' here and then tick the box to give additional managers extra privileges before transferring ownership.\n            ",
+        "errorTitle": "Group manager promotion failed",
+        "successMessage": "You have been demoted to an additional manager of this group",
+        "successTitle": "Group manager promoted to owner"
+      },
+      "removeManager": {
+        "errorTitle": "Group manager removal failed"
+      },
+      "removeSelf": {
+        "title": "Remove yourself as a group manager"
+      },
+      "selectedGroup": "Selected group: {{groupName}}",
+      "uncheckInstruction": "Un-tick the above box if you would like to remove these additional privileges."
+    },
+    "member": {
+      "emailDeliveryFailedTooltip": "This user's account email address is invalid or not accepting email.<br/>They will not be able to reset their password or receive update emails. Ask them to login and update it, or contact us to help resolve the issue.",
+      "emailUnverifiedTooltip": "This user has not yet verified their email.",
+      "inactiveLabel": "(inactive in group)",
+      "inactiveTooltip": "This user has set their status to inactive for this group. This means they will no longer see new assignments.",
+      "nameNotSharing": "<struckOut>{{givenName}} {{familyName}}</struckOut> (Not Sharing)",
+      "passwordReset": {
+        "cannotSend": "Cannot send password reset request email.",
+        "deliveryFailedTooltip": "Password reset request cannot be sent because this user's account email address is either invalid or not accepting email.",
+        "sendTooltip": "Send a password reset request to this user's email address.",
+        "sentLabel": "Reset email sent",
+        "sentTooltip": "Password reset request sent."
+      },
+      "removeAriaLabel": "Remove member",
+      "removeConfirm": "Are you sure you want to remove this user from the group '{{groupName}}'?",
+      "removeTooltip": "Remove this user from the group."
+    },
+    "members": {
+      "fetch": {
+        "errorTitle": "Loading group members failed"
+      },
+      "remove": {
+        "errorMessage": "User not removed from the group, please try again.",
+        "errorTitle": "Failed to delete",
+        "successMessage": "User removed from the group.",
+        "successTitle": "Removal successful"
+      }
+    },
+    "memberships": {
+      "fetch": {
+        "errorTitle": "Loading group memberships failed"
+      },
+      "updateStatus": {
+        "errorTitle": "Membership status update failed",
+        "successMessage": "You have updated your membership status.",
+        "successTitle": "Status Updated"
+      }
+    },
+    "page": {
+      "addTeachersInfo": "You can add other teachers to help you manage a group. You cannot directly add students, but you can invite them to join.",
+      "helpText": "Use this page to manage groups. You can add users to a group by giving them the group code and asking them paste it into their account settings page.<br/>You can find the code for an existing group by selecting the group and clicking <inviteUsersText>Invite Users</inviteUsersText>."
+    },
+    "progress": {
+      "fallbackTitle": "Unknown quiz",
+      "scheduledBadge": "(scheduled)",
+      "searchLabel": "Search:",
+      "sectionDescription": "View this group's progress on assignment and tests.",
+      "sectionTitle": "Assignments and tests",
+      "sortLabel": "Sort by:",
+      "startDate": "Starts: {{startDate}}",
+      "studentCount_one": "{{count}} student",
+      "studentCount_other": "{{count}} students",
+      "title": "Group progress",
+      "unknownCount": "Unknown"
+    },
+    "qr": {
+      "loadError": "Failed to load QR code panel."
+    },
+    "qrCode": {
+      "altText": "Follow this URL to join the group: {{url}}"
+    },
+    "selector": {
+      "createButton": "Create a new group",
+      "groupIdTitle": "Group id: {{groupId}}"
+    },
+    "share": {
+      "title": "Share your group"
+    },
+    "shared": {
+      "title": "Shared group"
+    },
+    "token": {
+      "fetch": {
+        "errorTitle": "Loading group token failed"
+      }
+    },
+    "update": {
+      "errorTitle": "Group saving failed",
+      "successTitle": "Group updated successfully"
+    }
+  },
+  "progress": {
+    "charts": {
+      "byTopicTitle": "By topic"
+    },
+    "correctOfAttempts": "{{correct}} of {{attempts}}",
+    "marking": {
+      "accountSettings": "your account settings",
+      "notMarkedFor": "not been marked for {{context}}"
+    },
+    "mostRecentTitle": "Most recently answered questions",
+    "noneAttempted": "None attempted",
+    "oldestUnsolvedTitle": "Oldest unsolved questions",
+    "otherUserTitle": "Progress for {{userName}}",
+    "partBreakdown": {
+      "partColumn": "Part {{partNumber}}"
+    },
+    "questionPartsTitle": "Question parts correct by type",
+    "questionTypeLabel": "{{questionType}} questions",
+    "returnAttempt": {
+      "action": "Allow another attempt",
+      "body": "This will allow the student to attempt the test again.",
+      "title": "Allow another attempt?"
+    },
+    "table": {
+      "emptyState": "This group is empty, so has no progress data available. You can invite users through the <manageGroupsLink>Manage groups</manageGroupsLink> page.",
+      "notSharing": "Not Sharing",
+      "totalAttemptedQuestionsLabel": "Total attempted questions",
+      "totalCorrectQuestionsLabel": "Total correct questions",
+      "viewAnswers": "View answers"
+    }
+  },
+  "teacherFeatures": {
+    "request": {
+      "alreadyTutor": "You already have a tutor account",
+      "moreInfo": "More information about <tutorLink>tutor</tutorLink> and <teacherLink>teacher</teacherLink> accounts.",
+      "teacherRequirement": "A \"teacher\" must be directly associated with a school",
+      "title": "Request Account Upgrade",
+      "tutorButton": "I am a tutor",
+      "tutorRequirement": "A \"tutor\" does not have to be associated with a school (private tutors and parents fall under this category)",
+      "upgradeIntro": "Upgrading your {{siteTitle}} account gives you access to teaching resources, the ability to assign work to groups of students, and more! To continue, please tell us whether you are a teacher or a tutor:"
+    }
+  },
+  "teacherNotes": {
+    "label": "Teacher notes"
+  },
+  "tests": {
+    "alreadySubmitted": {
+      "body": "A submission has already been recorded for this test by your account.",
+      "title": "Test already submitted"
+    },
+    "api": {
+      "loadAssignedToMeFailed": "Loading tests assigned to you failed",
+      "loadAssignmentFeedbackFailed": "Loading test assignment feedback failed",
+      "loadAssignmentsSetByMeFailed": "Loading test assignments failed",
+      "loadAvailableFailed": "Loading tests failed",
+      "loadFreelyAttemptedFailed": "Loading attempted freely tests failed",
+      "loadMyFeedbackFailed": "Loading test feedback failed",
+      "loadPreviewFailed": "Loading test preview failed",
+      "loadRubricFailed": "Loading test rubric failed",
+      "loadStudentFeedbackFailed": "Loading student test feedback failed",
+      "returnWorkFailed": "Failed to return work to the student",
+      "startAttemptFailed": "Starting test attempt failed",
+      "startFreeAttemptFailed": "Starting free test attempt failed",
+      "submitAnswersFailed": "Failed to submit your test answers",
+      "updateAssignmentFailed": "Failed to update test assignment",
+      "updateDueDateFailed": "Failed to update test due date",
+      "updateFeedbackModeFailed": "Failed to update test feedback mode"
+    },
+    "assign": {
+      "errorTitle": "Failed to assign test"
+    },
+    "assignedEmpty": {
+      "none": "You have no tests in progress."
+    },
+    "assignedLoadError": "Your test assignments failed to load, please try refreshing the page.",
+    "assignedTable": {
+      "dueDate": "Due Date",
+      "setDate": "Set Date"
+    },
+    "attempt": {
+      "allComplete": "All sections complete",
+      "assignedErrorBody": "Your teacher has set this test to you. You may not practise it in advance.<br/>If you are ready to take the test, click on it in your <assignedTestsLink>assigned tests</assignedTestsLink> page.",
+      "assignedErrorTitle": "You have been set this test",
+      "finish": "Finish",
+      "loadErrorTitle": "Error loading test!",
+      "reviewAnswers": "Review answers",
+      "sectionsComplete": "{{completedCount}} / {{totalCount}} sections complete",
+      "submitAnyway": "Submit anyway",
+      "submitConfirmIncomplete": "Are you sure? You haven't answered all of the questions",
+      "submitToastBody": "Your answers have been submitted successfully."
+    },
+    "button": {
+      "continue": "Continue test",
+      "noFeedback": "No feedback",
+      "start": "Start test",
+      "viewFeedback": "View feedback"
+    },
+    "cancelAssignment": {
+      "errorTitle": "Cancelling test assignment failed"
+    },
+    "details": {
+      "overallMark": "Your mark is {{correct}} / {{total}}",
+      "overallMarkLabel": "Overall mark",
+      "sectionBreakdown": "Section mark breakdown"
+    },
+    "feedback": {
+      "error": {
+        "heading": "Error loading your feedback!"
+      },
+      "errorTitle": "Error loading test feedback",
+      "footer": {
+        "finalLabel": "Back to Overview"
+      },
+      "helpText": "See the feedback for your students for this test assignment.",
+      "notStartedHeading": "This test has not yet started.",
+      "releaseDate": "It will be released to your group on {{startDate}}.",
+      "title": "Test Feedback"
+    },
+    "header": {
+      "completedDate": "Completed: {{date}}",
+      "freeAttempt": "You are freely attempting this test.",
+      "preview": "You are previewing this test.",
+      "setBy": "Set by: {{teacherName}}",
+      "wasDue": "Was due:"
+    },
+    "info": {
+      "assigner": "by {{teacherName}}",
+      "completed": "Completed: {{completedDate}}",
+      "dueDate": "Due date: {{dueDate}}",
+      "set": "Set: {{setDate}}",
+      "started": "Started: {{startDate}}"
+    },
+    "pageHelp": "Use this page to see tests you need to take and your test results.<br/>You can also take some tests freely whenever you want to test your knowledge.",
+    "pagination": {
+      "position": "Section {{page}} / {{sectionCount}}"
+    },
+    "practiceEmpty": {
+      "noMatch": "No practice tests match your filters.",
+      "none": "You have no practice tests. Take some new tests <viewTestsLink>here</viewTestsLink>!"
+    },
+    "practiceLoadError": "Your practice test attempts failed to load, please try refreshing the page.",
+    "practiceTable": {
+      "startDate": "Start Date"
+    },
+    "preview": {
+      "attemptYourself": "Attempt test yourself",
+      "backToContents": "Back to Contents",
+      "previewQuestions": "Preview questions"
+    },
+    "rubric": {
+      "buttonTooltip": "Show instructions in a modal",
+      "modalTitle": "Test Instructions",
+      "showButton": "Show instructions"
+    },
+    "section": {
+      "fallbackTitle": "Section {{page}}",
+      "notFound": "Test section {{page}} not found"
+    },
+    "setQuiz": {
+      "dueDateAfterStart": "Due date must be on or after the start date.",
+      "dueDateAfterToday": "Due date must be after today.",
+      "dueDateSelect": "Select a due date for the assignment.",
+      "feedbackLabel": "What level of feedback should students get:",
+      "feedbackRequired": "Please select a feedback mode",
+      "groupPlaceholder": "Select groups",
+      "startDateError": "Start date must be today or in the future.",
+      "startDateHelp": "You can schedule a test to appear in the future by setting a start date. The test will be visible to students from this date onwards.<br/>If you do not set a start date, the test will be visible immediately.",
+      "title": "Setting test '{{testTitle}}'"
+    },
+    "sidebar": {
+      "fallbackTitle": "Section {{id}}",
+      "sectionsButton": "Sections",
+      "statusCompleted": "Section completed",
+      "statusInProgress": "Section in progress",
+      "statusNotStarted": "Section not started"
+    },
+    "status": {
+      "completed": "Completed ·",
+      "feedbackAvailable": "Feedback available",
+      "started": "Started"
+    },
+    "submission": {
+      "failureMessage": "Error submitting test",
+      "successTitle": "Test submitted"
+    },
+    "title": {
+      "studentSuffix": " for {{givenName}} {{familyName}}"
+    },
+    "view": {
+      "emptyState": "There are no practice tests currently available.",
+      "loginRequired": "You must be logged in to view practice tests.",
+      "takeTest": "Take Test"
+    },
+    "viewingAs": {
+      "notification": "You are viewing this test as <strong>{{givenName}} {{familyName}}</strong>.",
+      "returnLink": "<feedbackLink>Click here</feedbackLink> to return to the teacher test feedback page."
+    }
+  }
+}

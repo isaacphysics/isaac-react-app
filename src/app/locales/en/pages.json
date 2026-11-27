@@ -1,0 +1,69 @@
+{
+  "contact": {
+    "faq": {
+      "heading": "Frequently Asked Question?",
+      "text": "You might like to check our FAQs pages to see if they can help you: <studentFaqLink>student FAQs</studentFaqLink> | <teacherFaqLink>teacher FAQs</teacherFaqLink>"
+    },
+    "form": {
+      "errorMessage": "{{errorMessage}} You can contact us at <webmasterEmailLink>{{webmasterEmail}}</webmasterEmailLink>",
+      "heading": "Send us a message",
+      "maxLengthWarning": "Your message has reached the maximum length.",
+      "messageLabel": "Message",
+      "subjectLabel": "Message subject",
+      "successMessage": "Thank you for your message."
+    },
+    "formErrorTitle": "Error sending Contact Us form",
+    "preset": {
+      "accountDeletionMessage": "Hello,\n\nPlease could you delete my {{siteTitle}} account.\n\nThanks, \n\n",
+      "accountDeletionSubject": "Account Deletion Request",
+      "contentProblemPlaceholder": "Please describe the problem here.",
+      "contentProblemSection": ", section \"{{sectionName}}\"",
+      "contentProblemSubject": "Content problem",
+      "pageNotFoundMessage": "Page: \"{{pageName}}\"\n\n[Add any details about how you found this missing page here.]",
+      "pageNotFoundSubject": "Page not found",
+      "teacherAccountMessage": "Hello,\n\nPlease could you convert my {{siteTitle}} account into a teacher account.\n\nMy school is: \nI have changed my account email address to be my school email: [Yes/No]\nA link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: \n\nThanks, \n\n"
+    },
+    "problems": {
+      "heading": "Problems with the site?",
+      "text": "We always want to improve so please report any issues to <webmasterEmailLink>{{webmasterEmail}}</webmasterEmailLink>"
+    },
+    "social": {
+      "text": "Follow us on:"
+    }
+  },
+  "contextPicker": {
+    "resetButton": "Reset viewing context"
+  },
+  "homepage": {
+    "video": {
+      "altText": "Isaac Physics introduction video",
+      "copyLink": "Copy Link",
+      "linkCopied": "Copied!",
+      "thumbnailAlt": "A group of students solving problems at an in-person Isaac event.",
+      "title": "Why use Isaac Physics?"
+    }
+  },
+  "news": {
+    "displayErrorTitle": "Unable to display news",
+    "emptyState": "No news to display...",
+    "errorTitle": "Error fetching news stories"
+  },
+  "profiles": {
+    "featured": {
+      "emailLinkLabel": "Email {{name}}"
+    }
+  },
+  "quantumMechanicsPrimer": {
+    "title": "Quantum Mechanics Primer"
+  },
+  "revision": {
+    "alert": {
+      "correctAnswerTimespan": "You answered this question correctly {{timespan}}.",
+      "lastMonth": "in the last month",
+      "lastTwelveMonths": "in the last 12 months",
+      "lastWeek": "in the last week",
+      "modeNotice": "You are currently in <revisionModeLink>revision mode</revisionModeLink> which hides your previous attempts.",
+      "overOneYear": "more than 1 year ago"
+    }
+  }
+}

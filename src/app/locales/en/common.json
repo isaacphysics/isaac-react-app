@@ -1,0 +1,442 @@
+{
+  "accessibility": {
+    "dragAndDropLabel": "Drag and drop",
+    "dropdownLabel": "Dropdown",
+    "inputModeTitle": "Question input mode"
+  },
+  "accordion": {
+    "completion": {
+      "allCorrect": "All questions in this part are answered correctly.",
+      "allIncorrect": "All questions in this part are answered incorrectly.",
+      "notAttempted": "No questions in this part have been answered.",
+      "someIncorrect": "Some questions in this part are answered incorrectly."
+    },
+    "partLabel": "Part {{partLetter}}"
+  },
+  "banners": {
+    "emailVerification": {
+      "dismissButton": "Snooze",
+      "heading": "Email Verification"
+    },
+    "research": {
+      "dismissButton": "Got it"
+    }
+  },
+  "button": {
+    "addMatchingRule": "Add matching rule",
+    "assign": "Assign",
+    "back": "Back",
+    "bookPlace": "Book a place",
+    "cancel": "Cancel",
+    "changePassword": "Change password",
+    "close": "Close",
+    "closeModal": "Close modal",
+    "confirm": "Confirm",
+    "connect": "Connect",
+    "continue": "Continue",
+    "createAccount": "Create an account",
+    "createGroup": "Create a group",
+    "createNewGroup": "Create new group",
+    "delete": "Delete",
+    "deleteAllCurves": "Delete all curves",
+    "deleteGroup": "Delete group",
+    "deleteMatchingRule": "Delete matching rule",
+    "deleteSelectedCurve": "Delete selected curve",
+    "details": "Details",
+    "downloadAssignmentsCsv": "Download assignments CSV",
+    "downloadCsv": "Download CSV",
+    "downloadTestsCsv": "Download tests CSV",
+    "duplicateAndEdit": "Duplicate and edit",
+    "emailUsers": "Email Users",
+    "expand": "Expand",
+    "extendDueDate": "Extend due date",
+    "findOutMore": "Find out more",
+    "getTeacherAccount": "Get a teacher account",
+    "help": "Help",
+    "home": "Home",
+    "iAmATeacher": "I am a teacher",
+    "inviteUsers": "Invite users",
+    "leaveGroup": "Leave group",
+    "loadMore": "Load more",
+    "logIn": "Log in",
+    "logOut": "Log out",
+    "manage": "Manage",
+    "manageGroups": "Manage groups",
+    "menu": "Menu",
+    "next": "Next",
+    "ok": "OK",
+    "preview": "Preview",
+    "previous": "Previous",
+    "printPage": "Print page",
+    "readMore": "Read more",
+    "remove": "Remove",
+    "resendVerificationEmail": "Resend verification email",
+    "reset": "Reset",
+    "resetPassword": "Reset password",
+    "seeMoreEvents": "More events",
+    "sendEmails": "Send emails",
+    "setAsAssignment": "Set as assignment",
+    "setTest": "Set test",
+    "show": "Show",
+    "signUp": "Sign up",
+    "submit": "Submit",
+    "unassign": "Unassign",
+    "unsave": "Unsave",
+    "update": "Update",
+    "viewMore": "View more",
+    "viewTests": "View tests"
+  },
+  "cards": {
+    "imageAlt": "Illustration for {{title}}"
+  },
+  "clientError": {
+    "concepts": {
+      "loadError": "Unable to load concepts"
+    },
+    "contentNotFound": "Content not found",
+    "defaultTitle": "Error fetching data from server",
+    "fragmentNotFound": "We're sorry, page fragment not found:<code>{{fragmentId}}</code>",
+    "heading": "We're sorry, but an error has occurred in the {{siteName}} app!",
+    "notFound": {
+      "message": "We're sorry, page not found: <code>{{pathname}}</code>",
+      "offlineMessage": "It looks like you're offline. You may want to check your internet connection, and then refresh this page to try again.<br/>If you are still having issues, please <webmasterEmail>let us know</webmasterEmail>.",
+      "offlineTitle": "No internet",
+      "reportPrompt": "Expecting to find something here?<contactAction>Let us know<srOnly> about this missing page</srOnly></contactAction>.",
+      "title": "Page not found"
+    },
+    "offlineMessage": "It looks like you're offline. You may want to check your internet connection, and then refresh this page to try again.<br/>If you are still having issues, please <contactLink>let us know</contactLink>.",
+    "offlineWarning": "You appear to be offline.",
+    "recoveryOptions": "You may want to <refreshLink>refresh this page and try again</refreshLink>, <homeLink>return to our homepage</homeLink>, or <contactLink>contact</contactLink> or <emailLink>email</emailLink> us if this keeps happening.",
+    "sessionExpired": {
+      "breadcrumbTitle": "Session expired error",
+      "contactSupport": "Please email <mailtoLink>{{webmasterEmail}}</mailtoLink> if this keeps happening.",
+      "heading": "We're sorry, but your session has expired!",
+      "retryInstructions": "You should <refresh>refresh this page and try again</refresh>, or try refreshing whilst <bypassCache>bypassing your browser's cache</bypassCache>, which may have saved an outdated version of Isaac."
+    },
+    "skills": {
+      "loadError": "Unable to load skills questions",
+      "saveError": "Couldn't save answer."
+    },
+    "statusCode": "Status code: {{statusCode}}",
+    "userInfo": {
+      "errorDetails": "Error Details",
+      "sectionTitle": "Useful information to include in your email"
+    }
+  },
+  "clipboard": {
+    "copiedTooltip": "Copied to clipboard!",
+    "copyAriaLabel": "Copy to clipboard",
+    "copyButton": "Copy"
+  },
+  "cookieConsent": {
+    "accept": "Accept",
+    "anvil": {
+      "title": "Allow Anvil content?"
+    },
+    "desmos": {
+      "title": "Allow Desmos content?"
+    },
+    "geogebra": {
+      "title": "Allow GeoGebra content?"
+    },
+    "youtube": {
+      "title": "Allow YouTube content?"
+    }
+  },
+  "dateInput": {
+    "clearButtonLabel": "Clear date",
+    "clearButtonLabel_birth": "Clear date of birth",
+    "dayLabel": "Day",
+    "dayLabel_birth": "Day of birth",
+    "monthLabel": "Month",
+    "monthLabel_birth": "Month of birth",
+    "yearLabel": "Year",
+    "yearLabel_birth": "Year of birth"
+  },
+  "error": {
+    "emailRequestFailed": "Email verification request failed.",
+    "eventBookingFailed": "Event booking failed",
+    "fetchGroups": "Error fetching groups",
+    "invalidCharacters": "Some of the characters you are using are not allowed: {{badCharacters}}",
+    "invalidEmailAddress": "Please enter a valid email address",
+    "loadConcept": "Unable to load concept",
+    "loadPage": "Unable to load page",
+    "loadQuestion": "Unable to load question",
+    "loadTopic": "Unable to load topic",
+    "noEmailToVerify": "You are not logged in or don't have an e-mail address to verify.",
+    "selectGroup": "Please select a group",
+    "tooManyAttempts": "Too many attempts",
+    "updateAccount": "Unable to update your account",
+    "validName": "Please enter a valid name."
+  },
+  "form": {
+    "elements": {
+      "requiredError": "required",
+      "trueFalseAccessibilityLabel": "for {{fieldName}}"
+    },
+    "requiredField": "Required field"
+  },
+  "label": {
+    "aLevel": "A Level",
+    "accessibilityRequirements": "Accessibility requirements",
+    "accountVerificationNote": "We will be in touch shortly. Please note that account verification is a manual process and may take a few days.",
+    "all": "All",
+    "any": "Any",
+    "assignments": "Assignments",
+    "bookingDeadline": "Booking deadline",
+    "bookingDeadlineLabel": "Booking deadline:",
+    "cambridgeUniversity": "University of Cambridge website",
+    "contactName": "Contact name",
+    "created": "Created",
+    "difficultiesTooltip": "Practice: {{practiceLevels}}<br/>Challenge: {{challengeLevels}}",
+    "difficulty": "Difficulty",
+    "dragToReorder": "Drag to reorder",
+    "due": "Due:",
+    "dueDateLabel": "Due date:",
+    "emailAddress": "Email address",
+    "emailOptOutNote": "Users who have opted out of this type of email will not receive anything. Administrative emails cannot be opted out of and should be avoided.",
+    "emailPreferencesDescription": "Get important information about the {{siteTitle}} programme delivered to your inbox. These settings can be changed at any time.",
+    "emailPreviewNote": "The preview below uses fields taken from your account (e.g. givenName and familyName).",
+    "emailSubject": "Email subject",
+    "emailType": "Email type",
+    "emailTypeAdminUrgent": "Urgent administrative email",
+    "emailTypeDescription": "The type of email you are sending.",
+    "emailTypeNewsUpdates": "News and updates",
+    "eventLeaderRestriction": "As an event leader, you are only able to see the bookings of users who have granted you access to their data.",
+    "eventLocation": "Location:",
+    "feedbackMode": "Student feedback mode:",
+    "filterByAssigner": "Filter by assigner",
+    "filterByGroup": "Filter by group",
+    "filterByStatus": "Filter by status",
+    "filterByTitle": "Filter by title",
+    "filters": "Filters",
+    "findByUserRole": "Find by user role:",
+    "findUserByEmail": "Find a user by email:",
+    "findUserByFamilyName": "Find a user by family name:",
+    "firstName": "First name",
+    "followUs": "Follow us",
+    "gender": "Gender",
+    "groupName": "Group name",
+    "groups": "Groups:",
+    "key": "Key",
+    "lastName": "Last name",
+    "location": "Location",
+    "makeSelection": "--- Make a selection ---",
+    "newPassword": "New password",
+    "none": "None",
+    "notes": "Notes:",
+    "password": "Password",
+    "passwordMinLength": "Passwords must be at least {{minLength}} characters long.",
+    "passwordStrength": "Password strength:",
+    "questionNumber": "Question {{questionNumber}}",
+    "questions": "questions",
+    "rememberMe": "Remember me",
+    "role": "Role",
+    "school": "School",
+    "selectOrCreateGroup": "Select or create a group",
+    "setBy": "Set by",
+    "sidebar": "Sidebar",
+    "skipToContent": "Skip to main content",
+    "someoneElse": "Someone else",
+    "sortBy": "Sort by",
+    "stage": "Stage",
+    "startDate": "Start date",
+    "startDateLabel": "Start date:",
+    "status": "Status",
+    "teacherAccountRequestSubject": "Teacher Account Request",
+    "teacherConnectionCode": "Teacher connection code",
+    "topic": "Topic",
+    "unit": "Unit",
+    "university": "University",
+    "userAgent": "User Agent",
+    "userId": "User ID",
+    "userSelectionDescription": "Comma separated list of user IDs to email.",
+    "value": "Value",
+    "verificationCode": "Verification Code"
+  },
+  "listViews": {
+    "action": {
+      "takeTest": "Take the test",
+      "viewTest": "View test"
+    },
+    "hiddenFromTeachers": "Hidden from teachers",
+    "moveDown": "Move question down",
+    "moveUp": "Move question up",
+    "noTitle": "no title",
+    "question": {
+      "label": "Question"
+    },
+    "visibleToStudents": "Visible to students"
+  },
+  "modal": {
+    "help": {
+      "title": "Quick Help"
+    },
+    "nextPageAriaLabel": "Go to next page on modal",
+    "pageIndicatorAriaLabel": "Modal page indicator",
+    "questionReminder": {
+      "hideButton": "Hide Question",
+      "showButton": "Show Question"
+    }
+  },
+  "navigation": {
+    "scrollToTop": "Scroll to top of page",
+    "search": {
+      "closeLabel": "Close search menu",
+      "openLabel": "Open search menu"
+    },
+    "supersededDeprecated": {
+      "bookBoardTip": "If you want to set this work again, you should use the most up-to-date version from our book page.",
+      "deprecatedTitle": "Deprecated content",
+      "deprecatedUnsupported": "As this {{contentType}} is unsupported, we do not recommend using it with your students.",
+      "deprecatedWarning": "This {{contentType}} is no longer supported, and may contain errors.",
+      "supersededEditPrompt": "We recommend that you <editLink>duplicate and edit</editLink> this assignment to replace them with their newer version.",
+      "supersededTitle": "Superseded content",
+      "teacherNote": "Teacher note:"
+    }
+  },
+  "notifications": {
+    "assignmentTitle": "Assignment to do: {{gameboardTitle}}",
+    "dueDateMessage": "Due on {{dueDate}}",
+    "goToAssignmentButton": "Go to assignment",
+    "goToTestButton": "Go to test",
+    "survey": {
+      "acceptButton": "Yes, view questionnaire",
+      "declineButton": "No thanks",
+      "postponeButton": "Ask me later",
+      "prompt": "Would you like to complete a survey?"
+    },
+    "testTitle": "Test to do: {{quizTitle}}"
+  },
+  "pageMetadata": {
+    "visuallyHiddenTitle": "Main page"
+  },
+  "printButton": {
+    "withHints": {
+      "label": "<visuallyHidden>Print </visuallyHidden>With hints",
+      "title": "Print with hints"
+    },
+    "withoutHints": {
+      "label": "<visuallyHidden>Print </visuallyHidden>Without hints",
+      "title": "Print without hints"
+    }
+  },
+  "reportButton": {
+    "label": "Report a problem (opens in new tab)"
+  },
+  "role": {
+    "admin": "Admin",
+    "contentEditor": "Content editor",
+    "student": "Student",
+    "teacher": "Teacher",
+    "tutor": "Tutor"
+  },
+  "search": {
+    "error": {
+      "failed": "Failed to search. Please try again later."
+    },
+    "errorTitle": "Unable to perform search",
+    "filter": {
+      "placeholder": "Select page type filter..."
+    },
+    "results": {
+      "heading": "Search Results"
+    },
+    "shortcuts": {
+      "teacherConnect": {
+        "summary": "Click here to connect to a teacher using the code you entered.",
+        "title": "Teacher Connections"
+      }
+    }
+  },
+  "serverError": {
+    "heading": "We're sorry, but an error has occurred on the {{siteTitle}} server!",
+    "suggestions": "You may want to <refresh>refresh this page and try again</refresh>, <homepage>return to our homepage</homepage>, or <contact>contact</contact> or <email>email</email> us if this keeps happening."
+  },
+  "shareLink": {
+    "buttonTitle": "Share page",
+    "hideButtonLabel": "Hide share link",
+    "inputAriaLabel": "Share URL",
+    "showButtonLabel": "Get share link"
+  },
+  "status": {
+    "accountUpdated": "Your account settings were updated successfully.",
+    "attempted": "Attempted",
+    "checkInbox": "Please check your inbox.",
+    "comingSoon": "Coming soon",
+    "completed": "Completed",
+    "correct": "Correct",
+    "emailRequestMade": "Request made, to send another refresh.",
+    "incorrect": "Incorrect",
+    "loading": "Loading...",
+    "no": "No",
+    "noData": "No data",
+    "noFeedback": "No feedback available",
+    "noGroupsAssigned": "No groups have been assigned.",
+    "noResults": "No results found",
+    "notAttempted": "Not attempted",
+    "notLoggedIn": "Not currently logged in",
+    "notStarted": "Not started",
+    "off": "Off",
+    "on": "On",
+    "online": "Online",
+    "overdue": "Overdue",
+    "requestedPlace": "You have requested a place on this event.",
+    "sortDisabled": "Sorting is disabled until all question decks have been loaded. Increase the display limit to load all question decks.",
+    "testSubmitted": "Test submitted successfully",
+    "yes": "Yes"
+  },
+  "table": {
+    "actions": "Actions",
+    "bookingStatus": "Booking status",
+    "dueDate": "Due date",
+    "email": "Email",
+    "groups": "Groups",
+    "lastSeen": "Last seen",
+    "memberSince": "Member since",
+    "name": "Name",
+    "role": "User role",
+    "stagesAndDifficulties": "Stages and Difficulties",
+    "title": "Title"
+  },
+  "tabs": {
+    "fallbackTitle": "Tab {{tabNumber}}"
+  },
+  "title": {
+    "accountDetails": "Account details",
+    "accountSettings": "Account settings",
+    "adaComputerScience": "Ada Computer Science",
+    "admin": "Admin",
+    "adminEmails": "Admin emails",
+    "adminTools": "Admin tools",
+    "authenticationError": "Authentication error",
+    "contactUs": "Contact us",
+    "contentErrors": "Content errors",
+    "emailPreferences": "Set your email notification preferences",
+    "error": "Error",
+    "eventDetails": "Event details",
+    "events": "Events",
+    "featureFlags": "Feature flags",
+    "glossary": "Glossary",
+    "markdownBuilder": "Markdown builder",
+    "myAda": "My Ada",
+    "myProgress": "My progress",
+    "overview": "Overview",
+    "preferences": "Set your preferences",
+    "questions": "Questions",
+    "relatedQuestions": "Related questions",
+    "research": "Research",
+    "resources": "Resources",
+    "search": "Search",
+    "searchGlossary": "Search glossary",
+    "searchQuestions": "Search questions",
+    "searchTests": "Search tests",
+    "sessionExpired": "Session expired",
+    "staging": "Staging",
+    "teacherSupport": "Teacher support",
+    "test": "Test",
+    "tests": "Tests",
+    "userManager": "User manager",
+    "userSelection": "User selection"
+  }
+}
