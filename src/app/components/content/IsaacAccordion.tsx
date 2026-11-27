@@ -57,6 +57,7 @@ export const IsaacAccordion = ({doc, preview}: {doc: ContentDTO, preview?: boole
     const pageContext = useAppSelector(selectors.pageContext.context);
 
     const isConceptPage = page && page !== 404 && page.type === DOCUMENT_TYPE.CONCEPT;
+    const isQuestionPage = page && page !== 404 && page.type === DOCUMENT_TYPE.QUESTION;
 
     // Select different default display depending on page type
     const defaultDisplay = isFound(page) && page.type === DOCUMENT_TYPE.CONCEPT ? defaultConceptDisplay : defaultQuestionDisplay;
@@ -188,7 +189,7 @@ export const IsaacAccordion = ({doc, preview}: {doc: ContentDTO, preview?: boole
                     trustedTitle={section?.title || ""}
                     audienceString={audienceString}
                     preview={preview}
-                    disableIndexDisplay={section.tags?.includes("disableIndexDisplay")}
+                    disableIndexDisplay={!isQuestionPage || section.tags?.includes("disableIndexDisplay")}
                 >
                     <IsaacContent doc={section} />
                 </Accordion>
