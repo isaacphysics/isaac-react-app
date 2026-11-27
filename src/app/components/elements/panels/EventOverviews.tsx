@@ -41,7 +41,7 @@ export const EventOverviews = ({setSelectedEventId, user}: {user: PotentialUser;
         }
     }, [total]);
 
-    return <Accordion trustedTitle="Events overview" index={0} startOpen>
+    return <Accordion trustedTitle="Events overview" index={0} disableIndexDisplay startOpen>
         {isEventLeader(user) && <div className="bg-grey p-2 mb-4 text-center">
             As an event leader, you are only able to see the details of events which you manage.
         </div>}

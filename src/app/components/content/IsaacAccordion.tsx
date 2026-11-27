@@ -57,6 +57,7 @@ export const IsaacAccordion = ({doc, preview}: {doc: ContentDTO, preview?: boole
     const pageContext = useAppSelector(selectors.pageContext.context);
 
     const isConceptPage = page && page !== 404 && page.type === DOCUMENT_TYPE.CONCEPT;
+    const isQuestionPage = page && page !== 404 && [DOCUMENT_TYPE.QUESTION, DOCUMENT_TYPE.FAST_TRACK_QUESTION].includes(page.type as DOCUMENT_TYPE);
 
     // Select different default display depending on page type
     const defaultDisplay = isFound(page) && page.type === DOCUMENT_TYPE.CONCEPT ? defaultConceptDisplay : defaultQuestionDisplay;
@@ -181,12 +182,14 @@ export const IsaacAccordion = ({doc, preview}: {doc: ContentDTO, preview?: boole
             return <React.Fragment key={`${section.id} ${index}`}>
                 {isPhy && stageInserts?.[index] && <StageInsert stage={stageInserts[index]} />}
                 <Accordion
-                    id={section.id} index={index}
+                    id={section.id}
+                    index={index}
                     startOpen={section.startOpen}
                     deEmphasised={section.deEmphasised}
                     trustedTitle={section?.title || ""}
                     audienceString={audienceString}
                     preview={preview}
+                    disableIndexDisplay={!isQuestionPage || section.tags?.includes("disableIndexDisplay")}
                 >
                     <IsaacContent doc={section} />
                 </Accordion>

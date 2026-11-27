@@ -44,7 +44,7 @@ export const AddUsersToBooking = ({event, eventBookingUserIds}: AddUsersToBookin
         }));
     }, [setQueryParams]);
 
-    return <Accordion id="add-users-to-booking" trustedTitle="Add users to booking" disabled={event?.isCancelled && "You cannot add users to a cancelled event"}>
+    return <Accordion id="add-users-to-booking" index={0} disableIndexDisplay trustedTitle="Add users to booking" disabled={event?.isCancelled && "You cannot add users to a cancelled event"}>
         <Form onSubmit={userSearch}>
             <Row>
                 <Col md={6}>
