@@ -42,12 +42,12 @@ interface AccordionsProps {
     disabled?: string | boolean;
     audienceString?: string;
     preview?: boolean;
-    noIndex?: boolean;
+    disableIndexDisplay?: boolean;
 }
 
 let nextClientId = 0;
 
-export const Accordion = ({id, trustedTitle, index, children, startOpen, deEmphasised, disabled, audienceString, preview, noIndex}: AccordionsProps) => {
+export const Accordion = ({id, trustedTitle, index, children, startOpen, deEmphasised, disabled, audienceString, preview, disableIndexDisplay}: AccordionsProps) => {
     const dispatch = useAppDispatch();
     const location = useLocation();
     const componentId = useRef(uuid_v4().slice(0, 4)).current;
@@ -208,7 +208,7 @@ export const Accordion = ({id, trustedTitle, index, children, startOpen, deEmpha
                     )}
                 </span>}
                 <div className={classNames("d-flex flex-grow-1", siteSpecific(`flex-column ps-3 ${isConceptPage && audienceString ? "pt-1" : "pt-3"}`, "align-items-center ps-1"))}>
-                    {isDefined(index) && !noIndex && <span className={classNames("accordion-part text-theme text-nowrap", siteSpecific("ps-1", "p-3"))}>
+                    {isDefined(index) && !disableIndexDisplay && <span className={classNames("accordion-part text-theme text-nowrap", siteSpecific("ps-1", "p-3"))}>
                         Part {ALPHABET[index % ALPHABET.length]}
                     </span>}
                     <div className={classNames("accordion-title p-3 ps-1 mb-0", {"pt-0": isPhy, "d-flex align-items-center": isPhy && includeLLMMarkedQuestionIndicator})}>

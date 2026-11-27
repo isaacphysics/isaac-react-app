@@ -188,7 +188,7 @@ export const IsaacAccordion = ({doc, preview}: {doc: ContentDTO, preview?: boole
                     trustedTitle={section?.title || ""}
                     audienceString={audienceString}
                     preview={preview}
-                    noIndex={section.tags?.includes("noIndex")}
+                    disableIndexDisplay={section.tags?.includes("disableIndexDisplay")}
                 >
                     <IsaacContent doc={section} />
                 </Accordion>
