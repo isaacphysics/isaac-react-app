@@ -70,7 +70,7 @@ const Equality = () => {
         if (!allowTextInput) return; // as the ref won't be defined
         
         initialiseInequality(editorMode, hiddenEditorRef, sketchRef, currentAttemptValue, updateState);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [hiddenEditorRef.current]);
 
     return <Container>
@@ -79,7 +79,7 @@ const Equality = () => {
             {/* Editor Mode and Logic Syntax settings */}
             <Col md={3} className="py-4 syntax-picker mode-picker">
                 <div>
-                    <Label for="inequality-mode-select">Editor mode:</Label>
+                    <Label htmlFor="inequality-mode-select">Editor mode:</Label>
                     <Input type="select" name="mode" id="inequality-mode-select" value={editorMode} onChange={updateEditor}> 
                         <option value="maths">Maths</option>
                         <option value="chemistry">Chemistry</option>
@@ -88,7 +88,7 @@ const Equality = () => {
                     </Input>
                 </div>
                 {editorMode === 'logic' && <div className="mt-4">
-                    <Label for="inequality-syntax-select">Boolean Logic Syntax</Label>
+                    <Label htmlFor="inequality-syntax-select">Boolean Logic Syntax</Label>
                     <Input type="select" name="syntax" id="inequality-syntax-select" value={editorSyntax} onChange={(e) => { 
                         setEditorSyntax(e.target.value as LogicSyntax);
                         if (sketchRef.current) sketchRef.current.logicSyntax = editorSyntax;
@@ -132,6 +132,7 @@ const Equality = () => {
             {/* Result Summary */}
             <Col md={{size: 8, offset: 2}} className="py-4 inequality-results">
                 <div className="h4">LaTeX</div>
+                {/* eslint-disable-next-line @eslint-react/jsx-no-leaked-dollar*/}
                 <pre>${currentAttemptValue?.result?.tex}$</pre>
                 {["chemistry", "nuclear"].includes(editorMode) && <>
                     <div className="h4">MhChem</div>

@@ -19,7 +19,7 @@ interface ThemeSelectorProps {
 const ThemeSelector = ({theme, isCurrentTheme, onChange}: ThemeSelectorProps) => {
     return <button type={isCurrentTheme ? "button" : "submit"} className={classNames("d-flex flex-column gap-2 theme-preview", { "active": isCurrentTheme })} onClick={() => !isCurrentTheme && onChange()}>
         <img id={theme.value} src={theme.value === "light" ? "/assets/phy/theming/theme-preview-light.svg" : "/assets/phy/theming/theme-preview-dark.svg"} alt={theme.displayName} />
-        <Label for={theme.value}>{theme.displayName}</Label>
+        <Label htmlFor={theme.value}>{theme.displayName}</Label>
     </button>;
 };
 

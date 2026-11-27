@@ -72,7 +72,7 @@ const GeogebraPlainElement = (props: GeogebraPlainElementProps) => {
     }, [size.height, materialId, uuid, size.width, appType, allowNewInputs]);
 
     return <>
-        {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */ /* the button maintains accessibility */}
+        {/* eslint-disable-next-line jsx-a11y-x/click-events-have-key-events, jsx-a11y-x/no-static-element-interactions */ /* the button maintains accessibility */}
         {isInert && <div className="geogebra-embedding-wrapper" onClick={() => setIsInert(false)}>
             <Button color="primary" onClick={() => setIsInert(false)}>Click to open GeoGebra content</Button>
         </div>}

@@ -29,8 +29,9 @@ const HoverableNavigationDropdown = (props: NavigationDropdownProps) => {
     const timerId = useRef<number | null>(null);
 
     const clearTimer = () => {
-        if (timerId.current) {
+        if (timerId.current !== null) {
             window.clearTimeout(timerId.current);
+            timerId.current = null;
         }
     };
 
@@ -53,7 +54,7 @@ const HoverableNavigationDropdown = (props: NavigationDropdownProps) => {
     useEffect(() => {
         if (!hoverContext) return;
         hoverContext.openId.current = isOpen ? ikey : (hoverContext?.openId.current === ikey ? undefined : hoverContext?.openId.current);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [isOpen, ikey]);
 
     useEffect(() => {
@@ -61,7 +62,8 @@ const HoverableNavigationDropdown = (props: NavigationDropdownProps) => {
             if (isOpen) {
                 setIsFocused(true);
             } else {
-                // start a 250ms timer to show the dropdown
+                // start a 250ms timer to show the dropdown (the timeout is cleared at cleanup with clearTimer)
+                // eslint-disable-next-line @eslint-react/web-api-no-leaked-timeout
                 timerId.current = window.setTimeout(toggle, 250);
             }
         } else {
@@ -71,7 +73,8 @@ const HoverableNavigationDropdown = (props: NavigationDropdownProps) => {
                 toggle();
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        return clearTimer;
+        // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [isHovered]);
 
     return <Dropdown {...rest} nav inNavbar className={classNames(className, "hoverable", { "active": isOpen || isActiveUnderContext?.(pageContext)})} isOpen={isOpen}
@@ -105,7 +108,7 @@ const StaticNavigationDropdown = (props: NavigationDropdownProps) => {
     useEffect(() => {
         if (!hoverContext) return;
         hoverContext.openId.current = isOpen ? ikey : (hoverContext.openId.current === ikey ? undefined : hoverContext.openId.current);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [isOpen, ikey]);
 
     return <Dropdown {...rest} nav inNavbar className={classNames(className, { "active": isOpen })} isOpen={isOpen} toggle={toggle}

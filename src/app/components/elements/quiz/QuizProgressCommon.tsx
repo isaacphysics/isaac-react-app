@@ -204,7 +204,7 @@ export function ResultsTable<Q extends QuestionType>({
             scrollContainerRef.current.scrollTop = resetStudent.offsetTop - 64; // seems to scroll slightly too far; 64px offset to account
             scrollVerticallyIntoView(scrollContainerRef.current);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     }, [JSON.stringify(progress)]);
 
     function toggleSort(itemOrder: ProgressSortOrder) {

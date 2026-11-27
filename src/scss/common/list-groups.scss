@@ -67,6 +67,10 @@
   }
 }
 
+.quiz-stage {
+  width: 7rem;
+}
+
 .draggable-list-view-accessible {
   @extend .focus-visible-z-index;
 

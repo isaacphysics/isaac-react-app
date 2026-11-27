@@ -21,7 +21,7 @@ export const AnonymisationCheckboxes = ({className}: AnonymisationCheckboxesProp
                 }}
                 className={siteSpecific("mb-1", "mt-1")}
             />
-            <Label for="anonymise-users-checkbox" className="ms-2 mb-0">Disguise only user names and emails in teacher tools</Label>
+            <Label htmlFor="anonymise-users-checkbox" className="ms-2 mb-0">Disguise only user names and emails in teacher tools</Label>
         </div>
         <div>
             <Input
@@ -36,7 +36,7 @@ export const AnonymisationCheckboxes = ({className}: AnonymisationCheckboxesProp
                 }}
                 className={siteSpecific("", "mt-1")}
             />
-            <Label for="anonymise-groups-checkbox" className="ms-2 mb-0">Disguise both user and group details in teacher tools</Label>
+            <Label htmlFor="anonymise-groups-checkbox" className="ms-2 mb-0">Disguise both user and group details in teacher tools</Label>
         </div>
     </div>;
 };

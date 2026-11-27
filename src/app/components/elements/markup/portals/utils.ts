@@ -53,7 +53,7 @@ const portalsInHtmlHookBuilder = (hookList?: PortalInHtmlHook[]): PortalInHtmlHo
 
     // Portal hooks can return new functions when their internal state changes (e.g. switching
     // between dropdown and drag-and-drop), so this array must be rebuilt on every render.
-    //eslint-disable-next-line react-hooks/exhaustive-deps
+    //eslint-disable-next-line @eslint-react/exhaustive-deps
     const newPortalFuncs = [] as ((ref?: HTMLElement) => JSX.Element[])[];
     htmlFuncs.current = [];
     hookList?.forEach(hook => {

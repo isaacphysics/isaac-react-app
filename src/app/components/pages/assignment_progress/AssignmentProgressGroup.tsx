@@ -36,6 +36,8 @@ import { PageContainer } from '../../elements/layout/PageContainer';
 import { MyAdaSidebar } from '../../elements/sidebar/MyAdaSidebar';
 import { FeatureFlag, useFeatureFlag } from '../../../services/featureFlag';
 
+export const assignmentProgressCrumbs = [{title: siteSpecific("Assignment progress", "Markbook"), to: PATHS.ASSIGNMENT_PROGRESS}];
+
 const AssignmentLikeLink = ({assignment}: {assignment: EnhancedAssignment | AppQuizAssignment}) => {
     const dispatch = useAppDispatch();
     const quiz = isQuiz(assignment);
@@ -122,7 +124,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
         pageTitle={
             <TitleAndBreadcrumb
                 currentPageTitle={group?.groupName ?? "Group progress"}
-                intermediateCrumbs={[{title: siteSpecific("Assignment progress", "Markbook"), to: PATHS.ASSIGNMENT_PROGRESS}]}
+                intermediateCrumbs={assignmentProgressCrumbs}
                 icon={{type: "icon", icon: "icon-group"}}
             />
         }
@@ -189,7 +191,7 @@ export const AssignmentProgressGroup = ({user, group}: {user: RegisteredUserDTO,
                         />
                     </Col>
                     <Col xs={12} sm={6} lg={{size: 4, offset: 4}} className="d-flex flex-column">
-                        <Label for="sort-by-dropdown" className="m-0 fw-bold mt-2 mt-lg-3">Sort by:</Label>
+                        <Label htmlFor="sort-by-dropdown" className="m-0 fw-bold mt-2 mt-lg-3">Sort by:</Label>
                         <StyledDropdown
                             value={Object.values(AssignmentOrder).findIndex(item => item.type === pageSettings.assignmentOrder.type && item.order === pageSettings.assignmentOrder.order)}
                             onChange={(e) => pageSettings.setAssignmentOrder(Object.values(AssignmentOrder)[parseInt(e.target.value)])}
