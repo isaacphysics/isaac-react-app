@@ -1,25 +1,6 @@
 {
-  "anvilApps": {
-    "emptyMessage": "Tools are not available for {{context}}.",
-    "emptyTitle": "Tools"
-  },
   "attempt": {
     "assignmentError": "Error loading assignment!"
-  },
-  "bookmarks": {
-    "emptyState": {
-      "message": "You have no bookmarks yet."
-    },
-    "loadError": {
-      "message": "Could not load your bookmarks. Please try again later."
-    },
-    "saveConfirmation": "Saved!",
-    "sidebar": {
-      "filterTitle": "Filter bookmarks by...",
-      "searchTitle": "Search bookmarks",
-      "sortTitle": "Sort bookmarks by...",
-      "stageFilter": "Learning stage"
-    }
   },
   "clozeQuestion": {
     "accessibility": {
@@ -38,16 +19,6 @@
     "iframeTitle": "Code Sandbox",
     "timeout": {
       "infoHeading": "Useful information to include in your email:"
-    }
-  },
-  "concepts": {
-    "cardSubtitle": "Review the key concepts for {{subjectContext}}.",
-    "errorFetching": "Error fetching concepts",
-    "filteredIntro": "The concepts shown on this page have been filtered to only show those that are relevant to {{contextDescription}}. You can browse all concepts <allConceptsLink>here</allConceptsLink>.",
-    "genericIntro": "Use our concept finder to explore all concepts on the Isaac platform.",
-    "resultsCount": "Showing <b>{{count}}</b> results",
-    "sidebar": {
-      "searchTitle": "Search concepts"
     }
   },
   "confidence": {
@@ -194,26 +165,13 @@
     "openContent": "Click to open GeoGebra content"
   },
   "glossary": {
-    "cardSubtitle": "Use the glossary to understand the vocabulary you need for {{subjectContext}}.",
-    "contextualTitle": "{{context}} Glossary",
     "empty": {
       "noResults": "We could not find glossary terms to match your search criteria.",
-      "noTerms": "There are no glossary terms in the glossary yet! Please try again later.",
-      "selectSubject": "Please select a subject."
-    },
-    "filters": {
-      "topicPlaceholder": "All topics"
+      "noTerms": "There are no glossary terms in the glossary yet! Please try again later."
     },
     "print": {
       "searchTerm": "Search: <strong>{{searchText}}</strong>",
       "topicName": "Topic: <strong>{{topicTitle}}</strong>"
-    },
-    "search": {
-      "label": "Search by term"
-    },
-    "sidebar": {
-      "selectSubjectTitle": "Select subject",
-      "switchStageTitle": "Switch learning stage"
     }
   },
   "graphSketcher": {
@@ -274,24 +232,14 @@
     "inlineDropZone": {
       "ariaLabel": "drop zone",
       "clearButton": "Clear"
-    },
-    "tables": {
-      "expandButton": {
-        "ariaLabel": "Expand content"
-      }
     }
   },
   "questionFinder": {
-    "cardSubtitle": "Find {{subjectContext}} questions to try by topic and difficulty level.",
     "errorTitle": "Error loading questions",
     "filter": {
       "bookmarked": "Bookmarked",
       "clearAll": "Clear all filters",
       "excludeBooks": "Exclude skills books questions"
-    },
-    "filters": {
-      "excludeSkillsBook": "Exclude skills book questions",
-      "togglePanel": "Toggle filter panel"
     },
     "noResults": "No results.",
     "results": {
@@ -304,19 +252,7 @@
       "selectedCount_other": "{{count}} questions selected"
     },
     "shuffleButton": "Shuffle <responsiveWord>questions</responsiveWord>",
-    "sidebar": {
-      "stageHeading": "Decks by stage",
-      "subjectHeading": "Decks by subject",
-      "switchContextButton": "Switch stage/subject"
-    },
     "totalCount": "of <b>{{total}}</b>"
-  },
-  "questionMetadata": {
-    "accessibilityWarningsTitle": "Accessibility warnings",
-    "printStageDifficultyLabel": "Stage & difficulty:",
-    "printSubjectTopicsLabel": "Subject & topics:",
-    "stageDifficultyTitle": "Stage & difficulty",
-    "subjectTopicsTitle": "Subject & topics"
   },
   "questionStats": {
     "aggregate": {
@@ -347,7 +283,6 @@
       "noCommaError": "Your answer should not contain commas. Enter each part of your answer in a separate box.",
       "simplifyError": "Simplify each part of your answer into a single decimal number."
     },
-    "crossTopicIndicator": "Cross-topic question",
     "dragAndDrop": {
       "announceDroppedIntoDropZone": "Draggable item {{itemText}} was dropped into drop zone number {{dropZoneNumber}}",
       "announceOverDropZone": "Draggable item is over drop zone number {{dropZoneNumber}}",
@@ -359,9 +294,7 @@
     },
     "feedback": {
       "correct": "Correct!",
-      "partlyCorrect": "Partly correct...",
-      "tooFewSigFigs": "Right or wrong...",
-      "tooManySigFigs": "Looks right, but..."
+      "partlyCorrect": "Partly correct..."
     },
     "freeText": {
       "answerLabel": "Answer text field",
@@ -411,7 +344,6 @@
     "numeric": {
       "decimalSeparator": "Use points instead of commas as decimal separators.",
       "exponentSymbol": "Use a correct exponent symbol, e.g. 10^-3 or 10**-3.",
-      "helpPrompt": "What can I type in this box?",
       "inputHelp": "Here are some examples of numbers you can write:<br1/><br2/>3.7<br3/>-3x10^14<br4/>2.8e-12<br5/><br6/>Do not use commas or spaces.",
       "inputLabel": "Input field for part {{partTitle}}",
       "noSpaces": "Do not use spaces when entering your answer.",
@@ -452,53 +384,10 @@
       "piiDetected": "<strong>Possible PII detected:</strong><br/>It looks like your answer contains personal information, like a name, email or street address. Sending this data to OpenAI is against their Usage policy.",
       "sigFigs": "Significant Figures",
       "stdFormSyntax": "When writing standard form, you must include <caretCode>^</caretCode> or <doubleAsteriskCode>**</doubleAsteriskCode> between the 10 and the exponent.",
-      "tooFewSigFigs": "your answer needs <b>more</b> <strong><sigFigsLink> significant figures</sigFigsLink></strong>.",
-      "tooManySigFigs": "your answer needs <b>fewer</b> <strong><sigFigsLink> significant figures</sigFigsLink></strong>.",
       "wordLimitExceeded": "Word limit exceeded ({{currentCount}}/{{limit}})"
     }
   },
-  "relatedContent": {
-    "questions": {
-      "outsideSpecificationHeader": "Outside your specification:",
-      "specificationHeader": "On your specification:"
-    }
-  },
-  "sidebar": {
-    "backToBook": {
-      "button": "Back to book section"
-    },
-    "completionKey": {
-      "allCorrect": "All correct",
-      "title": "Question key"
-    },
-    "display": {
-      "limit": "Limit:",
-      "limitLabel": "Set display limit",
-      "modeLabel": "Set display mode",
-      "title": "Display"
-    },
-    "filter": {
-      "creator": "Filter by creator"
-    },
-    "optionsButton": "Options",
-    "relatedContent": {
-      "conceptsTitle": "Related concepts",
-      "noConcepts": "There are no related concepts for this {{pageType}}.",
-      "noQuestions": "There are no related questions for this {{pageType}}.",
-      "otherStagesTitle": "Related questions for other learning stages",
-      "stageQuestionsTitle": "Related {{stageName}} questions",
-      "viewAllConcepts": "See all concepts for {{contextName}}",
-      "viewAllQuestions": "See all questions for {{contextName}}"
-    },
-    "search": {
-      "decks": "Search question decks"
-    },
-    "toggleButton": {
-      "label": "Search and filter"
-    }
-  },
   "svgFilter": {
-    "comingSoon": "Coming soon!",
     "count": "{{count}} filters selected",
     "title": "Difficulties filter selector"
   },

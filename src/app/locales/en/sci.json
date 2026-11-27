@@ -1,15 +1,20 @@
 {
   "accordion": {
-    "untitledFallback": "Untitled"
+    "untitledFallback": "Untitled",
+    "additionalStagesDescription": "You may also be interested in exploring additional material relevant to other learning stages:",
+    "additionalStagesTitle": "Additional learning stages"
   },
   "account": {
     "betaFeatures": {
-      "hideAttemptsHelp": "This feature lets you answer questions that you have answered before, without seeing your old answer. It's useful if you are reviewing a topic before a test or exam."
+      "hideAttemptsHelp": "This feature lets you answer questions that you have answered before, without seeing your old answer. It's useful if you are reviewing a topic before a test or exam.",
+      "chemEntryHelp": "This feature allows you to enter text-based answers for chemistry questions, as an alternative to the graphical editor. See our <guidanceLink>guidance on using this feature</guidanceLink>.",
+      "chemEntryLabel": "Enable text entry for chemistry questions"
     },
     "context": {
       "interestedLabel": "I am interested in...",
       "teachingLabel": "I am teaching...",
-      "tooltipContent": "Choose a stage here to pre-select the material that is most relevant to your interests.<br1/>You will be able to change this preference on relevant pages.<br2/>If you prefer to see all content by default, select \"All stages\"."
+      "tooltipContent": "Choose a stage here to pre-select the material that is most relevant to your interests.<br1/>You will be able to change this preference on relevant pages.<br2/>If you prefer to see all content by default, select \"All stages\".",
+      "addStageLabel": "Add stage"
     },
     "country": {
       "description": "The country you go to school in. This helps us to measure our reach and impact."
@@ -21,7 +26,10 @@
       "assignmentsDescription": "Get notified when your teacher gives your group a new assignment.",
       "eventsDescription": "Information about new online or in-person events.",
       "frequencyNote": "<strong>Frequency</strong>: expect one email per term for News and a monthly bulletin for Events. Assignment notifications will be sent as needed by your teacher.",
-      "newsDescription": "New content and website feature updates, as well as interesting news about Isaac."
+      "newsDescription": "New content and website feature updates, as well as interesting news about Isaac.",
+      "descriptionHeader": "Description",
+      "preferenceHeader": "Preference",
+      "newsLabel": "News and updates"
     },
     "linkedAccounts": {
       "title": "Linked Accounts"
@@ -62,7 +70,9 @@
   },
   "assignments": {
     "add": {
-      "fromTitle": "Add a question deck from ..."
+      "fromTitle": "Add a question deck from ...",
+      "createDeckButton": "create a question deck",
+      "topicDecksButton": "our topic question decks"
     },
     "delete": {
       "errorTitle": "Assignment deletion failed",
@@ -81,7 +91,18 @@
     },
     "modal": {
       "unknownDeck": "Unknown question deck",
-      "unknownGameboard": "Unknown question deck (may belong to another user)"
+      "unknownGameboard": "Unknown question deck (may belong to another user)",
+      "assignButton_one": "Assign to group",
+      "assignButton_other": "Assign to groups",
+      "backToSchedule": "Back to schedule",
+      "belongsToOther": " (belongs to another user)",
+      "dueDateAfterStartError": "Due date must be on or after start date.",
+      "dueDateLabel": "Due date reminder",
+      "dueDateRequiredNotice": "Since January 2025, due dates are required for assignments.",
+      "gameboardLabel": "Gameboard:",
+      "notesCharCount": "{{charCount}}/500 characters",
+      "notesLabel": "Notes (optional):",
+      "startDateLabel": "Schedule an assignment start date <muted> (optional)</muted>"
     },
     "pageHelp": "Use this page to set assignments to your groups. You can assign any question deck you have saved to your account.<br/>Students in the group will be emailed when you set a new assignment.",
     "pageTitle": "My assignments",
@@ -98,10 +119,77 @@
       "preview": {
         "hideButton": "Hide question deck preview"
       },
-      "unknownDeck": "Unknown question deck (may belong to another user)"
+      "unknownDeck": "Unknown question deck (may belong to another user)",
+      "assignedBy": "Assigned by: <strong>{{assigner}}</strong>",
+      "assignedTo": "Assigned to: <strong>{{groupName}}</strong>",
+      "byDueDate": "By due date",
+      "byStartDate": "By start date",
+      "dueDate": "Due date: <strong>{{date}}</strong>",
+      "emptyState": "You have no assignments",
+      "filterByGroup": "Filter by group:",
+      "noAssignmentsForGroups_one": "There are no assignments set to group: {{groupNames}}",
+      "noAssignmentsForGroups_other": "There are no assignments set to groups: {{groupNames}}",
+      "notStarted": "(not started)",
+      "notes": "Notes",
+      "pageHelp": "Use this page to manage assignments for your groups, and view them as a timeline. You can unassign work, and assign existing assignments to other groups.",
+      "setAssignmentsLink": "Use the <setAssignmentsLink>set assignments</setAssignmentsLink> page to schedule new assignments to your groups.",
+      "showEarlierAssignments": "Show assignments before {{date}}",
+      "stage_one": "Stage",
+      "stage_other": "Stages",
+      "startDate": "Start date: <strong>{{date}}</strong>",
+      "title": "Assignment schedule",
+      "unassignConfirm": "Are you sure you want to unassign {{deckName}} from {{groupLabel}}?"
     },
     "scheduleInfo": "Use the <scheduleLink>assignment schedule</scheduleLink> page to view assignments by start date and due date.",
-    "title": "Set assignments"
+    "title": "Set assignments",
+    "manage": {
+      "findDeckFrom": "Find a deck from...",
+      "findNewDeck": "a new question deck",
+      "findSavedDecks": "your saved decks",
+      "findTopicDecks": "our topic questions decks",
+      "noMatchingWork": "There is no work matching your filters.",
+      "noWorkSet": "You have not set any work yet. Use the buttons above to set a new assignment or test.",
+      "noWorkSetTutor": "You have not set any work yet. Use the button above to set a new assignment.",
+      "pageHelp": "Use this page to set and manage assigned work for your groups, and view set work as a timeline. You can unassign work, and assign existing work to other groups.",
+      "setGroup": "Set to <strong>{{groupName}}</strong>",
+      "setNewTestButton": "Set a new test",
+      "showEarlierWork": "Show work before {{date}}",
+      "timeline": {
+        "listForGroup": " list for group {{groupName}}",
+        "unknownGroup": "Unknown group"
+      }
+    },
+    "manageSidebar": {
+      "dateShownLabel": "Date shown",
+      "filterByWorkTypeLabel": "Filter by work type",
+      "title": "Filter & sort"
+    },
+    "timeline": {
+      "collapse": "Collapse",
+      "listForDay": " list for day {{date}}",
+      "listForMonth": " list for {{monthName}}"
+    },
+    "card": {
+      "assigned": "Assigned <strong>{{startDate}}</strong>",
+      "dueDate": "(due {{dueDate}})"
+    },
+    "sidebar": {
+      "searchTitle": "Search assignments",
+      "sortAttemptedHighest": "Attempted (highest first)",
+      "sortAttemptedLowest": "Attempted (lowest first)",
+      "sortCorrectnessHighest": "Correctness (highest first)",
+      "sortCorrectnessLowest": "Correctness (lowest first)",
+      "sortDueDateLatest": "Due date (latest first)",
+      "sortDueDateSoonest": "Due date (soonest first)",
+      "sortOrderLabel": "Set sort order",
+      "sortStartDateNewest": "Start date (recent first)",
+      "sortStartDateOldest": "Start date (oldest first)",
+      "sortTitle": "Sort",
+      "subjectFilterTitle": "Filter by subject"
+    },
+    "table": {
+      "deckName": "Deck name"
+    }
   },
   "auth": {
     "ageCheckFailed": {
@@ -127,15 +215,48 @@
       "homeButton": "Take me back"
     },
     "sso": {
-      "ariaLabel": "Link to Single Sign-On documentation"
+      "ariaLabel": "Link to Single Sign-On documentation",
+      "learnMore": "Learn more about Single Sign-On"
     },
     "teacherConnect": {
       "groupInfo": "If you've been given a group code by your teachers, enter it below. This lets your teachers set you work and see your progress. <learnMoreLink>Learn more</learnMoreLink>.",
-      "skipNote": "You can skip this. You don't need to join a group to use Isaac, and you can always do this later from the My Account page."
+      "skipNote": "You can skip this. You don't need to join a group to use Isaac, and you can always do this later from the My Account page.",
+      "skipButton": "Skip"
     },
     "teacherRequest": {
       "emailVerificationLine": "A link to my school website with a staff list showing my name and email (or a phone number to contact the school) is: {{verificationDetails}}",
-      "verificationUrl": "URL of a page on your school website which shows your name and email address, or your school phone number"
+      "verificationUrl": "URL of a page on your school website which shows your name and email address, or your school phone number",
+      "emailBody": "Hello,\n\n{{requestLine}}\n\nMy school is: {{school}}\n{{verificationMessage}}\n\n\nAny other information: {{otherInformation}}\n\nThanks, \n\n{{firstName}} {{lastName}}",
+      "noSchool": "If you don't have an associated school please fill out our <contactFormLink>Contact us</contactFormLink> form. If you are a private tutor or parent, you can <tutorAccountLink>request an {{siteTitle}} Tutor account</tutorAccountLink>.",
+      "noSchoolError": "You have not provided your school – please add your school on your <accountLink>My Account</accountLink> page. If you are a private tutor or parent, you can <tutorAccountLink>request an {{siteTitle}} Tutor account</tutorAccountLink>.",
+      "otherInfo": "Any other information",
+      "submitError": "{{errorMessage}} You can contact us at <webmasterContact>{{webmasterEmail}}</webmasterContact>",
+      "submitted": "Thank you for submitting a teacher account request.",
+      "teacherFaq": "Go to the <faqLink>Teacher FAQ page</faqLink> to learn about your new account features.",
+      "title": "Teacher Account request",
+      "wrongEmailError": "You have not used your school email address – please change your email address on your <accountLink>My Account</accountLink> page."
+    },
+    "emailVerification": {
+      "badParamsMessage": "This page received bad parameters. Please ensure you are using the link as provided in the email.",
+      "loginToResend": "Please login to your <accountLink>account</accountLink> to resend the verification email.",
+      "sentTo": "Verification email sent to {{email}}",
+      "title": "Email verification",
+      "userMismatch": "You are signed in as a different user to the user with the email you have just verified.",
+      "verified": "Email address verified."
+    },
+    "parentalConsent": {
+      "checkboxLabel": "Please check the box to confirm that you have read and understood this message.",
+      "permissionIntro": "Before signing up to any online programme or website you should ask for permission from a parent or carer so they may check that it is appropriate for you to use.",
+      "privacyNote": "Often websites store some information about you to give you the best possible experience on the site but you should always check what data is being kept to do this – you can read how we use your data to provide our service <privacyLink>here</privacyLink>.",
+      "title": "Additional information"
+    },
+    "registration": {
+      "ssoVerified": "Your age has already been verified by your SSO provider."
+    },
+    "sidebar": {
+      "tabAge": "Age verification",
+      "tabMethod": "Sign-up method",
+      "tabPreferences": "Preferences"
     }
   },
   "banners": {
@@ -275,6 +396,44 @@
       "chapter7SubHeading": "(Sections 42-48)",
       "pageHelp": "The Isaac Physics Step Up to GCSE Physics book",
       "title": "Step Up to GCSE Physics"
+    },
+    "detail": {
+      "loadError": "Unable to load book page"
+    },
+    "error": {
+      "fetchContents": "Unable to fetch book contents.",
+      "fetchPage": "Unable to fetch book page."
+    },
+    "index": {
+      "loadError": "Unable to load book contents"
+    },
+    "overview": {
+      "exploreDescription": "Click on a book image below to go to the homepage of each book and explore further.",
+      "exploreTitle": "Explore our books online",
+      "title": "Our books"
+    },
+    "page": {
+      "emptyState": "There are no materials for this page.",
+      "extensionIntroText": "Expand your boundaries by having a go at these additional extension questions.",
+      "extensionTitle": "Extension work"
+    },
+    "preUniMaths": {
+      "helpText": "The Isaac Physics Pre-University Mathematics for Sciences book",
+      "level2Title": "Level 2",
+      "level3Title": "Level 3",
+      "level4Title": "Level 4",
+      "level5Title": "Level 5",
+      "level6Title": "Level 6",
+      "level7Title": "Level 7"
+    },
+    "solvingPhysProblems": {
+      "title": "How To Solve Physics Problems"
+    },
+    "yr9": {
+      "chapter5Subheading": "(Sections 35-38)",
+      "chapter6Subheading": "(Sections 39-48)",
+      "helpText": "The Isaac Physics Step up to GCSE Physics book",
+      "title": "Step up to GCSE Physics"
     }
   },
   "button": {
@@ -283,7 +442,15 @@
     "createQuestionDeck": "Create a question deck",
     "setNewAssignment": "Set a new assignment",
     "upgradeAccount": "Upgrade my account",
-    "viewAllBooks": "View all books"
+    "viewAllBooks": "View all books",
+    "addBookmark": "Add bookmark",
+    "joinGroup": "Join a group",
+    "ourBooks": "our books",
+    "removeBookmark": "Remove bookmark",
+    "searchAndFilter": "Search & Filter",
+    "selectTopic": "Select a topic",
+    "setAgain": "Set again",
+    "viewGroupProgress": "View group progress"
   },
   "clientError": {
     "notFound": {
@@ -318,6 +485,33 @@
     },
     "details": {
       "availability": "Availability:"
+    },
+    "booking": {
+      "cancelledMessage": "You cannot sign up to a teacher event as a student.",
+      "cancelledTitle": "Event booking cancelled"
+    },
+    "card": {
+      "availableToBook": "Available to book",
+      "bookedStatus": "You are booked on this event.",
+      "bookingClosed": "Booking closed",
+      "expired": "Event has expired",
+      "onlineBadge": "ONLINE",
+      "readMoreAriaLabel": "{{eventTitle}} read more",
+      "reservedStatus": "You have a reservation for this event.",
+      "studentEvent": "STUDENT EVENT",
+      "studentEventIconAlt": "student event icon",
+      "teacherEvent": "TEACHER EVENT",
+      "teacherEventIconAlt": "teacher event icon"
+    },
+    "confirmation": {
+      "body": "This is an event for <emphasis>teachers only</emphasis>. Please confirm that you are a teacher (or a teacher trainee), and not a student, private tutor or parent.",
+      "declineButton": "I am not a teacher",
+      "title": "Please confirm teacher status"
+    },
+    "sidebar": {
+      "eventTypeLabel": "Event type",
+      "filterButtonTitle": "Filter events",
+      "stagesLabel": "Stages"
     }
   },
   "footer": {
@@ -404,6 +598,27 @@
       "errorTitle": "Deck removal failed",
       "successMessage": "The deck has been removed from your saved decks.",
       "successTitle": "Deck removed"
+    },
+    "card": {
+      "createdBy": "Created by <owner>{{ownerName}}</owner>",
+      "createdDate": "Created <strong>{{creationDate}}</strong>",
+      "lastVisited": "Last visited <strong>{{lastVisitedDate}}</strong>",
+      "hideDetailsButton": "Hide details",
+      "questionsLabel": "Questions:",
+      "showDetailsButton": "Show details",
+      "stagesHeader_one": "Stage:",
+      "stagesHeader_other": "Stages:"
+    },
+    "assignment": {
+      "assignedTo": "Assigned to <emphasis>{{groupName}}</emphasis> by <emphasis2>{{assigner}}</emphasis2>",
+      "dueLabel": "Due: <b>{{dueDate}}</b>",
+      "setLabel": "Set: <b>{{setDate}}</b>"
+    },
+    "sidebar": {
+      "externalLink": "External link (<em>{{externalUrl}}</em>)"
+    },
+    "usageInfo": {
+      "beginsIn": "Begins <bold>{{daysUntil}}</bold>"
     }
   },
   "gameboards": {
@@ -412,10 +627,22 @@
       "help": "A summary of your question decks",
       "summary": "Showing <strongTotal>{{totalCount}}</strongTotal> question decks, with <strongInProgress>{{inProgressCount}}</strongInProgress> on the go and <strongNotStarted>{{notStartedCount}}</strongNotStarted> not started.",
       "title": "My saved decks"
+    },
+    "sidebar": {
+      "filterCompletionTitle": "Filter by completion"
     }
   },
   "glossary": {
-    "metaDescription": "A glossary of important words and phrases used in maths, physics, chemistry and biology."
+    "metaDescription": "A glossary of important words and phrases used in maths, physics, chemistry and biology.",
+    "cardSubtitle": "Use the glossary to understand the vocabulary you need for {{subjectContext}}.",
+    "contextualTitle": "{{context}} Glossary",
+    "empty": {
+      "selectSubject": "Please select a subject."
+    },
+    "sidebar": {
+      "selectSubjectTitle": "Select subject",
+      "switchStageTitle": "Switch learning stage"
+    }
   },
   "groups": {
     "editor": {
@@ -481,7 +708,17 @@
     "practice": "Practice",
     "questionDecksDescription": "A selection of our questions organised by topic.",
     "skillsMasteryBooksDescription": "Buy one of our Skills Mastery books at cost.",
-    "subject": "Subject"
+    "subject": "Subject",
+    "dueDate": "Due <strong>{{dueDate}}</strong>",
+    "filterByStage": "Filter by stage",
+    "filterBySubjectAndTopic": "Filter by subject and topic",
+    "filterByTopic": "Filter by topic",
+    "level1": "Level 1",
+    "maths": "Maths",
+    "mentalMaths": "Overall Mental Maths",
+    "searchByTitle": "Search by title",
+    "selectStage": "Select stage",
+    "subjects": "Subjects"
   },
   "meta": {
     "description": "Join Isaac Science - free physics, chemistry, biology and maths learning resources for years 7 to 13 designed by Cambridge University subject specialists.",
@@ -516,12 +753,18 @@
     },
     "quickSwitch": {
       "label": "Quick switch to"
+    },
+    "sidebar": {
+      "homepageLink": "Go to homepage"
     }
   },
   "news": {
     "loadMoreButton": "Load older news",
     "metaDescription": "Get all the latest news about Isaac Science.",
-    "title": "News"
+    "title": "News",
+    "sidebar": {
+      "seeAllNews": "See all news"
+    }
   },
   "progress": {
     "bookAttemptedOutOf": "{{attempted}} attempted out of {{total}}",
@@ -530,7 +773,8 @@
     "bookQuestionLabel": "{{bookTitle}} questions",
     "charts": {
       "byDifficultyTitle": "By difficulty",
-      "subjectHeader": "Questions by {{subject}}"
+      "subjectHeader": "Questions by {{subject}}",
+      "bySubjectTitle": "By {{subject}}"
     },
     "isaacBooksDescription": "Questions completed correctly, against questions attempted for each of our <booksLink>books</booksLink>.",
     "isaacBooksTitle": "Isaac Books",
@@ -543,10 +787,34 @@
     "questionAttemptsCaption": "Question attempts",
     "settings": {
       "colourBlindLabel": "Colour-blind mode",
-      "completionModeLabel": "Completion display mode"
+      "completionModeLabel": "Completion display mode",
+      "hideButton": "Hide settings",
+      "showButton": "Show settings",
+      "displayModeLabel": "Table display mode",
+      "fractionsOption": "Fractions",
+      "percentagesOption": "Percentages"
     },
     "streak": {
-      "tooltip": "The weekly streak indicates the number of consecutive weeks you have been active on Isaac.<br/>Answer at least <strong>ten question parts</strong> correctly per week to fill up your daily progress bar and increase your streak!"
+      "tooltip": "The weekly streak indicates the number of consecutive weeks you have been active on Isaac.<br/>Answer at least <strong>ten question parts</strong> correctly per week to fill up your daily progress bar and increase your streak!",
+      "title": "Weekly Streak"
+    },
+    "attemptsOverTime": "Attempts over time",
+    "legend": {
+      "failedAttempted": "<{{failThresholdPercentage}}% attempted",
+      "failedCorrect": "<{{failThresholdPercentage}}% correct",
+      "fullAttempted": "100% attempted",
+      "fullCorrect": "100% correct",
+      "inProgressAttempted": "≥{{failThresholdPercentage}}% attempted",
+      "inProgressCorrect": "≥{{failThresholdPercentage}}% correct",
+      "passedAttempted": "≥{{passPercentage}}% attempted",
+      "passedCorrect": "≥{{passPercentage}}% correct",
+      "title": "Section key:"
+    },
+    "mentalMathsEmptyState": "<mentalMathsLink>Click here</mentalMathsLink> to try our mental maths skills practice.",
+    "skillsAttemptsError": "Failed to load skills attempts.",
+    "table": {
+      "totalAttemptedPartsLabel": "Total attempted parts",
+      "totalCorrectPartsLabel": "Total correct parts"
     }
   },
   "questionFinder": {
@@ -563,7 +831,8 @@
     "filters": {
       "difficultyHelp": "Learn more about difficulty levels",
       "header": "Filter questions by",
-      "statusInProgressIcon": "In Progress"
+      "statusInProgressIcon": "In Progress",
+      "excludeSkillsBook": "Exclude skills book questions"
     },
     "intro": "Use our question finder to find questions to try on topics in Physics, Maths, Chemistry and Biology. Use our practice questions to become fluent in topics and then take your understanding and problem solving skills to the next level with our challenge questions.",
     "metaDescription": "Find physics, maths, chemistry and biology questions by topic and difficulty.",
@@ -574,11 +843,26 @@
       "showBookmarked": "Show bookmarked only",
       "showFastTrack": "Show FastTrack only"
     },
-    "title": "Question finder"
+    "title": "Question finder",
+    "sidebar": {
+      "stageHeading": "Decks by stage",
+      "subjectHeading": "Decks by subject",
+      "switchContextButton": "Switch stage/subject"
+    },
+    "cardSubtitle": "Find {{subjectContext}} questions to try by topic and difficulty level."
   },
   "questions": {
     "validation": {
-      "numericGuide": "For help, see our <numericGuideLink>guide to answering numeric questions</numericGuideLink>."
+      "numericGuide": "For help, see our <numericGuideLink>guide to answering numeric questions</numericGuideLink>.",
+      "tooFewSigFigs": "your answer needs <b>more</b> <strong><sigFigsLink> significant figures</sigFigsLink></strong>.",
+      "tooManySigFigs": "your answer needs <b>fewer</b> <strong><sigFigsLink> significant figures</sigFigsLink></strong>."
+    },
+    "feedback": {
+      "tooFewSigFigs": "Right or wrong...",
+      "tooManySigFigs": "Looks right, but..."
+    },
+    "numeric": {
+      "helpPrompt": "What can I type in this box?"
     }
   },
   "search": {
@@ -596,7 +880,9 @@
     "allAttempted": "All attempted",
     "alreadyHaveTeacherAccount": "You already have a teacher account",
     "datePassed": "(passed)",
-    "fullyCorrect": "Fully correct"
+    "fullyCorrect": "Fully correct",
+    "allAttemptedWithErrors": "All attempted (some errors)",
+    "inProgress": "In progress"
   },
   "support": {
     "student": {
@@ -613,6 +899,36 @@
     "pageTitle": "My tests",
     "set": {
       "title": "Set / manage tests"
+    },
+    "card": {
+      "manage": {
+        "changeFeedbackType": "Change feedback type"
+      },
+      "shareLink": {
+        "tooltip": "(student-only link)"
+      },
+      "untitledTitle": "Untitled Test",
+      "usage": {
+        "begins": "Begins <strong>{{startDate}}</strong>",
+        "viewResults": "View group results"
+      }
+    },
+    "admissions": {
+      "title": "Practice admissions tests"
+    },
+    "search": {
+      "placeholder": "e.g. Practice"
+    },
+    "setQuiz": {
+      "completionEmail": "Email me when a student completes this test"
+    },
+    "sidebar": {
+      "displayCardOption": "Card View",
+      "displayTableOption": "Table View"
+    },
+    "view": {
+      "searchPlaceholder": "e.g. Admissions",
+      "searchTitle": "Search practice tests"
     }
   },
   "title": {
@@ -630,6 +946,361 @@
     "teacherFeatures": "Teacher features",
     "tutorFaq": "Tutor FAQ",
     "tutorFeatures": "Tutor features",
-    "upcomingEvents": "Upcoming events"
+    "upcomingEvents": "Upcoming events",
+    "concepts": "Concepts",
+    "coreSkillsPractice": "Core skills practice",
+    "myTests": "My tests",
+    "news": "News",
+    "questionFinder": "Question finder",
+    "revision": "Revision",
+    "skillsPractice": "Skills practice"
+  },
+  "quickQuizzes": {
+    "title": "Quick quizzes"
+  },
+  "teacherFeatures": {
+    "resources": {
+      "title": "Teacher resources"
+    },
+    "support": {
+      "cpdTitle": "Teacher CPD",
+      "emailsSubtitle": "Recent start-of-term emails sent to teachers.",
+      "emailsTitle": "Teacher emails"
+    },
+    "tutor": {
+      "assignmentsSubtitle": "Set assignments from our skills books, pre-made boards or create your own.",
+      "assignmentsTitle": "2. Set assignments",
+      "booksTitle": "Isaac books",
+      "decksTitle": "Decks by topic",
+      "description": "Isaac Science provides you with a huge range of resources to support your tutoring of science subjects.",
+      "getButton": "Get a tutor account",
+      "progressSubtitle": "View your students’ progress through their assignments.",
+      "progressTitle": "3. Assignment progress",
+      "resourcesTitle": "Tutor support and resources",
+      "workflowTitle": "Tutor workflow"
+    },
+    "workflow": {
+      "title": "Teacher workflow"
+    }
+  },
+  "anvilApps": {
+    "emptyMessage": "Tools are not available for {{context}}.",
+    "emptyTitle": "Tools"
+  },
+  "bookmarks": {
+    "emptyState": {
+      "message": "You have no bookmarks yet."
+    },
+    "loadError": {
+      "message": "Could not load your bookmarks. Please try again later."
+    },
+    "sidebar": {
+      "filterTitle": "Filter bookmarks by...",
+      "searchTitle": "Search bookmarks",
+      "sortTitle": "Sort bookmarks by...",
+      "stageFilter": "Learning stage"
+    },
+    "saveConfirmation": "Saved!"
+  },
+  "concepts": {
+    "errorFetching": "Error fetching concepts",
+    "filteredIntro": "The concepts shown on this page have been filtered to only show those that are relevant to {{contextDescription}}. You can browse all concepts <allConceptsLink>here</allConceptsLink>.",
+    "genericIntro": "Use our concept finder to explore all concepts on the Isaac platform.",
+    "resultsCount": "Showing <b>{{count}}</b> results",
+    "sidebar": {
+      "searchTitle": "Search concepts"
+    },
+    "cardSubtitle": "Review the key concepts for {{subjectContext}}."
+  },
+  "sidebar": {
+    "toggleButton": {
+      "label": "Search and filter"
+    },
+    "backToBook": {
+      "button": "Back to book section"
+    },
+    "completionKey": {
+      "allCorrect": "All correct",
+      "title": "Question key"
+    },
+    "display": {
+      "limit": "Limit:",
+      "limitLabel": "Set display limit",
+      "modeLabel": "Set display mode",
+      "title": "Display"
+    },
+    "filter": {
+      "creator": "Filter by creator"
+    },
+    "optionsButton": "Options",
+    "relatedContent": {
+      "conceptsTitle": "Related concepts",
+      "noConcepts": "There are no related concepts for this {{pageType}}.",
+      "noQuestions": "There are no related questions for this {{pageType}}.",
+      "otherStagesTitle": "Related questions for other learning stages",
+      "stageQuestionsTitle": "Related {{stageName}} questions",
+      "viewAllConcepts": "See all concepts for {{contextName}}",
+      "viewAllQuestions": "See all questions for {{contextName}}"
+    },
+    "search": {
+      "decks": "Search question decks"
+    }
+  },
+  "birthdayStats": {
+    "community": {
+      "assignments": "total assignments set",
+      "schools": "schools using Isaac",
+      "teachers": "teachers setting assignments"
+    },
+    "hard": {
+      "heading": "Most <emphasis>difficult</emphasis> question"
+    },
+    "highlights": {
+      "hintViews": "total hint views",
+      "longestStreak": "longest student streak",
+      "streakUnit": "weeks"
+    },
+    "overview": {
+      "accounts": "Accounts",
+      "conceptsViewed": "Concepts viewed",
+      "questionAttempts": "Question attempts"
+    },
+    "page": {
+      "closing": "Thank you for being a part of Isaac!",
+      "intro": "The 1st September 2025 marked the 11th anniversary of the first question attempts on the Isaac Physics platform. To celebrate, we're taking a look back at Isaac's statistics over this time.",
+      "metaTitle": "Happy <emphasis>11th</emphasis> birthday to Isaac Science!",
+      "title": "Isaac 11th birthday stats"
+    },
+    "popular": {
+      "conceptHeading": "Most popular concept",
+      "questionHeading": "Most popular question"
+    }
+  },
+  "csOverview": {
+    "description": "Ada Computer Science is a free learning platform for computing teachers and students. Developed by the Raspberry Pi Foundation in partnership with the Isaac Science team at the University of Cambridge, it is tailored to support learners aged 11-19. Ada Computer Science offers structured resources to support both teachers and students. These include concept pages, interactive questions, and teacher tools, amongst a wide range of other resources designed to enhance computer science education.",
+    "overviewTitle": "Computer Science",
+    "students": {
+      "featureChallenges": "Join termly challenges to test your knowledge and skills.",
+      "featureLearn": "Learn through a full curriculum of topics explained in concept pages.",
+      "featurePractise": "Practise and test your understanding with interactive questions.",
+      "featureTrack": "Track your progress and identify areas to improve.",
+      "intro": "Explore interactive resources designed to help you study computer science:",
+      "title": "For students"
+    },
+    "teachers": {
+      "featureAssignments": "Set self-marking assignments to save time and support independent learning.",
+      "featureMarkbook": "Track student progress with a personal markbook to identify areas for improvement.",
+      "featureTeach": "Teach with over 50 curriculum-aligned topics covering the full breadth of computer science.",
+      "intro": "Access structured resources to help you deliver high-quality computer science education:",
+      "title": "For teachers"
+    },
+    "visitButton": "Go to Ada CS"
+  },
+  "dashboard": {
+    "assignments": {
+      "emptyState": "You have no assignments with upcoming due dates.",
+      "title": "View scheduled work",
+      "viewAllLink": "See all set work"
+    },
+    "books": {
+      "title": "Explore our books",
+      "viewAllLink": "See all books"
+    },
+    "currentWork": {
+      "activeIntro": "You have assignments that are active or due soon:",
+      "allAssignmentsLink": "See all assignments",
+      "allTestsLink": "See all tests",
+      "dueDate": "Due {{dueLabel}}",
+      "emptyState": "You have no active assignments.",
+      "title": "Complete current work",
+      "viewOlderLink": "View older assignments."
+    },
+    "greeting": "Welcome back, {{studentName}}!",
+    "groupJoin": {
+      "existingGroupsLink": "See my existing groups",
+      "placeholder": "Enter code"
+    },
+    "groups": {
+      "emptyState": "You have no active groups.",
+      "viewAllLink": "See all groups' progress"
+    },
+    "myIsaac": {
+      "title": "More in My Isaac"
+    },
+    "streak": {
+      "festiveFreeze": "Enjoy your festive two week streak freeze from 22nd Dec to 4th Jan!",
+      "infoLink": "What is this?",
+      "maintained": "You've maintained your streak for this week!",
+      "remaining": "Only {{remainingParts}} more question parts to answer correctly this week!",
+      "title": "Build your weekly streak",
+      "tooltip": "The weekly streak indicates the number of consecutive weeks you have been active on Isaac.<br1/><br2/>Answer at least ten question parts correctly per week to fill up your weekly progress bar and increase your streak!"
+    },
+    "viewToggleLabel": "Dashboard view",
+    "welcomeHeader": "Welcome back, {{teacherName}}!"
+  },
+  "overview": {
+    "aLevel": {
+      "subtitle": "Our A Level {{subject}} resources further strengthen the understanding of {{subjectName}}, while developing problem solving skills. Our resources include questions, concepts and books."
+    },
+    "difficulty": {
+      "challengeDesc": "Challenge questions are those that require one or more concepts, or require more creativity to solve the problem, helping to develop important problem solving skills.",
+      "intro": "All Isaac Science questions are classed as either \"Practice\" or \"Challenge\" – indicated by the symbols below.",
+      "practiceDesc": "Practice questions are those that require one concept or equation to solve."
+    },
+    "examIndependent": "Our materials are exam board independent. They are designed to help students develop and apply their understanding of fundamental concepts in {{subject}}, while developing problem solving skills.",
+    "exampleQuestions": {
+      "errorTitle": "Unable to load example questions"
+    },
+    "freeAccount": "You can use our resources for FREE. By creating a free account you will have complete access to all the resources available to students under Isaac Science and you can make the most of our platform by tracking your progress. Teachers can request a free teacher account to access <teacherFeaturesLink>additional features</teacherFeaturesLink>.",
+    "gcse": {
+      "subtitle": "Our GCSE {{subject}} resources develop the {{subjectName}} knowledge needed at GCSE through the use of questions, concepts and books."
+    },
+    "notFound": "No subject found.",
+    "pageTitle": "Introducing Isaac {{subject}}",
+    "stage1114": {
+      "subtitle": "Our 11–14 {{subject}} resources introduce secondary {{subjectName}} concepts to students and build their numeracy skills through questions and a selection of experiments."
+    },
+    "university": {
+      "subtitle": "Our University {{subject}} resources help you prepare for your university STEM degree."
+    },
+    "welcome": {
+      "subjectLink": "Isaac {{subjectName}}"
+    }
+  },
+  "programmes": {
+    "list": {
+      "heading": "Programmes list"
+    },
+    "sidebar": {
+      "title": "Our programmes",
+      "toggleLabel": "Explore programmes"
+    },
+    "cardSubtitle": "Explore the programmes developed to support your understanding of Physics and take your problem solving skills to the next level."
+  },
+  "revision": {
+    "errorTitle": "Unable to fetch revision page.",
+    "page": {
+      "loadError": "Unable to load revision page."
+    },
+    "sections": {
+      "introDescription": "First, have a go at these baseline questions to assess your understanding and identify which aspects of this topic you should focus your revision on:",
+      "introTitle": "Introduction",
+      "testsDescription": "To demonstrate your progress once you've revised this section, have a go at a practice test:"
+    },
+    "cardSubtitle": "Revise with our summary videos, topic tests and question decks.",
+    "mathsALevel": {
+      "subtitle": "Revise with our tailored revision decks on core pure, further pure, and mechanics."
+    }
+  },
+  "subjectLanding": {
+    "books": {
+      "title": "Interactive online books <emphasis>({{bookCount}})</emphasis>",
+      "viewMore": "View more books"
+    },
+    "events": {
+      "heading": "Events <theme>({{eventCount}})</theme>"
+    },
+    "footer": {
+      "emptyState": "No books or news available for this subject. Check back soon!"
+    },
+    "news": {
+      "title": "News & Features"
+    },
+    "randomQuestion": {
+      "differentButton": "Get a different question",
+      "emptyState": "No questions found.",
+      "title": "Try a random question!"
+    },
+    "title": {
+      "aLevelMaths": "A Level Maths and Further Maths"
+    }
+  },
+  "tools": {
+    "listing": {
+      "seeAllButton": "See all tools"
+    }
+  },
+  "cards": {
+    "opensNewTab": "(opens in new tab)",
+    "readMoreAria": "{{title}} read more"
+  },
+  "dateString": {
+    "daysAgo": "{{days}} days ago",
+    "inDays": "in {{days}} days"
+  },
+  "help": {
+    "buttonLabel": "Open help video"
+  },
+  "biologyExtension": {
+    "cardSubtitle": "Stretch your understanding of biology with our extension questions that make you think outside the box.",
+    "cardTitle": "Biology extension"
+  },
+  "context": {
+    "mathsAndFurtherMaths": "Maths and Further Maths"
+  },
+  "experiments": {
+    "cardSubtitle": "Develop experimental skills with interesting experiments."
+  },
+  "mathsUni": {
+    "cardSubtitle": "Refresh your maths skills in preparation for {{subject}} at university.",
+    "cardTitle": "Maths revision for {{subject}}"
+  },
+  "policy": {
+    "sidebar": {
+      "accessibilityStatement": "Accessibility Statement",
+      "cookiePolicy": "Cookie Policy",
+      "privacyPolicy": "Privacy Policy",
+      "selectPage": "Select a page",
+      "termsOfUse": "Terms of Use"
+    }
+  },
+  "questionDecks": {
+    "cardSubtitle": "Practise specific topics by using our ready-made question decks.",
+    "cardTitle": "Question decks by topic",
+    "chemUni": {
+      "subtitle": "Consolidate your chemistry understanding with these questions by topic."
+    },
+    "mathsALevel": {
+      "subtitle": "Practise specific topics from Maths and Further Maths by using our ready-made question decks."
+    }
+  },
+  "skillsPractice": {
+    "bioGcse": {
+      "subtitle": "Practise core maths skills that are used in GCSE Biology."
+    },
+    "chemALevel": {
+      "subtitle": "Practise core skills required in A Level Chemistry."
+    },
+    "chemGcse": {
+      "subtitle": "Practise core skills required in GCSE Chemistry."
+    },
+    "chemUni": {
+      "subtitle": "Consolidate your chemistry skills with these tools"
+    },
+    "fallback": {
+      "subtitle": "Consolidate your {{subject}} skills with these tools."
+    },
+    "mathsALevel": {
+      "subtitle": "Practise those core skills, such as rearranging equations, vital for maths."
+    },
+    "mathsGcse": {
+      "subtitle": "Practise those core skills, such as rearranging equations, vital for GCSE Maths."
+    },
+    "physics1114": {
+      "subtitle": "Keep training those maths skills with our algebra tools."
+    },
+    "physicsGcse": {
+      "subtitle": "Practise the important equations in GCSE Physics with these tools."
+    }
+  },
+  "questionMetadata": {
+    "accessibilityWarningsTitle": "Accessibility warnings",
+    "printStageDifficultyLabel": "Stage & difficulty:",
+    "printSubjectTopicsLabel": "Subject & topics:",
+    "stageDifficultyTitle": "Stage & difficulty",
+    "subjectTopicsTitle": "Subject & topics"
+  },
+  "svgFilter": {
+    "comingSoon": "Coming soon!"
   }
 }

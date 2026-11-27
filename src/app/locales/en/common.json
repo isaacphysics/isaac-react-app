@@ -5,8 +5,6 @@
     "inputModeTitle": "Question input mode"
   },
   "accordion": {
-    "additionalStagesDescription": "You may also be interested in exploring additional material relevant to other learning stages:",
-    "additionalStagesTitle": "Additional learning stages",
     "completion": {
       "allCorrect": "All questions in this part are answered correctly.",
       "allIncorrect": "All questions in this part are answered incorrectly.",
@@ -16,10 +14,6 @@
     "partLabel": "Part {{partLetter}}"
   },
   "banners": {
-    "downtime": {
-      "dismissButton": "Dismiss<screenReaderText> downtime notification</screenReaderText>",
-      "message": "{{siteTitle}} will be unavailable on Saturday 24 October from 8pm BST for a few hours for essential server maintenance."
-    },
     "emailVerification": {
       "dismissButton": "Snooze",
       "heading": "Email Verification"
@@ -29,7 +23,6 @@
     }
   },
   "button": {
-    "addBookmark": "Add bookmark",
     "addMatchingRule": "Add matching rule",
     "assign": "Assign",
     "back": "Back",
@@ -63,8 +56,6 @@
     "home": "Home",
     "iAmATeacher": "I am a teacher",
     "inviteUsers": "Invite users",
-    "joinGroup": "Join a group",
-    "learnMore": "Learn more",
     "leaveGroup": "Leave group",
     "loadMore": "Load more",
     "logIn": "Log in",
@@ -74,22 +65,16 @@
     "menu": "Menu",
     "next": "Next",
     "ok": "OK",
-    "ourBooks": "our books",
     "preview": "Preview",
     "previous": "Previous",
     "printPage": "Print page",
     "readMore": "Read more",
     "remove": "Remove",
-    "removeBookmark": "Remove bookmark",
     "resendVerificationEmail": "Resend verification email",
     "reset": "Reset",
     "resetPassword": "Reset password",
-    "searchAndFilter": "Search & Filter",
-    "seeMore": "See more",
     "seeMoreEvents": "More events",
-    "selectTopic": "Select a topic",
     "sendEmails": "Send emails",
-    "setAgain": "Set again",
     "setAsAssignment": "Set as assignment",
     "setTest": "Set test",
     "show": "Show",
@@ -98,14 +83,11 @@
     "unassign": "Unassign",
     "unsave": "Unsave",
     "update": "Update",
-    "viewGroupProgress": "View group progress",
     "viewMore": "View more",
     "viewTests": "View tests"
   },
   "cards": {
-    "imageAlt": "Illustration for {{title}}",
-    "opensNewTab": "(opens in new tab)",
-    "readMoreAria": "{{title}} read more"
+    "imageAlt": "Illustration for {{title}}"
   },
   "clientError": {
     "concepts": {
@@ -171,10 +153,6 @@
     "yearLabel": "Year",
     "yearLabel_birth": "Year of birth"
   },
-  "dateString": {
-    "daysAgo": "{{days}} days ago",
-    "inDays": "in {{days}} days"
-  },
   "error": {
     "emailRequestFailed": "Email verification request failed.",
     "eventBookingFailed": "Event booking failed",
@@ -198,9 +176,6 @@
     },
     "requiredField": "Required field"
   },
-  "help": {
-    "buttonLabel": "Open help video"
-  },
   "label": {
     "aLevel": "A Level",
     "accessibilityRequirements": "Accessibility requirements",
@@ -215,10 +190,8 @@
     "created": "Created",
     "difficultiesTooltip": "Practice: {{practiceLevels}}<br/>Challenge: {{challengeLevels}}",
     "difficulty": "Difficulty",
-    "displayIn": "Display in",
     "dragToReorder": "Drag to reorder",
     "due": "Due:",
-    "dueDate": "Due <strong>{{dueDate}}</strong>",
     "dueDateLabel": "Due date:",
     "emailAddress": "Email address",
     "emailOptOutNote": "Users who have opted out of this type of email will not receive anything. Administrative emails cannot be opted out of and should be avoided.",
@@ -232,15 +205,10 @@
     "eventLeaderRestriction": "As an event leader, you are only able to see the bookings of users who have granted you access to their data.",
     "eventLocation": "Location:",
     "feedbackMode": "Student feedback mode:",
-    "filterBy": "Filter by",
     "filterByAssigner": "Filter by assigner",
-    "filterByCreator": "Filter by Creator",
     "filterByGroup": "Filter by group",
-    "filterByStage": "Filter by stage",
     "filterByStatus": "Filter by status",
-    "filterBySubjectAndTopic": "Filter by subject and topic",
     "filterByTitle": "Filter by title",
-    "filterByTopic": "Filter by topic",
     "filters": "Filters",
     "findByUserRole": "Find by user role:",
     "findUserByEmail": "Find a user by email:",
@@ -252,11 +220,8 @@
     "groups": "Groups:",
     "key": "Key",
     "lastName": "Last name",
-    "level1": "Level 1",
     "location": "Location",
     "makeSelection": "--- Make a selection ---",
-    "maths": "Maths",
-    "mentalMaths": "Overall Mental Maths",
     "newPassword": "New password",
     "none": "None",
     "notes": "Notes:",
@@ -265,13 +230,10 @@
     "passwordStrength": "Password strength:",
     "questionNumber": "Question {{questionNumber}}",
     "questions": "questions",
-    "raspberryPi": "Raspberry Pi",
     "rememberMe": "Remember me",
     "role": "Role",
     "school": "School",
-    "searchByTitle": "Search by title",
     "selectOrCreateGroup": "Select or create a group",
-    "selectStage": "Select stage",
     "setBy": "Set by",
     "sidebar": "Sidebar",
     "skipToContent": "Skip to main content",
@@ -281,7 +243,6 @@
     "startDate": "Start date",
     "startDateLabel": "Start date:",
     "status": "Status",
-    "subjects": "Subjects",
     "teacherAccountRequestSubject": "Teacher Account Request",
     "teacherConnectionCode": "Teacher connection code",
     "topic": "Topic",
@@ -324,9 +285,6 @@
       "closeLabel": "Close search menu",
       "openLabel": "Open search menu"
     },
-    "sidebar": {
-      "homepageLink": "Go to homepage"
-    },
     "supersededDeprecated": {
       "bookBoardTip": "If you want to set this work again, you should use the most up-to-date version from our book page.",
       "deprecatedTitle": "Deprecated content",
@@ -348,11 +306,7 @@
       "postponeButton": "Ask me later",
       "prompt": "Would you like to complete a survey?"
     },
-    "testTitle": "Test to do: {{quizTitle}}",
-    "toggle": {
-      "collapseButton": "Show fewer notifications",
-      "expandButton": "Show all {{count}} notifications"
-    }
+    "testTitle": "Test to do: {{quizTitle}}"
   },
   "pageMetadata": {
     "visuallyHiddenTitle": "Main page"
@@ -407,14 +361,12 @@
   },
   "status": {
     "accountUpdated": "Your account settings were updated successfully.",
-    "allAttemptedWithErrors": "All attempted (some errors)",
     "attempted": "Attempted",
     "checkInbox": "Please check your inbox.",
     "comingSoon": "Coming soon",
     "completed": "Completed",
     "correct": "Correct",
     "emailRequestMade": "Request made, to send another refresh.",
-    "inProgress": "In progress",
     "incorrect": "Incorrect",
     "loading": "Loading...",
     "no": "No",
@@ -437,7 +389,6 @@
   "table": {
     "actions": "Actions",
     "bookingStatus": "Booking status",
-    "creator": "Creator",
     "dueDate": "Due date",
     "email": "Email",
     "groups": "Groups",
@@ -445,7 +396,6 @@
     "memberSince": "Member since",
     "name": "Name",
     "role": "User role",
-    "share": "Share",
     "stagesAndDifficulties": "Stages and Difficulties",
     "title": "Title"
   },
@@ -460,10 +410,8 @@
     "adminEmails": "Admin emails",
     "adminTools": "Admin tools",
     "authenticationError": "Authentication error",
-    "concepts": "Concepts",
     "contactUs": "Contact us",
     "contentErrors": "Content errors",
-    "coreSkillsPractice": "Core skills practice",
     "emailPreferences": "Set your email notification preferences",
     "error": "Error",
     "eventDetails": "Event details",
@@ -473,22 +421,17 @@
     "markdownBuilder": "Markdown builder",
     "myAda": "My Ada",
     "myProgress": "My progress",
-    "myTests": "My tests",
-    "news": "News",
     "overview": "Overview",
     "preferences": "Set your preferences",
-    "questionFinder": "Question finder",
     "questions": "Questions",
     "relatedQuestions": "Related questions",
     "research": "Research",
     "resources": "Resources",
-    "revision": "Revision",
     "search": "Search",
     "searchGlossary": "Search glossary",
     "searchQuestions": "Search questions",
     "searchTests": "Search tests",
     "sessionExpired": "Session expired",
-    "skillsPractice": "Skills practice",
     "staging": "Staging",
     "teacherSupport": "Teacher support",
     "test": "Test",

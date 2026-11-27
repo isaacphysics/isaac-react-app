@@ -77,8 +77,6 @@
       "accessibilityHelp": "For example, please let us know if you need wheelchair access, hearing loop or if we can help with any special adjustments.",
       "accountSection": "Your account information (<accountLink>update</accountLink>)",
       "cancelConfirmMessage": "Are you sure you want to cancel your booking on this event? You may not be able to re-book, especially if there is a waiting list.",
-      "cancelledMessage": "You cannot sign up to a teacher event as a student.",
-      "cancelledTitle": "Event booking cancelled",
       "detailsTitle": "Event booking details",
       "dietary": "Dietary requirements or relevant medical conditions",
       "dietaryHelp": "For example, it is important for us to know if you have a severe allergy and/or carry an EpiPen, are prone to fainting, suffer from epilepsy...",
@@ -98,7 +96,6 @@
       "teachingExperience": "Level of teaching experience",
       "terms": "By requesting to book on this event, you are granting event organisers access to the information provided in the form above. You are also giving them permission to set you pre-event work and view your progress. You can manage access to your progress data in your <teacherConnectionsLink>account settings</teacherConnectionsLink>.<br1/>Your data will be processed in accordance with {{siteTitle}}'s <privacyPolicyLink>privacy policy</privacyPolicyLink>.<br2/>If you have unsubscribed from assignment email notifications you may miss out on pre-work set for the event. You can enable this in your <emailPreferencesLink>account settings</emailPreferencesLink>.",
       "updateInfo": "If this information is incorrect, please update it from your <accountLink>account page</accountLink>.",
-      "upgradeLink": "<teacherAccountLink>Click to upgrade to a teacher account</teacherAccountLink> for free!",
       "verifyEmailBtn": "Verify your email before booking",
       "year10": "Year 10",
       "year11": "Year 11",
@@ -136,36 +133,8 @@
       "reservation": "Cancel your reservation",
       "waitingList": "Leave waiting list"
     },
-    "card": {
-      "availableToBook": "Available to book",
-      "bookedBadge": "Booked",
-      "bookedStatus": "You are booked on this event.",
-      "bookingClosed": "Booking closed",
-      "cancelledBadge": "Cancelled",
-      "expired": "Event has expired",
-      "fullBadge": "Full",
-      "onlineBadge": "ONLINE",
-      "readMoreAriaLabel": "{{eventTitle}} read more",
-      "reservedBadge": "Reserved",
-      "reservedStatus": "You have a reservation for this event.",
-      "studentEvent": "STUDENT EVENT",
-      "studentEventIconAlt": "student event icon",
-      "teacherEvent": "TEACHER EVENT",
-      "teacherEventIconAlt": "teacher event icon",
-      "untitled": "Untitled event",
-      "viewDetailsAriaLabel": "View details of the event: {{eventTitle}} - {{eventDate}}",
-      "viewDetailsButton": "View details",
-      "waitingListBadge": "On waiting list"
-    },
-    "confirmation": {
-      "body": "This is an event for <emphasis>teachers only</emphasis>. Please confirm that you are a teacher (or a teacher trainee), and not a student, private tutor or parent.",
-      "declineButton": "I am not a teacher",
-      "title": "Please confirm teacher status"
-    },
     "date": {
-      "from": "From",
-      "seriesStarts": "Series starts",
-      "to": "to"
+      "seriesStarts": "Series starts"
     },
     "details": {
       "bookedConfirmation": "You are booked on this event!",
@@ -277,11 +246,6 @@
       }
     },
     "showingCount": "(showing {{shownCount}} of {{totalCount}})",
-    "sidebar": {
-      "eventTypeLabel": "Event type",
-      "filterButtonTitle": "Filter events",
-      "stagesLabel": "Stages"
-    },
     "status": {
       "bookingDeadlineSoon": "Booking deadline soon!",
       "expired": "EXPIRED",

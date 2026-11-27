@@ -21,8 +21,6 @@
       "title": "Accessibility settings"
     },
     "betaFeatures": {
-      "chemEntryHelp": "This feature allows you to enter text-based answers for chemistry questions, as an alternative to the graphical editor. See our <guidanceLink>guidance on using this feature</guidanceLink>.",
-      "chemEntryLabel": "Enable text entry for chemistry questions",
       "description": "Here you can opt-in to beta features of the {{siteTitle}} platform.",
       "hideAttemptsLabel": "Hide previous question attempts",
       "openAiConsentLabel": "Consent to sending free-text answers to OpenAI for marking",
@@ -37,8 +35,6 @@
       "title": "Changing schools?"
     },
     "context": {
-      "addContentButton": "Add more content",
-      "addStageLabel": "Add stage",
       "removeRow": "clear stage row"
     },
     "country": {
@@ -80,10 +76,6 @@
       "title": "Editing your email address"
     },
     "emailPreferences": {
-      "descriptionHeader": "Description",
-      "preferenceHeader": "Preference",
-      "tipsLabel": "Tips and updates",
-      "newsLabel": "News and updates",
       "validationError": "Please specify all email preferences"
     },
     "gender": {
@@ -244,16 +236,10 @@
       "validationError": "Please enter a valid email address."
     },
     "emailVerification": {
-      "badParamsMessage": "This page received bad parameters. Please ensure you are using the link as provided in the email.",
-      "loginToResend": "Please login to your <accountLink>account</accountLink> to resend the verification email.",
       "requestSuccessMessage": "Please follow the verification link given in the email sent to your address.",
       "requestSuccessTitle": "Email verification request succeeded.",
-      "sentTo": "Verification email sent to {{email}}",
       "successMessage": "The email address has been verified",
-      "successTitle": "Email address verified",
-      "title": "Email verification",
-      "userMismatch": "You are signed in as a different user to the user with the email you have just verified.",
-      "verified": "Email address verified."
+      "successTitle": "Email address verified"
     },
     "formIntro": "To <emphasis>continue with an account</emphasis>, please do so below",
     "google": {
@@ -307,12 +293,6 @@
       "ssoHeading": "Log in with:"
     },
     "pageTitle": "Login – {{siteName}}",
-    "parentalConsent": {
-      "checkboxLabel": "Please check the box to confirm that you have read and understood this message.",
-      "permissionIntro": "Before signing up to any online programme or website you should ask for permission from a parent or carer so they may check that it is appropriate for you to use.",
-      "privacyNote": "Often websites store some information about you to give you the best possible experience on the site but you should always check what data is being kept to do this – you can read how we use your data to provide our service <privacyLink>here</privacyLink>.",
-      "title": "Additional information"
-    },
     "password": {
       "forgotten": "Forgotten your password?",
       "minLengthHint": "Your password must be at least {{minLength}} characters long."
@@ -338,25 +318,17 @@
     "passwordStrength": {
       "breachedFeedback": "Useless"
     },
-    "raspberryPi": {
-      "fullLabelDesktop": "Raspberry Pi Foundation",
-      "logoAlt": "Raspberry Pi logo"
-    },
     "register": {
-      "existingAccount": "Already have an account?",
-      "pageTitle": "Create an {{siteName}} account"
+      "existingAccount": "Already have an account?"
     },
     "registration": {
       "ageCheck": {
         "ageQuestion": "How old are you?",
-        "heading": "Unable to use email",
-        "message": "As you are between {{minAge}}-{{maxAge}} years old, we need you to <strong>sign up using a third-party provider</strong>.",
         "optionBetween": "{{minAge}} - {{maxAgeWithConsent}} years old",
         "optionOver": "{{minAgeWithConsent}} and over",
         "optionUnder": "{{maxAge}} or under",
         "selectionRequired": "Please make a selection.",
-        "terms": "We can only create accounts for users {{minAge}} years old or over.",
-        "tryOtherProvider": "Please try again, using either {{authProviders}}."
+        "terms": "We can only create accounts for users {{minAge}} years old or over."
       },
       "emailSection": {
         "button": "Sign up with email",
@@ -368,7 +340,6 @@
       "socialSignIn": {
         "title": "Continue with:"
       },
-      "ssoVerified": "Your age has already been verified by your SSO provider.",
       "success": {
         "continue": "Let's go!",
         "viewAccount": "Check my account",
@@ -380,23 +351,6 @@
     "registrationSuccess": {
       "title": "Account created!"
     },
-    "roleSelect": {
-      "description": "Knowing if you are a student or a teacher means we can make sure you have access to the right features.",
-      "heading": "Are you a student or a teacher?",
-      "student": {
-        "button": "I am a student",
-        "featurePreferences": "Set your preferences so that you see content relevant to you",
-        "featureProgress": "Track your progress, including how many questions you have answered by topic",
-        "intro": "With a student account you can:"
-      },
-      "teacher": {
-        "featureGroups": "Create groups and invite students to join them",
-        "featureProgress": "View the progress of the students in your groups",
-        "featureQuizzes": "Create quizzes from the questions available, and assign them to your groups",
-        "intro": "With a teacher account you can:",
-        "noAccessNote": "Teacher accounts do not give you access to the answers. <learnMoreLink>Learn more</learnMoreLink>"
-      }
-    },
     "sessionError": {
       "breadcrumbTitle": "User consistency error",
       "message": "You have logged out in another tab or browser window, so we've logged you out here. Use the button below to continue where you left off.",
@@ -407,30 +361,10 @@
       "message": "Your {{siteTitle}} session has expired, so we've logged you out. Use the button below to continue where you left off.",
       "title": "Your session has expired"
     },
-    "sidebar": {
-      "tabAge": "Age verification",
-      "tabMethod": "Sign-up method",
-      "tabPreferences": "Preferences"
-    },
-    "sso": {
-      "learnMore": "Learn more about Single Sign-On"
-    },
     "teacherConnect": {
       "codeError": "Please enter a valid code.",
       "connectedTeachers": "Connected teachers:",
-      "heading": "Connect your account to your teacher",
-      "skipButton": "Skip"
-    },
-    "teacherRequest": {
-      "emailBody": "Hello,\n\n{{requestLine}}\n\nMy school is: {{school}}\n{{verificationMessage}}\n\n\nAny other information: {{otherInformation}}\n\nThanks, \n\n{{firstName}} {{lastName}}",
-      "noSchool": "If you don't have an associated school please fill out our <contactFormLink>Contact us</contactFormLink> form. If you are a private tutor or parent, you can <tutorAccountLink>request an {{siteTitle}} Tutor account</tutorAccountLink>.",
-      "noSchoolError": "You have not provided your school – please add your school on your <accountLink>My Account</accountLink> page. If you are a private tutor or parent, you can <tutorAccountLink>request an {{siteTitle}} Tutor account</tutorAccountLink>.",
-      "otherInfo": "Any other information",
-      "submitError": "{{errorMessage}} You can contact us at <webmasterContact>{{webmasterEmail}}</webmasterContact>",
-      "submitted": "Thank you for submitting a teacher account request.",
-      "teacherFaq": "Go to the <faqLink>Teacher FAQ page</faqLink> to learn about your new account features.",
-      "title": "Teacher Account request",
-      "wrongEmailError": "You have not used your school email address – please change your email address on your <accountLink>My Account</accountLink> page."
+      "heading": "Connect your account to your teacher"
     },
     "tfa": {
       "codeInvalid": "Please enter a valid verification code",
@@ -447,16 +381,6 @@
     "unlinkAccount": {
       "failureMessage": "Failed to unlink account",
       "successTitle": "Account unlinked"
-    },
-    "verifyEmail": {
-      "continueLoginMessage": "Please <loginLink>log in</loginLink> to continue.",
-      "failedTitle": "Unable to verify your email address",
-      "loginFirstMessage": "If you need a new verification email, please <loginLink>log in</loginLink> first.",
-      "resendPrompt": "Didn't get the email?",
-      "sentMessage": "Verification email sent to {{emailAddress}}",
-      "title": "Verify your email address",
-      "unverifiedMessage": "Click the link in the email we've sent to finish setting up your account.",
-      "verifiedMessage": "You've verified your email address and finished creating your account."
     }
   },
   "connections": {

@@ -5,10 +5,6 @@
     "you-have-no-teaching-groups-yet": "You have no teaching groups yet."
   },
   "assignments": {
-    "add": {
-      "createDeckButton": "create a question deck",
-      "topicDecksButton": "our topic question decks"
-    },
     "assign": {
       "errorTitle": "Test assignment to {{groupName}} failed",
       "savedTitle_one": "Test saved",
@@ -20,12 +16,8 @@
       "confirmMessage": "Are you sure you want to cancel \"{{quizTitle}}\"?\r\n\r\nStudents will no longer be able to take the test or see any feedback, and all student attempts at this test will be lost."
     },
     "card": {
-      "assigned": "Assigned <strong>{{startDate}}</strong>",
-      "assignedLabel": "Assigned:",
       "assignerLabel": "By:",
-      "dueDate": "(due {{dueDate}})",
-      "groupLabel": "Group:",
-      "overdueLabel": "Overdue:"
+      "groupLabel": "Group:"
     },
     "counts": {
       "assignments_one": "{{count}} assignment",
@@ -53,47 +45,8 @@
       "title": "Set feedback mode",
       "updateSuccess": "Feedback mode updated successfully."
     },
-    "filter": {
-      "groupLabel": "Group",
-      "nameLabel": "Filter quizzes by name"
-    },
     "help": {
       "overdueExplanation": "Any quizzes you have been set will appear here.<br/>Overdue quizzes which have not been fully attempted will be treated as quizzes <statusTodo>To do</statusTodo> until they are due, after which they are considered <statusOlder>Older</statusOlder> quizzes."
-    },
-    "manage": {
-      "findDeckFrom": "Find a deck from...",
-      "findNewDeck": "a new question deck",
-      "findSavedDecks": "your saved decks",
-      "findTopicDecks": "our topic questions decks",
-      "noMatchingWork": "There is no work matching your filters.",
-      "noWorkSet": "You have not set any work yet. Use the buttons above to set a new assignment or test.",
-      "noWorkSetTutor": "You have not set any work yet. Use the button above to set a new assignment.",
-      "pageHelp": "Use this page to set and manage assigned work for your groups, and view set work as a timeline. You can unassign work, and assign existing work to other groups.",
-      "setGroup": "Set to <strong>{{groupName}}</strong>",
-      "setNewTestButton": "Set a new test",
-      "showEarlierWork": "Show work before {{date}}",
-      "timeline": {
-        "listForGroup": " list for group {{groupName}}",
-        "unknownGroup": "Unknown group"
-      }
-    },
-    "manageSidebar": {
-      "dateShownLabel": "Date shown",
-      "filterByWorkTypeLabel": "Filter by work type",
-      "title": "Filter & sort"
-    },
-    "modal": {
-      "assignButton_one": "Assign to group",
-      "assignButton_other": "Assign to groups",
-      "backToSchedule": "Back to schedule",
-      "belongsToOther": " (belongs to another user)",
-      "dueDateAfterStartError": "Due date must be on or after start date.",
-      "dueDateLabel": "Due date reminder",
-      "dueDateRequiredNotice": "Since January 2025, due dates are required for assignments.",
-      "gameboardLabel": "Gameboard:",
-      "notesCharCount": "{{charCount}}/500 characters",
-      "notesLabel": "Notes (optional):",
-      "startDateLabel": "Schedule an assignment start date <muted> (optional)</muted>"
     },
     "notesMaxLengthError": "You have exceeded the maximum length.",
     "pagination": {
@@ -118,27 +71,6 @@
         "ariaLabel": "Open question in new tab"
       }
     },
-    "schedule": {
-      "assignedBy": "Assigned by: <strong>{{assigner}}</strong>",
-      "assignedTo": "Assigned to: <strong>{{groupName}}</strong>",
-      "byDueDate": "By due date",
-      "byStartDate": "By start date",
-      "dueDate": "Due date: <strong>{{date}}</strong>",
-      "emptyState": "You have no assignments",
-      "filterByGroup": "Filter by group:",
-      "noAssignmentsForGroups_one": "There are no assignments set to group: {{groupNames}}",
-      "noAssignmentsForGroups_other": "There are no assignments set to groups: {{groupNames}}",
-      "notStarted": "(not started)",
-      "notes": "Notes",
-      "pageHelp": "Use this page to manage assignments for your groups, and view them as a timeline. You can unassign work, and assign existing assignments to other groups.",
-      "setAssignmentsLink": "Use the <setAssignmentsLink>set assignments</setAssignmentsLink> page to schedule new assignments to your groups.",
-      "showEarlierAssignments": "Show assignments before {{date}}",
-      "stage_one": "Stage",
-      "stage_other": "Stages",
-      "startDate": "Start date: <strong>{{date}}</strong>",
-      "title": "Assignment schedule",
-      "unassignConfirm": "Are you sure you want to unassign {{deckName}} from {{groupLabel}}?"
-    },
     "setModal": {
       "dueDateAfterStart": "Due date must be on or after start date and in the future.",
       "dueDateRequired": "Due dates are required for assignments.",
@@ -149,30 +81,9 @@
       "title": "Assign \"{{boardTitle}}\"",
       "unassignGroup": "Unassign group"
     },
-    "sidebar": {
-      "searchTitle": "Search assignments",
-      "sortAttemptedHighest": "Attempted (highest first)",
-      "sortAttemptedLowest": "Attempted (lowest first)",
-      "sortCorrectnessHighest": "Correctness (highest first)",
-      "sortCorrectnessLowest": "Correctness (lowest first)",
-      "sortDueDateLatest": "Due date (latest first)",
-      "sortDueDateSoonest": "Due date (soonest first)",
-      "sortOrderLabel": "Set sort order",
-      "sortStartDateNewest": "Start date (recent first)",
-      "sortStartDateOldest": "Start date (oldest first)",
-      "sortTitle": "Sort",
-      "subjectFilterTitle": "Filter by subject"
-    },
     "startDatePlaceholder": "Select your scheduled start date...",
     "table": {
-      "deckName": "Deck name",
-      "lastViewed": "Last viewed",
-      "quizName": "Quiz name"
-    },
-    "timeline": {
-      "collapse": "Collapse",
-      "listForDay": " list for day {{date}}",
-      "listForMonth": " list for {{monthName}}"
+      "lastViewed": "Last viewed"
     },
     "warning": {
       "assignmentDetail": "<assignmentLink><strong>{{assignmentTitle}}</strong></assignmentLink> (set to <bold>{{groupName}}</bold> by {{teacherName}})",
@@ -183,17 +94,8 @@
     "assign": {
       "noGroupsErrorTitle": "Error: Please choose one or more groups."
     },
-    "assignment": {
-      "assignedTo": "Assigned to <emphasis>{{groupName}}</emphasis> by <emphasis2>{{assigner}}</emphasis2>",
-      "dueLabel": "Due: <b>{{dueDate}}</b>",
-      "setLabel": "Set: <b>{{setDate}}</b>"
-    },
     "assignments": {
-      "assignUnassignButton": "Assign / Unassign",
-      "assignedTo": "Quiz assigned to: {{groupNames}}",
-      "groupCount_one": "group",
-      "groupCount_other": "groups",
-      "noGroupsQuizAssigned": "No groups have been assigned to this quiz."
+      "assignUnassignButton": "Assign / Unassign"
     },
     "builder": {
       "addQuestionsButton": "Add questions",
@@ -214,18 +116,7 @@
       "wildcardNone": "No wildcard"
     },
     "card": {
-      "byLabel": "By",
-      "createdBy": "Created by <owner>{{ownerName}}</owner>",
-      "createdDate": "Created <strong>{{creationDate}}</strong>",
-      "groupsAssigned": "Number of groups assigned",
-      "hideDetailsButton": "Hide details",
-      "lastVisited": "Last visited <strong>{{lastVisitedDate}}</strong>",
-      "lastVisitedLabel": "Last visited",
-      "questionsLabel": "Questions:",
-      "showDetailsButton": "Show details",
-      "stagesDifficulties": "Stages and difficulties",
-      "stagesHeader_one": "Stage:",
-      "stagesHeader_other": "Stages:"
+      "groupsAssigned": "Number of groups assigned"
     },
     "cards": {
       "showingAll": "Showing <loadedCountEmphasis>{{loadedCount}}</loadedCountEmphasis> of <totalCountEmphasis>{{totalCount}}</totalCountEmphasis> results.",
@@ -242,26 +133,8 @@
     "save": {
       "unsaveConfirm": "Are you sure you want to unsave '{{boardTitle}}' from your account?"
     },
-    "sidebar": {
-      "externalLink": "External link (<em>{{externalUrl}}</em>)"
-    },
-    "table": {
-      "unsaveCountButton": "Unsave ({{selectedCount}})"
-    },
-    "usageInfo": {
-      "beginsIn": "Begins <bold>{{daysUntil}}</bold>"
-    },
     "wildcards": {
       "errorTitle": "Error loading wildcards"
-    }
-  },
-  "gameboards": {
-    "filters": {
-      "name": "Filter boards by name",
-      "status": "Filter by Status"
-    },
-    "sidebar": {
-      "filterCompletionTitle": "Filter by completion"
     }
   },
   "groups": {
@@ -295,9 +168,6 @@
       "errorTitle": "Group deletion failed",
       "nonOwnerConfirm": "You cannot delete this group, because you are not the group owner.  Do you want to remove yourself as a manager of '{{groupName}}'?",
       "ownerConfirm": "Are you sure you want to permanently delete the group '{{groupName}}' and remove all associated assignments?\n\nThis action cannot be undone!"
-    },
-    "demo": {
-      "name": "Demo Group {{groupId}}"
     },
     "editor": {
       "emailButton": "Email users",
@@ -420,7 +290,6 @@
     },
     "page": {
       "addTeachersInfo": "You can add other teachers to help you manage a group. You cannot directly add students, but you can invite them to join.",
-      "emptyState": "Organise your students into groups and set work appropriate for each group.<br/>You need a student group before you can assign quizzes and tests in {{siteTitle}}.",
       "helpText": "Use this page to manage groups. You can add users to a group by giving them the group code and asking them paste it into their account settings page.<br/>You can find the code for an existing group by selecting the group and clicking <inviteUsersText>Invite Users</inviteUsersText>."
     },
     "progress": {
@@ -457,40 +326,20 @@
         "errorTitle": "Loading group token failed"
       }
     },
-    "unknown": {
-      "label": "Unknown Group"
-    },
     "update": {
       "errorTitle": "Group saving failed",
       "successTitle": "Group updated successfully"
     }
   },
   "progress": {
-    "attemptsOverTime": "Attempts over time",
     "charts": {
-      "bySubjectTitle": "By {{subject}}",
       "byTopicTitle": "By topic"
     },
     "correctOfAttempts": "{{correct}} of {{attempts}}",
-    "legend": {
-      "failedAttempted": "<{{failThresholdPercentage}}% attempted",
-      "failedCorrect": "<{{failThresholdPercentage}}% correct",
-      "fullAttempted": "100% attempted",
-      "fullCorrect": "100% correct",
-      "fullyAttempted": "Fully attempted",
-      "inProgressAttempted": "≥{{failThresholdPercentage}}% attempted",
-      "inProgressCorrect": "≥{{failThresholdPercentage}}% correct",
-      "partiallyAttempted": "Partially attempted",
-      "partiallyCorrect": "Partially correct",
-      "passedAttempted": "≥{{passPercentage}}% attempted",
-      "passedCorrect": "≥{{passPercentage}}% correct",
-      "title": "Section key:"
-    },
     "marking": {
       "accountSettings": "your account settings",
       "notMarkedFor": "not been marked for {{context}}"
     },
-    "mentalMathsEmptyState": "<mentalMathsLink>Click here</mentalMathsLink> to try our mental maths skills practice.",
     "mostRecentTitle": "Most recently answered questions",
     "noneAttempted": "None attempted",
     "oldestUnsolvedTitle": "Oldest unsolved questions",
@@ -505,29 +354,13 @@
       "body": "This will allow the student to attempt the test again.",
       "title": "Allow another attempt?"
     },
-    "settings": {
-      "displayModeLabel": "Table display mode",
-      "fractionsOption": "Fractions",
-      "hideButton": "Hide settings",
-      "percentagesOption": "Percentages",
-      "showButton": "Show settings"
-    },
-    "skillsAttemptsError": "Failed to load skills attempts.",
-    "streak": {
-      "title": "Weekly Streak"
-    },
     "table": {
       "emptyState": "This group is empty, so has no progress data available. You can invite users through the <manageGroupsLink>Manage groups</manageGroupsLink> page.",
       "notSharing": "Not Sharing",
-      "totalAttemptedPartsLabel": "Total attempted parts",
       "totalAttemptedQuestionsLabel": "Total attempted questions",
-      "totalCorrectPartsLabel": "Total correct parts",
       "totalCorrectQuestionsLabel": "Total correct questions",
       "viewAnswers": "View answers"
     }
-  },
-  "quickQuizzes": {
-    "title": "Quick quizzes"
   },
   "teacherFeatures": {
     "request": {
@@ -538,49 +371,12 @@
       "tutorButton": "I am a tutor",
       "tutorRequirement": "A \"tutor\" does not have to be associated with a school (private tutors and parents fall under this category)",
       "upgradeIntro": "Upgrading your {{siteTitle}} account gives you access to teaching resources, the ability to assign work to groups of students, and more! To continue, please tell us whether you are a teacher or a tutor:"
-    },
-    "resources": {
-      "title": "Teacher resources"
-    },
-    "support": {
-      "cpdTitle": "Teacher CPD",
-      "emailsSubtitle": "Recent start-of-term emails sent to teachers.",
-      "emailsTitle": "Teacher emails"
-    },
-    "tutor": {
-      "assignmentsSubtitle": "Set assignments from our skills books, pre-made boards or create your own.",
-      "assignmentsTitle": "2. Set assignments",
-      "booksTitle": "Isaac books",
-      "decksTitle": "Decks by topic",
-      "description": "Isaac Science provides you with a huge range of resources to support your tutoring of science subjects.",
-      "getButton": "Get a tutor account",
-      "progressSubtitle": "View your students’ progress through their assignments.",
-      "progressTitle": "3. Assignment progress",
-      "resourcesTitle": "Tutor support and resources",
-      "workflowTitle": "Tutor workflow"
-    },
-    "workflow": {
-      "title": "Teacher workflow"
-    }
-  },
-  "teacherMentoring": {
-    "join": {
-      "freeNote": "All of our resources are completely free. You can join (or leave) the programme at any time.",
-      "loggedIn": "<strong><joinLink>Join the {{groupName}} group</joinLink></strong> to participate in the programme so that we can assign you the quizzes weekly.",
-      "notLoggedIn": "<strong><authLink>Log in or sign up</authLink></strong> to join the teacher mentoring group and participate in the programme."
-    },
-    "page": {
-      "teacherNotice": "You must be signed in with a teacher account to view the weekly resources.",
-      "title": "Teacher mentoring programme"
     }
   },
   "teacherNotes": {
     "label": "Teacher notes"
   },
   "tests": {
-    "admissions": {
-      "title": "Practice admissions tests"
-    },
     "alreadySubmitted": {
       "body": "A submission has already been recorded for this test by your account.",
       "title": "Test already submitted"
@@ -614,16 +410,6 @@
       "dueDate": "Due Date",
       "setDate": "Set Date"
     },
-    "assignment": {
-      "assignedTooltip": "Test assigned to: {{groupNames}}",
-      "cancelTest": "Cancel test",
-      "cancelling": "Cancelling...",
-      "extendDueDate": "Extend Due Date",
-      "header": {
-        "creationDate": "Creation date"
-      },
-      "more": "More"
-    },
     "attempt": {
       "allComplete": "All sections complete",
       "assignedErrorBody": "Your teacher has set this test to you. You may not practise it in advance.<br/>If you are ready to take the test, click on it in your <assignedTestsLink>assigned tests</assignedTestsLink> page.",
@@ -645,27 +431,10 @@
     "cancelAssignment": {
       "errorTitle": "Cancelling test assignment failed"
     },
-    "card": {
-      "manage": {
-        "changeFeedbackType": "Change feedback type"
-      },
-      "shareLink": {
-        "tooltip": "(student-only link)"
-      },
-      "untitledTitle": "Untitled Test",
-      "usage": {
-        "begins": "Begins <strong>{{startDate}}</strong>",
-        "viewResults": "View group results"
-      }
-    },
     "details": {
       "overallMark": "Your mark is {{correct}} / {{total}}",
       "overallMarkLabel": "Overall mark",
       "sectionBreakdown": "Section mark breakdown"
-    },
-    "displayMode": {
-      "cards": "Cards",
-      "table": "Table"
     },
     "feedback": {
       "error": {
@@ -679,13 +448,6 @@
       "notStartedHeading": "This test has not yet started.",
       "releaseDate": "It will be released to your group on {{startDate}}.",
       "title": "Test Feedback"
-    },
-    "filters": {
-      "dateSectionTitle": "Filter by date",
-      "hide": "Hide filters",
-      "searchGroupLabel": "Search by group",
-      "show": "Show filters",
-      "title": "Filter by quiz title"
     },
     "header": {
       "completedDate": "Completed: {{date}}",
@@ -705,11 +467,6 @@
     "pagination": {
       "position": "Section {{page}} / {{sectionCount}}"
     },
-    "pastTests": {
-      "hidden": "Hidden",
-      "label": "Past tests",
-      "shown": "Shown"
-    },
     "practiceEmpty": {
       "noMatch": "No practice tests match your filters.",
       "none": "You have no practice tests. Take some new tests <viewTestsLink>here</viewTestsLink>!"
@@ -728,24 +485,11 @@
       "modalTitle": "Test Instructions",
       "showButton": "Show instructions"
     },
-    "search": {
-      "placeholder": "e.g. Practice"
-    },
     "section": {
       "fallbackTitle": "Section {{page}}",
       "notFound": "Test section {{page}} not found"
     },
-    "set": {
-      "available": {
-        "empty": "There are no tests you can set which match your search term.",
-        "intro": "The following tests are available to set to your groups."
-      },
-      "emptyState": "You have not set any tests to your groups yet.",
-      "help": "Use this page to manage and set tests to your groups. You can assign any test the {{siteName}} team have built.<br/>Students in the group will be emailed when you set a new test.",
-      "loadError": "Tests you have assigned have failed to load, please try refreshing the page."
-    },
     "setQuiz": {
-      "completionEmail": "Email me when a student completes this test",
       "dueDateAfterStart": "Due date must be on or after the start date.",
       "dueDateAfterToday": "Due date must be after today.",
       "dueDateSelect": "Select a due date for the assignment.",
@@ -757,8 +501,6 @@
       "title": "Setting test '{{testTitle}}'"
     },
     "sidebar": {
-      "displayCardOption": "Card View",
-      "displayTableOption": "Table View",
       "fallbackTitle": "Section {{id}}",
       "sectionsButton": "Sections",
       "statusCompleted": "Section completed",
@@ -780,8 +522,6 @@
     "view": {
       "emptyState": "There are no practice tests currently available.",
       "loginRequired": "You must be logged in to view practice tests.",
-      "searchPlaceholder": "e.g. Admissions",
-      "searchTitle": "Search practice tests",
       "takeTest": "Take Test"
     },
     "viewingAs": {
