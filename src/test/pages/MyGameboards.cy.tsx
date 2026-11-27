@@ -18,6 +18,7 @@ describe("My Gameboards", () => {
         cy.get('[data-testid="display-select"]').select("Card View");
         cy.get('[data-testid="limit-select"]').should('be.visible').select("6");
         if (isPhy) cy.closeSidebar();
+        cy.contains(/^Showing 6 of \d+ results\.$/).should('be.visible');
         cy.get('[data-testid="loading"]').should('not.exist');
         cy.matchImage();
     });
